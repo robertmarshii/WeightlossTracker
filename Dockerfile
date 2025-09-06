@@ -4,6 +4,9 @@ FROM php:8.2-fpm-alpine
 # Install nginx
 RUN apk add --no-cache nginx supervisor
 
+# Install postgres driver and other necessary PHP extensions
+RUN docker-php-ext-install pdo pdo_pgsql pgsql
+
 # Create nginx run directory
 RUN mkdir -p /run/nginx
 
