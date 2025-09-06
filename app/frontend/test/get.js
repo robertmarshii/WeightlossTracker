@@ -12,7 +12,7 @@ function getFromDB() {
             }
         }
 
-        xhr.open('POST', 'router.php?controller=get1', true);
+        xhr.open('POST', '../router.php?controller=get1', true);
         xhr.send(data);
     })
 }

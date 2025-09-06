@@ -1,0 +1,15 @@
+{
+  "name": "weightloss-tracker",
+  "private": true,
+  "devDependencies": {
+    "cypress": "^13.7.0",
+    "husky": "^9.1.6"
+  },
+  "scripts": {
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
+    "test:e2e": "cypress run",
+    "test:db": "cypress run --spec cypress/e2e/test-page.cy.js"
+  },
+  "prepare": "husky"
+}

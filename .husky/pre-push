@@ -1,0 +1,21 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "Running pre-push checks: all Cypress specs..."
+
+# Friendly check: ensure Docker services are up
+if ! docker compose ps --status running >/dev/null 2>&1; then
+  echo "Docker services are not running. Start with: docker compose up -d"
+  exit 1
+fi
+
+# Run all Cypress specs; fail push if tests fail
+npm run --silent test:e2e
+status=$?
+
+if [ $status -ne 0 ]; then
+  echo "Pre-push blocked: Cypress tests failed. Fix issues and retry."
+  exit $status
+fi
+
+echo "Pre-push checks passed. Proceeding with push."

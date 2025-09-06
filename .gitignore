@@ -1,2 +1,9 @@
-
+# Environment files
 .env
+.env.*
+!.env.example
+
+# Node / Cypress
+node_modules/
+cypress/screenshots/
+cypress/videos/
