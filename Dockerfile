@@ -8,7 +8,8 @@ RUN apk add --no-cache nginx supervisor
 RUN mkdir -p /run/nginx
 
 # Copy website files
-COPY html/ /var/www/html/
+COPY app/backend /var/app/backend
+COPY app/frontend /var/www
 
 # Copy nginx and supervisor configs
 COPY nginx.conf /etc/nginx/nginx.conf
