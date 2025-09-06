@@ -4,16 +4,12 @@ FROM php:8.2-fpm-alpine
 # Install nginx
 RUN apk add --no-cache nginx supervisor
 
-# Install build deps for pgsql
-RUN set -eux; \
-    apt-get update; \
-    apt-get install -y --no-install-recommends \
-        libpq-dev \
-    ; \
-    rm -rf /var/lib/apt/lists/*
+# Install necessary PHP extensions
+RUN apt-get update && apt-get install -y \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
 
-# Build PHP extensions
-RUN docker-php-ext-install pdo pdo_pgsql pgsql
+RUN docker-php-ext-install pdo pdo_mysql mysqli
 
 # Create nginx run directory
 RUN mkdir -p /run/nginx
