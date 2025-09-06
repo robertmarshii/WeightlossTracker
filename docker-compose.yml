@@ -1,0 +1,58 @@
+services:
+  docker-nginx:
+    restart: always
+    build:
+      context: ./nginx
+    ports:
+      - "8111:80"
+    volumes:
+      - ./app/frontend:/var/www
+      - ./app/backend:/var/app/backend
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    networks:
+      - web-network
+    depends_on:
+      - docker-php-fpm
+
+  docker-php-fpm:
+    restart: always
+    environment:
+      - XDEBUG_MODE=${XDEBUG_MODE}
+      - XDEBUG_CONFIG=${XDEBUG_CONFIG}
+      - MYSQL_HOST=${MYSQL_HOST}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    build: 
+      context: ./php-fpm
+    volumes:
+      - ./app/frontend:/var/www
+      - ./app/backend:/var/app/backend
+    networks:
+      - web-network
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:8.0
+    restart: always
+    ports:
+      - "3308:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - web-network
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    container_name: mysql
+
+
+# define the network
+networks:
+  web-network:
+volumes:
+  mysql_data:
