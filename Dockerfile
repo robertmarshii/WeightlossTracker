@@ -4,7 +4,15 @@ FROM php:8.2-fpm-alpine
 # Install nginx
 RUN apk add --no-cache nginx supervisor
 
-# Install postgres driver and other necessary PHP extensions
+# Install build deps for pgsql
+RUN set -eux; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends \
+        libpq-dev \
+    ; \
+    rm -rf /var/lib/apt/lists/*
+
+# Build PHP extensions
 RUN docker-php-ext-install pdo pdo_pgsql pgsql
 
 # Create nginx run directory
