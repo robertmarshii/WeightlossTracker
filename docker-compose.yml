@@ -23,6 +23,7 @@ services:
     volumes:
       - ./app/frontend:/var/www
       - ./app/backend:/var/app/backend
+      - ./seeders:/var/app/seeders
       - ./.env:/var/app/.env
     networks:
       - web-network

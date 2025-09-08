@@ -5,6 +5,7 @@
         $controller = htmlspecialchars($_GET["controller"]);
         if($controller === "get1") { Get1(); }
         if($controller === "schema") { SchemaController(); }
+        if($controller === "seeder") { SeederController(); }
     }
 
     function Get1() {
@@ -29,6 +30,26 @@
             } elseif ($action === 'get') {
                 $currentSchema = SchemaManager::getCurrentSchema();
                 echo json_encode(['success' => true, 'schema' => $currentSchema]);
+            }
+        }
+    }
+
+    function SeederController() {
+        require_once ('/var/app/backend/DatabaseSeeder.php');
+        
+        if (isset($_POST['action'])) {
+            $action = htmlspecialchars($_POST['action']);
+            
+            if ($action === 'reset_all') {
+                $result = DatabaseSeeder::resetSchemas(['wt_test', 'wt_dev']);
+                echo json_encode($result);
+            } elseif ($action === 'reset_schema' && isset($_POST['schema'])) {
+                $schema = htmlspecialchars($_POST['schema']);
+                $result = DatabaseSeeder::seedSchema($schema);
+                echo json_encode($result);
+            } elseif ($action === 'migrate_live') {
+                $result = DatabaseSeeder::migrateLive();
+                echo json_encode($result);
             }
         }
     }

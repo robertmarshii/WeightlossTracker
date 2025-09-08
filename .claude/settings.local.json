@@ -4,7 +4,8 @@
       "Bash(docker compose:*)",
       "Bash(cat:*)",
       "Bash(docker exec:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "WebFetch(domain:127.0.0.1)"
     ],
     "deny": [],
     "ask": []

@@ -21,7 +21,7 @@ COPY app/backend /var/app/backend
 COPY app/frontend /var/www
 
 # Copy configs
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY nginx/nginx.prod.conf /etc/nginx/nginx.conf
 COPY supervisord.conf /etc/supervisord.conf
 
 # Custom PHP config

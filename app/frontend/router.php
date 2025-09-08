@@ -1,1 +1,1 @@
-<?php include_once "../app/backend/Router.php"; ?>
+<?php require_once('/var/app/backend/Router.php'); ?>

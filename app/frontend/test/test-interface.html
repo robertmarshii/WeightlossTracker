@@ -51,6 +51,10 @@
             font-family: monospace;
             font-size: 0.875rem;
         }
+        
+        .card-title h5 {
+            font-size: 1.1rem;
+        }
     </style>
 </head>
 
@@ -58,94 +62,119 @@
     <div class="container mt-5">
         <div class="row">
             <div class="col-12">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <div>
-                        <h2><i class="fa fa-flask"></i> Test Interface</h2>
-                        <p class="text-muted">Run various tests and check application functionality</p>
-                    </div>
+                <div class="d-flex justify-content-end align-items-center mb-3">
                     <a href="../index.php" class="btn btn-outline-primary">
                         <i class="fa fa-arrow-left"></i> Back to Home
                     </a>
                 </div>
                 <div id="alert-container"></div>
                 
+                <h3 class="mt-4 mb-3">
+                    <i class="fa fa-flask"></i> Tests
+                </h3>
+                
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="card test-card">
                             <div class="card-body">
                                 <h5 class="card-title">
                                     <span class="status-indicator status-idle" id="status-api"></span>
                                     API Tests
                                 </h5>
-                                <p class="card-text">Test backend API endpoints and data retrieval</p>
                                 <button class="btn btn-primary btn-test" data-test="api">Run API Tests</button>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="card test-card">
                             <div class="card-body">
                                 <h5 class="card-title">
                                     <span class="status-indicator status-idle" id="status-database"></span>
                                     Database Tests
                                 </h5>
-                                <p class="card-text">Test database connection and schema queries</p>
                                 <button class="btn btn-primary btn-test" data-test="database">Run DB Tests</button>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="card test-card">
                             <div class="card-body">
                                 <h5 class="card-title">
                                     <span class="status-indicator status-idle" id="status-cypress"></span>
                                     E2E Tests
                                 </h5>
-                                <p class="card-text">Run Cypress end-to-end test suite</p>
                                 <button class="btn btn-success btn-test" data-test="cypress">Run E2E Tests</button>
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                <div class="row mt-4">
-                    <div class="col-md-4">
+                    
+                    <div class="col-md-3">
                         <div class="card test-card">
                             <div class="card-body">
                                 <h5 class="card-title">
                                     <span class="status-indicator status-idle" id="status-schema"></span>
                                     Schema Tests
                                 </h5>
-                                <p class="card-text">Test all three schemas (test/dev/live)</p>
                                 <button class="btn btn-info btn-test" data-test="schema">Run Schema Tests</button>
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="col-md-4">
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-3">
                         <div class="card test-card">
                             <div class="card-body">
                                 <h5 class="card-title">
                                     <span class="status-indicator status-idle" id="status-health"></span>
                                     Health Check
                                 </h5>
-                                <p class="card-text">Check system health and environment</p>
                                 <button class="btn btn-warning btn-test" data-test="health">Run Health Check</button>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="card test-card">
                             <div class="card-body">
                                 <h5 class="card-title">
                                     <span class="status-indicator status-idle" id="status-all"></span>
                                     Run All Tests
                                 </h5>
-                                <p class="card-text">Execute complete test suite</p>
                                 <button class="btn btn-dark btn-test" data-test="all">Run All Tests</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3 class="mt-4 mb-3">
+                    <i class="fa fa-cogs"></i> Functions
+                </h3>
+                
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="card test-card">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <span class="status-indicator status-idle" id="status-seeder"></span>
+                                    Database Seeder
+                                </h5>
+                                <div class="btn-group-vertical w-100" role="group">
+                                    <button class="btn btn-outline-danger btn-sm btn-test" data-test="seed-test">
+                                        <span class="status-indicator status-idle" id="status-seedtest"></span>
+                                        Reset Test Schema
+                                    </button>
+                                    <button class="btn btn-outline-danger btn-sm btn-test" data-test="seed-dev">
+                                        <span class="status-indicator status-idle" id="status-seeddev"></span>
+                                        Reset Dev Schema
+                                    </button>
+                                    <button class="btn btn-outline-warning btn-sm btn-test" data-test="migrate-live">
+                                        <span class="status-indicator status-idle" id="status-migrate"></span>
+                                        Migrate Live Schema
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -153,11 +182,11 @@
                 
                 <div class="mt-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4>Test Results</h4>
-                        <button class="btn btn-secondary btn-sm" id="clear-results">Clear Results</button>
+                        <h4><i class="fa fa-terminal"></i> System Log</h4>
+                        <button class="btn btn-secondary btn-sm" id="clear-results">Clear Log</button>
                     </div>
                     <div class="result-container" id="test-results">
-                        <div class="text-muted">Click any test button to see results here...</div>
+                        <div class="text-muted">System operations and test results will appear here...</div>
                     </div>
                 </div>
             </div>
@@ -196,6 +225,15 @@
                     break;
                 case 'health':
                     runHealthCheck();
+                    break;
+                case 'seed-test':
+                    runSchemaReset('wt_test');
+                    break;
+                case 'seed-dev':
+                    runSchemaReset('wt_dev');
+                    break;
+                case 'migrate-live':
+                    runLiveMigration();
                     break;
                 case 'all':
                     runAllTests();
@@ -385,8 +423,117 @@
         }
         
         function clearResults() {
-            $('#test-results').html('<div class="text-muted">Click any test button to see results here...</div>');
+            $('#test-results').html('<div class="text-muted">System operations and test results will appear here...</div>');
             $('.status-indicator').removeClass('status-running status-success status-error').addClass('status-idle');
+        }
+        
+        
+        function runSchemaReset(schema) {
+            const schemaName = schema.replace('wt_', '');
+            const statusId = schema === 'wt_test' ? 'seedtest' : 'seeddev';
+            
+            // Show alert and update status
+            showAlert(`Running ${schemaName} schema reset...`, 'info');
+            updateTestStatus(statusId, 'running');
+            appendResult(`🗄️ Resetting ${schemaName} schema with fresh data...`);
+            
+            $.post('../router.php?controller=seeder', { 
+                action: 'reset_schema',
+                schema: schema
+            }, function(response) {
+                try {
+                    const data = JSON.parse(response);
+                    if (data.success) {
+                        showAlert(`${schemaName} schema reset completed successfully!`, 'success');
+                        appendResult(`✅ ${schemaName} schema reset successfully!`);
+                        
+                        if (data.verification && data.verification[schema]) {
+                            const info = data.verification[schema];
+                            appendResult(`📊 ${schemaName} verification: ${info.tables.length} tables, ${Object.values(info.record_counts).reduce((a, b) => a + b, 0)} total records`);
+                            Object.entries(info.record_counts).forEach(([table, count]) => {
+                                appendResult(`    - ${table}: ${count} records`);
+                            });
+                        }
+                        
+                        updateTestStatus(statusId, 'success');
+                    } else {
+                        showAlert(`${schemaName} schema reset failed: ${data.message}`, 'danger');
+                        appendResult(`❌ ${schemaName} reset failed: ${data.message}`);
+                        updateTestStatus(statusId, 'error');
+                    }
+                } catch (e) {
+                    showAlert(`${schemaName} schema reset failed: ${e.message}`, 'danger');
+                    appendResult(`❌ ${schemaName} reset failed: ${e.message}`);
+                    updateTestStatus(statusId, 'error');
+                }
+            }).fail(function() {
+                showAlert(`${schemaName} schema reset failed: Network error`, 'danger');
+                appendResult(`❌ ${schemaName} reset failed: Network error`);
+                updateTestStatus(statusId, 'error');
+            });
+        }
+        
+        function runLiveMigration() {
+            showAlert('Running live schema migration...', 'info');
+            updateTestStatus('migrate', 'running');
+            appendResult('⚡ Running live schema migration (non-destructive)...');
+            
+            $.post('../router.php?controller=seeder', { 
+                action: 'migrate_live'
+            }, function(response) {
+                try {
+                    const data = JSON.parse(response);
+                    if (data.success) {
+                        showAlert('Live schema migration completed successfully!', 'success');
+                        appendResult('✅ Live schema migration completed successfully!');
+                        
+                        if (data.verification) {
+                            const info = data.verification;
+                            if (info.exists) {
+                                appendResult(`📊 Live verification: ${info.tables.length} tables, ${Object.values(info.record_counts).reduce((a, b) => a + b, 0)} total records`);
+                                Object.entries(info.record_counts).forEach(([table, count]) => {
+                                    appendResult(`    - ${table}: ${count} records`);
+                                });
+                            }
+                        }
+                        
+                        updateTestStatus('migrate', 'success');
+                    } else {
+                        showAlert(`Live migration failed: ${data.message}`, 'danger');
+                        appendResult(`❌ Live migration failed: ${data.message}`);
+                        updateTestStatus('migrate', 'error');
+                    }
+                } catch (e) {
+                    showAlert(`Live migration failed: ${e.message}`, 'danger');
+                    appendResult(`❌ Live migration failed: ${e.message}`);
+                    updateTestStatus('migrate', 'error');
+                }
+            }).fail(function() {
+                showAlert('Live migration failed: Network error', 'danger');
+                appendResult('❌ Live migration failed: Network error');
+                updateTestStatus('migrate', 'error');
+            });
+        }
+
+        function showAlert(message, type) {
+            const alertClass = `alert-${type}`;
+            const alertHtml = `
+                <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
+                    ${message}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            `;
+            
+            $('#alert-container').html(alertHtml);
+            
+            // Auto-dismiss success/info alerts after 5 seconds
+            if (type === 'success' || type === 'info') {
+                setTimeout(() => {
+                    $('#alert-container .alert').alert('close');
+                }, 5000);
+            }
         }
     </script>
 </body>
