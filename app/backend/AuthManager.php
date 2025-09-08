@@ -20,7 +20,7 @@ class AuthManager {
     public static function sendLoginCode($email) {
         try {
             require_once('/var/app/backend/Database.php');
-            $db = Database::getInstance()->getConnection();
+            $db = Database::getInstance()->getDbConnection();
             
             // Check if user exists
             $stmt = $db->prepare("SELECT id FROM users WHERE email = ?");
@@ -62,7 +62,7 @@ class AuthManager {
     public static function createAccount($email, $firstName, $lastName) {
         try {
             require_once('/var/app/backend/Database.php');
-            $db = Database::getInstance()->getConnection();
+            $db = Database::getInstance()->getDbConnection();
             
             // Check if user already exists
             $stmt = $db->prepare("SELECT id FROM users WHERE email = ?");
@@ -101,7 +101,7 @@ class AuthManager {
     public static function verifyLoginCode($email, $code) {
         try {
             require_once('/var/app/backend/Database.php');
-            $db = Database::getInstance()->getConnection();
+            $db = Database::getInstance()->getDbConnection();
             
             // Check if code is valid and not expired
             $stmt = $db->prepare("
