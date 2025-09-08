@@ -32,6 +32,16 @@ class Database
     }
 
     /**
+     * Get current schema name
+     * @return string
+     */
+    public static function getSchema()
+    {
+        require_once('/var/app/backend/SchemaManager.php');
+        return SchemaManager::getCurrentSchema();
+    }
+
+    /**
      * @param $username
      * @param $password
      * @param $host

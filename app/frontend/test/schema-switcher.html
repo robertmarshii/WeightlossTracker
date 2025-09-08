@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schema Switcher - WeightLoss Tracker</title>
+    <!-- Jquery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Boostrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <style>
+        .schema-card {
+            margin: 20px 0;
+            transition: all 0.3s ease;
+        }
+        .schema-card.active {
+            border: 2px solid #007bff;
+            box-shadow: 0 4px 8px rgba(0,123,255,.25);
+        }
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 10px;
+        }
+        .status-active { background-color: #28a745; }
+        .status-inactive { background-color: #6c757d; }
+    </style>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <h2><i class="fa fa-database"></i> Schema Switcher</h2>
+                        <p class="text-muted">Switch between different database schemas (Only works on localhost:8111)</p>
+                    </div>
+                    <a href="../index.php" class="btn btn-outline-primary">
+                        <i class="fa fa-arrow-left"></i> Back to Home
+                    </a>
+                </div>
+                <div id="alert-container"></div>
+                
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card schema-card" id="card-wt_test">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <span class="status-indicator status-inactive" id="status-wt_test"></span>
+                                    Test Schema
+                                </h5>
+                                <p class="card-text">Development testing environment</p>
+                                <button class="btn btn-primary btn-switch" data-schema="wt_test">Switch to Test</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="card schema-card" id="card-wt_dev">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <span class="status-indicator status-inactive" id="status-wt_dev"></span>
+                                    Development Schema
+                                </h5>
+                                <p class="card-text">Main development environment</p>
+                                <button class="btn btn-primary btn-switch" data-schema="wt_dev">Switch to Dev</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="card schema-card" id="card-wt_live">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <span class="status-indicator status-inactive" id="status-wt_live"></span>
+                                    Live Schema
+                                </h5>
+                                <p class="card-text">Production environment</p>
+                                <button class="btn btn-danger btn-switch" data-schema="wt_live">Switch to Live</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-4">
+                    <button class="btn btn-info" id="test-connection">Test Current Schema Connection</button>
+                    <button class="btn btn-secondary" id="refresh-status">Refresh Status</button>
+                </div>
+                
+                <div class="mt-3" id="connection-result"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Schema Logger -->
+    <script src="../schema-logger.js"></script>
+    
+    <script>
+        $(document).ready(function() {
+            loadCurrentSchema();
+            
+            $('.btn-switch').click(function() {
+                const schema = $(this).data('schema');
+                switchSchema(schema);
+            });
+            
+            $('#test-connection').click(function() {
+                testConnection();
+            });
+            
+            $('#refresh-status').click(function() {
+                loadCurrentSchema();
+            });
+        });
+        
+        function loadCurrentSchema() {
+            $.post('../router.php?controller=schema', {
+                action: 'get'
+            }, function(response) {
+                const data = JSON.parse(response);
+                if (data.success) {
+                    updateSchemaStatus(data.schema);
+                }
+            });
+        }
+        
+        function updateSchemaStatus(activeSchema) {
+            $('.schema-card').removeClass('active');
+            $('.status-indicator').removeClass('status-active').addClass('status-inactive');
+            
+            $(`#card-${activeSchema}`).addClass('active');
+            $(`#status-${activeSchema}`).removeClass('status-inactive').addClass('status-active');
+        }
+        
+        function switchSchema(schema) {
+            showAlert('info', `Switching to ${schema}...`);
+            
+            $.post('../router.php?controller=schema', {
+                action: 'switch',
+                schema: schema
+            }, function(response) {
+                const data = JSON.parse(response);
+                if (data.success) {
+                    if (data.restart_required) {
+                        showAlert('warning', data.message + '<br><br><strong>Run:</strong> <code>docker compose restart</code>');
+                    } else {
+                        showAlert('success', data.message);
+                        updateSchemaStatus(schema);
+                    }
+                } else {
+                    showAlert('danger', data.message);
+                }
+            });
+        }
+        
+        function testConnection() {
+            showAlert('info', 'Testing connection...');
+            
+            $.post('../router.php?controller=get1', {
+                page: 1
+            }, function(response) {
+                try {
+                    const data = JSON.parse(response);
+                    if (data && data.length > 0) {
+                        $('#connection-result').html(`
+                            <div class="alert alert-success">
+                                <strong>Connection Test Successful!</strong><br>
+                                Retrieved ${data.length} records from new_table
+                            </div>
+                        `);
+                    } else {
+                        $('#connection-result').html(`
+                            <div class="alert alert-warning">
+                                <strong>Connection OK but no data found</strong><br>
+                                The table might be empty or not exist in this schema
+                            </div>
+                        `);
+                    }
+                } catch (e) {
+                    $('#connection-result').html(`
+                        <div class="alert alert-danger">
+                            <strong>Connection Test Failed</strong><br>
+                            ${response}
+                        </div>
+                    `);
+                }
+            });
+        }
+        
+        function showAlert(type, message) {
+            const alertHtml = `
+                <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                    ${message}
+                    <button type="button" class="close" data-dismiss="alert">
+                        <span>&times;</span>
+                    </button>
+                </div>
+            `;
+            $('#alert-container').html(alertHtml);
+            
+            setTimeout(() => {
+                $('.alert').alert('close');
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

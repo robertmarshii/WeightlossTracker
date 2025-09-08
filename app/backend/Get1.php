@@ -15,7 +15,8 @@ class Get1
 
     public function Get()
     {
-        $sqlQuery = "SELECT * from new_table ";
+        $schema = Database::getSchema();
+        $sqlQuery = "SELECT id, val FROM " . $schema . ".test_table ORDER BY id";
                             //return $sqlQuery;
         $statement = $this->_dbHandle->prepare($sqlQuery); // prepare a PDO statement
         $statement->execute(); // execute the PDO statement

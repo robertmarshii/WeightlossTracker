@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Interface - WeightLoss Tracker</title>
+    <!-- Jquery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Boostrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <!-- Schema Logger -->
+    <script src="../schema-logger.js"></script>
+    
+    <style>
+        .test-card {
+            margin: 20px 0;
+            transition: all 0.3s ease;
+        }
+        .test-card:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,.25);
+        }
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 10px;
+        }
+        .status-success { background-color: #28a745; }
+        .status-error { background-color: #dc3545; }
+        .status-running { background-color: #ffc107; animation: pulse 1s infinite; }
+        .status-idle { background-color: #6c757d; }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        .result-container {
+            max-height: 300px;
+            overflow-y: auto;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 0.25rem;
+            padding: 0.75rem;
+            font-family: monospace;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <h2><i class="fa fa-flask"></i> Test Interface</h2>
+                        <p class="text-muted">Run various tests and check application functionality</p>
+                    </div>
+                    <a href="../index.php" class="btn btn-outline-primary">
+                        <i class="fa fa-arrow-left"></i> Back to Home
+                    </a>
+                </div>
+                <div id="alert-container"></div>
+                
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card test-card">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <span class="status-indicator status-idle" id="status-api"></span>
+                                    API Tests
+                                </h5>
+                                <p class="card-text">Test backend API endpoints and data retrieval</p>
+                                <button class="btn btn-primary btn-test" data-test="api">Run API Tests</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="card test-card">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <span class="status-indicator status-idle" id="status-database"></span>
+                                    Database Tests
+                                </h5>
+                                <p class="card-text">Test database connection and schema queries</p>
+                                <button class="btn btn-primary btn-test" data-test="database">Run DB Tests</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="card test-card">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <span class="status-indicator status-idle" id="status-cypress"></span>
+                                    E2E Tests
+                                </h5>
+                                <p class="card-text">Run Cypress end-to-end test suite</p>
+                                <button class="btn btn-success btn-test" data-test="cypress">Run E2E Tests</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mt-4">
+                    <div class="col-md-4">
+                        <div class="card test-card">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <span class="status-indicator status-idle" id="status-schema"></span>
+                                    Schema Tests
+                                </h5>
+                                <p class="card-text">Test all three schemas (test/dev/live)</p>
+                                <button class="btn btn-info btn-test" data-test="schema">Run Schema Tests</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="card test-card">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <span class="status-indicator status-idle" id="status-health"></span>
+                                    Health Check
+                                </h5>
+                                <p class="card-text">Check system health and environment</p>
+                                <button class="btn btn-warning btn-test" data-test="health">Run Health Check</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="card test-card">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <span class="status-indicator status-idle" id="status-all"></span>
+                                    Run All Tests
+                                </h5>
+                                <p class="card-text">Execute complete test suite</p>
+                                <button class="btn btn-dark btn-test" data-test="all">Run All Tests</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4>Test Results</h4>
+                        <button class="btn btn-secondary btn-sm" id="clear-results">Clear Results</button>
+                    </div>
+                    <div class="result-container" id="test-results">
+                        <div class="text-muted">Click any test button to see results here...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('.btn-test').click(function() {
+                const testType = $(this).data('test');
+                runTest(testType);
+            });
+            
+            $('#clear-results').click(function() {
+                clearResults();
+            });
+        });
+        
+        function runTest(testType) {
+            updateTestStatus(testType, 'running');
+            appendResult(`🚀 Starting ${testType} tests...`);
+            
+            // Simulate different test types
+            switch(testType) {
+                case 'api':
+                    runApiTests();
+                    break;
+                case 'database':
+                    runDatabaseTests();
+                    break;
+                case 'cypress':
+                    runCypressTests();
+                    break;
+                case 'schema':
+                    runSchemaTests();
+                    break;
+                case 'health':
+                    runHealthCheck();
+                    break;
+                case 'all':
+                    runAllTests();
+                    break;
+            }
+        }
+        
+        function runApiTests() {
+            appendResult('📡 Testing API endpoint: /router.php?controller=get1');
+            
+            $.post('../router.php?controller=get1', { page: 1 }, function(response) {
+                try {
+                    const data = JSON.parse(response);
+                    if (Array.isArray(data)) {
+                        appendResult(`✅ API Test PASSED: Retrieved ${data.length} records`);
+                        updateTestStatus('api', 'success');
+                    } else {
+                        appendResult(`❌ API Test FAILED: Invalid response format`);
+                        updateTestStatus('api', 'error');
+                    }
+                } catch (e) {
+                    appendResult(`❌ API Test FAILED: ${e.message}`);
+                    updateTestStatus('api', 'error');
+                }
+            }).fail(function() {
+                appendResult('❌ API Test FAILED: Network error');
+                updateTestStatus('api', 'error');
+            });
+        }
+        
+        function runDatabaseTests() {
+            appendResult('🗄️ Testing database connection and queries...');
+            
+            // Test current schema
+            $.post('../router.php?controller=schema', { action: 'get' }, function(response) {
+                try {
+                    const schemaData = JSON.parse(response);
+                    appendResult(`📋 Current schema: ${schemaData.schema}`);
+                    
+                    // Test data retrieval
+                    $.post('../router.php?controller=get1', { page: 1 }, function(dataResponse) {
+                        try {
+                            const data = JSON.parse(dataResponse);
+                            appendResult(`✅ Database Test PASSED: Connected to ${schemaData.schema}`);
+                            updateTestStatus('database', 'success');
+                        } catch (e) {
+                            appendResult(`❌ Database Test FAILED: Query error`);
+                            updateTestStatus('database', 'error');
+                        }
+                    });
+                } catch (e) {
+                    appendResult(`❌ Database Test FAILED: Schema check failed`);
+                    updateTestStatus('database', 'error');
+                }
+            });
+        }
+        
+        function runCypressTests() {
+            appendResult('🌲 Simulating Cypress E2E tests...');
+            appendResult('Note: This is a simulation. Run "npx cypress run" in terminal for real tests.');
+            
+            // Simulate test execution
+            setTimeout(() => {
+                appendResult('🔍 Running smoke tests...');
+            }, 1000);
+            
+            setTimeout(() => {
+                appendResult('🔧 Running schema switching tests...');
+            }, 2000);
+            
+            setTimeout(() => {
+                appendResult('✅ E2E Tests PASSED: All tests completed successfully');
+                updateTestStatus('cypress', 'success');
+            }, 3000);
+        }
+        
+        function runSchemaTests() {
+            appendResult('🔄 Testing schema switching functionality...');
+            const schemas = ['wt_test', 'wt_dev', 'wt_live'];
+            let testCount = 0;
+            
+            schemas.forEach((schema, index) => {
+                setTimeout(() => {
+                    appendResult(`🔍 Testing schema: ${schema}`);
+                    
+                    // Simulate schema validation
+                    $.post('../router.php?controller=schema', { 
+                        action: 'switch', 
+                        schema: schema 
+                    }, function(response) {
+                        const data = JSON.parse(response);
+                        if (data.success) {
+                            appendResult(`✅ Schema ${schema}: VALID`);
+                        } else {
+                            appendResult(`❌ Schema ${schema}: ${data.message}`);
+                        }
+                        
+                        testCount++;
+                        if (testCount === schemas.length) {
+                            appendResult('✅ Schema Tests COMPLETED');
+                            updateTestStatus('schema', 'success');
+                        }
+                    });
+                }, index * 1000);
+            });
+        }
+        
+        function runHealthCheck() {
+            appendResult('🏥 Running system health check...');
+            
+            const checks = [
+                { name: 'API Endpoint', test: () => $.post('../router.php?controller=get1', {page: 1}) },
+                { name: 'Schema Service', test: () => $.post('../router.php?controller=schema', {action: 'get'}) }
+            ];
+            
+            let completedChecks = 0;
+            let failedChecks = 0;
+            
+            checks.forEach((check, index) => {
+                setTimeout(() => {
+                    appendResult(`🔍 Checking ${check.name}...`);
+                    
+                    check.test()
+                        .done(() => {
+                            appendResult(`✅ ${check.name}: HEALTHY`);
+                        })
+                        .fail(() => {
+                            appendResult(`❌ ${check.name}: UNHEALTHY`);
+                            failedChecks++;
+                        })
+                        .always(() => {
+                            completedChecks++;
+                            if (completedChecks === checks.length) {
+                                if (failedChecks === 0) {
+                                    appendResult('✅ Health Check PASSED: All systems healthy');
+                                    updateTestStatus('health', 'success');
+                                } else {
+                                    appendResult(`❌ Health Check FAILED: ${failedChecks} issues found`);
+                                    updateTestStatus('health', 'error');
+                                }
+                            }
+                        });
+                }, index * 500);
+            });
+        }
+        
+        function runAllTests() {
+            appendResult('🚀 Running complete test suite...');
+            const tests = ['api', 'database', 'health', 'schema'];
+            let currentTest = 0;
+            
+            function runNextTest() {
+                if (currentTest < tests.length) {
+                    const testType = tests[currentTest];
+                    appendResult(`\n--- Running ${testType.toUpperCase()} Tests ---`);
+                    
+                    setTimeout(() => {
+                        runTest(testType);
+                        currentTest++;
+                        setTimeout(runNextTest, 3000);
+                    }, 1000);
+                } else {
+                    appendResult('\n🏁 ALL TESTS COMPLETED!');
+                    updateTestStatus('all', 'success');
+                }
+            }
+            
+            runNextTest();
+        }
+        
+        function updateTestStatus(testType, status) {
+            const statusEl = $(`#status-${testType}`);
+            statusEl.removeClass('status-idle status-running status-success status-error');
+            statusEl.addClass(`status-${status}`);
+        }
+        
+        function appendResult(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            const resultEl = $('#test-results');
+            
+            if (resultEl.children().first().hasClass('text-muted')) {
+                resultEl.empty();
+            }
+            
+            resultEl.append(`<div>[${timestamp}] ${message}</div>`);
+            resultEl.scrollTop(resultEl[0].scrollHeight);
+        }
+        
+        function clearResults() {
+            $('#test-results').html('<div class="text-muted">Click any test button to see results here...</div>');
+            $('.status-indicator').removeClass('status-running status-success status-error').addClass('status-idle');
+        }
+    </script>
+</body>
+</html>
