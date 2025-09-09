@@ -4,9 +4,9 @@ describe('Schema Switching Tests', () => {
 
   before(() => {
     // Store original schema to restore after tests
-    cy.request('POST', '/router.php?controller=schema', { action: 'get' })
+    cy.request({ method: 'POST', url: '/router.php?controller=schema', form: true, body: { action: 'get' } })
       .then((resp) => {
-        const data = JSON.parse(resp.body);
+        const data = typeof resp.body === 'string' ? JSON.parse(resp.body) : resp.body;
         originalSchema = data.schema;
       });
   });
@@ -14,10 +14,10 @@ describe('Schema Switching Tests', () => {
   after(() => {
     // Restore original schema
     if (originalSchema) {
-      cy.request('POST', '/router.php?controller=schema', { 
+      cy.request({ method: 'POST', url: '/router.php?controller=schema', form: true, body: { 
         action: 'switch', 
         schema: originalSchema 
-      });
+      }});
     }
   });
 
@@ -55,7 +55,7 @@ describe('Schema Switching Tests', () => {
       cy.get('#connection-result').should('not.contain', 'Connection Test Failed');
       
       // Verify API call with new schema works
-      cy.request('POST', '/router.php?controller=get1', { page: 1 })
+      cy.request({ method: 'POST', url: '/router.php?controller=get1', form: true, body: { page: 1 } })
         .then((resp) => {
           expect(resp.status).to.eq(200);
           // Should return valid JSON (array or error message)
@@ -67,27 +67,27 @@ describe('Schema Switching Tests', () => {
   it('validates schema switching API endpoints', () => {
     schemas.forEach((schema) => {
       // Test schema switching via API
-      cy.request('POST', '/router.php?controller=schema', { 
+      cy.request({ method: 'POST', url: '/router.php?controller=schema', form: true, body: { 
         action: 'switch', 
         schema: schema 
-      }).then((resp) => {
+      }}).then((resp) => {
         expect(resp.status).to.eq(200);
-        const data = JSON.parse(resp.body);
+        const data = typeof resp.body === 'string' ? JSON.parse(resp.body) : resp.body;
         expect(data.success).to.be.true;
         expect(data.message).to.contain(schema);
       });
 
       // Verify the schema was actually changed
-      cy.request('POST', '/router.php?controller=schema', { action: 'get' })
+      cy.request({ method: 'POST', url: '/router.php?controller=schema', form: true, body: { action: 'get' } })
         .then((resp) => {
           expect(resp.status).to.eq(200);
-          const data = JSON.parse(resp.body);
+          const data = typeof resp.body === 'string' ? JSON.parse(resp.body) : resp.body;
           expect(data.success).to.be.true;
           expect(data.schema).to.eq(schema);
         });
 
       // Test that data can be retrieved from new_table with current schema
-      cy.request('POST', '/router.php?controller=get1', { page: 1 })
+      cy.request({ method: 'POST', url: '/router.php?controller=get1', form: true, body: { page: 1 } })
         .then((resp) => {
           expect(resp.status).to.eq(200);
           // Response should be valid JSON
@@ -100,11 +100,12 @@ describe('Schema Switching Tests', () => {
     cy.request({
       method: 'POST',
       url: '/router.php?controller=schema',
+      form: true,
       body: { action: 'switch', schema: 'invalid_schema' },
       failOnStatusCode: false
     }).then((resp) => {
       expect(resp.status).to.eq(200);
-      const data = JSON.parse(resp.body);
+      const data = typeof resp.body === 'string' ? JSON.parse(resp.body) : resp.body;
       expect(data.success).to.be.false;
       expect(data.message).to.contain('Invalid schema name');
     });

@@ -53,6 +53,16 @@ CREATE TABLE wt_dev.goals (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- User profile table for wt_dev
+CREATE TABLE wt_dev.user_profiles (
+    user_id INTEGER PRIMARY KEY REFERENCES wt_dev.users(id) ON DELETE CASCADE,
+    height_cm INTEGER,
+    body_frame VARCHAR(10), -- small | medium | large
+    age INTEGER,
+    activity_level VARCHAR(20), -- e.g., sedentary, light, moderate, very, athlete
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Seed basic development data for wt_dev (minimal, clean data for development)
 INSERT INTO wt_dev.users (email, first_name, last_name, is_verified) VALUES
     ('robertmarshgb@gmail.com', 'Robert', 'Marsh', true),

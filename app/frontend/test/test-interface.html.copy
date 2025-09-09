@@ -55,8 +55,6 @@
         .card-title h5 {
             font-size: 1.1rem;
         }
-        /* Tighter spacing for dynamic Cypress spec list */
-        #specs-list .list-group-item { padding: .25rem; }
     </style>
 </head>
 
@@ -65,7 +63,7 @@
         <div class="row">
             <div class="col-12">
                 <div class="d-flex justify-content-end align-items-center mb-3">
-                    <a id="back-home" href="#" class="btn btn-outline-primary">
+                    <a href="../index.php" class="btn btn-outline-primary">
                         <i class="fa fa-arrow-left"></i> Back to Home
                     </a>
                 </div>
@@ -75,21 +73,81 @@
                     <i class="fa fa-flask"></i> Tests
                 </h3>
                 
-                <div class="mb-4">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h5 class="mb-0"><i class="fa fa-list"></i> Cypress Specs</h5>
-                        <div>
-                          <button class="btn btn-sm btn-success" id="run-all-specs"><i class="fa fa-play"></i> Run All</button>
-                          <input type="text" id="spec-filter" class="form-control form-control-sm d-inline-block ml-2" style="width: 260px;" placeholder="Filter specs..." />
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="card test-card">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <span class="status-indicator status-idle" id="status-api"></span>
+                                    API Tests
+                                </h5>
+                                <button class="btn btn-primary btn-test" data-test="api">Run API Tests</button>
+                            </div>
                         </div>
                     </div>
-                    <div id="specs-empty" class="text-muted small" style="display:none;">No specs found. Start the local watcher: npm run ui:cypress:watch</div>
-                    <div id="specs-scroll" style="max-height: 180px; overflow-y: auto;">
-                      <div id="specs-list" class="list-group"></div>
+                    
+                    <div class="col-md-3">
+                        <div class="card test-card">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <span class="status-indicator status-idle" id="status-database"></span>
+                                    Database Tests
+                                </h5>
+                                <button class="btn btn-primary btn-test" data-test="database">Run DB Tests</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3">
+                        <div class="card test-card">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <span class="status-indicator status-idle" id="status-cypress"></span>
+                                    E2E Tests
+                                </h5>
+                                <button class="btn btn-success btn-test" data-test="cypress">Run E2E Tests</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3">
+                        <div class="card test-card">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <span class="status-indicator status-idle" id="status-schema"></span>
+                                    Schema Tests
+                                </h5>
+                                <button class="btn btn-info btn-test" data-test="schema">Run Schema Tests</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
                 
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="card test-card">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <span class="status-indicator status-idle" id="status-health"></span>
+                                    Health Check
+                                </h5>
+                                <button class="btn btn-warning btn-test" data-test="health">Run Health Check</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3">
+                        <div class="card test-card">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <span class="status-indicator status-idle" id="status-all"></span>
+                                    Run All Tests
+                                </h5>
+                                <button class="btn btn-dark btn-test" data-test="all">Run All Tests</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 
                 <h3 class="mt-4 mb-3">
                     <i class="fa fa-cogs"></i> Functions
@@ -137,10 +195,6 @@
 
     <script>
         $(document).ready(function() {
-            // Decide where Back/Home should go based on login status
-            $.ajax({ url: '../auth_gatekeeper.php', method: 'GET' })
-              .done(function(){ $('#back-home').attr('href', '../dashboard.php'); })
-              .fail(function(){ $('#back-home').attr('href', '../index.php'); });
             $('.btn-test').click(function() {
                 const testType = $(this).data('test');
                 runTest(testType);
@@ -164,7 +218,7 @@
                     runDatabaseTests();
                     break;
                 case 'cypress':
-                    runCypressTestsBridge();
+                    runCypressTests();
                     break;
                 case 'schema':
                     runSchemaTests();
@@ -461,47 +515,6 @@
             });
         }
 
-        // Cypress bridge: requires `npm run ui:cypress:watch` running locally
-        let cypressPoll = null;
-        function runCypressTestsBridge() {
-            appendResult('Triggering Cypress via UI bridge...');
-            updateTestStatus('cypress', 'running');
-            $.post('cypress-runner.php?action=start', { spec: 'all' })
-              .done(() => {
-                appendResult('Cypress run started. Watching for results...');
-                if (cypressPoll) clearInterval(cypressPoll);
-                cypressPoll = setInterval(pollCypressStatus, 1500);
-              })
-              .fail(() => {
-                appendResult('Failed to trigger Cypress (bridge not running?)');
-                updateTestStatus('cypress', 'error');
-              });
-        }
-
-        function pollCypressStatus() {
-            $.getJSON('cypress-runner.php?action=status')
-              .done((resp) => {
-                const s = resp.status || {};
-                const dbg = resp.debug || {};
-                if (s.state === 'running') {
-                    appendResult('Cypress: running...');
-                } else if (s.state === 'finished') {
-                    appendResult(`Cypress finished. Exit ${s.exitCode}, Passed ${s.summary?.totalPassed}/${s.summary?.totalTests}, Failed ${s.summary?.totalFailed}`);
-                    updateTestStatus('cypress', s.exitCode === 0 ? 'success' : 'error');
-                    clearInterval(cypressPoll);
-                } else if (s.state === 'error') {
-                    appendResult(`Cypress error: ${s.message || 'unknown'}`);
-                    updateTestStatus('cypress', 'error');
-                    clearInterval(cypressPoll);
-                } else if (dbg.trigger_pending) {
-                    appendResult('Waiting for local Cypress watcher to pick up the trigger... (run: npm run ui:cypress:watch)');
-                }
-              })
-              .fail(() => {
-                appendResult('Error polling Cypress status');
-              });
-        }
-
         function showAlert(message, type) {
             const alertClass = `alert-${type}`;
             const alertHtml = `
@@ -522,128 +535,6 @@
                 }, 5000);
             }
         }
-
-        // Dynamic Cypress spec list
-        (function initSpecs(){
-          function renderSpecs(list){
-            const $list = $('#specs-list');
-            const $empty = $('#specs-empty');
-            $list.empty();
-            if (!list || list.length === 0){
-              $empty.show();
-              return;
-            }
-            $empty.hide();
-            list.forEach((s, idx) => {
-              const id = `spec-${idx}`;
-              const safe = $('<div/>').text(s.path).html();
-              const groupBadge = s.group === 'e2e_prod' ? '<span class="badge badge-warning ml-2">prod</span>' : '';
-              const item = `
-                <div class="list-group-item d-flex justify-content-between align-items-center">
-                  <div class="text-truncate" style="max-width: 70%;">
-                    <code title="${safe}">${safe}</code> ${groupBadge}
-                  </div>
-                  <div>
-                    <button class="btn btn-sm btn-outline-primary run-spec" data-spec="${safe}"><i class="fa fa-play"></i> Run</button>
-                  </div>
-                </div>`;
-              $list.append(item);
-            });
-          }
-
-          function applyFilter(){
-            const q = ($('#spec-filter').val()||'').toLowerCase();
-            $('#specs-list .list-group-item').each(function(){
-              const txt = $(this).find('code').text().toLowerCase();
-              $(this).toggle(txt.indexOf(q) !== -1);
-            });
-          }
-
-          function loadSpecs(){
-            $.getJSON('cypress-runner.php?action=specs')
-              .done(function(data){
-                renderSpecs((data && data.specs) || (data && data.specs === undefined && data.runs) || []);
-                applyFilter();
-              })
-              .fail(function(){
-                $('#specs-empty').show().text('Failed to load specs (start watcher with npm run ui:cypress:watch)');
-              });
-          }
-
-          $(document).on('click', '.run-spec', function(){
-            const spec = $(this).data('spec');
-            try { appendResult(`Triggering Cypress: ${spec}`); } catch(e) {}
-            $.post('cypress-runner.php?action=start', { spec: spec })
-              .done(function(){
-                try { appendResult('Cypress run started. Watching for results...'); } catch(e) {}
-                if (cypressPoll) clearInterval(cypressPoll);
-                if (typeof pollCypressStatus === 'function') cypressPoll = setInterval(pollCypressStatus, 1500);
-              })
-              .fail(function(){
-                try { appendResult('Failed to trigger Cypress (bridge not running?)'); } catch(e) {}
-              });
-          });
-
-          $('#run-all-specs').on('click', function(){
-            try { appendResult('Triggering Cypress: All specs'); } catch(e) {}
-            $.post('cypress-runner.php?action=start', { spec: 'all' })
-              .done(function(){
-                try { appendResult('Cypress run started. Watching for results...'); } catch(e) {}
-                if (cypressPoll) clearInterval(cypressPoll);
-                if (typeof pollCypressStatus === 'function') cypressPoll = setInterval(pollCypressStatus, 1500);
-              })
-              .fail(function(){ try { appendResult('Failed to trigger Cypress (bridge not running?)'); } catch(e) {} });
-          });
-
-          $('#spec-filter').on('input', applyFilter);
-
-          loadSpecs();
-          // refresh specs occasionally
-          setInterval(loadSpecs, 15000);
-        })();
-</script>
-</body>
-<script>
-// Override runTest to route to Cypress bridge specs
-(function(){
-  function triggerCypress(label, specPattern, statusId){
-    try { updateTestStatus(statusId, 'running'); } catch(e) {}
-    try { appendResult(`Triggering Cypress: ${label} (${specPattern})`); } catch(e) {}
-    $.post('cypress-runner.php?action=start', { spec: specPattern })
-      .done(function(){
-        try { appendResult('Cypress run started. Watching for results...'); } catch(e) {}
-        if (typeof cypressPoll !== 'undefined' && cypressPoll) clearInterval(cypressPoll);
-        if (typeof pollCypressStatus === 'function') {
-          cypressPoll = setInterval(pollCypressStatus, 1500);
-        }
-      })
-      .fail(function(){
-        try {
-          appendResult('Failed to trigger Cypress (bridge not running?)');
-          updateTestStatus(statusId, 'error');
-        } catch(e) {}
-      });
-  }
-
-  const prevRunTest = window.runTest;
-  window.runTest = function(testType){
-    switch(testType){
-      case 'api':
-        return triggerCypress('API', 'cypress/e2e/api.cy.js', 'api');
-      case 'database':
-        return triggerCypress('Database (health)', 'cypress/e2e/health.cy.js', 'database');
-      case 'schema':
-        return triggerCypress('Schema', 'cypress/e2e/schema.cy.js', 'schema');
-      case 'health':
-        return triggerCypress('Health', 'cypress/e2e/health.cy.js', 'health');
-      case 'cypress':
-      case 'all':
-        return triggerCypress('All', 'cypress/e2e/*.cy.js', 'all');
-      default:
-        if (typeof prevRunTest === 'function') return prevRunTest(testType);
-    }
-  };
-})();
-</script>
+    </script>
 </body>
 </html>

@@ -9,21 +9,46 @@ class AuthManager {
         // For development, we'll log to a file instead of sending actual emails
         // In production, configure with SMTP settings
         $logMessage = "EMAIL TO: $to\nSUBJECT: $subject\nMESSAGE:\n$message\n" . str_repeat("-", 50) . "\n";
-        file_put_contents('/var/app/backend/email_log.txt', $logMessage, FILE_APPEND | LOCK_EX);
+        self::appendToEmailLog($logMessage);
         
         // TODO: Implement actual email sending in production
         // mail($to, $subject, $message, $headers);
         
         return true;
     }
+
+    private static function appendToEmailLog($text)
+    {
+        $path = '/var/app/backend/email_log.txt';
+        // Prune the log if it grows too large
+        self::pruneLog($path, 1048576, 2000); // 1MB or keep last 2000 lines
+        file_put_contents($path, $text, FILE_APPEND | LOCK_EX);
+    }
+
+    private static function pruneLog($path, $maxBytes, $keepLines)
+    {
+        if (!file_exists($path)) { return; }
+        $size = @filesize($path);
+        if ($size === false) { return; }
+        if ($size <= $maxBytes) { return; }
+        // Keep only the last N lines
+        $lines = @file($path, FILE_IGNORE_NEW_LINES);
+        if ($lines === false) { return; }
+        $total = count($lines);
+        if ($total > $keepLines) {
+            $tail = array_slice($lines, -$keepLines);
+            @file_put_contents($path, implode(PHP_EOL, $tail) . PHP_EOL, LOCK_EX);
+        }
+    }
     
     public static function sendLoginCode($email) {
         try {
-            require_once('/var/app/backend/Database.php');
+            require_once('/var/app/backend/Config.php');
             $db = Database::getInstance()->getDbConnection();
+            $schema = Database::getSchema();
             
             // Check if user exists
-            $stmt = $db->prepare("SELECT id FROM users WHERE email = ?");
+            $stmt = $db->prepare("SELECT id FROM {$schema}.users WHERE email = ?");
             $stmt->execute([$email]);
             $user = $stmt->fetch();
             
@@ -33,14 +58,22 @@ class AuthManager {
             
             // Generate and store verification code
             $code = self::generateCode();
+            // Deterministic code for E2E in local/test conditions
+            $httpHost = $_SERVER['HTTP_HOST'] ?? '';
+            $schemaNow = Database::getSchema();
+            $isLocal = (strpos($httpHost, '127.0.0.1') === 0) || (strpos($httpHost, 'localhost') === 0);
+            $isTestEmail = ($email === 'test@dev.com') || preg_match('/^(e2e|cypress)\+.+@/i', $email) || preg_match('/@example\.test$/i', $email);
+            if (($isLocal || $schemaNow === 'wt_test') && $isTestEmail) {
+                $code = '111111';
+            }
             $expiresAt = date('Y-m-d H:i:s', strtotime('+15 minutes'));
             
             // Remove any existing codes for this email
-            $stmt = $db->prepare("DELETE FROM auth_codes WHERE email = ?");
+            $stmt = $db->prepare("DELETE FROM {$schema}.auth_codes WHERE email = ?");
             $stmt->execute([$email]);
             
             // Insert new code
-            $stmt = $db->prepare("INSERT INTO auth_codes (email, code, expires_at, created_at) VALUES (?, ?, ?, NOW())");
+            $stmt = $db->prepare("INSERT INTO {$schema}.auth_codes (email, code, code_type, expires_at, created_at) VALUES (?, ?, 'login', ?, NOW())");
             $stmt->execute([$email, $code, $expiresAt]);
             
             // Send email
@@ -61,25 +94,34 @@ class AuthManager {
     
     public static function createAccount($email, $firstName, $lastName) {
         try {
-            require_once('/var/app/backend/Database.php');
+            require_once('/var/app/backend/Config.php');
             $db = Database::getInstance()->getDbConnection();
+            $schema = Database::getSchema();
             
             // Check if user already exists
-            $stmt = $db->prepare("SELECT id FROM users WHERE email = ?");
+            $stmt = $db->prepare("SELECT id FROM {$schema}.users WHERE email = ?");
             $stmt->execute([$email]);
             if ($stmt->fetch()) {
                 return ['success' => false, 'message' => 'An account with this email already exists'];
             }
             
             // Create user account
-            $stmt = $db->prepare("INSERT INTO users (email, first_name, last_name, created_at) VALUES (?, ?, ?, NOW())");
+            $stmt = $db->prepare("INSERT INTO {$schema}.users (email, first_name, last_name, created_at) VALUES (?, ?, ?, NOW())");
             $stmt->execute([$email, $firstName, $lastName]);
             
             // Generate and store verification code
             $code = self::generateCode();
+            // For Cypress tests: allow deterministic code for specific addresses
+            $httpHost = $_SERVER['HTTP_HOST'] ?? '';
+            $schemaNow = Database::getSchema();
+            $isLocal = (strpos($httpHost, '127.0.0.1') === 0) || (strpos($httpHost, 'localhost') === 0);
+            $isTestEmail = ($email === 'test@dev.com') || preg_match('/^(e2e|cypress)\+.+@/i', $email) || preg_match('/@example\.test$/i', $email);
+            if (($isLocal || $schemaNow === 'wt_test') && $isTestEmail) {
+                $code = '111111';
+            }
             $expiresAt = date('Y-m-d H:i:s', strtotime('+15 minutes'));
             
-            $stmt = $db->prepare("INSERT INTO auth_codes (email, code, expires_at, created_at) VALUES (?, ?, ?, NOW())");
+            $stmt = $db->prepare("INSERT INTO {$schema}.auth_codes (email, code, code_type, expires_at, created_at) VALUES (?, ?, 'signup', ?, NOW())");
             $stmt->execute([$email, $code, $expiresAt]);
             
             // Send welcome email with verification code
@@ -100,14 +142,15 @@ class AuthManager {
     
     public static function verifyLoginCode($email, $code) {
         try {
-            require_once('/var/app/backend/Database.php');
+            require_once('/var/app/backend/Config.php');
             $db = Database::getInstance()->getDbConnection();
+            $schema = Database::getSchema();
             
             // Check if code is valid and not expired
             $stmt = $db->prepare("
                 SELECT ac.id, u.id as user_id, u.first_name, u.last_name 
-                FROM auth_codes ac 
-                JOIN users u ON u.email = ac.email 
+                FROM {$schema}.auth_codes ac 
+                JOIN {$schema}.users u ON u.email = ac.email 
                 WHERE ac.email = ? AND ac.code = ? AND ac.expires_at > NOW()
             ");
             $stmt->execute([$email, $code]);
@@ -118,7 +161,7 @@ class AuthManager {
             }
             
             // Delete the used code
-            $stmt = $db->prepare("DELETE FROM auth_codes WHERE id = ?");
+            $stmt = $db->prepare("DELETE FROM {$schema}.auth_codes WHERE id = ?");
             $stmt->execute([$result['id']]);
             
             // Create session

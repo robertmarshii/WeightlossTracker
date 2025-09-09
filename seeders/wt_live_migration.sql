@@ -53,6 +53,16 @@ CREATE TABLE IF NOT EXISTS wt_live.goals (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Create user_profiles table if it doesn't exist
+CREATE TABLE IF NOT EXISTS wt_live.user_profiles (
+    user_id INTEGER PRIMARY KEY,
+    height_cm INTEGER,
+    body_frame VARCHAR(10),
+    age INTEGER,
+    activity_level VARCHAR(20),
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Add foreign key constraints if they don't exist (safe way)
 -- Note: This uses a more complex pattern because PostgreSQL doesn't have 
 -- "ADD CONSTRAINT IF NOT EXISTS" until version 9.6+
@@ -87,6 +97,7 @@ CREATE INDEX IF NOT EXISTS idx_weight_entries_user_id ON wt_live.weight_entries(
 CREATE INDEX IF NOT EXISTS idx_weight_entries_date ON wt_live.weight_entries(entry_date);
 CREATE INDEX IF NOT EXISTS idx_goals_user_id ON wt_live.goals(user_id);
 CREATE INDEX IF NOT EXISTS idx_goals_active ON wt_live.goals(is_active);
+CREATE INDEX IF NOT EXISTS idx_user_profiles_user_id ON wt_live.user_profiles(user_id);
 
 -- Example of how to safely add new columns (uncomment when needed):
 -- DO $$ 

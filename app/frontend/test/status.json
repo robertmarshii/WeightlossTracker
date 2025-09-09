@@ -1,0 +1,15 @@
+{
+  "state": "finished",
+  "finishedAt": "2025-09-09T07:36:40.080Z",
+  "exitCode": 0,
+  "spec": "all",
+  "summary": {
+    "totalTests": 22,
+    "totalPassed": 22,
+    "totalFailed": 0
+  },
+  "debug": {
+    "runner": "node-api",
+    "lastLogTail": "[2025-09-09T07:00:04.015Z] Using Cypress Node API\n[2025-09-09T07:00:12.106Z] Using Cypress Node API\n[2025-09-09T07:04:18.354Z] Using Cypress Node API\n[2025-09-09T07:05:09.797Z] Using Cypress Node API\n[2025-09-09T07:05:21.857Z] Using Cypress Node API\n[2025-09-09T07:07:23.947Z] Using Cypress Node API\n[2025-09-09T07:13:56.632Z] Using Cypress Node API\n[2025-09-09T07:35:56.177Z] Using Cypress Node API\n"
+  }
+}

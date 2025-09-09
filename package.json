@@ -8,8 +8,11 @@
   "scripts": {
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
+    "cypress:run:json": "cypress run --reporter json --reporter-options output=cypress/results/last.json",
+    "ui:cypress:watch": "node scripts/ui-cypress-runner.js",
     "test:e2e": "cypress run",
-    "test:db": "cypress run --spec cypress/e2e/test-page.cy.js"
+    "test:db": "cypress run --spec cypress/e2e/test-page.cy.js",
+    "test:prod": "cypress run --spec 'cypress/e2e_prod/**/*.cy.js'"
   },
   "prepare": "husky"
 }

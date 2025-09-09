@@ -4,7 +4,7 @@ RUN apt-get update && apt-get install -y \
     libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
-RUN docker-php-ext-install pdo pdo_mysql mysqli
+RUN docker-php-ext-install pdo pdo_mysql pdo_pgsql
 
 RUN pecl install xdebug && docker-php-ext-enable xdebug
 

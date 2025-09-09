@@ -1,3 +1,11 @@
+<?php
+// Auto-redirect logged-in users to dashboard
+require_once('/var/app/backend/AuthManager.php');
+if (AuthManager::isLoggedIn()) {
+    header('Location: dashboard.php');
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

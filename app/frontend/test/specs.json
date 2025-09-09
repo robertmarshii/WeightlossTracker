@@ -1,0 +1,70 @@
+{
+  "updatedAt": "2025-09-09T07:39:03.883Z",
+  "specs": [
+    {
+      "group": "e2e",
+      "path": "cypress/e2e/api.cy.js",
+      "name": "api.cy.js"
+    },
+    {
+      "group": "e2e",
+      "path": "cypress/e2e/auth_negative.cy.js",
+      "name": "auth_negative.cy.js"
+    },
+    {
+      "group": "e2e",
+      "path": "cypress/e2e/goals_weights.cy.js",
+      "name": "goals_weights.cy.js"
+    },
+    {
+      "group": "e2e",
+      "path": "cypress/e2e/health.cy.js",
+      "name": "health.cy.js"
+    },
+    {
+      "group": "e2e",
+      "path": "cypress/e2e/login.cy.js",
+      "name": "login.cy.js"
+    },
+    {
+      "group": "e2e",
+      "path": "cypress/e2e/profile.cy.js",
+      "name": "profile.cy.js"
+    },
+    {
+      "group": "e2e",
+      "path": "cypress/e2e/schema-switching.cy.js",
+      "name": "schema-switching.cy.js"
+    },
+    {
+      "group": "e2e",
+      "path": "cypress/e2e/schema.cy.js",
+      "name": "schema.cy.js"
+    },
+    {
+      "group": "e2e",
+      "path": "cypress/e2e/security.cy.js",
+      "name": "security.cy.js"
+    },
+    {
+      "group": "e2e",
+      "path": "cypress/e2e/signup.cy.js",
+      "name": "signup.cy.js"
+    },
+    {
+      "group": "e2e",
+      "path": "cypress/e2e/smoke.cy.js",
+      "name": "smoke.cy.js"
+    },
+    {
+      "group": "e2e",
+      "path": "cypress/e2e/test-page.cy.js",
+      "name": "test-page.cy.js"
+    },
+    {
+      "group": "e2e_prod",
+      "path": "cypress/e2e_prod/security_prod.cy.js",
+      "name": "security_prod.cy.js"
+    }
+  ]
+}
