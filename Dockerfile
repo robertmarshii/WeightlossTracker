@@ -15,9 +15,8 @@ RUN set -eux; \
     docker-php-ext-install -j"$(nproc)" pdo pdo_pgsql pgsql; \
     apk del .build-deps
 
-# Create nginx user and directories
-RUN adduser -D -g 'nginx' nginx && \
-    mkdir -p /run/nginx /var/log/nginx /var/cache/nginx && \
+# Create nginx directories (user already exists from nginx package)
+RUN mkdir -p /run/nginx /var/log/nginx /var/cache/nginx && \
     chown -R nginx:nginx /run/nginx /var/log/nginx /var/cache/nginx
 
 # Install Composer
