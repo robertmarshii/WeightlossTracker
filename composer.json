@@ -1,0 +1,22 @@
+{
+    "name": "weightlosstracker/app",
+    "description": "Weight Loss Tracker Application",
+    "type": "project",
+    "require": {
+        "php": ">=7.4",
+        "sparkpost/sparkpost": "^2.0",
+        "php-http/guzzle7-adapter": "^1.0",
+        "guzzlehttp/guzzle": "^7.0",
+        "nyholm/psr7": "^1.5",
+        "php-http/message": "^1.16",
+        "php-http/message-factory": "^1.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true
+    }
+}

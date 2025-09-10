@@ -11,7 +11,7 @@ if (AuthManager::isLoggedIn()) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weight Loss Tracker</title>
+    <title>Weightloss Tracker</title>
     <!-- jQuery -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <!-- Bootstrap -->
@@ -25,7 +25,7 @@ if (AuthManager::isLoggedIn()) {
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="text-center mb-4">
-                    <h1>Weight Loss Tracker</h1>
+                    <h1>Weightloss Tracker</h1>
                     <p class="lead">Track your fitness journey</p>
                 </div>
 
@@ -137,7 +137,9 @@ if (AuthManager::isLoggedIn()) {
 
         function sendLoginCode() {
             const email = $('#loginEmail').val();
-            showAlert('Sending login code...', 'info');
+            
+            // Show loading message
+            showAlert('📧 Sending your login code via email...', 'info');
             
             $.post('login_router.php?controller=auth', {
                 action: 'send_login_code',
@@ -145,14 +147,19 @@ if (AuthManager::isLoggedIn()) {
             }, function(response) {
                 const data = JSON.parse(response);
                 if (data.success) {
-                    showAlert('Login code sent to your email!', 'success');
+                    showAlert('✅ Login code sent successfully! Check your email inbox (and spam folder). The code is also in the subject line.', 'success');
                     $('#loginForm').hide();
                     $('#verifyLoginForm').show();
+                    
+                    // Show tip after success message finishes (10s + 1s buffer)
+                    setTimeout(() => {
+                        showAlert('💡 Tip: Your 6-digit code is included in the email subject line for easy access!', 'info');
+                    }, 11000);
                 } else {
-                    showAlert(data.message, 'danger');
+                    showAlert('❌ ' + data.message, 'danger');
                 }
             }).fail(function() {
-                showAlert('Network error. Please try again.', 'danger');
+                showAlert('🔌 Network error. Please check your connection and try again.', 'danger');
             });
         }
 
@@ -161,7 +168,7 @@ if (AuthManager::isLoggedIn()) {
             const lastName = $('#signupLastName').val();
             const email = $('#signupEmail').val();
             
-            showAlert('Creating account...', 'info');
+            showAlert('🔄 Creating your account and sending verification code...', 'info');
             
             $.post('login_router.php?controller=auth', {
                 action: 'create_account',
@@ -171,14 +178,19 @@ if (AuthManager::isLoggedIn()) {
             }, function(response) {
                 const data = JSON.parse(response);
                 if (data.success) {
-                    showAlert('Verification code sent to your email!', 'success');
+                    showAlert('✅ Account created! Verification code sent to your email. Check your inbox (and spam folder).', 'success');
                     $('#signupForm').hide();
                     $('#verifySignupForm').show();
+                    
+                    // Show tip after success message finishes (10s + 1s buffer)
+                    setTimeout(() => {
+                        showAlert('💡 Your verification code is in the email subject line!', 'info');
+                    }, 11000);
                 } else {
-                    showAlert(data.message, 'danger');
+                    showAlert('❌ ' + data.message, 'danger');
                 }
             }).fail(function() {
-                showAlert('Network error. Please try again.', 'danger');
+                showAlert('🔌 Network error. Please check your connection and try again.', 'danger');
             });
         }
 
@@ -244,7 +256,15 @@ if (AuthManager::isLoggedIn()) {
             $('#signupCode').val('');
         }
 
-        function showAlert(message, type) {
+        let currentAlertTimeout = null;
+        
+        function showAlert(message, type, duration = null) {
+            // Clear any existing timeout to prevent conflicts
+            if (currentAlertTimeout) {
+                clearTimeout(currentAlertTimeout);
+                currentAlertTimeout = null;
+            }
+            
             const alertClass = `alert-${type}`;
             const alertHtml = `
                 <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
@@ -257,10 +277,23 @@ if (AuthManager::isLoggedIn()) {
             
             $('#alert-container').html(alertHtml);
             
-            if (type === 'success' || type === 'info') {
-                setTimeout(() => {
+            // Set different durations for different message types
+            let autoDismissTime = duration;
+            if (autoDismissTime === null) {
+                if (type === 'success') {
+                    autoDismissTime = 10000; // 10 seconds for success messages
+                } else if (type === 'info') {
+                    autoDismissTime = 8000;  // 8 seconds for info messages
+                } else if (type === 'danger') {
+                    autoDismissTime = 0;     // Don't auto-hide error messages
+                }
+            }
+            
+            if (autoDismissTime > 0) {
+                currentAlertTimeout = setTimeout(() => {
                     $('#alert-container .alert').alert('close');
-                }, 5000);
+                    currentAlertTimeout = null;
+                }, autoDismissTime);
             }
         }
     </script>

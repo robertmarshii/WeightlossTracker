@@ -25,6 +25,8 @@ services:
       - ./app/backend:/var/app/backend
       - ./seeders:/var/app/seeders
       - ./.env:/var/app/.env
+      - .:/var/app/project
+    working_dir: /var/app/project
     networks:
       - web-network
 

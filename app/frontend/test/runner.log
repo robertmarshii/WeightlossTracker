@@ -1,8 +1,783 @@
-[2025-09-09T07:00:04.015Z] Using Cypress Node API
-[2025-09-09T07:00:12.106Z] Using Cypress Node API
-[2025-09-09T07:04:18.354Z] Using Cypress Node API
-[2025-09-09T07:05:09.797Z] Using Cypress Node API
-[2025-09-09T07:05:21.857Z] Using Cypress Node API
-[2025-09-09T07:07:23.947Z] Using Cypress Node API
-[2025-09-09T07:13:56.632Z] Using Cypress Node API
-[2025-09-09T07:35:56.177Z] Using Cypress Node API
+[2025-09-09T22:45:53.218Z] 
+[2025-09-09T22:45:53.719Z] [err] 
+DevTools listening on ws://127.0.0.1:60607/devtools/browser/a78309c0-515f-4b85-a990-fd3ef9d63bdd
+[2025-09-09T22:45:55.757Z] 
+[2025-09-09T22:45:55.774Z] ====================================================================================================
+[2025-09-09T22:45:55.774Z] 
+  (Run Starting)
+
+[2025-09-09T22:45:55.777Z]   ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Cypress:        13.17.0                                                                        │
+  │ Browser:        Electron 118 (headless)                                                        │
+  │ Node Version:   v22.19.0 (C:\Program Files\nodejs\node.exe)                                    │
+  │ Specs:          1 found (api.cy.js)                                                            │
+  │ Searched:       C:\GitKraken\WeightlossTracker\cypress\e2e\api.cy.js                           │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+[2025-09-09T22:45:55.777Z] 
+[2025-09-09T22:45:55.777Z] 
+[2025-09-09T22:45:55.778Z] ────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  api.cy.js                                                                       (1 of 1)
+[2025-09-09T22:45:58.641Z] {
+  "stats": {
+    "suites": 1,
+    "tests": 1,
+    "passes": 1,
+    "pending": 0,
+    "failures": 0,
+    "start": "2025-09-09T22:45:57.953Z",
+    "end": "2025-09-09T22:45:58.641Z",
+    "duration": 688
+  },
+  "tests": [
+    {
+      "title": "returns data from get1",
+      "fullTitle": "API basic returns data from get1",
+      "duration": 665,
+      "currentRetry": 0,
+      "err": {}
+    }
+  ],
+  "pending": [],
+  "failures": [],
+  "passes": [
+    {
+      "title": "returns data from get1",
+      "fullTitle": "API basic returns data from get1",
+      "duration": 665,
+      "currentRetry": 0,
+      "err": {}
+    }
+  ]
+}[2025-09-09T22:45:59.720Z] 
+  (Results)
+[2025-09-09T22:45:59.720Z] 
+[2025-09-09T22:45:59.720Z]   ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        1                                                                                │
+  │ Passing:      1                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        true                                                                             │
+  │ Duration:     0 seconds                                                                        │
+  │ Spec Ran:     api.cy.js                                                                        │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+[2025-09-09T22:45:59.726Z] 
+[2025-09-09T22:45:59.726Z]   (Video)
+
+  -  Video output: C:\GitKraken\WeightlossTracker\cypress\videos\api.cy.js.mp4
+
+[2025-09-09T22:45:59.728Z] 
+[2025-09-09T22:45:59.742Z] ====================================================================================================
+
+[2025-09-09T22:45:59.742Z]   (Run Finished)
+[2025-09-09T22:45:59.743Z] 
+
+[2025-09-09T22:45:59.743Z]        Spec                                              Tests  Passing  Failing  Pending  Skipped  
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ √  api.cy.js                                689ms        1        1        -        -        - │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+    √  All specs passed!                        689ms        1        1        -        -        -  
+[2025-09-09T22:45:59.743Z] 
+[2025-09-09T22:46:03.227Z] 
+[2025-09-09T22:46:03.652Z] [err] 
+DevTools listening on ws://127.0.0.1:58462/devtools/browser/57324ad5-a7e2-411d-935d-bba7804f8087
+[2025-09-09T22:46:05.493Z] 
+[2025-09-09T22:46:05.507Z] ====================================================================================================
+[2025-09-09T22:46:05.507Z] 
+  (Run Starting)
+[2025-09-09T22:46:05.507Z] 
+[2025-09-09T22:46:05.511Z]   ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Cypress:        13.17.0                                                                        │
+  │ Browser:        Electron 118 (headless)                                                        │
+  │ Node Version:   v22.19.0 (C:\Program Files\nodejs\node.exe)                                    │
+  │ Specs:          1 found (api.cy.js)                                                            │
+  │ Searched:       C:\GitKraken\WeightlossTracker\cypress\e2e\api.cy.js                           │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+[2025-09-09T22:46:05.511Z] 
+[2025-09-09T22:46:05.511Z] ────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  api.cy.js                                                                       (1 of 1)
+[2025-09-09T22:46:08.264Z] {
+  "stats": {
+    "suites": 1,
+    "tests": 1,
+    "passes": 1,
+    "pending": 0,
+    "failures": 0,
+    "start": "2025-09-09T22:46:07.535Z",
+    "end": "2025-09-09T22:46:08.264Z",
+    "duration": 729
+  },
+  "tests": [
+    {
+      "title": "returns data from get1",
+      "fullTitle": "API basic returns data from get1",
+      "duration": 709,
+      "currentRetry": 0,
+      "err": {}
+    }
+  ],
+  "pending": [],
+  "failures": [],
+  "passes": [
+    {
+      "title": "returns data from get1",
+      "fullTitle": "API basic returns data from get1",
+      "duration": 709,
+      "currentRetry": 0,
+      "err": {}
+    }
+  ]
+}[2025-09-09T22:46:09.346Z] 
+[2025-09-09T22:46:09.346Z]   (Results)
+[2025-09-09T22:46:09.346Z] 
+[2025-09-09T22:46:09.346Z]   ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        1                                                                                │
+  │ Passing:      1                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        true                                                                             │
+  │ Duration:     0 seconds                                                                        │
+  │ Spec Ran:     api.cy.js                                                                        │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+[2025-09-09T22:46:09.352Z] 
+[2025-09-09T22:46:09.352Z]   (Video)
+
+  -  Video output: C:\GitKraken\WeightlossTracker\cypress\videos\api.cy.js.mp4
+
+[2025-09-09T22:46:09.354Z] 
+[2025-09-09T22:46:09.368Z] ====================================================================================================
+[2025-09-09T22:46:09.368Z] 
+  (Run Finished)
+[2025-09-09T22:46:09.369Z] 
+[2025-09-09T22:46:09.369Z] 
+[2025-09-09T22:46:09.369Z]        Spec                                              Tests  Passing  Failing  Pending  Skipped  
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ √  api.cy.js                                731ms        1        1        -        -        - │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+    √  All specs passed!                        731ms        1        1        -        -        -  
+
+[2025-09-09T22:46:14.336Z] 
+[2025-09-09T22:46:14.786Z] [err] 
+DevTools listening on ws://127.0.0.1:64583/devtools/browser/6d6201e5-406c-431d-b2d1-3929d3fecd17
+[2025-09-09T22:46:17.013Z] 
+[2025-09-09T22:46:17.029Z] ====================================================================================================
+
+[2025-09-09T22:46:17.029Z]   (Run Starting)
+
+[2025-09-09T22:46:17.032Z]   ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Cypress:        13.17.0                                                                        │
+  │ Browser:        Electron 118 (headless)                                                        │
+  │ Node Version:   v22.19.0 (C:\Program Files\nodejs\node.exe)                                    │
+  │ Specs:          1 found (auth_negative.cy.js)                                                  │
+  │ Searched:       C:\GitKraken\WeightlossTracker\cypress\e2e\auth_negative.cy.js                 │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+[2025-09-09T22:46:17.032Z] 
+[2025-09-09T22:46:17.032Z] 
+[2025-09-09T22:46:17.033Z] ────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  auth_negative.cy.js                                                             (1 of 1)
+[2025-09-09T22:46:20.485Z] {
+  "stats": {
+    "suites": 1,
+    "tests": 2,
+    "passes": 2,
+    "pending": 0,
+    "failures": 0,
+    "start": "2025-09-09T22:46:19.139Z",
+    "end": "2025-09-09T22:46:20.485Z",
+    "duration": 1346
+  },
+  "tests": [
+    {
+      "title": "rejects wrong login code",
+      "fullTitle": "Auth negative cases rejects wrong login code",
+      "duration": 1301,
+      "currentRetry": 0,
+      "err": {}
+    },
+    {
+      "title": "rejects account creation with invalid email",
+      "fullTitle": "Auth negative cases rejects account creation with invalid email",
+      "duration": 20,
+      "currentRetry": 0,
+      "err": {}
+    }
+  ],
+  "pending": [],
+  "failures": [],
+  "passes": [
+    {
+      "title": "rejects wrong login code",
+      "fullTitle": "Auth negative cases rejects wrong login code",
+      "duration": 1301,
+      "currentRetry": 0,
+      "err": {}
+    },
+    {
+      "title": "rejects account creation with invalid email",
+      "fullTitle": "Auth negative cases rejects account creation with invalid email",
+      "duration": 20,
+      "currentRetry": 0,
+      "err": {}
+    }
+  ]
+}[2025-09-09T22:46:21.581Z] 
+[2025-09-09T22:46:21.581Z]   (Results)
+[2025-09-09T22:46:21.581Z] 
+[2025-09-09T22:46:21.581Z]   ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        2                                                                                │
+  │ Passing:      2                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        true                                                                             │
+  │ Duration:     1 second                                                                         │
+  │ Spec Ran:     auth_negative.cy.js                                                              │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+[2025-09-09T22:46:21.587Z] 
+[2025-09-09T22:46:21.587Z]   (Video)
+
+  -  Video output: C:\GitKraken\WeightlossTracker\cypress\videos\auth_negative.cy.js.mp4
+
+[2025-09-09T22:46:21.588Z] 
+[2025-09-09T22:46:21.604Z] ====================================================================================================
+
+  (Run Finished)
+[2025-09-09T22:46:21.605Z] 
+
+[2025-09-09T22:46:21.605Z]        Spec                                              Tests  Passing  Failing  Pending  Skipped  
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ √  auth_negative.cy.js                      00:01        2        2        -        -        - │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+    √  All specs passed!                        00:01        2        2        -        -        -  
+
+[2025-09-09T22:46:48.641Z] 
+[2025-09-09T22:46:49.042Z] [err] 
+DevTools listening on ws://127.0.0.1:58812/devtools/browser/cf9f235b-b60e-4f9c-87b1-57b850f15122
+[2025-09-09T22:46:50.879Z] 
+[2025-09-09T22:46:50.894Z] ====================================================================================================
+
+[2025-09-09T22:46:50.894Z]   (Run Starting)
+
+[2025-09-09T22:46:50.897Z]   ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Cypress:        13.17.0                                                                        │
+  │ Browser:        Electron 118 (headless)                                                        │
+  │ Node Version:   v22.19.0 (C:\Program Files\nodejs\node.exe)                                    │
+  │ Specs:          1 found (smoke.cy.js)                                                          │
+  │ Searched:       C:\GitKraken\WeightlossTracker\cypress\e2e\smoke.cy.js                         │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+[2025-09-09T22:46:50.897Z] 
+[2025-09-09T22:46:50.897Z] 
+[2025-09-09T22:46:50.897Z] ────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  smoke.cy.js                                                                     (1 of 1)
+[2025-09-09T22:46:53.697Z] {
+  "stats": {
+    "suites": 1,
+    "tests": 2,
+    "passes": 2,
+    "pending": 0,
+    "failures": 0,
+    "start": "2025-09-09T22:46:52.932Z",
+    "end": "2025-09-09T22:46:53.697Z",
+    "duration": 765
+  },
+  "tests": [
+    {
+      "title": "loads the index page",
+      "fullTitle": "App smoke tests loads the index page",
+      "duration": 570,
+      "currentRetry": 0,
+      "err": {}
+    },
+    {
+      "title": "API get1 returns valid JSON",
+      "fullTitle": "App smoke tests API get1 returns valid JSON",
+      "duration": 169,
+      "currentRetry": 0,
+      "err": {}
+    }
+  ],
+  "pending": [],
+  "failures": [],
+  "passes": [
+    {
+      "title": "loads the index page",
+      "fullTitle": "App smoke tests loads the index page",
+      "duration": 570,
+      "currentRetry": 0,
+      "err": {}
+    },
+    {
+      "title": "API get1 returns valid JSON",
+      "fullTitle": "App smoke tests API get1 returns valid JSON",
+      "duration": 169,
+      "currentRetry": 0,
+      "err": {}
+    }
+  ]
+}[2025-09-09T22:46:54.779Z] 
+[2025-09-09T22:46:54.779Z]   (Results)
+[2025-09-09T22:46:54.780Z] 
+[2025-09-09T22:46:54.780Z]   ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        2                                                                                │
+  │ Passing:      2                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        true                                                                             │
+  │ Duration:     0 seconds                                                                        │
+  │ Spec Ran:     smoke.cy.js                                                                      │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+[2025-09-09T22:46:54.786Z] 
+[2025-09-09T22:46:54.786Z]   (Video)
+
+  -  Video output: C:\GitKraken\WeightlossTracker\cypress\videos\smoke.cy.js.mp4
+
+[2025-09-09T22:46:54.789Z] 
+[2025-09-09T22:46:54.804Z] ====================================================================================================
+
+[2025-09-09T22:46:54.804Z]   (Run Finished)
+[2025-09-09T22:46:54.804Z] 
+
+[2025-09-09T22:46:54.805Z]        Spec                                              Tests  Passing  Failing  Pending  Skipped  
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ √  smoke.cy.js                              765ms        2        2        -        -        - │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+    √  All specs passed!                        765ms        2        2        -        -        -  
+
+[2025-09-10T20:06:33.039Z] 
+[2025-09-10T20:06:33.667Z] [err] 
+DevTools listening on ws://127.0.0.1:54469/devtools/browser/4330c394-3655-40d1-9dee-1717214d194f
+[2025-09-10T20:06:36.281Z] 
+[2025-09-10T20:06:36.301Z] ====================================================================================================
+
+[2025-09-10T20:06:36.301Z]   (Run Starting)
+
+[2025-09-10T20:06:36.305Z]   ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Cypress:        13.17.0                                                                        │
+  │ Browser:        Electron 118 (headless)                                                        │
+  │ Node Version:   v22.19.0 (C:\Program Files\nodejs\node.exe)                                    │
+  │ Specs:          14 found (api.cy.js, auth_negative.cy.js, email_login.cy.js, email_security.cy │
+  │                 .js, goals_weights.cy.js, health.cy.js, login.cy.js, profile.cy.js, schema-swi │
+  │                 tching.cy.js, schema.cy.js, security.cy.js, signup.cy.js, smoke.cy.js, test-pa │
+  │                 ge.cy.js)                                                                      │
+  │ Searched:       cypress/e2e/**/*.cy.{js,jsx,ts,tsx}                                            │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+[2025-09-10T20:06:36.305Z] 
+[2025-09-10T20:06:36.305Z] ────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  api.cy.js                                                                      (1 of 14)
+[2025-09-10T20:06:39.627Z] {
+  "stats": {
+    "suites": 1,
+    "tests": 1,
+    "passes": 1,
+    "pending": 0,
+    "failures": 0,
+    "start": "2025-09-10T20:06:38.800Z",
+    "end": "2025-09-10T20:06:39.626Z",
+    "duration": 826
+  },
+  "tests": [
+    {
+      "title": "returns data from get1",
+      "fullTitle": "API basic returns data from get1",
+      "duration": 809,
+      "currentRetry": 0,
+      "err": {}
+    }
+  ],
+  "pending": [],
+  "failures": [],
+  "passes": [
+    {
+      "title": "returns data from get1",
+      "fullTitle": "API basic returns data from get1",
+      "duration": 809,
+      "currentRetry": 0,
+      "err": {}
+    }
+  ]
+}[2025-09-10T20:06:40.711Z] 
+[2025-09-10T20:06:40.711Z]   (Results)
+[2025-09-10T20:06:40.711Z] 
+[2025-09-10T20:06:40.712Z]   ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        1                                                                                │
+  │ Passing:      1                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        true                                                                             │
+  │ Duration:     0 seconds                                                                        │
+  │ Spec Ran:     api.cy.js                                                                        │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+[2025-09-10T20:06:40.712Z] 
+[2025-09-10T20:06:40.718Z] 
+[2025-09-10T20:06:40.718Z]   (Video)
+
+  -  Video output: C:\GitKraken\WeightlossTracker\cypress\videos\api.cy.js.mp4
+
+[2025-09-10T20:06:40.719Z] 
+[2025-09-10T20:06:40.719Z] ────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  auth_negative.cy.js                                                            (2 of 14)
+[2025-09-10T20:06:44.056Z] {
+  "stats": {
+    "suites": 1,
+    "tests": 2,
+    "passes": 2,
+    "pending": 0,
+    "failures": 0,
+    "start": "2025-09-10T20:06:41.551Z",
+    "end": "2025-09-10T20:06:44.055Z",
+    "duration": 2504
+  },
+  "tests": [
+    {
+      "title": "rejects wrong login code",
+      "fullTitle": "Auth negative cases rejects wrong login code",
+      "duration": 2441,
+      "currentRetry": 0,
+      "err": {}
+    },
+    {
+      "title": "rejects account creation with invalid email",
+      "fullTitle": "Auth negative cases rejects account creation with invalid email",
+      "duration": 35,
+      "currentRetry": 0,
+      "err": {}
+    }
+  ],
+  "pending": [],
+  "failures": [],
+  "passes": [
+    {
+      "title": "rejects wrong login code",
+      "fullTitle": "Auth negative cases rejects wrong login code",
+      "duration": 2441,
+      "currentRetry": 0,
+      "err": {}
+    },
+    {
+      "title": "rejects account creation with invalid email",
+      "fullTitle": "Auth negative cases rejects account creation with invalid email",
+      "duration": 35,
+      "currentRetry": 0,
+      "err": {}
+    }
+  ]
+}[2025-09-10T20:06:45.132Z] 
+[2025-09-10T20:06:45.132Z]   (Results)
+[2025-09-10T20:06:45.132Z] 
+[2025-09-10T20:06:45.132Z]   ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        2                                                                                │
+  │ Passing:      2                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        true                                                                             │
+  │ Duration:     2 seconds                                                                        │
+  │ Spec Ran:     auth_negative.cy.js                                                              │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+[2025-09-10T20:06:45.136Z] 
+[2025-09-10T20:06:45.136Z]   (Video)
+
+  -  Video output: C:\GitKraken\WeightlossTracker\cypress\videos\auth_negative.cy.js.mp4
+
+[2025-09-10T20:06:45.136Z] 
+[2025-09-10T20:06:45.137Z] ────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  email_login.cy.js                                                              (3 of 14)
+[2025-09-10T20:07:07.243Z] {
+  "stats": {
+    "suites": 5,
+    "tests": 7,
+    "passes": 5,
+    "pending": 0,
+    "failures": 2,
+    "start": "2025-09-10T20:06:46.118Z",
+    "end": "2025-09-10T20:07:07.242Z",
+    "duration": 21124
+  },
+  "tests": [
+    {
+      "title": "should toggle email sandbox mode on and off",
+      "fullTitle": "Login Email Functionality Sandbox Mode Toggle should toggle email sandbox mode on and off",
+      "duration": 859,
+      "currentRetry": 0,
+      "err": {
+        "message": "expected false to equal true",
+        "name": "AssertionError",
+        "stack": "AssertionError: expected false to equal true\n    at Context.eval (webpack://weightloss-tracker/./cypress/e2e/email_login.cy.js:46:59)",
+        "parsedStack": [
+          {
+            "message": "AssertionError: expected false to equal true",
+            "whitespace": ""
+          },
+          {
+            "function": "Context.eval",
+            "fileUrl": "http://127.0.0.1:8111/__cypress/tests?p=cypress\\e2e\\email_login.cy.js",
+            "originalFile": "webpack://weightloss-tracker/./cypress/e2e/email_login.cy.js",
+            "relativeFile": "cypress/e2e/email_login.cy.js",
+            "absoluteFile": "C:\\GitKraken\\WeightlossTracker/cypress/e2e/email_login.cy.js",
+            "line": 46,
+            "column": 59,
+            "whitespace": "    "
+          }
+        ],
+        "actual": false,
+        "expected": "true",
+        "showDiff": true,
+        "codeFrame": {
+          "line": 46,
+          "column": 60,
+          "originalFile": "cypress/e2e/email_login.cy.js",
+          "relativeFile": "cypress/e2e/email_login.cy.js",
+          "absoluteFile": "C:\\GitKraken\\WeightlossTracker/cypress/e2e/email_login.cy.js",
+          "frame": "  44 |             action: 'get_sandbox_status'\n  45 |           }).then((verifyResponse) => {\n> 46 |             expect(verifyResponse.body.sandbox_enabled).to.eq(!initialStatus);\n     |                                                            ^\n  47 |             \n  48 |             // Restore original state\n  49 |             cy.request('POST', `${base}/router.php?controller=email`, {",
+          "language": "js"
+        }
+      }
+    },
+    {
+      "title": "should send login code in sandbox mode without actual email delivery",
+      "fullTitle": "Login Email Functionality Email Sending with Sandbox Mode should send login code in sandbox mode without actual email delivery",
+      "duration": 12846,
+      "currentRetry": 0,
+      "err": {}
+    },
+    {
+      "title": "should send login code in production mode (real email)",
+      "fullTitle": "Login Email Functionality Email Sending with Sandbox Mode should send login code in production mode (real email)",
+      "duration": 2183,
+      "currentRetry": 0,
+      "err": {}
+    },
+    {
+      "title": "should show proper loading states during email sending",
+      "fullTitle": "Login Email Functionality Email Sending with Sandbox Mode should show proper loading states during email sending",
+      "duration": 2776,
+      "currentRetry": 0,
+      "err": {}
+    },
+    {
+      "title": "should generate and log email with code in subject line",
+      "fullTitle": "Login Email Functionality Email Content Validation should generate and log email with code in subject line",
+      "duration": 329,
+      "currentRetry": 0,
+      "err": {
+        "message": "expected false to be true",
+        "name": "AssertionError",
+        "stack": "AssertionError: expected false to be true\n    at Context.eval (webpack://weightloss-tracker/./cypress/e2e/email_login.cy.js:173:44)",
+        "parsedStack": [
+          {
+            "message": "AssertionError: expected false to be true",
+            "whitespace": ""
+          },
+          {
+            "function": "Context.eval",
+            "fileUrl": "http://127.0.0.1:8111/__cypress/tests?p=cypress\\e2e\\email_login.cy.js",
+            "originalFile": "webpack://weightloss-tracker/./cypress/e2e/email_login.cy.js",
+            "relativeFile": "cypress/e2e/email_login.cy.js",
+            "absoluteFile": "C:\\GitKraken\\WeightlossTracker/cypress/e2e/email_login.cy.js",
+            "line": 173,
+            "column": 44,
+            "whitespace": "    "
+          }
+        ],
+        "actual": false,
+        "expected": "true",
+        "showDiff": true,
+        "codeFrame": {
+          "line": 173,
+          "column": 45,
+          "originalFile": "cypress/e2e/email_login.cy.js",
+          "relativeFile": "cypress/e2e/email_login.cy.js",
+          "absoluteFile": "C:\\GitKraken\\WeightlossTracker/cypress/e2e/email_login.cy.js",
+          "frame": "  171 |       }).then((response) => {\n  172 |         expect(response.status).to.eq(200);\n> 173 |         expect(response.body.success).to.be.true;\n      |                                             ^\n  174 |\n  175 |         // Read email log to verify content\n  176 |         cy.readFile('app/backend/email_log.txt').then((logContent) => {",
+          "language": "js"
+        }
+      }
+    },
+    {
+      "title": "should handle network errors gracefully",
+      "fullTitle": "Login Email Functionality Error Handling should handle network errors gracefully",
+      "duration": 983,
+      "currentRetry": 0,
+      "err": {}
+    },
+    {
+      "title": "should handle server errors gracefully",
+      "fullTitle": "Login Email Functionality Error Handling should handle server errors gracefully",
+      "duration": 905,
+      "currentRetry": 0,
+      "err": {}
+    }
+  ],
+  "pending": [],
+  "failures": [
+    {
+      "title": "should toggle email sandbox mode on and off",
+      "fullTitle": "Login Email Functionality Sandbox Mode Toggle should toggle email sandbox mode on and off",
+      "currentRetry": 0,
+      "err": {
+        "message": "expected false to equal true",
+        "name": "AssertionError",
+        "stack": "AssertionError: expected false to equal true\n    at Context.eval (webpack://weightloss-tracker/./cypress/e2e/email_login.cy.js:46:59)",
+        "parsedStack": [
+          {
+            "message": "AssertionError: expected false to equal true",
+            "whitespace": ""
+          },
+          {
+            "function": "Context.eval",
+            "fileUrl": "http://127.0.0.1:8111/__cypress/tests?p=cypress\\e2e\\email_login.cy.js",
+            "originalFile": "webpack://weightloss-tracker/./cypress/e2e/email_login.cy.js",
+            "relativeFile": "cypress/e2e/email_login.cy.js",
+            "absoluteFile": "C:\\GitKraken\\WeightlossTracker/cypress/e2e/email_login.cy.js",
+            "line": 46,
+            "column": 59,
+            "whitespace": "    "
+          }
+        ],
+        "actual": false,
+        "expected": "true",
+        "showDiff": true,
+        "codeFrame": {
+          "line": 46,
+          "column": 60,
+          "originalFile": "cypress/e2e/email_login.cy.js",
+          "relativeFile": "cypress/e2e/email_login.cy.js",
+          "absoluteFile": "C:\\GitKraken\\WeightlossTracker/cypress/e2e/email_login.cy.js",
+          "frame": "  44 |             action: 'get_sandbox_status'\n  45 |           }).then((verifyResponse) => {\n> 46 |             expect(verifyResponse.body.sandbox_enabled).to.eq(!initialStatus);\n     |                                                            ^\n  47 |             \n  48 |             // Restore original state\n  49 |             cy.request('POST', `${base}/router.php?controller=email`, {",
+          "language": "js"
+        }
+      }
+    },
+    {
+      "title": "should generate and log email with code in subject line",
+      "fullTitle": "Login Email Functionality Email Content Validation should generate and log email with code in subject line",
+      "currentRetry": 0,
+      "err": {
+        "message": "expected false to be true",
+        "name": "AssertionError",
+        "stack": "AssertionError: expected false to be true\n    at Context.eval (webpack://weightloss-tracker/./cypress/e2e/email_login.cy.js:173:44)",
+        "parsedStack": [
+          {
+            "message": "AssertionError: expected false to be true",
+            "whitespace": ""
+          },
+          {
+            "function": "Context.eval",
+            "fileUrl": "http://127.0.0.1:8111/__cypress/tests?p=cypress\\e2e\\email_login.cy.js",
+            "originalFile": "webpack://weightloss-tracker/./cypress/e2e/email_login.cy.js",
+            "relativeFile": "cypress/e2e/email_login.cy.js",
+            "absoluteFile": "C:\\GitKraken\\WeightlossTracker/cypress/e2e/email_login.cy.js",
+            "line": 173,
+            "column": 44,
+            "whitespace": "    "
+          }
+        ],
+        "actual": false,
+        "expected": "true",
+        "showDiff": true,
+        "codeFrame": {
+          "line": 173,
+          "column": 45,
+          "originalFile": "cypress/e2e/email_login.cy.js",
+          "relativeFile": "cypress/e2e/email_login.cy.js",
+          "absoluteFile": "C:\\GitKraken\\WeightlossTracker/cypress/e2e/email_login.cy.js",
+          "frame": "  171 |       }).then((response) => {\n  172 |         expect(response.status).to.eq(200);\n> 173 |         expect(response.body.success).to.be.true;\n      |                                             ^\n  174 |\n  175 |         // Read email log to verify content\n  176 |         cy.readFile('app/backend/email_log.txt').then((logContent) => {",
+          "language": "js"
+        }
+      }
+    }
+  ],
+  "passes": [
+    {
+      "title": "should send login code in sandbox mode without actual email delivery",
+      "fullTitle": "Login Email Functionality Email Sending with Sandbox Mode should send login code in sandbox mode without actual email delivery",
+      "duration": 12846,
+      "currentRetry": 0,
+      "err": {}
+    },
+    {
+      "title": "should send login code in production mode (real email)",
+      "fullTitle": "Login Email Functionality Email Sending with Sandbox Mode should send login code in production mode (real email)",
+      "duration": 2183,
+      "currentRetry": 0,
+      "err": {}
+    },
+    {
+      "title": "should show proper loading states during email sending",
+      "fullTitle": "Login Email Functionality Email Sending with Sandbox Mode should show proper loading states during email sending",
+      "duration": 2776,
+      "currentRetry": 0,
+      "err": {}
+    },
+    {
+      "title": "should handle network errors gracefully",
+      "fullTitle": "Login Email Functionality Error Handling should handle network errors gracefully",
+      "duration": 983,
+      "currentRetry": 0,
+      "err": {}
+    },
+    {
+      "title": "should handle server errors gracefully",
+      "fullTitle": "Login Email Functionality Error Handling should handle server errors gracefully",
+      "duration": 905,
+      "currentRetry": 0,
+      "err": {}
+    }
+  ]
+}[2025-09-10T20:07:08.269Z] 
+[2025-09-10T20:07:08.269Z]   (Results)
+[2025-09-10T20:07:08.270Z] 
+[2025-09-10T20:07:08.271Z]   ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        7                                                                                │
+  │ Passing:      5                                                                                │
+  │ Failing:      2                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  2                                                                                │
+  │ Video:        true                                                                             │
+  │ Duration:     21 seconds                                                                       │
+  │ Spec Ran:     email_login.cy.js                                                                │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+[2025-09-10T20:07:08.271Z] 
+  (Screenshots)
+
+[2025-09-10T20:07:08.271Z]   -  C:\GitKraken\WeightlossTracker\cypress\screenshots\email_login.cy.js\Login Email     (1280x720)
+      Functionality -- Sandbox Mode Toggle -- should toggle email sandbox mode on and               
+      off (failed).png                                                                              
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\email_login.cy.js\Login Email     (1280x720)
+      Functionality -- Email Content Validation -- should generate and log email with               
+      code in subject line (failed).png                                                             
+
+[2025-09-10T20:07:08.276Z] 
+[2025-09-10T20:07:08.276Z]   (Video)
+
+  -  Video output: C:\GitKraken\WeightlossTracker\cypress\videos\email_login.cy.js.mp4
+
+[2025-09-10T20:07:08.276Z] 
+[2025-09-10T20:07:08.277Z] ────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  email_security.cy.js                                                           (4 of 14)

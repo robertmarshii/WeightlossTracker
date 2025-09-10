@@ -131,7 +131,15 @@ function writeSpecsFile() {
 
 function runCypress(specPattern) {
   return new Promise((resolve) => {
-    writeStatus({ state: 'running', startedAt: new Date().toISOString(), spec: specPattern });
+    const runId = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2,6)}`;
+    const guessGroup = (sp) => {
+      if (!sp || sp === 'all') return 'mixed';
+      if (/e2e_prod/.test(sp)) return 'e2e_prod';
+      if (/cypress\/(?:\\)?e2e\b/.test(sp)) return 'e2e';
+      return 'unknown';
+    };
+    const specGroup = guessGroup(specPattern);
+    writeStatus({ state: 'running', runId, startedAt: new Date().toISOString(), spec: specPattern, specGroup });
     if (!fs.existsSync(resultsDir)) fs.mkdirSync(resultsDir, { recursive: true });
 
     const args = ['run', '--reporter', 'json', '--reporter-options', `output=${lastJson}`];
@@ -152,23 +160,49 @@ function runCypress(specPattern) {
     const runnerLog = path.join(resultsDir, 'runner.log');
     const logStream = fs.createWriteStream(runnerLog, { flags: 'a' });
     const stamp = () => new Date().toISOString();
+    const startedAt = new Date().toISOString();
+    // Heartbeat: update status while running so UI can detect activity
+    let hb = setInterval(() => {
+      try {
+        writeStatus({
+          state: 'running',
+          runId,
+          startedAt,
+          spec: specPattern,
+          specGroup,
+          debug: { lastLogTail: tailFile(runnerLog) },
+        });
+      } catch {}
+    }, 2000);
 
     // Helper to wire up process and finalize
     const attach = (proc, meta = {}) => {
       proc.stdout && proc.stdout.on('data', (d) => { try { logStream.write(`[${stamp()}] ${d}`); } catch {} });
       proc.stderr && proc.stderr.on('data', (d) => { try { logStream.write(`[${stamp()}] [err] ${d}`); } catch {} });
       proc.on('close', (code) => {
+        try { clearInterval(hb); } catch {}
         let summary = { totalTests: 0, totalPassed: 0, totalFailed: 0 };
+        let runsLight = [];
         try {
           const data = JSON.parse(fs.readFileSync(lastJson, 'utf8'));
           const runs = data.runs || [];
-          runs.forEach((r) => {
-            (r.tests || []).forEach((t) => {
+          runsLight = runs.map((r) => {
+            const specPath = (r && r.spec && (r.spec.relative || r.spec.name || r.spec)) || null;
+            const tests = Array.isArray(r.tests) ? r.tests.map((t) => {
+              const errMsg = (t && (t.displayError || (t.attempts && t.attempts[0] && t.attempts[0].error && t.attempts[0].error.message))) || null;
+              return {
+                title: Array.isArray(t.title) ? t.title : (t.title ? [t.title] : []),
+                state: (t.state || '').toLowerCase(),
+                error: errMsg,
+              };
+            }) : [];
+            tests.forEach((t) => {
               summary.totalTests += 1;
-              const state = (t.state || '').toLowerCase();
-              if (state === 'passed') summary.totalPassed += 1;
-              if (state === 'failed') summary.totalFailed += 1;
+              if (t.state === 'passed') summary.totalPassed += 1;
+              if (t.state === 'failed') summary.totalFailed += 1;
             });
+            const counts = tests.reduce((acc, t) => { acc.total++; acc[t.state] = (acc[t.state]||0)+1; return acc; }, { total: 0 });
+            return { spec: specPath, counts, tests };
           });
         } catch {}
 
@@ -177,7 +211,11 @@ function runCypress(specPattern) {
           finishedAt: new Date().toISOString(),
           exitCode: code,
           spec: specPattern,
+          runId,
+          specGroup,
+          specCount: runsLight.length || null,
           summary,
+          runs: runsLight,
           debug: {
             runner: meta.runner || 'spawn',
             command: meta.command || null,
@@ -207,18 +245,59 @@ function runCypress(specPattern) {
           runOpts.spec = specPattern;
         }
         const results = await cypress.run(runOpts);
+        // Do NOT overwrite last.json here. The JSON reporter already wrote
+        // the detailed per-spec results to last.json. We only read it later
+        // for the UI and compute summary from the API results.
         // Compute summary directly from results to avoid reading file
-        const summary = {
-          totalTests: (results && typeof results.totalTests === 'number') ? results.totalTests : 0,
-          totalPassed: (results && typeof results.totalPassed === 'number') ? results.totalPassed : 0,
-          totalFailed: (results && typeof results.totalFailed === 'number') ? results.totalFailed : 0,
-        };
+        // Prefer deriving summary from runs when available
+        let summary;
+        if (Array.isArray(results && results.runs)) {
+          const agg = { totalTests: 0, totalPassed: 0, totalFailed: 0 };
+          results.runs.forEach((r) => {
+            (Array.isArray(r.tests) ? r.tests : []).forEach((t) => {
+              agg.totalTests += 1;
+              const st = (t.state || '').toLowerCase();
+              if (st === 'passed') agg.totalPassed += 1;
+              if (st === 'failed') agg.totalFailed += 1;
+            });
+          });
+          summary = agg;
+        } else {
+          summary = {
+            totalTests: (results && typeof results.totalTests === 'number') ? results.totalTests : 0,
+            totalPassed: (results && typeof results.totalPassed === 'number') ? results.totalPassed : 0,
+            totalFailed: (results && typeof results.totalFailed === 'number') ? results.totalFailed : 0,
+          };
+        }
+        // Build a lightweight per-spec run summary for the UI
+        let runsLight = [];
+        try {
+          const rlist = Array.isArray(results && results.runs) ? results.runs : [];
+          runsLight = rlist.map((r) => {
+            const specPath = (r && r.spec && (r.spec.relative || r.spec.name || r.spec)) || null;
+            const tests = Array.isArray(r.tests) ? r.tests.map((t) => {
+              const errMsg = (t && (t.displayError || (t.attempts && t.attempts[0] && t.attempts[0].error && t.attempts[0].error.message))) || null;
+              return {
+                title: Array.isArray(t.title) ? t.title : (t.title ? [t.title] : []),
+                state: (t.state || '').toLowerCase(),
+                error: errMsg,
+              };
+            }) : [];
+            const counts = tests.reduce((acc, t) => { acc.total++; acc[t.state] = (acc[t.state]||0)+1; return acc; }, { total: 0 });
+            return { spec: specPath, counts, tests };
+          });
+        } catch {}
+        try { clearInterval(hb); } catch {}
         writeStatus({
           state: 'finished',
           finishedAt: new Date().toISOString(),
-          exitCode: results ? results.totalFailed : 1,
+          exitCode: (summary && typeof summary.totalFailed === 'number') ? summary.totalFailed : (results ? results.totalFailed : 1),
           spec: specPattern,
+          runId,
+          specGroup,
+          specCount: Array.isArray(results && results.runs) ? results.runs.length : null,
           summary,
+          runs: runsLight,
           debug: {
             runner: 'node-api',
             lastLogTail: tailFile(runnerLog),
@@ -295,22 +374,13 @@ function runCypress(specPattern) {
       }
     };
 
-    // Attempt Node API first, then fallback to spawn
+    // Prefer spawn on Windows for reliable spec selection; else try Node API first
     (async () => {
-      const ok = await tryNodeApi();
-      if (!ok) {
-        // Prefer Node API on Windows; only try spawn if explicitly requested via env
-        const allowSpawn = process.platform !== 'win32' || process.env.CYPRESS_RUNNER_ALLOW_SPAWN === '1';
-        if (allowSpawn) {
-          trySpawn();
-        } else {
-          writeStatus({
-            state: 'error',
-            message: 'Node API failed and spawn disabled on Windows',
-            details: { note: 'Set CYPRESS_RUNNER_ALLOW_SPAWN=1 to enable shell spawn fallback.' },
-          });
-          resolve();
-        }
+      if (process.platform === 'win32') {
+        trySpawn();
+      } else {
+        const ok = await tryNodeApi();
+        if (!ok) trySpawn();
       }
     })();
   });
@@ -348,9 +418,12 @@ setInterval(async () => {
   if (!trig) return;
   busy = true;
   const spec = trig.spec || 'all';
-  console.log('[ui-cypress-runner] Trigger received -> spec:', spec);
+  const runId = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2,6)}`;
+  console.log('[ui-cypress-runner] Trigger received -> spec:', spec, 'runId:', runId);
   clearTrigger();
   try {
+    // Pre-mark running so UI can see this run immediately with differentiator
+    writeStatus({ state: 'running', runId, startedAt: new Date().toISOString(), spec, specGroup: /e2e_prod/.test(spec) ? 'e2e_prod' : (/e2e\b/.test(spec) ? 'e2e' : 'mixed') });
     await runCypress(spec);
   } catch (e) {
     writeStatus({ state: 'error', message: String(e && e.message || e) });

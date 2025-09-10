@@ -7,6 +7,7 @@
         if($controller === "schema") { SchemaController(); }
         if($controller === "seeder") { SeederController(); }
         if($controller === "profile") { ProfileController(); }
+        if($controller === "email") { EmailController(); }
     }
 
     function Get1() {
@@ -308,6 +309,123 @@
             echo json_encode(['success' => false, 'message' => 'Invalid action']);
         } catch (Exception $e) {
             echo json_encode(['success' => false, 'message' => 'Server error']);
+        }
+    }
+
+    function EmailController() {
+        header('Content-Type: application/json');
+        
+        $request = $_POST;
+        if (!isset($request['action'])) {
+            $raw = file_get_contents('php://input');
+            if ($raw) {
+                $json = json_decode($raw, true);
+                if (is_array($json)) { $request = array_merge($request, $json); }
+            }
+        }
+        
+        $action = $request['action'] ?? '';
+        
+        try {
+            if ($action === 'get_sandbox_status') {
+                $sandboxMode = $_ENV['EMAIL_SANDBOX_MODE'] ?? 'false';
+                echo json_encode([
+                    'success' => true,
+                    'sandbox_enabled' => strtolower($sandboxMode) === 'true' || $sandboxMode === '1'
+                ]);
+                return;
+            }
+            
+            if ($action === 'set_sandbox_mode') {
+                $enabled = $request['enabled'] ?? false;
+                
+                // Update the .env file
+                $envFile = '/var/app/.env';
+                $envContent = file_exists($envFile) ? file_get_contents($envFile) : '';
+                
+                $newValue = $enabled ? 'true' : 'false';
+                
+                if (strpos($envContent, 'EMAIL_SANDBOX_MODE=') !== false) {
+                    // Update existing line
+                    $envContent = preg_replace('/EMAIL_SANDBOX_MODE=.*/m', "EMAIL_SANDBOX_MODE=$newValue", $envContent);
+                } else {
+                    // Add new line
+                    $envContent .= "\nEMAIL_SANDBOX_MODE=$newValue\n";
+                }
+                
+                file_put_contents($envFile, $envContent);
+                $_ENV['EMAIL_SANDBOX_MODE'] = $newValue;
+                
+                echo json_encode([
+                    'success' => true,
+                    'message' => 'Sandbox mode ' . ($enabled ? 'enabled' : 'disabled'),
+                    'sandbox_enabled' => $enabled
+                ]);
+                return;
+            }
+            
+            if ($action === 'clear_rate_limits') {
+                // For testing purposes - clear rate limits for specific email or all
+                $email = $request['email'] ?? null;
+                $rateLimitFile = '/var/app/backend/rate_limits.json';
+                
+                if ($email) {
+                    // Clear limits for specific email
+                    $rateLimits = [];
+                    if (file_exists($rateLimitFile)) {
+                        $data = json_decode(file_get_contents($rateLimitFile), true);
+                        if (is_array($data)) {
+                            $rateLimits = $data;
+                        }
+                    }
+                    
+                    // Remove entries for this email
+                    foreach (array_keys($rateLimits) as $key) {
+                        if (strpos($key, $email . ':') === 0) {
+                            unset($rateLimits[$key]);
+                        }
+                    }
+                    
+                    file_put_contents($rateLimitFile, json_encode($rateLimits, JSON_PRETTY_PRINT));
+                    
+                    echo json_encode([
+                        'success' => true,
+                        'message' => "Rate limits cleared for $email"
+                    ]);
+                } else {
+                    // Clear all rate limits
+                    if (file_exists($rateLimitFile)) {
+                        unlink($rateLimitFile);
+                    }
+                    echo json_encode([
+                        'success' => true,
+                        'message' => 'All rate limits cleared'
+                    ]);
+                }
+                return;
+            }
+            
+            if ($action === 'get_rate_limits') {
+                $rateLimitFile = '/var/app/backend/rate_limits.json';
+                $rateLimits = [];
+                
+                if (file_exists($rateLimitFile)) {
+                    $data = json_decode(file_get_contents($rateLimitFile), true);
+                    if (is_array($data)) {
+                        $rateLimits = $data;
+                    }
+                }
+                
+                echo json_encode([
+                    'success' => true,
+                    'rate_limits' => $rateLimits
+                ]);
+                return;
+            }
+            
+            echo json_encode(['success' => false, 'message' => 'Invalid action']);
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'message' => 'Server error: ' . $e->getMessage()]);
         }
     }
 

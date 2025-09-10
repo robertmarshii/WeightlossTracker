@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-09-09T07:39:03.883Z",
+  "updatedAt": "2025-09-10T23:14:52.435Z",
   "specs": [
     {
       "group": "e2e",
@@ -10,6 +10,16 @@
       "group": "e2e",
       "path": "cypress/e2e/auth_negative.cy.js",
       "name": "auth_negative.cy.js"
+    },
+    {
+      "group": "e2e",
+      "path": "cypress/e2e/email_login.cy.js",
+      "name": "email_login.cy.js"
+    },
+    {
+      "group": "e2e",
+      "path": "cypress/e2e/email_security.cy.js",
+      "name": "email_security.cy.js"
     },
     {
       "group": "e2e",

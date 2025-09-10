@@ -30,7 +30,7 @@ if (isset($_SESSION['login_time'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Weight Loss Tracker</title>
+    <title>Dashboard - Weightloss Tracker</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
@@ -283,10 +283,14 @@ if (isset($_SESSION['login_time'])) {
             const lines = [];
             lines.push(`BMI: <strong>${data.bmi}</strong> (${data.category})`);
             if (data.adjusted_bmi) {
-                lines.push(`Frame-adjusted BMI: <strong>${data.adjusted_bmi}</strong> (${data.adjusted_category})`);
-            }
-            if (Array.isArray(data.notes) && data.notes.length) {
-                lines.push('<small class="d-block mt-2 text-muted">' + data.notes.join(' ') + '</small>');
+                const infoId = 'bmi-info-' + Math.random().toString(36).substr(2, 9);
+                lines.push(`Frame-adjusted BMI: <strong>${data.adjusted_bmi}</strong> (${data.adjusted_category}) 
+                    <button class="btn btn-link p-0 ml-1 text-info" type="button" data-toggle="collapse" data-target="#${infoId}" style="text-decoration: none; border: none; background: none;">
+                        ⓘ
+                    </button>`);
+                lines.push(`<div class="collapse mt-2" id="${infoId}">
+                    <small class="text-muted">Frame-adjusted BMI is a heuristic interpretation only.</small>
+                </div>`);
             }
             el.html(lines.join('<br>')).removeClass('text-muted');
         });
@@ -302,16 +306,28 @@ if (isset($_SESSION['login_time'])) {
             }
             const lines = [];
             if (Array.isArray(data.estimated_body_fat_range)) {
-                lines.push(`Estimated body fat: <strong>${data.estimated_body_fat_range[0]}–${data.estimated_body_fat_range[1]}%</strong>`);
-            }
-            if (Array.isArray(data.body_fat_notes) && data.body_fat_notes.length) {
-                lines.push('<small class="d-block text-muted">' + data.body_fat_notes.join(' ') + '</small>');
+                const bodyFatInfoId = 'bodyfat-info-' + Math.random().toString(36).substr(2, 9);
+                lines.push(`Estimated body fat: <strong>${data.estimated_body_fat_range[0]}–${data.estimated_body_fat_range[1]}%</strong> 
+                    <button class="btn btn-link p-0 ml-1 text-info" type="button" data-toggle="collapse" data-target="#${bodyFatInfoId}" style="text-decoration: none; border: none; background: none;">
+                        ⓘ
+                    </button>`);
+                
+                // Add body fat notes from the original data
+                if (Array.isArray(data.body_fat_notes) && data.body_fat_notes.length) {
+                    lines.push(`<div class="collapse mt-2" id="${bodyFatInfoId}">
+                        <small class="text-muted">${data.body_fat_notes.join(' ')}</small>
+                    </div>`);
+                }
             }
             if (data.cvd_risk_label) {
-                lines.push(`Cardiovascular risk (non-diagnostic): <strong>${data.cvd_risk_label}</strong>`);
-            }
-            if (Array.isArray(data.cvd_risk_notes) && data.cvd_risk_notes.length) {
-                lines.push('<small class="d-block text-muted">' + data.cvd_risk_notes.join(' ') + '</small>');
+                const cvdInfoId = 'cvd-info-' + Math.random().toString(36).substr(2, 9);
+                lines.push(`Cardiovascular risk (non-diagnostic): <strong>${data.cvd_risk_label}</strong> 
+                    <button class="btn btn-link p-0 ml-1 text-info" type="button" data-toggle="collapse" data-target="#${cvdInfoId}" style="text-decoration: none; border: none; background: none;">
+                        ⓘ
+                    </button>`);
+                lines.push(`<div class="collapse mt-2" id="${cvdInfoId}">
+                    <small class="text-muted">This is a general, non-diagnostic impression based on BMI, age and activity. For cardiovascular risk, clinical calculators (e.g., Framingham, ASCVD) require blood pressure and lab values.</small>
+                </div>`);
             }
             el.html(lines.join('<br>')).removeClass('text-muted');
         });

@@ -75,18 +75,25 @@ INSERT INTO wt_dev.test_table (val) VALUES
     ('dev2'),
     ('dev3');
 
--- Basic weight entries for development testing
+-- User profiles with detailed information
+INSERT INTO wt_dev.user_profiles (user_id, height_cm, body_frame, age, activity_level) VALUES
+    (1, 178, 'large', 40, 'light');
+
+-- Weight entries for development testing
 INSERT INTO wt_dev.weight_entries (user_id, weight_kg, entry_date, notes) VALUES
     (1, 75.0, '2024-01-01', 'Development baseline'),
     (1, 74.5, '2024-01-08', 'Week 1 progress'),
     (1, 74.0, '2024-01-15', 'Steady progress'),
+    (1, 119.0, '2025-09-09', 'Current weight'),
     (2, 80.0, '2024-01-01', 'Test user baseline'),
     (2, 79.5, '2024-01-08', 'Test progress');
 
--- Basic goals for development
-INSERT INTO wt_dev.goals (user_id, target_weight_kg, target_date) VALUES
-    (1, 70.0, '2024-06-01'),
-    (2, 75.0, '2024-05-01');
+-- Goals for development (including current active goal)
+INSERT INTO wt_dev.goals (user_id, target_weight_kg, target_date, is_active) VALUES
+    (1, 70.0, '2024-06-01', false),
+    (1, 115.0, '2025-10-15', false),
+    (1, 115.0, '2025-10-15', true),
+    (2, 75.0, '2024-05-01', true);
 
 -- Grant permissions (adjust as needed for your setup)
 -- GRANT ALL PRIVILEGES ON SCHEMA wt_dev TO your_app_user;

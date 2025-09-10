@@ -77,7 +77,7 @@
                 
                 <div class="mb-4">
                     <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h5 class="mb-0"><i class="fa fa-list"></i> Cypress Specs</h5>
+                        <h5 class="mb-0"><i class="fa fa-list"></i> Cypress Specs (npm run ui:cypress:watch)</h5>
                         <div>
                           <button class="btn btn-sm btn-success" id="run-all-specs"><i class="fa fa-play"></i> Run All</button>
                           <input type="text" id="spec-filter" class="form-control form-control-sm d-inline-block ml-2" style="width: 260px;" placeholder="Filter specs..." />
@@ -120,6 +120,43 @@
                             </div>
                         </div>
                     </div>
+                    
+                    <div class="col-md-3">
+                        <div class="card test-card">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <span class="status-indicator status-idle" id="status-email"></span>
+                                    Email System
+                                </h5>
+                                <div class="btn-group-vertical w-100" role="group">
+                                    <button class="btn btn-outline-info btn-sm" id="toggle-sandbox">
+                                        <span class="status-indicator status-idle" id="status-sandbox"></span>
+                                        <span id="sandbox-text">Enable Sandbox</span>
+                                    </button>
+                                    <button class="btn btn-outline-secondary btn-sm" id="clear-rate-limits">
+                                        <span class="status-indicator status-idle" id="status-ratelimit"></span>
+                                        Clear Rate Limits
+                                    </button>
+                                    <button class="btn btn-outline-primary btn-sm" id="view-rate-limits">
+                                        <i class="fa fa-eye"></i>
+                                        View Rate Limits
+                                    </button>
+                                    <button class="btn btn-outline-primary btn-sm" id="run-email-login-spec">
+                                        <i class="fa fa-play"></i>
+                                        Run Email Login Test
+                                    </button>
+                                    <button class="btn btn-outline-primary btn-sm" id="run-email-security-spec">
+                                        <i class="fa fa-play"></i>
+                                        Run Email Security Test
+                                    </button>
+                                </div>
+                                <small class="text-muted mt-2 d-block">
+                                    <span id="sandbox-status">Checking...</span><br>
+                                    <span id="rate-limit-count">Rate limits: Loading...</span>
+                                </small>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="mt-4">
@@ -148,6 +185,33 @@
             
             $('#clear-results').click(function() {
                 clearResults();
+            });
+
+            // Email system controls
+            loadEmailStatus();
+            
+            $('#toggle-sandbox').click(function() {
+                toggleSandboxMode();
+            });
+
+            $('#clear-rate-limits').click(function() {
+                clearRateLimits();
+            });
+
+            $('#view-rate-limits').click(function() {
+                viewRateLimits();
+            });
+
+            // Email Cypress spec shortcuts
+            $('#run-email-login-spec').click(function() {
+                if (typeof window.runTest === 'function') {
+                    window.runTest('email_login');
+                }
+            });
+            $('#run-email-security-spec').click(function() {
+                if (typeof window.runTest === 'function') {
+                    window.runTest('email_security');
+                }
             });
         });
         
@@ -355,7 +419,16 @@
             statusEl.removeClass('status-idle status-running status-success status-error');
             statusEl.addClass(`status-${status}`);
         }
-        
+
+        // Safely parse JSON or pass through objects
+        function parseMaybeJson(resp) {
+            if (resp && typeof resp === 'object') return resp;
+            if (typeof resp === 'string') {
+                try { return JSON.parse(resp); } catch (e) { return null; }
+            }
+            return null;
+        }
+
         function appendResult(message) {
             const timestamp = new Date().toLocaleTimeString();
             const resultEl = $('#test-results');
@@ -478,21 +551,102 @@
               });
         }
 
+        // Cache to avoid reprinting the same tail and to differentiate runs
+        let __lastCypressTail = '';
+        let __lastRunId = null;
+        let __runStartAtMs = null;
+        let __lastStatusMtime = null;
         function pollCypressStatus() {
             $.getJSON('cypress-runner.php?action=status')
               .done((resp) => {
                 const s = resp.status || {};
                 const dbg = resp.debug || {};
+                // New run detected? Print a header and reset caches
+                if (s.runId && s.runId !== __lastRunId) {
+                  __lastRunId = s.runId;
+                  __lastCypressTail = '';
+                  __runStartAtMs = Date.now();
+                  const grp = s.specGroup ? ` [${s.specGroup}]` : '';
+                  const specLbl = s.spec ? ` ${s.spec}` : '';
+                  appendResult(`—— Run ${s.runId}${grp}${specLbl} ——`);
+                }
+                __lastStatusMtime = (typeof resp.debug?.status_mtime === 'number') ? resp.debug.status_mtime : __lastStatusMtime;
+                // Stream the runner log tail if provided by status.json
+                try {
+                  const tail = (s.debug && s.debug.lastLogTail) ? String(s.debug.lastLogTail) : null;
+                  if (tail) {
+                    if (typeof __lastCypressTail !== 'string') __lastCypressTail = '';
+                    // Only append the new part to reduce spam
+                    const newPart = tail.startsWith(__lastCypressTail) ? tail.slice(__lastCypressTail.length) : tail;
+                    if (newPart.trim().length > 0) {
+                      newPart.split(/\r?\n/).forEach((line) => {
+                        if (line.trim().length) appendResult(`[Cypress] ${line}`);
+                      });
+                    }
+                    __lastCypressTail = tail;
+                  }
+                } catch (e) {}
                 if (s.state === 'running') {
-                    appendResult('Cypress: running...');
+                    const specLbl = s.spec ? ` (${s.spec})` : '';
+                    const grp = s.specGroup ? ` [${s.specGroup}]` : '';
+                    appendResult(`Cypress: running${specLbl}${grp}...`);
+                    // Stuck detection: if trigger pending and no tail updates for ~10s, flag watcher issue
+                    try {
+                      const now = Date.now();
+                      const started = __runStartAtMs || now;
+                      const ageSec = Math.floor((now - started) / 1000);
+                      const trigAge = (typeof resp.debug?.trigger_mtime === 'number') ? (Math.floor((now/1000) - resp.debug.trigger_mtime)) : null;
+                      const hasTail = (s.debug && s.debug.lastLogTail && String(s.debug.lastLogTail).trim().length > 0);
+                      if (!hasTail && ageSec >= 10 && (resp.debug?.trigger_pending || (trigAge !== null && trigAge > 8))) {
+                        appendResult('Watcher appears inactive. Start it locally: npm run ui:cypress:watch');
+                        updateTestStatus('cypress', 'error');
+                        clearInterval(cypressPoll);
+                        return;
+                      }
+                    } catch {}
                 } else if (s.state === 'finished') {
-                    appendResult(`Cypress finished. Exit ${s.exitCode}, Passed ${s.summary?.totalPassed}/${s.summary?.totalTests}, Failed ${s.summary?.totalFailed}`);
+                    const specCount = (typeof s.specCount === 'number') ? `, Specs ${s.specCount}` : '';
+                    // Derive duration if timestamps available
+                    let duration = '';
+                    try {
+                      if (s.startedAt && s.finishedAt) {
+                        const d = (new Date(s.finishedAt) - new Date(s.startedAt)) / 1000;
+                        if (isFinite(d)) duration = `, ${d.toFixed(1)}s`;
+                      }
+                    } catch {}
+                    appendResult(`Cypress finished. Exit ${s.exitCode}, Passed ${s.summary?.totalPassed}/${s.summary?.totalTests}, Failed ${s.summary?.totalFailed}${specCount}${duration}`);
+                    // Prefer embedded run details from status if present
+                    if (Array.isArray(s.runs) && s.runs.length) {
+                      renderCypressRuns(s.runs);
+                    } else {
+                      // Fallback: fetch last.json from reporter
+                      try {
+                        $.getJSON('cypress-runner.php?action=results')
+                          .done((results) => {
+                            if (results && (Array.isArray(results.runs) && results.runs.length || (Array.isArray(results.tests) && results.tests.length))) {
+                              renderCypressResults(results);
+                            } else {
+                              // Final fallback: show summary line as a spec-level result
+                              renderCypressRuns([{ spec: s.spec || 'unknown', counts: { total: s.summary?.totalTests||0, passed: s.summary?.totalPassed||0, failed: s.summary?.totalFailed||0, pending: 0 }, tests: [] }]);
+                            }
+                          })
+                          .fail(() => {
+                            // Final fallback: show summary line as a spec-level result
+                            renderCypressRuns([{ spec: s.spec || 'unknown', counts: { total: s.summary?.totalTests||0, passed: s.summary?.totalPassed||0, failed: s.summary?.totalFailed||0, pending: 0 }, tests: [] }]);
+                          });
+                      } catch (e) {
+                        renderCypressRuns([{ spec: s.spec || 'unknown', counts: { total: s.summary?.totalTests||0, passed: s.summary?.totalPassed||0, failed: s.summary?.totalFailed||0, pending: 0 }, tests: [] }]);
+                      }
+                    }
                     updateTestStatus('cypress', s.exitCode === 0 ? 'success' : 'error');
                     clearInterval(cypressPoll);
+                    // Reset tail cache after finish so next run starts fresh
+                    setTimeout(() => { __lastCypressTail = ''; }, 1000);
                 } else if (s.state === 'error') {
                     appendResult(`Cypress error: ${s.message || 'unknown'}`);
                     updateTestStatus('cypress', 'error');
                     clearInterval(cypressPoll);
+                    setTimeout(() => { __lastCypressTail = ''; }, 1000);
                 } else if (dbg.trigger_pending) {
                     appendResult('Waiting for local Cypress watcher to pick up the trigger... (run: npm run ui:cypress:watch)');
                 }
@@ -500,6 +654,73 @@
               .fail(() => {
                 appendResult('Error polling Cypress status');
               });
+        }
+
+        // Render detailed Cypress results from JSON reporter (Cypress JSON with runs[])
+        function renderCypressResults(data) {
+            if (!data || typeof data !== 'object') {
+                appendResult('No detailed results available');
+                return;
+            }
+            const runs = Array.isArray(data.runs) ? data.runs : [];
+            if (runs.length === 0) {
+                // Try Mocha JSON reporter shape: { tests: [], failures: [], passes: [], stats: {} }
+                const tests = Array.isArray(data.tests) ? data.tests : [];
+                if (!tests.length) {
+                  appendResult('No spec runs found in results');
+                  return;
+                }
+                // Summarize by state and list failures
+                const passed = (data.passes && data.passes.length) || tests.filter(t => (t.state||'').toLowerCase()==='passed').length;
+                const failed = (data.failures && data.failures.length) || tests.filter(t => (t.state||'').toLowerCase()==='failed').length;
+                const pending = tests.filter(t => (t.state||'').toLowerCase()==='pending').length;
+                appendResult(`— Detailed results (mocha json) — Passed ${passed}, Failed ${failed}, Pending ${pending}`);
+                const fails = data.failures || tests.filter(t => (t.state||'').toLowerCase()==='failed');
+                fails.forEach((t) => {
+                  const title = (Array.isArray(t.title) ? t.title.join(' > ') : (t.fullTitle || t.title || 'Unnamed test'));
+                  const err = (t.err && t.err.message) || t.error || '';
+                  const snippet = String(err).split('\n')[0].slice(0, 200);
+                  appendResult(`  ✖ ${title} — ${snippet}`);
+                });
+                return;
+            }
+            appendResult('— Detailed results —');
+            runs.forEach((run) => {
+                const specPath = (run && run.spec && (run.spec.relative || run.spec.name || run.spec)) || 'unknown spec';
+                const tests = Array.isArray(run.tests) ? run.tests : [];
+                const passed = tests.filter(t => (t.state||'').toLowerCase() === 'passed').length;
+                const failed = tests.filter(t => (t.state||'').toLowerCase() === 'failed').length;
+                const pending = tests.filter(t => (t.state||'').toLowerCase() === 'pending').length;
+                appendResult(`Spec: ${specPath} — Passed ${passed}, Failed ${failed}, Pending ${pending}`);
+                // List failed tests with error snippet if present
+                tests.filter(t => (t.state||'').toLowerCase() === 'failed').forEach((t) => {
+                    const title = Array.isArray(t.title) ? t.title.join(' > ') : (t.title || 'Unnamed test');
+                    const err = (t.displayError || (t.attempts && t.attempts[0] && t.attempts[0].error && t.attempts[0].error.message)) || '';
+                    const snippet = String(err).split('\n')[0].slice(0, 200);
+                    appendResult(`  ✖ ${title} — ${snippet}`);
+                });
+            });
+            appendResult('View raw JSON: app/frontend/test/last.json (or open cypress-runner.php?action=results)');
+        }
+
+        // Render when runs[] are already included in status.json (runs light format)
+        function renderCypressRuns(runs) {
+            if (!Array.isArray(runs) || runs.length === 0) return;
+            appendResult('— Detailed results —');
+            runs.forEach((r) => {
+                const specPath = r.spec || 'unknown spec';
+                const c = r.counts || {};
+                const passed = c.passed || c.pass || 0;
+                const failed = c.failed || c.fail || 0;
+                const pending = c.pending || 0;
+                appendResult(`Spec: ${specPath} — Passed ${passed}, Failed ${failed}, Pending ${pending}`);
+                const tests = Array.isArray(r.tests) ? r.tests : [];
+                tests.filter(t => (t.state||'').toLowerCase() === 'failed').forEach((t) => {
+                    const title = Array.isArray(t.title) ? t.title.join(' > ') : (t.title || 'Unnamed test');
+                    const snippet = String(t.error || '').split('\n')[0].slice(0, 200);
+                    appendResult(`  ✖ ${title} — ${snippet}`);
+                });
+            });
         }
 
         function showAlert(message, type) {
@@ -536,15 +757,16 @@
             $empty.hide();
             list.forEach((s, idx) => {
               const id = `spec-${idx}`;
-              const safe = $('<div/>').text(s.path).html();
+              const display = $('<div/>').text(s.path).html();
+              const rawPath = s.path; // use raw path for data attribute
               const groupBadge = s.group === 'e2e_prod' ? '<span class="badge badge-warning ml-2">prod</span>' : '';
               const item = `
                 <div class="list-group-item d-flex justify-content-between align-items-center">
                   <div class="text-truncate" style="max-width: 70%;">
-                    <code title="${safe}">${safe}</code> ${groupBadge}
+                    <code title="${display}">${display}</code> ${groupBadge}
                   </div>
                   <div>
-                    <button class="btn btn-sm btn-outline-primary run-spec" data-spec="${safe}"><i class="fa fa-play"></i> Run</button>
+                    <button class="btn btn-sm btn-outline-primary run-spec" data-spec="${rawPath}"><i class="fa fa-play"></i> Run</button>
                   </div>
                 </div>`;
               $list.append(item);
@@ -601,6 +823,162 @@
           // refresh specs occasionally
           setInterval(loadSpecs, 15000);
         })();
+
+        // Email system management functions
+        function loadEmailStatus() {
+            // Load sandbox status
+            $.post('../router.php?controller=email', { action: 'get_sandbox_status' })
+                .done(function(response) {
+                    const data = parseMaybeJson(response);
+                    if (data.success) {
+                        updateSandboxUI(data.sandbox_enabled);
+                    } else {
+                        $('#sandbox-status').text('Error loading status');
+                    }
+                })
+                .fail(function() {
+                    $('#sandbox-status').text('Error loading status');
+                });
+
+            // Load rate limit count
+            $.post('../router.php?controller=email', { action: 'get_rate_limits' })
+                .done(function(response) {
+                    const data = parseMaybeJson(response);
+                    if (data.success) {
+                        const count = Object.keys(data.rate_limits).length;
+                        $('#rate-limit-count').text(`Rate limits: ${count} entries`);
+                    } else {
+                        $('#rate-limit-count').text('Error loading limits');
+                    }
+                })
+                .fail(function() {
+                    $('#rate-limit-count').text('Error loading limits');
+                });
+        }
+
+        function updateSandboxUI(sandboxEnabled) {
+            if (sandboxEnabled) {
+                $('#sandbox-text').text('Disable Sandbox');
+                $('#sandbox-status').text('Sandbox: ENABLED (no emails sent)');
+                $('#toggle-sandbox').removeClass('btn-outline-info').addClass('btn-outline-warning');
+                $('#status-sandbox').removeClass('status-idle').addClass('status-success');
+            } else {
+                $('#sandbox-text').text('Enable Sandbox');
+                $('#sandbox-status').text('Sandbox: DISABLED (real emails sent)');
+                $('#toggle-sandbox').removeClass('btn-outline-warning').addClass('btn-outline-info');
+                $('#status-sandbox').removeClass('status-success').addClass('status-idle');
+            }
+        }
+
+        function toggleSandboxMode() {
+            $('#status-sandbox').removeClass('status-idle status-success status-error').addClass('status-running');
+            appendResult('🔄 Toggling email sandbox mode...');
+
+            // Get current status first
+            $.post('../router.php?controller=email', { action: 'get_sandbox_status' })
+                .done(function(response) {
+                    const data = parseMaybeJson(response);
+                    if (data.success) {
+                        const newState = !data.sandbox_enabled;
+                        
+                        // Toggle to opposite state
+                        $.post('../router.php?controller=email', { 
+                            action: 'set_sandbox_mode', 
+                            enabled: newState 
+                        })
+                        .done(function(toggleResponse) {
+                            const toggleData = parseMaybeJson(toggleResponse);
+                            if (toggleData.success) {
+                                updateSandboxUI(toggleData.sandbox_enabled);
+                                appendResult(`✅ Sandbox mode ${toggleData.sandbox_enabled ? 'enabled' : 'disabled'}`);
+                                showAlert(toggleData.message, 'success');
+                                $('#status-sandbox').removeClass('status-running').addClass('status-success');
+                            } else {
+                                appendResult(`❌ Failed to toggle sandbox: ${toggleData.message}`);
+                                showAlert(`Error: ${toggleData.message}`, 'danger');
+                                $('#status-sandbox').removeClass('status-running').addClass('status-error');
+                            }
+                        })
+                        .fail(function() {
+                            appendResult('❌ Network error toggling sandbox mode');
+                            showAlert('Network error', 'danger');
+                            $('#status-sandbox').removeClass('status-running').addClass('status-error');
+                        });
+                    }
+                })
+                .fail(function() {
+                    appendResult('❌ Failed to get current sandbox status');
+                    $('#status-sandbox').removeClass('status-running').addClass('status-error');
+                });
+        }
+
+        function clearRateLimits() {
+            $('#status-ratelimit').removeClass('status-idle status-success status-error').addClass('status-running');
+            appendResult('🗑️ Clearing all rate limits...');
+
+            $.post('../router.php?controller=email', { action: 'clear_rate_limits' })
+                .done(function(response) {
+                    const data = parseMaybeJson(response);
+                    if (data.success) {
+                        appendResult('✅ All rate limits cleared');
+                        showAlert(data.message, 'success');
+                        $('#status-ratelimit').removeClass('status-running').addClass('status-success');
+                        $('#rate-limit-count').text('Rate limits: 0 entries');
+                        setTimeout(() => {
+                            $('#status-ratelimit').removeClass('status-success').addClass('status-idle');
+                        }, 2000);
+                    } else {
+                        appendResult(`❌ Failed to clear rate limits: ${data.message}`);
+                        showAlert(`Error: ${data.message}`, 'danger');
+                        $('#status-ratelimit').removeClass('status-running').addClass('status-error');
+                    }
+                })
+                .fail(function() {
+                    appendResult('❌ Network error clearing rate limits');
+                    showAlert('Network error', 'danger');
+                    $('#status-ratelimit').removeClass('status-running').addClass('status-error');
+                });
+        }
+
+        function viewRateLimits() {
+            appendResult('📊 Fetching current rate limits...');
+
+            $.post('../router.php?controller=email', { action: 'get_rate_limits' })
+                .done(function(response) {
+                    const data = parseMaybeJson(response);
+                    if (data.success) {
+                        const rateLimits = data.rate_limits;
+                        const count = Object.keys(rateLimits).length;
+                        
+                        appendResult(`📋 Rate limits (${count} entries):`);
+                        
+                        if (count === 0) {
+                            appendResult('   No rate limits currently active');
+                        } else {
+                            Object.entries(rateLimits).forEach(([key, limits]) => {
+                                const now = Math.floor(Date.now() / 1000);
+                                const blockedUntil = limits.blocked_until || 0;
+                                const attempts = limits.attempts ? limits.attempts.length : 0;
+                                
+                                let status = `${attempts} attempts`;
+                                if (blockedUntil > now) {
+                                    const remainingMin = Math.ceil((blockedUntil - now) / 60);
+                                    status += `, blocked for ${remainingMin}min`;
+                                }
+                                
+                                appendResult(`   ${key}: ${status}`);
+                            });
+                        }
+                        
+                        $('#rate-limit-count').text(`Rate limits: ${count} entries`);
+                    } else {
+                        appendResult(`❌ Failed to get rate limits: ${data.message}`);
+                    }
+                })
+                .fail(function() {
+                    appendResult('❌ Network error fetching rate limits');
+                });
+        }
 </script>
 </body>
 <script>
@@ -636,6 +1014,10 @@
         return triggerCypress('Schema', 'cypress/e2e/schema.cy.js', 'schema');
       case 'health':
         return triggerCypress('Health', 'cypress/e2e/health.cy.js', 'health');
+      case 'email_login':
+        return triggerCypress('Email Login', 'cypress/e2e/email_login.cy.js', 'email_login');
+      case 'email_security':
+        return triggerCypress('Email Security', 'cypress/e2e/email_security.cy.js', 'email_security');
       case 'cypress':
       case 'all':
         return triggerCypress('All', 'cypress/e2e/*.cy.js', 'all');

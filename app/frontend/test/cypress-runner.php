@@ -27,14 +27,30 @@ if ($action === 'start') {
     if (($status['state'] ?? '') === 'running') {
         ok(['message' => 'Cypress already running; trigger ignored', 'status' => $status]);
     }
+    $runId = dechex(time()) . '-' . substr(bin2hex(random_bytes(3)), 0, 6);
+    $specGroup = (strpos($spec, 'e2e_prod') !== false) ? 'e2e_prod' : ((strpos($spec, 'cypress/e2e') !== false) ? 'e2e' : 'mixed');
     $payload = [
         'ts' => time(),
         'spec' => $spec,
+        'runId' => $runId,
     ];
     if (!is_dir(dirname($triggerFile))) {
         @mkdir(dirname($triggerFile), 0777, true);
     }
     file_put_contents($triggerFile, json_encode($payload, JSON_PRETTY_PRINT));
+    // Pre-write a running status so the UI can show differentiator immediately
+    @file_put_contents($statusFile, json_encode([
+        'state' => 'queued',
+        'startedAt' => gmdate('c'),
+        'runId' => $runId,
+        'spec' => $spec,
+        'specGroup' => $specGroup,
+        'debug' => [
+            'trigger_pending' => true,
+            'trigger_mtime' => @filemtime($triggerFile),
+            'status_mtime' => @filemtime($statusFile),
+        ],
+    ], JSON_PRETTY_PRINT));
     ok(['message' => 'Trigger written', 'payload' => $payload]);
 }
 
