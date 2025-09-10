@@ -40,6 +40,12 @@ class AuthManager {
             return true;
         }
         
+        // Check for force_email_success cookie (only for rate limiting tests when cypress_testing is disabled)
+        if (!$isCypressTest && isset($_COOKIE['force_email_success']) && $_COOKIE['force_email_success'] === 'true') {
+            error_log("Force email success cookie set - returning success without sending email (rate limit testing)");
+            return true;
+        }
+        
         try {
             // Prepare email data
             $fromEmail = $_ENV['SPARKPOST_FROM_EMAIL'] ?? 'noreply@weightlosstracker.com';
