@@ -18,15 +18,13 @@ function AuthController() {
             $email = htmlspecialchars($_POST['email']);
             $result = AuthManager::sendLoginCode($email);
             echo json_encode($result);
-        } elseif ($action === 'create_account' && isset($_POST['email'], $_POST['first_name'], $_POST['last_name'])) {
+        } elseif ($action === 'create_account' && isset($_POST['email'])) {
             $email = htmlspecialchars($_POST['email']);
             if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 echo json_encode(['success' => false, 'message' => 'Invalid email address']);
                 return;
             }
-            $firstName = htmlspecialchars($_POST['first_name']);
-            $lastName = htmlspecialchars($_POST['last_name']);
-            $result = AuthManager::createAccount($email, $firstName, $lastName);
+            $result = AuthManager::createAccount($email);
             echo json_encode($result);
         } elseif ($action === 'verify_login' && isset($_POST['email'], $_POST['code'])) {
             $email = htmlspecialchars($_POST['email']);

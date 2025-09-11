@@ -63,6 +63,24 @@ CREATE TABLE wt_test.user_profiles (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- User settings table for wt_test
+CREATE TABLE wt_test.user_settings (
+    user_id INTEGER PRIMARY KEY REFERENCES wt_test.users(id) ON DELETE CASCADE,
+    weight_unit VARCHAR(10) DEFAULT 'kg', -- kg, lbs, st
+    height_unit VARCHAR(10) DEFAULT 'cm', -- cm, ft, m
+    temperature_unit VARCHAR(5) DEFAULT 'c', -- c, f
+    date_format VARCHAR(10) DEFAULT 'uk', -- uk, us, iso, euro
+    time_format VARCHAR(5) DEFAULT '24', -- 24, 12
+    timezone VARCHAR(50) DEFAULT 'Europe/London',
+    theme VARCHAR(20) DEFAULT 'glassmorphism',
+    language VARCHAR(10) DEFAULT 'en',
+    start_of_week VARCHAR(10) DEFAULT 'monday', -- monday, sunday
+    share_data BOOLEAN DEFAULT false,
+    email_notifications BOOLEAN DEFAULT false,
+    weekly_reports BOOLEAN DEFAULT false,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Seed comprehensive test data for wt_test
 INSERT INTO wt_test.users (email, first_name, last_name, is_verified) VALUES
     ('test@dev.com', 'Test', 'User', true),
@@ -102,16 +120,20 @@ INSERT INTO wt_test.weight_entries (user_id, weight_kg, entry_date, notes) VALUE
     (1, 80.3, '2024-03-19', 'Quarter way there'),
     (1, 79.9, '2024-03-26', 'March end'),
     
-    -- User 2 - Bob's maintenance phase
-    (2, 75.5, '2024-01-01', 'Maintenance phase start'),
-    (2, 75.8, '2024-01-08', 'Holiday weight still showing'),
-    (2, 75.2, '2024-01-15', 'Getting back to normal'),
-    (2, 75.0, '2024-01-22', 'Stable weight'),
-    (2, 74.8, '2024-01-29', 'Good consistency'),
-    (2, 75.1, '2024-02-05', 'Weekend indulgence'),
-    (2, 74.9, '2024-02-12', 'Back to baseline'),
-    (2, 75.0, '2024-02-19', 'Steady as she goes'),
-    (2, 74.7, '2024-02-26', 'Slight loss'),
+    -- User 2 - Robert Marsh's exact actual weight history
+    (2, 128.0, '2025-06-13', 'Weight entry'),
+    (2, 126.5, '2025-06-20', 'Weight entry'),
+    (2, 123.6, '2025-06-27', 'Weight entry'),
+    (2, 125.2, '2025-07-04', 'Weight entry'),
+    (2, 122.4, '2025-07-11', 'Weight entry'),
+    (2, 121.7, '2025-07-18', 'Weight entry'),
+    (2, 122.2, '2025-07-25', 'Weight entry'),
+    (2, 121.3, '2025-08-01', 'Weight entry'),
+    (2, 120.2, '2025-08-08', 'Weight entry'),
+    (2, 120.2, '2025-08-15', 'Weight entry'),
+    (2, 119.4, '2025-08-22', 'Weight entry'),
+    (2, 119.2, '2025-08-29', 'Weight entry'),
+    (2, 119.0, '2025-09-09', 'Current weight'),
     
     -- User 3 - Carol's aggressive cut
     (3, 92.0, '2024-01-01', 'Starting aggressive weight loss'),

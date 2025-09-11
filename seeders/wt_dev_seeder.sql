@@ -63,6 +63,24 @@ CREATE TABLE wt_dev.user_profiles (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- User settings table for wt_dev
+CREATE TABLE wt_dev.user_settings (
+    user_id INTEGER PRIMARY KEY REFERENCES wt_dev.users(id) ON DELETE CASCADE,
+    weight_unit VARCHAR(10) DEFAULT 'kg', -- kg, lbs, st
+    height_unit VARCHAR(10) DEFAULT 'cm', -- cm, ft, m
+    temperature_unit VARCHAR(5) DEFAULT 'c', -- c, f
+    date_format VARCHAR(10) DEFAULT 'uk', -- uk, us, iso, euro
+    time_format VARCHAR(5) DEFAULT '24', -- 24, 12
+    timezone VARCHAR(50) DEFAULT 'Europe/London',
+    theme VARCHAR(20) DEFAULT 'glassmorphism',
+    language VARCHAR(10) DEFAULT 'en',
+    start_of_week VARCHAR(10) DEFAULT 'monday', -- monday, sunday
+    share_data BOOLEAN DEFAULT false,
+    email_notifications BOOLEAN DEFAULT false,
+    weekly_reports BOOLEAN DEFAULT false,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Seed basic development data for wt_dev (minimal, clean data for development)
 INSERT INTO wt_dev.users (email, first_name, last_name, is_verified) VALUES
     ('robertmarshgb@gmail.com', 'Robert', 'Marsh', true),
@@ -79,12 +97,22 @@ INSERT INTO wt_dev.test_table (val) VALUES
 INSERT INTO wt_dev.user_profiles (user_id, height_cm, body_frame, age, activity_level) VALUES
     (1, 178, 'large', 40, 'light');
 
--- Weight entries for development testing
+-- Weight entries for Robert Marsh - exact actual weight history data
 INSERT INTO wt_dev.weight_entries (user_id, weight_kg, entry_date, notes) VALUES
-    (1, 75.0, '2024-01-01', 'Development baseline'),
-    (1, 74.5, '2024-01-08', 'Week 1 progress'),
-    (1, 74.0, '2024-01-15', 'Steady progress'),
+    (1, 128.0, '2025-06-13', 'Weight entry'),
+    (1, 126.5, '2025-06-20', 'Weight entry'),
+    (1, 123.6, '2025-06-27', 'Weight entry'),
+    (1, 125.2, '2025-07-04', 'Weight entry'),
+    (1, 122.4, '2025-07-11', 'Weight entry'),
+    (1, 121.7, '2025-07-18', 'Weight entry'),
+    (1, 122.2, '2025-07-25', 'Weight entry'),
+    (1, 121.3, '2025-08-01', 'Weight entry'),
+    (1, 120.2, '2025-08-08', 'Weight entry'),
+    (1, 120.2, '2025-08-15', 'Weight entry'),
+    (1, 119.4, '2025-08-22', 'Weight entry'),
+    (1, 119.2, '2025-08-29', 'Weight entry'),
     (1, 119.0, '2025-09-09', 'Current weight'),
+    -- Other users
     (2, 80.0, '2024-01-01', 'Test user baseline'),
     (2, 79.5, '2024-01-08', 'Test progress');
 

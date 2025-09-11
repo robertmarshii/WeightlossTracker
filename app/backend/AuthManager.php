@@ -256,7 +256,7 @@ class AuthManager {
         }
     }
     
-    public static function createAccount($email, $firstName, $lastName) {
+    public static function createAccount($email) {
         try {
             // Rate limiting check
             $rateLimitResult = self::checkRateLimit($email, 'signup_code');
@@ -274,9 +274,9 @@ class AuthManager {
                 return ['success' => false, 'message' => 'An account with this email already exists'];
             }
             
-            // Create user account
-            $stmt = $db->prepare("INSERT INTO {$schema}.users (email, first_name, last_name, created_at) VALUES (?, ?, ?, NOW())");
-            $stmt->execute([$email, $firstName, $lastName]);
+            // Create user account with empty first_name and last_name
+            $stmt = $db->prepare("INSERT INTO {$schema}.users (email, first_name, last_name, created_at) VALUES (?, '', '', NOW())");
+            $stmt->execute([$email]);
             
             // Generate and store verification code
             $code = self::generateCode();

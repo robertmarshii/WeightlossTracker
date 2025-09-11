@@ -23,7 +23,8 @@
       "Bash(timeout 30 npx cypress run --spec \"debug_test.js\" --reporter spec)",
       "Bash(timeout 30 npx cypress run:*)",
       "Bash(do echo \"Login request $i:\")",
-      "Bash(timeout 60 npx cypress run:*)"
+      "Bash(timeout 60 npx cypress run:*)",
+      "WebFetch(domain:localhost)"
     ],
     "deny": [],
     "ask": []
