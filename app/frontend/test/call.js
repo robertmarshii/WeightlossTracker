@@ -6,6 +6,7 @@ $( document ).ready(function() {
 })
 
     async function getData() {
+        if (window.coverage) window.coverage.logFunction('getData', 'test/call.js');
 
         let result = await getFromDB(); 
         console.log(result);

@@ -9,10 +9,14 @@
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
     "cypress:run:json": "cypress run --reporter json --reporter-options output=cypress/results/last.json",
-    "ui:cypress:watch": "node scripts/ui-cypress-runner.js",
+    "cypress:coverage": "node .claude/scripts/run-tests-with-coverage.js",
+    "ui:cypress:watch": "node .claude/scripts/ui-cypress-runner.js",
     "test:e2e": "cypress run",
     "test:db": "cypress run --spec cypress/e2e/test-page.cy.js",
-    "test:prod": "cypress run --spec 'cypress/e2e_prod/**/*.cy.js'"
+    "test:prod": "cypress run --spec 'cypress/e2e_prod/**/*.cy.js'",
+    "test:coverage": "npm run cypress:coverage && node .claude/scripts/analyze-coverage.js",
+    "functions:scan": "node .claude/scripts/generate-function-inventory.js",
+    "functions:add-comments": "node .claude/scripts/add-coverage-comments.js"
   },
   "prepare": "husky"
 }

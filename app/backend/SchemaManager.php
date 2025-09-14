@@ -1,9 +1,11 @@
 <?php
+require_once('/var/app/backend/CoverageLogger.php');
 
 class SchemaManager
 {
     public static function switchSchema($schema)
     {
+        COVERAGE_LOG('switchSchema', __CLASS__, __FILE__, __LINE__);
         // Only allow localhost access
         if (!self::isLocalhost()) {
             return ['success' => false, 'message' => 'Schema switching only allowed from localhost'];
@@ -40,12 +42,14 @@ class SchemaManager
     
     public static function getCurrentSchema()
     {
+        COVERAGE_LOG('getCurrentSchema', __CLASS__, __FILE__, __LINE__);
         // Check session first (user's choice), then fallback to env, then default
         return $_SESSION['selected_schema'] ?? getenv('PG_SCHEMA') ?: 'wt_dev';
     }
     
     private static function validateSchemaSwitch($schema)
     {
+        COVERAGE_LOG('validateSchemaSwitch', __CLASS__, __FILE__, __LINE__);
         try {
             // Force clear any cached database connections
             require_once('/var/app/backend/Config.php');
@@ -99,6 +103,7 @@ class SchemaManager
     
     private static function isLocalhost()
     {
+        COVERAGE_LOG('isLocalhost', __CLASS__, __FILE__, __LINE__);
         $httpHost = $_SERVER['HTTP_HOST'] ?? '';
         
         return $httpHost === '127.0.0.1:8111';

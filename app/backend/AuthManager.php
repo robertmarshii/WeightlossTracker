@@ -1,6 +1,7 @@
 <?php
 
 require_once '/var/app/project/vendor/autoload.php';
+require_once '/var/app/backend/CoverageLogger.php';
 
 use SparkPost\SparkPost;
 use GuzzleHttp\Client;
@@ -8,13 +9,12 @@ use Http\Adapter\Guzzle7\Client as GuzzleAdapter;
 
 class AuthManager {
     private static function generateCode() {
+        COVERAGE_LOG('generateCode', __CLASS__, __FILE__, __LINE__);
         return str_pad(mt_rand(0, 999999), 6, '0', STR_PAD_LEFT);
     }
     
     private static function sendEmail($to, $subject, $message) {
-        // Always log for development/debugging purposes
-        $logMessage = "EMAIL TO: $to\nSUBJECT: $subject\nMESSAGE:\n$message\n" . str_repeat("-", 50) . "\n";
-        self::appendToEmailLog($logMessage);
+        COVERAGE_LOG('sendEmail', __CLASS__, __FILE__, __LINE__);
         
         // Check if cypress_testing cookie is set (for tests)
         $isCypressTest = isset($_COOKIE['cypress_testing']) && $_COOKIE['cypress_testing'] === 'true';
@@ -112,6 +112,7 @@ class AuthManager {
     }
 
     private static function checkRateLimit($email, $action) {
+        COVERAGE_LOG('checkRateLimit', __CLASS__, __FILE__, __LINE__);
         // Skip rate limiting if cypress_testing cookie is set AND email is the main test email
         // This allows rate limiting tests to work with other email addresses
         if (isset($_COOKIE['cypress_testing']) && $_COOKIE['cypress_testing'] === 'true' && $email === 'robertmarshgb@gmail.com') {
@@ -176,31 +177,9 @@ class AuthManager {
         return ['allowed' => true];
     }
 
-    private static function appendToEmailLog($text)
-    {
-        $path = '/var/app/backend/email_log.txt';
-        // Prune the log if it grows too large
-        self::pruneLog($path, 1048576, 2000); // 1MB or keep last 2000 lines
-        file_put_contents($path, $text, FILE_APPEND | LOCK_EX);
-    }
-
-    private static function pruneLog($path, $maxBytes, $keepLines)
-    {
-        if (!file_exists($path)) { return; }
-        $size = @filesize($path);
-        if ($size === false) { return; }
-        if ($size <= $maxBytes) { return; }
-        // Keep only the last N lines
-        $lines = @file($path, FILE_IGNORE_NEW_LINES);
-        if ($lines === false) { return; }
-        $total = count($lines);
-        if ($total > $keepLines) {
-            $tail = array_slice($lines, -$keepLines);
-            @file_put_contents($path, implode(PHP_EOL, $tail) . PHP_EOL, LOCK_EX);
-        }
-    }
     
     public static function sendLoginCode($email) {
+        COVERAGE_LOG('sendLoginCode', __CLASS__, __FILE__, __LINE__);
         try {
             // Rate limiting check
             $rateLimitResult = self::checkRateLimit($email, 'login_code');
@@ -257,6 +236,7 @@ class AuthManager {
     }
     
     public static function createAccount($email) {
+        COVERAGE_LOG('createAccount', __CLASS__, __FILE__, __LINE__);
         try {
             // Rate limiting check
             $rateLimitResult = self::checkRateLimit($email, 'signup_code');
@@ -310,6 +290,7 @@ class AuthManager {
     }
     
     public static function verifyLoginCode($email, $code) {
+        COVERAGE_LOG('verifyLoginCode', __CLASS__, __FILE__, __LINE__);
         try {
             require_once('/var/app/backend/Config.php');
             $db = Database::getInstance()->getDbConnection();
@@ -350,16 +331,19 @@ class AuthManager {
     }
     
     public static function verifySignupCode($email, $code) {
+        COVERAGE_LOG('verifySignupCode', __CLASS__, __FILE__, __LINE__);
         return self::verifyLoginCode($email, $code);
     }
     
     public static function logout() {
+        COVERAGE_LOG('logout', __CLASS__, __FILE__, __LINE__);
         session_start();
         session_destroy();
         return ['success' => true, 'message' => 'Logged out successfully'];
     }
     
     public static function isLoggedIn() {
+        COVERAGE_LOG('isLoggedIn', __CLASS__, __FILE__, __LINE__);
         session_start();
         
         if (!isset($_SESSION['user_id']) || !isset($_SESSION['login_time'])) {

@@ -101,17 +101,17 @@ INSERT INTO wt_dev.user_profiles (user_id, height_cm, body_frame, age, activity_
 INSERT INTO wt_dev.weight_entries (user_id, weight_kg, entry_date, notes) VALUES
     (1, 128.0, '2025-06-13', 'Weight entry'),
     (1, 126.5, '2025-06-20', 'Weight entry'),
-    (1, 123.6, '2025-06-27', 'Weight entry'),
+    (1, 125.5, '2025-06-27', 'Weight entry'),
     (1, 125.2, '2025-07-04', 'Weight entry'),
-    (1, 122.4, '2025-07-11', 'Weight entry'),
-    (1, 121.7, '2025-07-18', 'Weight entry'),
+    (1, 123.6, '2025-07-11', 'Weight entry'),
+    (1, 122.4, '2025-07-18', 'Weight entry'),
     (1, 122.2, '2025-07-25', 'Weight entry'),
-    (1, 121.3, '2025-08-01', 'Weight entry'),
-    (1, 120.2, '2025-08-08', 'Weight entry'),
+    (1, 121.7, '2025-08-01', 'Weight entry'),
+    (1, 121.3, '2025-08-08', 'Weight entry'),
     (1, 120.2, '2025-08-15', 'Weight entry'),
     (1, 119.4, '2025-08-22', 'Weight entry'),
     (1, 119.2, '2025-08-29', 'Weight entry'),
-    (1, 119.0, '2025-09-09', 'Current weight'),
+    (1, 119.0, '2025-09-05', 'Weight entry'),
     -- Other users
     (2, 80.0, '2024-01-01', 'Test user baseline'),
     (2, 79.5, '2024-01-08', 'Test progress');

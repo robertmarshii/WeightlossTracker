@@ -1,5 +1,6 @@
 <?php
    session_start();
+   require_once '/var/app/backend/CoverageLogger.php';
 
     if(isset($_GET["controller"])) {
         $controller = htmlspecialchars($_GET["controller"]);
@@ -8,9 +9,12 @@
         if($controller === "seeder") { SeederController(); }
         if($controller === "profile") { ProfileController(); }
         if($controller === "email") { EmailController(); }
+        if($controller === "coverage") { CoverageController(); }
+        if($controller === "seeder_tester") { SeederTesterController(); }
     }
 
     function Get1() {
+        COVERAGE_LOG('Get1', 'Router', __FILE__, __LINE__);
         if(!isset($_POST["page"])) { $_POST["page"] = 1; }
         $page = htmlspecialchars($_POST["page"]);
         require_once ('/var/app/backend/Get1.php'); //load the dataset model
@@ -20,6 +24,7 @@
     }
 
     function SchemaController() {
+        COVERAGE_LOG('SchemaController', 'Router', __FILE__, __LINE__);
         require_once ('/var/app/backend/SchemaManager.php');
         
         // Accept both form-encoded and JSON payloads
@@ -47,6 +52,7 @@
     }
 
     function SeederController() {
+        COVERAGE_LOG('SeederController', 'Router', __FILE__, __LINE__);
         require_once ('/var/app/backend/DatabaseSeeder.php');
         
         if (isset($_POST['action'])) {
@@ -55,9 +61,17 @@
             if ($action === 'reset_all') {
                 $result = DatabaseSeeder::resetSchemas(['wt_test', 'wt_dev']);
                 echo json_encode($result);
-            } elseif ($action === 'reset_schema' && isset($_POST['schema'])) {
+            } elseif ($action === 'reset_schemas' && isset($_POST['schemas'])) {
+                $schemas = is_array($_POST['schemas']) ? $_POST['schemas'] : [$_POST['schemas']];
+                $result = DatabaseSeeder::resetSchemas($schemas);
+                echo json_encode($result);
+            } elseif ($action === 'seed_schema' && isset($_POST['schema'])) {
                 $schema = htmlspecialchars($_POST['schema']);
                 $result = DatabaseSeeder::seedSchema($schema);
+                echo json_encode($result);
+            } elseif ($action === 'reset_schema' && isset($_POST['schema'])) {
+                $schema = htmlspecialchars($_POST['schema']);
+                $result = DatabaseSeeder::resetSchemas([$schema]);
                 echo json_encode($result);
             } elseif ($action === 'migrate_live') {
                 $result = DatabaseSeeder::migrateLive();
@@ -67,6 +81,7 @@
     }
 
     function ProfileController() {
+        COVERAGE_LOG('ProfileController', 'Router', __FILE__, __LINE__);
         require_once ('/var/app/backend/Config.php');
 
         if (!isset($_SESSION['user_id'])) {
@@ -767,6 +782,7 @@
     }
 
     function EmailController() {
+        COVERAGE_LOG('EmailController', 'Router', __FILE__, __LINE__);
         header('Content-Type: application/json');
         
         $request = $_POST;
@@ -881,6 +897,57 @@
         } catch (Exception $e) {
             echo json_encode(['success' => false, 'message' => 'Server error: ' . $e->getMessage()]);
         }
+    }
+
+    function CoverageController() {
+        COVERAGE_LOG('CoverageController', 'Router', __FILE__, __LINE__);
+        require_once '/var/app/backend/CoverageLogger.php';
+        
+        header('Content-Type: application/json');
+        
+        // Only allow in development environment
+        if (($_SERVER['HTTP_HOST'] ?? '') !== '127.0.0.1:8111') {
+            echo json_encode(['success' => false, 'message' => 'Coverage API not available']);
+            return;
+        }
+        
+        $action = $_POST['action'] ?? $_GET['action'] ?? '';
+        
+        try {
+            if ($action === 'get_report') {
+                $coverageLogger = CoverageLogger::getInstance();
+                $report = $coverageLogger->getReport();
+                
+                echo json_encode([
+                    'success' => true,
+                    'coverage' => $report
+                ]);
+                return;
+            }
+            
+            if ($action === 'clear') {
+                // Clear coverage data for fresh test runs
+                $coverageLogger = CoverageLogger::getInstance();
+                $coverageLogger->clearCoverage();
+                echo json_encode([
+                    'success' => true,
+                    'message' => 'Coverage data cleared'
+                ]);
+                return;
+            }
+            
+            echo json_encode(['success' => false, 'message' => 'Invalid coverage action']);
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'message' => 'Coverage error: ' . $e->getMessage()]);
+        }
+    }
+
+    function SeederTesterController() {
+        COVERAGE_LOG('SeederTesterController', 'Router', __FILE__, __LINE__);
+        require_once '/var/app/backend/DatabaseSeederTester.php';
+        
+        header('Content-Type: application/json');
+        echo json_encode(DatabaseSeederTester::handleRequest());
     }
 
     ?>

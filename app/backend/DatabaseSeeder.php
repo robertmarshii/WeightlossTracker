@@ -1,10 +1,12 @@
 <?php
 require_once('/var/app/backend/Config.php');
+require_once('/var/app/backend/CoverageLogger.php');
 
 class DatabaseSeeder
 {
     public static function resetSchemas($schemas = ['wt_test', 'wt_dev'])
     {
+        COVERAGE_LOG('resetSchemas', __CLASS__, __FILE__, __LINE__);
         // Only allow localhost access
         if (!self::isLocalhost()) {
             return ['success' => false, 'message' => 'Database seeding only allowed from localhost'];
@@ -56,6 +58,7 @@ class DatabaseSeeder
 
     public static function seedSchema($schema)
     {
+        COVERAGE_LOG('seedSchema', __CLASS__, __FILE__, __LINE__);
         // Only allow localhost access
         if (!self::isLocalhost()) {
             return ['success' => false, 'message' => 'Database seeding only allowed from localhost'];
@@ -72,6 +75,7 @@ class DatabaseSeeder
 
     public static function migrateLive()
     {
+        COVERAGE_LOG('migrateLive', __CLASS__, __FILE__, __LINE__);
         // Only allow localhost access
         if (!self::isLocalhost()) {
             return ['success' => false, 'message' => 'Live migration only allowed from localhost'];
@@ -111,6 +115,7 @@ class DatabaseSeeder
 
     private static function runSchemaSeeder($schema, $connection)
     {
+        COVERAGE_LOG('runSchemaSeeder', __CLASS__, __FILE__, __LINE__);
         try {
             // Determine the correct seeder file based on schema
             $seederFile = self::getSeederFile($schema);
@@ -136,6 +141,7 @@ class DatabaseSeeder
 
     private static function runSchemaMigration($schema, $connection)
     {
+        COVERAGE_LOG('runSchemaMigration', __CLASS__, __FILE__, __LINE__);
         try {
             // Use migration file for live schema (non-destructive)
             $migrationFile = "/var/app/seeders/{$schema}_migration.sql";
@@ -161,11 +167,13 @@ class DatabaseSeeder
 
     private static function getSeederFile($schema)
     {
+        COVERAGE_LOG('getSeederFile', __CLASS__, __FILE__, __LINE__);
         return "/var/app/seeders/{$schema}_seeder.sql";
     }
 
     private static function verifySchema($schema, $connection)
     {
+        COVERAGE_LOG('verifySchema', __CLASS__, __FILE__, __LINE__);
         try {
             // Check if schema exists
             $stmt = $connection->prepare("SELECT schema_name FROM information_schema.schemata WHERE schema_name = ?");
@@ -203,6 +211,7 @@ class DatabaseSeeder
 
     private static function isLocalhost()
     {
+        COVERAGE_LOG('isLocalhost', __CLASS__, __FILE__, __LINE__);
         $httpHost = $_SERVER['HTTP_HOST'] ?? '';
         return $httpHost === '127.0.0.1:8111';
     }

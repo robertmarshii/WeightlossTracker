@@ -1,5 +1,6 @@
 <?php
 // Backend authentication router - handles all auth-related endpoints
+require_once('/var/app/backend/CoverageLogger.php');
 session_start();
 
 if(isset($_GET["controller"])) {
@@ -8,6 +9,7 @@ if(isset($_GET["controller"])) {
 }
 
 function AuthController() {
+    COVERAGE_LOG('AuthController', null, __FILE__, __LINE__);
     require_once ('/var/app/backend/AuthManager.php');
     require_once ('/var/app/backend/Config.php');
     

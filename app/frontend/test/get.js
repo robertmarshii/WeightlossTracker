@@ -1,4 +1,5 @@
 function getFromDB() {
+    if (window.coverage) window.coverage.logFunction('getFromDB', 'test/get.js');
 
     var data = new FormData();
     data.append('page', 1);

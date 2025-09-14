@@ -13,8 +13,14 @@ $statusFile = __DIR__ . DIRECTORY_SEPARATOR . 'status.json';
 $lastJson = __DIR__ . DIRECTORY_SEPARATOR . 'last.json';
 $specsFile = __DIR__ . DIRECTORY_SEPARATOR . 'specs.json';
 
-function ok($data = []) { echo json_encode(['success' => true] + $data); exit; }
-function fail($msg, $data = []) { http_response_code(400); echo json_encode(['success' => false, 'message' => $msg] + $data); exit; }
+function ok($data = []) { 
+    if (function_exists('COVERAGE_LOG')) COVERAGE_LOG('ok', null, __FILE__, __LINE__);
+    echo json_encode(['success' => true] + $data); exit; 
+}
+function fail($msg, $data = []) { 
+    if (function_exists('COVERAGE_LOG')) COVERAGE_LOG('fail', null, __FILE__, __LINE__);
+    http_response_code(400); echo json_encode(['success' => false, 'message' => $msg] + $data); exit; 
+}
 
 if ($action === 'start') {
     $spec = $_POST['spec'] ?? 'cypress/e2e/*.cy.js';

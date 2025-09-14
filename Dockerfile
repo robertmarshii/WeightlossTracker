@@ -36,7 +36,7 @@ COPY nginx/nginx.prod.conf /etc/nginx/nginx.conf
 COPY supervisord.conf /etc/supervisord.conf
 
 # Custom PHP config
-COPY php.ini /usr/local/etc/php/conf.d/custom.ini
+COPY /php-fpm/php.ini /usr/local/etc/php/conf.d/custom.ini
 
 # Set proper permissions
 RUN chown -R www-data:www-data /var/www /var/app/backend && \

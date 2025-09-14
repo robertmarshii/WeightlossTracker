@@ -3,6 +3,7 @@
     'use strict';
     
     function logCurrentSchema() {
+        if (window.coverage) window.coverage.logFunction('logCurrentSchema', 'schema-logger.js');
         // Make request to get current schema
         fetch('/router.php?controller=schema', {
             method: 'POST',

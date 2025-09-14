@@ -1,5 +1,6 @@
 <?php
 require_once ('/var/app/backend/Config.php');
+require_once('/var/app/backend/CoverageLogger.php');
 
 class Get1
 {
@@ -7,6 +8,7 @@ class Get1
     
     public function __construct()
     {
+        COVERAGE_LOG('__construct', __CLASS__, __FILE__, __LINE__);
         $this->_dbInstance = Database::getInstance();
         $this->_dbHandle = $this
             ->_dbInstance
@@ -15,6 +17,7 @@ class Get1
 
     public function Get()
     {
+        COVERAGE_LOG('Get', __CLASS__, __FILE__, __LINE__);
         $schema = Database::getSchema();
         $sqlQuery = "SELECT id, val FROM " . $schema . ".test_table ORDER BY id";
                             //return $sqlQuery;
