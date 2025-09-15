@@ -1,65 +1,15 @@
 {
-    "sessionId": "1757860925_68c6d43db5162",
+    "sessionId": "1757973320_68c88b4801c04",
     "functions": {
-        "\/var\/app\/backend\/AuthManager.php:AuthManager::sendLoginCode": {
-            "function": "sendLoginCode",
-            "class": "AuthManager",
-            "file": "AuthManager.php",
-            "fullFile": "\/var\/app\/backend\/AuthManager.php",
-            "line": 182,
-            "callCount": 55,
-            "firstCalled": "2025-09-14 14:42:10",
-            "lastCalled": "2025-09-14 16:44:26"
-        },
-        "\/var\/app\/backend\/AuthManager.php:AuthManager::checkRateLimit": {
-            "function": "checkRateLimit",
-            "class": "AuthManager",
-            "file": "AuthManager.php",
-            "fullFile": "\/var\/app\/backend\/AuthManager.php",
-            "line": 115,
-            "callCount": 85,
-            "firstCalled": "2025-09-14 14:42:10",
-            "lastCalled": "2025-09-14 16:44:26"
-        },
-        "\/var\/app\/backend\/AuthManager.php:AuthManager::generateCode": {
-            "function": "generateCode",
-            "class": "AuthManager",
-            "file": "AuthManager.php",
-            "fullFile": "\/var\/app\/backend\/AuthManager.php",
-            "line": 12,
-            "callCount": 18,
-            "firstCalled": "2025-09-14 14:42:10",
-            "lastCalled": "2025-09-14 16:44:26"
-        },
-        "\/var\/app\/backend\/AuthManager.php:AuthManager::sendEmail": {
-            "function": "sendEmail",
-            "class": "AuthManager",
-            "file": "AuthManager.php",
-            "fullFile": "\/var\/app\/backend\/AuthManager.php",
-            "line": 17,
-            "callCount": 18,
-            "firstCalled": "2025-09-14 14:42:10",
-            "lastCalled": "2025-09-14 16:44:26"
-        },
-        "\/var\/app\/backend\/AuthManager.php:AuthManager::createAccount": {
-            "function": "createAccount",
-            "class": "AuthManager",
-            "file": "AuthManager.php",
-            "fullFile": "\/var\/app\/backend\/AuthManager.php",
-            "line": 239,
-            "callCount": 30,
-            "firstCalled": "2025-09-14 14:52:56",
-            "lastCalled": "2025-09-14 16:41:01"
-        },
-        "\/var\/app\/backend\/AuthManager.php:AuthManager::verifyLoginCode": {
-            "function": "verifyLoginCode",
-            "class": "AuthManager",
-            "file": "AuthManager.php",
-            "fullFile": "\/var\/app\/backend\/AuthManager.php",
-            "line": 293,
-            "callCount": 40,
-            "firstCalled": "2025-09-14 14:52:58",
-            "lastCalled": "2025-09-14 16:44:43"
+        "\/var\/app\/backend\/Router.php:Router::CoverageController": {
+            "function": "CoverageController",
+            "class": "Router",
+            "file": "Router.php",
+            "fullFile": "\/var\/app\/backend\/Router.php",
+            "line": 910,
+            "callCount": 514,
+            "firstCalled": "2025-09-15 21:55:20",
+            "lastCalled": "2025-09-15 23:40:01"
         },
         "\/var\/app\/backend\/AuthManager.php:AuthManager::isLoggedIn": {
             "function": "isLoggedIn",
@@ -67,189 +17,9 @@
             "file": "AuthManager.php",
             "fullFile": "\/var\/app\/backend\/AuthManager.php",
             "line": 346,
-            "callCount": 377,
-            "firstCalled": "2025-09-14 15:35:46",
-            "lastCalled": "2025-09-14 18:13:27"
-        },
-        "\/var\/app\/backend\/AuthManager.php:AuthManager::verifySignupCode": {
-            "function": "verifySignupCode",
-            "class": "AuthManager",
-            "file": "AuthManager.php",
-            "fullFile": "\/var\/app\/backend\/AuthManager.php",
-            "line": 334,
-            "callCount": 14,
-            "firstCalled": "2025-09-14 15:35:49",
-            "lastCalled": "2025-09-14 16:41:03"
-        },
-        "\/var\/app\/backend\/AuthManager.php:AuthManager::logout": {
-            "function": "logout",
-            "class": "AuthManager",
-            "file": "AuthManager.php",
-            "fullFile": "\/var\/app\/backend\/AuthManager.php",
-            "line": 339,
-            "callCount": 18,
-            "firstCalled": "2025-09-14 15:35:50",
-            "lastCalled": "2025-09-14 16:41:05"
-        },
-        "\/var\/app\/backend\/Router.php:Router::ProfileController": {
-            "function": "ProfileController",
-            "class": "Router",
-            "file": "Router.php",
-            "fullFile": "\/var\/app\/backend\/Router.php",
-            "line": 75,
-            "callCount": 256,
-            "firstCalled": "2025-09-14 15:53:07",
-            "lastCalled": "2025-09-14 18:08:29"
-        },
-        "\/var\/app\/backend\/Router.php:Router::SchemaController": {
-            "function": "SchemaController",
-            "class": "Router",
-            "file": "Router.php",
-            "fullFile": "\/var\/app\/backend\/Router.php",
-            "line": 26,
-            "callCount": 147,
-            "firstCalled": "2025-09-14 15:53:17",
-            "lastCalled": "2025-09-14 18:08:27"
-        },
-        "\/var\/app\/backend\/Router.php:Router::SeederController": {
-            "function": "SeederController",
-            "class": "Router",
-            "file": "Router.php",
-            "fullFile": "\/var\/app\/backend\/Router.php",
-            "line": 54,
-            "callCount": 119,
-            "firstCalled": "2025-09-14 15:53:38",
-            "lastCalled": "2025-09-14 18:04:51"
-        },
-        "\/var\/app\/backend\/Router.php:Router::EmailController": {
-            "function": "EmailController",
-            "class": "Router",
-            "file": "Router.php",
-            "fullFile": "\/var\/app\/backend\/Router.php",
-            "line": 776,
-            "callCount": 77,
-            "firstCalled": "2025-09-14 15:53:38",
-            "lastCalled": "2025-09-14 18:13:27"
-        },
-        "\/var\/app\/backend\/CoverageLogger.php:CoverageLogger::getReport": {
-            "function": "getReport",
-            "class": "CoverageLogger",
-            "file": "CoverageLogger.php",
-            "fullFile": "\/var\/app\/backend\/CoverageLogger.php",
-            "line": 159,
-            "callCount": 142,
-            "firstCalled": "2025-09-14 16:39:56",
-            "lastCalled": "2025-09-14 16:58:09"
-        },
-        "\/var\/app\/backend\/CoverageLogger.php:CoverageLogger::writeToLog": {
-            "function": "writeToLog",
-            "class": "CoverageLogger",
-            "file": "CoverageLogger.php",
-            "fullFile": "\/var\/app\/backend\/CoverageLogger.php",
-            "line": 143,
-            "callCount": 91,
-            "firstCalled": "2025-09-14 16:39:59",
-            "lastCalled": "2025-09-14 16:44:47"
-        },
-        "\/var\/app\/backend\/CoverageLogger.php:CoverageLogger::getInstance": {
-            "function": "getInstance",
-            "class": "CoverageLogger",
-            "file": "CoverageLogger.php",
-            "fullFile": "\/var\/app\/backend\/CoverageLogger.php",
-            "line": 30,
-            "callCount": 702,
-            "firstCalled": "2025-09-14 16:40:01",
-            "lastCalled": "2025-09-14 18:16:59"
-        },
-        "\/var\/app\/backend\/SchemaManager.php:SchemaManager::switchSchema": {
-            "function": "switchSchema",
-            "class": "SchemaManager",
-            "file": "SchemaManager.php",
-            "fullFile": "\/var\/app\/backend\/SchemaManager.php",
-            "line": 8,
-            "callCount": 33,
-            "firstCalled": "2025-09-14 16:40:01",
-            "lastCalled": "2025-09-14 16:58:07"
-        },
-        "\/var\/app\/backend\/SchemaManager.php:SchemaManager::isLocalhost": {
-            "function": "isLocalhost",
-            "class": "SchemaManager",
-            "file": "SchemaManager.php",
-            "fullFile": "\/var\/app\/backend\/SchemaManager.php",
-            "line": 106,
-            "callCount": 33,
-            "firstCalled": "2025-09-14 16:40:01",
-            "lastCalled": "2025-09-14 16:58:07"
-        },
-        "\/var\/app\/backend\/SchemaManager.php:SchemaManager::validateSchemaSwitch": {
-            "function": "validateSchemaSwitch",
-            "class": "SchemaManager",
-            "file": "SchemaManager.php",
-            "fullFile": "\/var\/app\/backend\/SchemaManager.php",
-            "line": 52,
-            "callCount": 30,
-            "firstCalled": "2025-09-14 16:40:01",
-            "lastCalled": "2025-09-14 16:58:07"
-        },
-        "\/var\/app\/backend\/Config.php:Database::getInstance": {
-            "function": "getInstance",
-            "class": "Database",
-            "file": "Config.php",
-            "fullFile": "\/var\/app\/backend\/Config.php",
-            "line": 21,
-            "callCount": 86,
-            "firstCalled": "2025-09-14 16:40:01",
-            "lastCalled": "2025-09-14 18:16:58"
-        },
-        "\/var\/app\/backend\/Config.php:Database::__construct": {
-            "function": "__construct",
-            "class": "Database",
-            "file": "Config.php",
-            "fullFile": "\/var\/app\/backend\/Config.php",
-            "line": 55,
-            "callCount": 81,
-            "firstCalled": "2025-09-14 16:40:02",
-            "lastCalled": "2025-09-14 18:16:56"
-        },
-        "\/var\/app\/backend\/Config.php:Database::getdbConnection": {
-            "function": "getdbConnection",
-            "class": "Database",
-            "file": "Config.php",
-            "fullFile": "\/var\/app\/backend\/Config.php",
-            "line": 73,
-            "callCount": 86,
-            "firstCalled": "2025-09-14 16:40:02",
-            "lastCalled": "2025-09-14 18:16:58"
-        },
-        "\/var\/app\/backend\/Config.php:Database::__destruct": {
-            "function": "__destruct",
-            "class": "Database",
-            "file": "Config.php",
-            "fullFile": "\/var\/app\/backend\/Config.php",
-            "line": 80,
-            "callCount": 80,
-            "firstCalled": "2025-09-14 16:40:02",
-            "lastCalled": "2025-09-14 16:58:07"
-        },
-        "\/var\/app\/backend\/SchemaManager.php:SchemaManager::getCurrentSchema": {
-            "function": "getCurrentSchema",
-            "class": "SchemaManager",
-            "file": "SchemaManager.php",
-            "fullFile": "\/var\/app\/backend\/SchemaManager.php",
-            "line": 45,
-            "callCount": 112,
-            "firstCalled": "2025-09-14 16:40:04",
-            "lastCalled": "2025-09-14 16:58:07"
-        },
-        "\/var\/app\/backend\/Config.php:Database::getSchema": {
-            "function": "getSchema",
-            "class": "Database",
-            "file": "Config.php",
-            "fullFile": "\/var\/app\/backend\/Config.php",
-            "line": 42,
-            "callCount": 53,
-            "firstCalled": "2025-09-14 16:41:01",
-            "lastCalled": "2025-09-14 16:58:07"
+            "callCount": 236,
+            "firstCalled": "2025-09-15 21:55:20",
+            "lastCalled": "2025-09-15 23:41:04"
         },
         "\/var\/app\/backend\/LoginRouter.php:AuthController": {
             "function": "AuthController",
@@ -257,140 +27,60 @@
             "file": "LoginRouter.php",
             "fullFile": "\/var\/app\/backend\/LoginRouter.php",
             "line": 12,
-            "callCount": 24,
-            "firstCalled": "2025-09-14 16:44:26",
-            "lastCalled": "2025-09-14 16:58:07"
+            "callCount": 82,
+            "firstCalled": "2025-09-15 21:55:21",
+            "lastCalled": "2025-09-15 23:40:00"
         },
-        "\/var\/app\/backend\/Router.php:Router::CoverageController": {
-            "function": "CoverageController",
+        "\/var\/app\/backend\/Router.php:Router::ProfileController": {
+            "function": "ProfileController",
             "class": "Router",
             "file": "Router.php",
             "fullFile": "\/var\/app\/backend\/Router.php",
-            "line": 894,
-            "callCount": 39,
-            "firstCalled": "2025-09-14 16:57:40",
-            "lastCalled": "2025-09-14 16:58:09"
+            "line": 84,
+            "callCount": 1181,
+            "firstCalled": "2025-09-15 21:55:22",
+            "lastCalled": "2025-09-15 23:39:23"
+        },
+        "\/var\/app\/backend\/Router.php:Router::SchemaController": {
+            "function": "SchemaController",
+            "class": "Router",
+            "file": "Router.php",
+            "fullFile": "\/var\/app\/backend\/Router.php",
+            "line": 27,
+            "callCount": 189,
+            "firstCalled": "2025-09-15 21:55:22",
+            "lastCalled": "2025-09-15 23:39:22"
+        },
+        "\/var\/app\/backend\/Router.php:Router::SeederController": {
+            "function": "SeederController",
+            "class": "Router",
+            "file": "Router.php",
+            "fullFile": "\/var\/app\/backend\/Router.php",
+            "line": 55,
+            "callCount": 111,
+            "firstCalled": "2025-09-15 21:55:22",
+            "lastCalled": "2025-09-15 23:37:36"
+        },
+        "\/var\/app\/backend\/Router.php:Router::EmailController": {
+            "function": "EmailController",
+            "class": "Router",
+            "file": "Router.php",
+            "fullFile": "\/var\/app\/backend\/Router.php",
+            "line": 792,
+            "callCount": 64,
+            "firstCalled": "2025-09-15 21:55:37",
+            "lastCalled": "2025-09-15 23:37:36"
         },
         "\/var\/app\/backend\/Router.php:Router::Get1": {
             "function": "Get1",
             "class": "Router",
             "file": "Router.php",
             "fullFile": "\/var\/app\/backend\/Router.php",
-            "line": 16,
-            "callCount": 13,
-            "firstCalled": "2025-09-14 16:57:40",
-            "lastCalled": "2025-09-14 16:58:07"
-        },
-        "\/var\/app\/backend\/Get1.php:Get1::__construct": {
-            "function": "__construct",
-            "class": "Get1",
-            "file": "Get1.php",
-            "fullFile": "\/var\/app\/backend\/Get1.php",
-            "line": 11,
-            "callCount": 13,
-            "firstCalled": "2025-09-14 16:57:40",
-            "lastCalled": "2025-09-14 16:58:07"
-        },
-        "\/var\/app\/backend\/Get1.php:Get1::Get": {
-            "function": "Get",
-            "class": "Get1",
-            "file": "Get1.php",
-            "fullFile": "\/var\/app\/backend\/Get1.php",
-            "line": 20,
-            "callCount": 13,
-            "firstCalled": "2025-09-14 16:57:40",
-            "lastCalled": "2025-09-14 16:58:07"
-        },
-        "\/var\/app\/backend\/Router.php:Router::SeederTesterController": {
-            "function": "SeederTesterController",
-            "class": "Router",
-            "file": "Router.php",
-            "fullFile": "\/var\/app\/backend\/Router.php",
-            "line": 946,
-            "callCount": 2,
-            "firstCalled": "2025-09-14 18:16:56",
-            "lastCalled": "2025-09-14 18:17:11"
-        },
-        "\/var\/app\/backend\/DatabaseSeeder.php:DatabaseSeeder::resetSchemas": {
-            "function": "resetSchemas",
-            "class": "DatabaseSeeder",
-            "file": "DatabaseSeeder.php",
-            "fullFile": "\/var\/app\/backend\/DatabaseSeeder.php",
-            "line": 9,
-            "callCount": 5,
-            "firstCalled": "2025-09-14 18:16:56",
-            "lastCalled": "2025-09-14 18:16:58"
-        },
-        "\/var\/app\/backend\/DatabaseSeeder.php:DatabaseSeeder::isLocalhost": {
-            "function": "isLocalhost",
-            "class": "DatabaseSeeder",
-            "file": "DatabaseSeeder.php",
-            "fullFile": "\/var\/app\/backend\/DatabaseSeeder.php",
-            "line": 214,
-            "callCount": 8,
-            "firstCalled": "2025-09-14 18:16:56",
-            "lastCalled": "2025-09-14 18:16:58"
-        },
-        "\/var\/app\/backend\/DatabaseSeeder.php:DatabaseSeeder::runSchemaSeeder": {
-            "function": "runSchemaSeeder",
-            "class": "DatabaseSeeder",
-            "file": "DatabaseSeeder.php",
-            "fullFile": "\/var\/app\/backend\/DatabaseSeeder.php",
-            "line": 118,
-            "callCount": 7,
-            "firstCalled": "2025-09-14 18:16:56",
-            "lastCalled": "2025-09-14 18:16:58"
-        },
-        "\/var\/app\/backend\/DatabaseSeeder.php:DatabaseSeeder::getSeederFile": {
-            "function": "getSeederFile",
-            "class": "DatabaseSeeder",
-            "file": "DatabaseSeeder.php",
-            "fullFile": "\/var\/app\/backend\/DatabaseSeeder.php",
-            "line": 170,
-            "callCount": 7,
-            "firstCalled": "2025-09-14 18:16:56",
-            "lastCalled": "2025-09-14 18:16:58"
-        },
-        "\/var\/app\/backend\/DatabaseSeeder.php:DatabaseSeeder::verifySchema": {
-            "function": "verifySchema",
-            "class": "DatabaseSeeder",
-            "file": "DatabaseSeeder.php",
-            "fullFile": "\/var\/app\/backend\/DatabaseSeeder.php",
-            "line": 176,
-            "callCount": 8,
-            "firstCalled": "2025-09-14 18:16:56",
-            "lastCalled": "2025-09-14 18:16:58"
-        },
-        "\/var\/app\/backend\/DatabaseSeeder.php:DatabaseSeeder::seedSchema": {
-            "function": "seedSchema",
-            "class": "DatabaseSeeder",
-            "file": "DatabaseSeeder.php",
-            "fullFile": "\/var\/app\/backend\/DatabaseSeeder.php",
-            "line": 61,
-            "callCount": 2,
-            "firstCalled": "2025-09-14 18:16:56",
-            "lastCalled": "2025-09-14 18:16:58"
-        },
-        "\/var\/app\/backend\/DatabaseSeeder.php:DatabaseSeeder::migrateLive": {
-            "function": "migrateLive",
-            "class": "DatabaseSeeder",
-            "file": "DatabaseSeeder.php",
-            "fullFile": "\/var\/app\/backend\/DatabaseSeeder.php",
-            "line": 78,
-            "callCount": 1,
-            "firstCalled": "2025-09-14 18:16:57",
-            "lastCalled": "2025-09-14 18:16:57"
-        },
-        "\/var\/app\/backend\/DatabaseSeeder.php:DatabaseSeeder::runSchemaMigration": {
-            "function": "runSchemaMigration",
-            "class": "DatabaseSeeder",
-            "file": "DatabaseSeeder.php",
-            "fullFile": "\/var\/app\/backend\/DatabaseSeeder.php",
-            "line": 144,
-            "callCount": 1,
-            "firstCalled": "2025-09-14 18:16:57",
-            "lastCalled": "2025-09-14 18:16:57"
+            "line": 17,
+            "callCount": 14,
+            "firstCalled": "2025-09-15 21:56:20",
+            "lastCalled": "2025-09-15 21:57:05"
         }
     },
-    "lastUpdated": "2025-09-14 18:17:11"
+    "lastUpdated": "2025-09-15 23:41:04"
 }

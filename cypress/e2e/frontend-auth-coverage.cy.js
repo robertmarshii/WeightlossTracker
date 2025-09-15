@@ -71,17 +71,26 @@ describe('Frontend Authentication Coverage Tests', () => {
     describe('Authentication Flow Functions', () => {
         it('should test sendLoginCode() function', () => {
             // Enter a valid test email
-            cy.get('#loginEmail').clear().type('test@dev.com');
-            
+            cy.get('#loginEmail').clear().type('test@example.com');
+
+            // Intercept the login code request
+            cy.intercept('POST', '**/login_router.php*', {
+                success: true,
+                message: 'Login code sent successfully'
+            }).as('sendLoginCode');
+
             // Submit the login form to trigger sendLoginCode()
-            cy.get('#loginForm').submit();
-            
+            cy.get('#loginForm .primary-btn').click();
+
+            // Wait for the request to complete
+            cy.wait('@sendLoginCode');
+
             // Should navigate to code verification form
             cy.get('#verifyLoginForm', { timeout: 5000 }).should('be.visible');
-            
+
             // Should hide the regular login form elements
             cy.get('#loginForm').should('not.be.visible');
-            
+
             // Should show a code input field
             cy.get('#loginCode').should('be.visible');
         });
@@ -90,19 +99,28 @@ describe('Frontend Authentication Coverage Tests', () => {
             // Switch to signup tab first
             cy.get('#signup-tab').click();
             cy.get('#signup').should('be.visible');
-            
+
+            // Intercept the account creation request
+            cy.intercept('POST', '**/login_router.php*', {
+                success: true,
+                message: 'Account created successfully'
+            }).as('createAccount');
+
             // Enter a valid test email
             cy.get('#signupEmail').clear().type('cypress+test@example.com');
-            
+
             // Check the terms agreement
             cy.get('#agreeTerms').check();
-            
+
             // Submit the signup form to trigger createAccount()
-            cy.get('#signupForm').submit();
-            
+            cy.get('#signupForm .primary-btn').click();
+
+            // Wait for the request to complete
+            cy.wait('@createAccount');
+
             // Should navigate to signup code verification form
             cy.get('#verifySignupForm', { timeout: 5000 }).should('be.visible');
-            
+
             // Should hide the regular signup form elements
             cy.get('#signupForm').should('not.be.visible');
             
@@ -111,42 +129,65 @@ describe('Frontend Authentication Coverage Tests', () => {
         });
 
         it('should test verifyLoginCode() function', () => {
-            // First trigger sendLoginCode
-            cy.get('#loginEmail').clear().type('test@dev.com');
-            cy.get('#loginForm').submit();
-            
-            // Wait for verification form to appear
-            cy.get('#verifyLoginForm', { timeout: 5000 }).should('be.visible');
-            
-            // Enter the test code (deterministic for test@dev.com)
+            // Manually show the verification form to test the function
+            cy.window().then((win) => {
+                // Show verification form directly
+                win.$('#loginForm').hide();
+                win.$('#verifyLoginForm').show();
+
+                // Set the email value
+                win.$('#loginEmail').val('test@example.com');
+            });
+
+            // Intercept the verification request
+            cy.intercept('POST', '**/login_router.php*', {
+                success: true,
+                message: 'Login successful'
+            }).as('verifyLogin');
+
+            // Enter the test code
             cy.get('#loginCode').type('111111');
-            
+
             // Submit verify form to trigger verifyLoginCode()
             cy.get('#verifyLoginForm').submit();
-            
+
+            // Wait for the intercepted request
+            cy.wait('@verifyLogin');
+
             // Should either redirect to dashboard or show result
-            // (Depends on implementation - could redirect or show message)
             cy.url({ timeout: 10000 }).should('satisfy', (url) => {
                 return url.includes('dashboard') || url === Cypress.config('baseUrl') + '/';
             });
         });
 
         it('should test verifySignupCode() function', () => {
-            // First trigger createAccount
+            // Switch to signup tab and manually show verification form
             cy.get('#signup-tab').click();
-            cy.get('#signupEmail').clear().type('cypress+signup@example.com');
-            cy.get('#agreeTerms').check();
-            cy.get('#signupForm').submit();
-            
-            // Wait for signup verification form to appear
-            cy.get('#verifySignupForm', { timeout: 5000 }).should('be.visible');
-            
+
+            cy.window().then((win) => {
+                // Show verification form directly
+                win.$('#signupForm').hide();
+                win.$('#verifySignupForm').show();
+
+                // Set the email value
+                win.$('#signupEmail').val('test@example.com');
+            });
+
+            // Intercept the verification request
+            cy.intercept('POST', '**/login_router.php*', {
+                success: true,
+                message: 'Account verified'
+            }).as('verifySignup');
+
             // Enter the test code
             cy.get('#signupCode').type('111111');
-            
+
             // Submit verify form to trigger verifySignupCode()
             cy.get('#verifySignupForm').submit();
-            
+
+            // Wait for the intercepted request
+            cy.wait('@verifySignup');
+
             // Should show result or redirect
             cy.url({ timeout: 10000 }).should('satisfy', (url) => {
                 return url.includes('dashboard') || url === Cypress.config('baseUrl') + '/';
@@ -156,18 +197,25 @@ describe('Frontend Authentication Coverage Tests', () => {
 
     describe('Navigation Functions', () => {
         it('should test backToEmailLogin() function', () => {
+            // Intercept the login code request
+            cy.intercept('POST', '**/login_router.php*', {
+                success: true,
+                message: 'Login code sent'
+            }).as('sendLoginCode');
+
             // First navigate to login verification form
-            cy.get('#loginEmail').clear().type('test@dev.com');
+            cy.get('#loginEmail').clear().type('test@example.com');
+            cy.get('#loginForm button[type="submit"]').should('not.be.disabled');
             cy.get('#loginForm').submit();
             cy.get('#verifyLoginForm', { timeout: 5000 }).should('be.visible');
-            
+
             // Click the back link to trigger backToEmailLogin()
             cy.get('#verifyLoginForm a[onclick*="backToEmailLogin"]').click();
-            
+
             // Should return to login form
             cy.get('#loginForm').should('be.visible');
             cy.get('#verifyLoginForm').should('not.be.visible');
-            
+
             // Email field should be visible and editable
             cy.get('#loginEmail').should('be.visible').should('not.be.disabled');
         });

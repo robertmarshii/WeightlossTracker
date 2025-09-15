@@ -29,7 +29,7 @@ if (AuthManager::isLoggedIn()) {
     <div id="alert-container"></div>
 
     <div class="container">
-        <div class="row justify-content-center align-items-center min-vh-100">
+        <div class="row justify-content-center align-items-center min-vh-90">
             <div class="col-md-6">
                 <!-- Login/Signup Form -->
                 <div class="glass-card">
@@ -74,7 +74,7 @@ if (AuthManager::isLoggedIn()) {
                                     </div>
                                 
                                 <a href="#" class="social-btn" onclick="continueWithGoogle(); return false;">
-                                    <svg width="18" height="18" viewBox="0 0 18 18" style="margin-right: 10px;">
+                                    <svg width="18" height="18" viewBox="0 0 18 18" class="icon-margin">
                                         <path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 0 0 2.38-5.88c0-.57-.05-.66-.15-1.18z"/>
                                         <path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2.04a4.8 4.8 0 0 1-7.18-2.53H1.83v2.07A8 8 0 0 0 8.98 17z"/>
                                         <path fill="#FBBC05" d="M4.5 10.49a4.8 4.8 0 0 1 0-3.07V5.35H1.83a8 8 0 0 0 0 7.28l2.67-2.14z"/>
@@ -84,7 +84,7 @@ if (AuthManager::isLoggedIn()) {
                                 </a>
                                 
                                 <a href="#" class="social-btn" onclick="continueWithMicrosoft(); return false;">
-                                    <svg width="18" height="18" viewBox="0 0 18 18" style="margin-right: 10px;">
+                                    <svg width="18" height="18" viewBox="0 0 18 18" class="icon-margin">
                                         <path fill="#F25022" d="M1 1h7v7H1z"/>
                                         <path fill="#7FBA00" d="M10 1h7v7h-7z"/>
                                         <path fill="#00A4EF" d="M1 10h7v7H1z"/>
@@ -95,7 +95,7 @@ if (AuthManager::isLoggedIn()) {
                                 </div>
                                 
                                 <!-- Code verification form (hidden initially) -->
-                                <form id="verifyLoginForm" style="display: none;">
+                                <form id="verifyLoginForm" class="verify-form">
                                     <div class="welcome-title">Check your email</div>
                                     <div class="welcome-subtitle">Enter the 6-digit code sent to your email.</div>
                                     
@@ -137,7 +137,7 @@ if (AuthManager::isLoggedIn()) {
                                     </div>
                                 
                                 <a href="#" class="social-btn" onclick="continueWithGoogle(); return false;">
-                                    <svg width="18" height="18" viewBox="0 0 18 18" style="margin-right: 10px;">
+                                    <svg width="18" height="18" viewBox="0 0 18 18" class="icon-margin">
                                         <path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 0 0 2.38-5.88c0-.57-.05-.66-.15-1.18z"/>
                                         <path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2.04a4.8 4.8 0 0 1-7.18-2.53H1.83v2.07A8 8 0 0 0 8.98 17z"/>
                                         <path fill="#FBBC05" d="M4.5 10.49a4.8 4.8 0 0 1 0-3.07V5.35H1.83a8 8 0 0 0 0 7.28l2.67-2.14z"/>
@@ -147,7 +147,7 @@ if (AuthManager::isLoggedIn()) {
                                 </a>
                                 
                                 <a href="#" class="social-btn" onclick="continueWithMicrosoft(); return false;">
-                                    <svg width="18" height="18" viewBox="0 0 18 18" style="margin-right: 10px;">
+                                    <svg width="18" height="18" viewBox="0 0 18 18" class="icon-margin">
                                         <path fill="#F25022" d="M1 1h7v7H1z"/>
                                         <path fill="#7FBA00" d="M10 1h7v7h-7z"/>
                                         <path fill="#00A4EF" d="M1 10h7v7H1z"/>
@@ -158,7 +158,7 @@ if (AuthManager::isLoggedIn()) {
                                 </div>
                                 
                                 <!-- Code verification form (hidden initially) -->
-                                <form id="verifySignupForm" style="display: none;">
+                                <form id="verifySignupForm" class="verify-form">
                                     <div class="welcome-title">Verify your email</div>
                                     <div class="welcome-subtitle">Enter the 6-digit verification code sent to your email.</div>
                                     
@@ -177,12 +177,12 @@ if (AuthManager::isLoggedIn()) {
 
                 <?php if ($_SERVER['HTTP_HOST'] === '127.0.0.1:8111'): ?>
                 <div class="mt-4">
-                    <div class="glass-card" style="padding: 1rem;">
-                        <h6 style="color: white; margin-bottom: 1rem;">Development Tools</h6>
-                        <a href="test/test-interface.html" class="social-btn" style="margin-bottom: 0.5rem;">
+                    <div class="glass-card" class="dev-tools-card">
+                        <h6 class="dev-tools-title">Development Tools</h6>
+                        <a href="test/test-interface.html" class="social-btn" class="dev-tools-link">
                             🧪 Test Interface
                         </a>
-                        <a href="test/schema-switcher.html" class="social-btn" style="margin-bottom: 0;">
+                        <a href="test/schema-switcher.html" class="social-btn" class="dev-tools-link">
                             🔄 Schema Switcher
                         </a>
                     </div>

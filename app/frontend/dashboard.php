@@ -49,36 +49,41 @@ if (isset($_SESSION['login_time'])) {
         <div class="col-lg-10">
             <!-- Header Card -->
             <div class="glass-card">
-                <div class="d-flex justify-content-between align-items-center">
+                <!-- First Row: Logo and Welcome Text -->
+                <div class="d-flex align-items-center header-top-row mb-2">
                     <div class="logo-section-compact">
                         <div class="logo-icon">
                             <svg viewBox="0 0 44 44" class="progress-ring">
                                 <circle cx="22" cy="22" r="15" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="12"/>
-                                <circle cx="22" cy="22" r="15" fill="none" stroke="#64a6d8" stroke-width="12" 
+                                <circle cx="22" cy="22" r="15" fill="none" stroke="#64a6d8" stroke-width="12"
                                         stroke-linecap="round" class="progress-ring-circle"/>
                             </svg>
                         </div>
                         <div class="logo-text">Weightloss<br>Tracker</div>
                     </div>
-                    
-                    <div class="header-center flex-grow-1 text-center mx-4">
+
+                    <div class="welcome-content flex-grow-1 mx-4">
                         <h1 class="welcome-title mb-1">Welcome!</h1>
-                        <p class="welcome-subtitle mb-2">Track your weightloss journey and achieve your goals</p>
-                        <div class="d-flex justify-content-center flex-wrap" style="gap: 0.5rem;">
-                            <?php if ($_SERVER['HTTP_HOST'] === '127.0.0.1:8111'): ?>
-                            <a class="btn secondary-btn btn-sm" href="test/test-interface.html">🧪 Test Interface</a>
-                            <?php endif; ?>
-                            <button id="btn-logout" class="btn danger-btn btn-sm">🚪 Logout</button>
-                        </div>
+                        <p class="welcome-subtitle mb-0">Track your weightloss journey and achieve your goals</p>
                     </div>
-                    
-                    <div class="header-right d-flex align-items-center">
-                        <div class="user-info text-right">
+                </div>
+
+                <!-- Second Row: User Info and Buttons -->
+                <div class="d-flex align-items-center justify-content-between header-bottom-row">
+                    <div class="header-left d-flex align-items-center">
+                        <div class="user-info text-left">
                             <div class="mb-1"><?php echo $email; ?></div>
                             <?php if ($loginTime): ?>
                                 <div class="text-muted small">Login: <?php echo $loginTime; ?></div>
                             <?php endif; ?>
                         </div>
+                    </div>
+
+                    <div class="d-flex align-items-center header-buttons">
+                        <?php if ($_SERVER['HTTP_HOST'] === '127.0.0.1:8111'): ?>
+                        <a class="btn secondary-btn btn-sm me-2" href="test/test-interface.html">🧪 Test Interface</a>
+                        <?php endif; ?>
+                        <button id="btn-logout" class="btn danger-btn btn-sm">🚪 Logout</button>
                     </div>
                 </div>
             </div>
@@ -151,13 +156,13 @@ if (isset($_SESSION['login_time'])) {
 
             <!-- Weight History Card -->
             <div class="glass-card">
-                <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="d-flex justify-content-between align-items-center mb-3 weight-history-header">
                     <h5 class="card-title mb-0">📈 Weight History</h5>
                     <button id="btn-add-entry" class="btn primary-btn">➕ Add Entry</button>
                 </div>
                 
                 <!-- Add New Entry Form (hidden by default) -->
-                <div id="add-entry-form" class="mb-4" style="display: none;">
+                <div id="add-entry-form" class="mb-4 hidden">
                     <div class="row">
                         <div class="col-md-4">
                             <label for="newWeight" class="form-label">Weight (kg)</label>
@@ -167,7 +172,7 @@ if (isset($_SESSION['login_time'])) {
                             <label for="newDate" class="form-label">Date</label>
                             <input type="date" id="newDate" class="form-control glass-input date-input">
                         </div>
-                        <div class="col-md-4 d-flex align-items-end" style="gap: 1rem;">
+                        <div class="col-md-4 d-flex align-items-end form-gap">
                             <button id="btn-save-entry" class="btn primary-btn">💾 Save</button>
                             <button id="btn-cancel-entry" class="btn secondary-btn">❌ Cancel</button>
                         </div>
@@ -175,20 +180,19 @@ if (isset($_SESSION['login_time'])) {
                 </div>
 
                 <!-- Weight History Table -->
-                <div class="table-responsive" style="max-height: 350px; overflow-y: auto;">
+                <div class="table-responsive weight-history-container">
                     <table class="table glass-table mb-0">
                         <thead>
                             <tr>
                                 <th>Date</th>
                                 <th>Weight (kg)</th>
                                 <th>Change</th>
-                                <th>BMI</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="weight-history-body">
                             <tr>
-                                <td colspan="5" class="no-data">Loading weight history...</td>
+                                <td colspan="4" class="no-data">Loading weight history...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -237,6 +241,20 @@ if (isset($_SESSION['login_time'])) {
                     
                     <!-- Health Insights Tab -->
                     <div class="tab-pane fade" id="health" role="tabpanel">
+                        <!-- Personal Benefits Info -->
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="glass-card-small">
+                                    <div id="personal-benefits-calculator" class="text-muted">
+                                        Complete your profile and set a weight goal to see personalized health benefit projections.
+                                        <div id="personal-benefits-display" class="personal-benefits-display">
+                                            <!-- Calculated benefits will appear here -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Health Stats Cards -->
                         <div class="row">
                             <div class="col-md-6">
@@ -282,15 +300,76 @@ if (isset($_SESSION['login_time'])) {
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Health Benefits Row -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="glass-card-small">
+                                    <h5 class="card-title">🩺 Type 2 Diabetes Risk</h5>
+                                    <div id="diabetes-block" class="text-muted">Log weights to see your current risk % vs starting risk %. Risk based on BMI level.</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="glass-card-small">
+                                    <h5 class="card-title">😴 Sleep Apnea Improvement</h5>
+                                    <div id="sleep-apnea-block" class="text-muted">Log weights to see your current risk % vs starting risk %. Risk based on BMI level.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="glass-card-small">
+                                    <h5 class="card-title">❤️ Hypertension Risk</h5>
+                                    <div id="hypertension-block" class="text-muted">Log weights to see your current risk % vs starting risk %. Risk based on BMI level.</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="glass-card-small">
+                                    <h5 class="card-title">🫀 Fatty Liver Disease</h5>
+                                    <div id="fatty-liver-block" class="text-muted">Log weights to see your current risk % vs starting risk %. Risk based on BMI level.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="glass-card-small">
+                                    <h5 class="card-title">💓 Heart Disease Risk</h5>
+                                    <div id="heart-disease-block" class="text-muted">Log weights to see your current risk % vs starting risk %. Risk based on BMI level.</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="glass-card-small">
+                                    <h5 class="card-title">🧠 Mental Health Benefits</h5>
+                                    <div id="mental-health-block" class="text-muted">5-15% improvement in mood and self-esteem. Reduced inflammation and better metabolic function.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="glass-card-small">
+                                    <h5 class="card-title">🦴 Joint Health (Arthritis)</h5>
+                                    <div id="joint-health-block" class="text-muted">20-30% less joint stress with weight loss. Slower progression of knee and hip osteoarthritis.</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="glass-card-small">
+                                    <h5 class="card-title">🌟 Life Expectancy</h5>
+                                    <div id="life-expectancy-block" class="text-muted">2-5 years increase in life expectancy. Stronger benefits if weight loss occurs earlier in life.</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    
+
                     <!-- Achievements Tab -->
                     <div class="tab-pane fade" id="achievements" role="tabpanel">
                         <!-- Weight Loss Chart -->
                         <div class="glass-card">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h5 class="card-title mb-0">📈 Weightloss Chart</h5>
-                                <div class="btn-group btn-group-sm" role="group">
+                            <div class="mb-3">
+                                <h5 class="card-title mb-2">📈 Weightloss Chart</h5>
+                                <div class="btn-group btn-group-sm chart-period-buttons" role="group">
                                     <button type="button" class="btn secondary-btn" id="chart-weekly">Weekly</button>
                                     <button type="button" class="btn secondary-btn" id="chart-30days">30 Days</button>
                                     <button type="button" class="btn secondary-btn" id="chart-90days">90 Days</button>
@@ -299,10 +378,10 @@ if (isset($_SESSION['login_time'])) {
                                     <button type="button" class="btn secondary-btn active" id="chart-all">All Time</button>
                                 </div>
                             </div>
-                            <div class="chart-container" style="position: relative; height: 400px; margin-bottom: 1rem;">
+                            <div class="chart-container">
                                 <canvas id="weightChart"></canvas>
                             </div>
-                            <div id="chart-navigation" class="d-flex justify-content-between align-items-center mb-3" style="display: none !important;">
+                            <div id="chart-navigation" class="d-flex justify-content-between align-items-center mb-3 chart-navigation">
                                 <button type="button" class="btn secondary-btn btn-sm" id="chart-prev" title="Previous period">
                                     ← Previous
                                 </button>
@@ -486,7 +565,11 @@ if (isset($_SESSION['login_time'])) {
 <script src="js/coverage.js"></script>
 <!-- Global Scripts -->
 <script src="js/global.js"></script>
-<!-- Page-specific Scripts -->
+<!-- Modular JS files -->
+<script src="js/health.js"></script>
+<script src="js/data.js"></script>
+<script src="js/achievements.js"></script>
+<script src="js/settings.js"></script>
 <script src="js/dashboard.js"></script>
 </body>
 </html>

@@ -84,7 +84,7 @@ function sendLoginCode() {
         action: 'send_login_code',
         email: email
     }, function(response) {
-        const data = JSON.parse(response);
+        const data = typeof response === 'string' ? JSON.parse(response) : response;
         if (data.success) {
             showAlert('✅ Login code sent successfully! Check your email inbox (and spam folder). The code is also in the subject line.', 'success');
             $('#loginForm').hide();
@@ -120,7 +120,7 @@ function createAccount() {
         action: 'create_account',
         email: email
     }, function(response) {
-        const data = JSON.parse(response);
+        const data = typeof response === 'string' ? JSON.parse(response) : response;
         if (data.success) {
             showAlert('✅ Account created! Verification code sent to your email. Check your inbox (and spam folder).', 'success');
             $('#signupForm').hide();
@@ -152,7 +152,7 @@ function verifyLoginCode() {
         email: email,
         code: code
     }, function(response) {
-        const data = JSON.parse(response);
+        const data = typeof response === 'string' ? JSON.parse(response) : response;
         if (data.success) {
             showAlert('Login successful! Redirecting...', 'success');
             setTimeout(() => {
@@ -178,7 +178,7 @@ function verifySignupCode() {
         email: email,
         code: code
     }, function(response) {
-        const data = JSON.parse(response);
+        const data = typeof response === 'string' ? JSON.parse(response) : response;
         if (data.success) {
             showAlert('Account created successfully! Redirecting...', 'success');
             setTimeout(() => {

@@ -249,7 +249,8 @@ describe('Backend Authentication Critical Coverage Tests', () => {
                 failOnStatusCode: false
             }).then((response) => {
                 // Should call ProfileController backend function
-                expect(response.status).to.be.oneOf([200, 404, 500]);
+                // 403 is expected for unauthenticated requests
+                expect(response.status).to.be.oneOf([200, 403, 404, 500]);
             });
         });
 

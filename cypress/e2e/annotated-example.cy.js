@@ -29,10 +29,19 @@ describe('Annotated Coverage Examples', () => {
         
         // Test email validation (should trigger isValidEmail)
         cy.get('#loginEmail').type('invalid-email');
-        cy.get('.primary-btn').first().click();
-        
+
+        // Ensure page is loaded and function is available
+        cy.window().its('sendLoginCode').should('be.a', 'function');
+
+        // Wait for button to be enabled after typing
+        cy.get('#loginForm button[type="submit"]').should('not.be.disabled');
+
+        // Submit form to trigger validation
+        cy.get('#loginForm').submit();
+
         // Should show validation error (triggers showAlert)
-        cy.get('#alert-container .alert').should('be.visible');
+        cy.get('#alert-container', { timeout: 10000 }).should('exist');
+        cy.get('#alert-container .alert', { timeout: 10000 }).should('be.visible');
         
         // Test with valid email
         cy.get('#loginEmail').clear().type('test@example.com');

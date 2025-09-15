@@ -28,6 +28,7 @@ $(function() {
     refreshIdealWeight();
     refreshWeightProgress();
     refreshGallbladderHealth();
+    refreshPersonalHealthBenefits();
     loadWeightHistory();
     loadSettings();
     
@@ -49,7 +50,7 @@ $(function() {
                 refreshIdealWeight();
                 refreshWeightProgress();
                 refreshGallbladderHealth();
-                refreshWeightProgress();
+                refreshPersonalHealthBenefits();
                 loadWeightHistory();
             }
         });
@@ -111,6 +112,7 @@ $(function() {
             if (data.success) {
                 showToast('Goal saved');
                 refreshGoal();
+                refreshPersonalHealthBenefits();
             }
         });
     });
@@ -131,6 +133,7 @@ $(function() {
                 refreshBMI();
                 refreshHealth();
                 refreshIdealWeight();
+                refreshPersonalHealthBenefits();
             } else {
                 $('#profile-status').text('Save failed').removeClass('text-success').addClass('text-danger');
             }
@@ -229,154 +232,24 @@ function loadProfile() {
 }
 
 function refreshBMI() {
-    if (window.coverage) window.coverage.logFunction('refreshBMI', 'dashboard.js');
-    $.post('router.php?controller=profile', { action: 'get_bmi' }, function(resp) {
-        const data = parseJson(resp);
-        const el = $('#bmi-block');
-        if (!data.success) {
-            el.text(data.message || 'BMI not available').addClass('text-muted');
-            return;
-        }
-        const lines = [];
-        lines.push(`Current BMI: <strong>${data.bmi}</strong> (${data.category})`);
-        if (data.adjusted_bmi) {
-            lines.push(`Frame-adjusted: <strong>${data.adjusted_bmi}</strong> (${data.adjusted_category})`);
-        }
-        
-        // Get before/after comparison
-        $.post('router.php?controller=profile', { action: 'get_weight_progress' }, function(progressResp) {
-            const progressData = parseJson(progressResp);
-            if (progressData.success && progressData.start_weight_kg && progressData.current_weight_kg !== progressData.start_weight_kg) {
-                // Calculate starting BMI for comparison
-                const heightCm = data.height_cm;
-                if (heightCm) {
-                    const h = heightCm / 100.0;
-                    const startingBmi = progressData.start_weight_kg / (h * h);
-                    const improvement = startingBmi - data.bmi;
-                    // Determine starting BMI category
-                    const getCategory = (bmi) => {
-                        if (bmi < 18.5) return 'underweight';
-                        else if (bmi < 25) return 'normal';
-                        else if (bmi < 30) return 'overweight';
-                        else return 'obese';
-                    };
-                    const startingCategory = getCategory(startingBmi);
-                    lines.push(`<small class="text-success">BMI reduced by ${improvement.toFixed(1)} points</small>`);
-                    lines.push(`<small class="text-muted">Started at ${startingBmi.toFixed(1)} BMI (${startingCategory})</small>`);
-                }
-            }
-            lines.push(`<small class="text-muted">BMI correlates with health risks. Each 5 BMI point reduction significantly lowers disease risk (Prospective Studies Collaboration, 2009)</small>`);
-            el.html(lines.join('<br>')).removeClass('text-muted');
-        });
-    });
+    // Call the health.js function
+    if (typeof window.healthRefreshBMI === 'function') {
+        window.healthRefreshBMI();
+    }
 }
 
 function refreshHealth() {
-    if (window.coverage) window.coverage.logFunction('refreshHealth', 'dashboard.js');
-    // Load body fat with before/after comparison
-    $.post('router.php?controller=profile', { action: 'get_health_stats' }, function(resp) {
-        const data = parseJson(resp);
-        
-        // Body Fat Block with before/after
-        const bodyFatEl = $('#body-fat-block');
-        if (!data.success) {
-            bodyFatEl.text(data.message || 'Body fat estimation not available').addClass('text-muted');
-        } else if (Array.isArray(data.estimated_body_fat_range)) {
-            const bodyFatLines = [];
-            const currentMin = data.estimated_body_fat_range[0];
-            const currentMax = data.estimated_body_fat_range[1];
-            bodyFatLines.push(`Current: <strong>${currentMin}–${currentMax}%</strong>`);
-            
-            // Always show research notes
-            bodyFatLines.push(`<small class="text-muted">Body fat estimated via Deurenberg formula (BMI + age). Each 1% body fat reduction improves metabolic health (Jackson et al., 2002)</small>`);
-            
-            // Get before/after body fat comparison
-            $.post('router.php?controller=profile', { action: 'get_weight_progress' }, function(progressResp) {
-                const progressData = parseJson(progressResp);
-                if (progressData.success && progressData.start_weight_kg && progressData.current_weight_kg !== progressData.start_weight_kg) {
-                    // Calculate starting body fat estimate
-                    const heightCm = data.height_cm;
-                    const age = data.age;
-                    if (heightCm && age && heightCm > 0 && age > 0) {
-                        const h = heightCm / 100.0;
-                        const startingBmi = progressData.start_weight_kg / (h * h);
-                        const startingBfpMale = 1.2 * startingBmi + 0.23 * age - 16.2;
-                        const startingBfpFemale = 1.2 * startingBmi + 0.23 * age - 5.4;
-                        const startingMin = Math.min(startingBfpMale, startingBfpFemale);
-                        const startingMax = Math.max(startingBfpMale, startingBfpFemale);
-                        
-                        const avgImprovement = ((startingMin + startingMax) / 2) - ((currentMin + currentMax) / 2);
-                        
-                        if (avgImprovement > 0.1) {
-                            bodyFatLines.splice(1, 0, `Change: <strong class="text-success">-${avgImprovement.toFixed(1)}%</strong>`);
-                            bodyFatLines.splice(2, 0, `Started: <strong>${startingMin.toFixed(1)}–${startingMax.toFixed(1)}%</strong>`);
-                        }
-                    }
-                }
-                bodyFatEl.html(bodyFatLines.join('<br>')).removeClass('text-muted');
-            }).fail(function() {
-                // If progress fails, still show the current data
-                bodyFatEl.html(bodyFatLines.join('<br>')).removeClass('text-muted');
-            });
-        } else {
-            bodyFatEl.text('Add your age to estimate body fat percentage').addClass('text-muted');
-        }
-    });
-    
-    // Load enhanced cardiovascular risk
-    $.post('router.php?controller=profile', { action: 'get_cardiovascular_risk' }, function(resp) {
-        const data = parseJson(resp);
-        const cardioEl = $('#cardio-risk-block');
-        
-        if (!data.success) {
-            cardioEl.text(data.message || 'Cardiovascular risk not available').addClass('text-muted');
-        } else {
-            const cardioLines = [];
-            cardioLines.push(`Current Risk: <strong>${data.current_risk_percentage}%</strong> (${data.current_risk_category})`);
-            
-            if (data.risk_improvement_percentage > 0) {
-                cardioLines.push(`<small class="text-success">Risk reduced by ${data.risk_improvement_percentage}% from weight loss</small>`);
-                cardioLines.push(`<small class="text-muted">Started at ${data.original_risk_percentage}% (${data.original_risk_category})</small>`);
-            }
-            
-            cardioLines.push(`<small class="text-muted">${data.research_note}</small>`);
-            cardioEl.html(cardioLines.join('<br>')).removeClass('text-muted');
-        }
-    }).fail(function() {
-        $('#cardio-risk-block').text('Failed to calculate cardiovascular risk').addClass('text-muted');
-    });
+    // Call the health.js function
+    if (typeof window.healthRefreshHealth === 'function') {
+        window.healthRefreshHealth();
+    }
 }
 
 function refreshIdealWeight() {
-    if (window.coverage) window.coverage.logFunction('refreshIdealWeight', 'dashboard.js');
-    $.post('router.php?controller=profile', { action: 'get_ideal_weight' }, function(resp) {
-        const data = parseJson(resp);
-        const el = $('#ideal-weight-block');
-        
-        if (!data.success) {
-            el.text(data.message || 'Set your height to calculate ideal weight range').addClass('text-muted');
-            return;
-        }
-        
-        const lines = [];
-        lines.push(`<strong>${data.min_weight_kg} - ${data.max_weight_kg} kg</strong>`);
-        
-        // Add timeline prediction if available
-        if (data.timeline && data.timeline.target_date) {
-            const targetMonth = new Date(data.timeline.target_date + '-01').toLocaleDateString('en-GB', { 
-                year: 'numeric', 
-                month: 'long' 
-            });
-            lines.push(`<small class="text-success">Projected to reach upper limit by ${targetMonth}</small>`);
-            lines.push(`<small class="text-muted">Based on current rate of ${data.timeline.current_rate_kg_per_week} kg/week</small>`);
-        }
-        
-        lines.push(`<small class="text-muted">${data.note}</small>`);
-        
-        el.html(lines.join('<br>')).removeClass('text-muted');
-    }).fail(function() {
-        $('#ideal-weight-block').text('Failed to calculate ideal weight range').addClass('text-muted');
-    });
+    // Call the health.js function
+    if (typeof window.healthRefreshIdealWeight === 'function') {
+        window.healthRefreshIdealWeight();
+    }
 }
 
 function refreshWeightProgress() {
@@ -403,227 +276,68 @@ function refreshWeightProgress() {
 }
 
 function refreshGallbladderHealth() {
-    if (window.coverage) window.coverage.logFunction('refreshGallbladderHealth', 'dashboard.js');
-    $.post('router.php?controller=profile', { action: 'get_gallbladder_health' }, function(resp) {
-        const data = parseJson(resp);
-        const el = $('#gallbladder-block');
-        
-        if (!data.success) {
-            el.text(data.message || 'Complete profile to assess gallbladder health benefits').addClass('text-muted');
-            return;
-        }
-        
-        const lines = [];
-        lines.push(`Status: <strong>${data.gallbladder_status}</strong>`);
-        
-        if (data.risk_reduction_percentage > 0) {
-            lines.push(`Risk Reduction: <strong class="text-success">${data.risk_reduction_percentage}%</strong>`);
-            lines.push(`<small class="text-muted">Based on ${data.weight_lost_kg}kg lost, BMI ${data.current_bmi}</small>`);
-        } else {
-            lines.push(`<small class="text-muted">Continue weight loss for gallbladder benefits</small>`);
-        }
-        
-        lines.push(`<small class="text-muted">${data.research_note}</small>`);
-        
-        el.html(lines.join('<br>')).removeClass('text-muted');
-    }).fail(function() {
-        $('#gallbladder-block').text('Failed to assess gallbladder health').addClass('text-muted');
-    });
+    // Call the health.js function
+    if (typeof window.healthRefreshGallbladderHealth === 'function') {
+        window.healthRefreshGallbladderHealth();
+    }
 }
 
 function loadWeightHistory() {
-    if (window.coverage) window.coverage.logFunction('loadWeightHistory', 'dashboard.js');
-    $.post('router.php?controller=profile', { action: 'get_weight_history' }, function(resp) {
-        const data = parseJson(resp);
-        const tbody = $('#weight-history-body');
-        
-        if (!data.success || !data.history || data.history.length === 0) {
-            tbody.html('<tr><td colspan="5" class="no-data">No weight entries found. Add your first entry above!</td></tr>');
-            return;
-        }
-        
-        let html = '';
-        
-        // Reverse the data to display newest first (but calculate changes based on chronological order)
-        const reversedHistory = [...data.history].reverse();
-        
-        reversedHistory.forEach((entry, index) => {
-            const weight = parseFloat(entry.weight_kg);
-            const date = entry.entry_date;
-            const bmi = entry.bmi || 'N/A';
-            
-            // Calculate change from previous chronological entry (which is next in reversed array)
-            let changeHtml = '<span class="text-muted">-</span>';
-            if (index < reversedHistory.length - 1) {
-                const nextEntry = reversedHistory[index + 1];
-                const previousWeight = parseFloat(nextEntry.weight_kg);
-                const change = weight - previousWeight;
-                const changeClass = change > 0 ? 'text-danger' : change < 0 ? 'text-success' : 'text-muted';
-                const changeSymbol = change > 0 ? '+' : '';
-                changeHtml = `<span class="${changeClass}">${changeSymbol}${change.toFixed(1)} kg</span>`;
-            }
-            
-            html += `
-                <tr data-id="${entry.id}">
-                    <td>${formatDate(date)}</td>
-                    <td><strong>${weight} kg</strong></td>
-                    <td>${changeHtml}</td>
-                    <td>${bmi !== 'N/A' ? bmi : '<span class="text-muted">N/A</span>'}</td>
-                    <td>
-                        <div class="table-actions">
-                            <button class="btn btn-sm edit-btn" onclick="editWeight(${entry.id}, ${weight}, '${date}')">✏️</button>
-                            <button class="btn btn-sm delete-btn" onclick="deleteWeight(${entry.id})">🗑️</button>
-                        </div>
-                    </td>
-                </tr>
-            `;
-        });
-        
-        tbody.html(html);
-    }).fail(function() {
-        $('#weight-history-body').html('<tr><td colspan="5" class="no-data text-danger">Failed to load weight history</td></tr>');
-    });
+    // Call the data.js function
+    if (typeof window.dataLoadWeightHistory === 'function') {
+        window.dataLoadWeightHistory();
+    }
 }
 
 function formatDate(dateString) {
-    if (window.coverage) window.coverage.logFunction('formatDate', 'dashboard.js');
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-GB', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric'
-    });
+    // Call the data.js function
+    if (typeof window.dataFormatDate === 'function') {
+        return window.dataFormatDate(dateString);
+    }
+    return dateString;
 }
 
 function editWeight(id, weight, date) {
-    if (window.coverage) window.coverage.logFunction('editWeight', 'dashboard.js');
-    // For now, just show the add form with the values pre-filled
-    $('#newWeight').val(weight);
-    $('#newDate').val(date);
-    $('#add-entry-form').slideDown();
-    $('#newWeight').focus();
-    
-    // TODO: Implement proper edit functionality with update instead of add
-    showToast('Edit mode: Modify values and save (creates new entry for now)');
+    // Call the data.js function
+    if (typeof window.dataEditWeight === 'function') {
+        window.dataEditWeight(id, weight, date);
+    }
 }
 
 function deleteWeight(id) {
-    if (window.coverage) window.coverage.logFunction('deleteWeight', 'dashboard.js');
-    if (!confirm('Are you sure you want to delete this weight entry?')) {
-        return;
+    // Call the data.js function
+    if (typeof window.dataDeleteWeight === 'function') {
+        window.dataDeleteWeight(id);
     }
-    
-    $.post('router.php?controller=profile', {
-        action: 'delete_weight',
-        id: id
-    }, function(resp) {
-        const data = parseJson(resp);
-        if (data.success) {
-            showToast('Weight entry deleted');
-            loadWeightHistory();
-            refreshLatestWeight();
-            refreshBMI();
-            refreshHealth();
-            refreshIdealWeight();
-        } else {
-            showToast('Failed to delete weight entry');
-        }
-    }).fail(function() {
-        showToast('Network error');
-    });
 }
 
 
 function loadSettings() {
-    if (window.coverage) window.coverage.logFunction('loadSettings', 'dashboard.js');
-    $.post('router.php?controller=profile', { action: 'get_settings' }, function(resp) {
-        const data = parseJson(resp);
-        if (data.success && data.settings) {
-            const s = data.settings;
-            $('#weightUnit').val(s.weight_unit || 'kg');
-            $('#heightUnit').val(s.height_unit || 'cm');
-            $('#dateFormat').val(s.date_format || 'uk');
-            $('#timezone').val(s.timezone || 'Europe/London');
-            $('#theme').val(s.theme || 'glassmorphism');
-            $('#language').val(s.language || 'en');
-            $('#startOfWeek').val(s.start_of_week || 'monday');
-            $('#shareData').prop('checked', s.share_data === true);
-            $('#emailNotifications').prop('checked', s.email_notifications === true);
-            $('#weeklyReports').prop('checked', s.weekly_reports === true);
-            updateDateExample();
-        }
-    });
+    // Call the settings.js function
+    if (typeof window.settingsLoadSettings === 'function') {
+        window.settingsLoadSettings();
+    }
 }
 
 function saveSettings() {
-    if (window.coverage) window.coverage.logFunction('saveSettings', 'dashboard.js');
-    const settings = {
-        action: 'save_settings',
-        weight_unit: $('#weightUnit').val(),
-        height_unit: $('#heightUnit').val(),
-        date_format: $('#dateFormat').val(),
-        timezone: $('#timezone').val(),
-        theme: $('#theme').val(),
-        language: $('#language').val(),
-        start_of_week: $('#startOfWeek').val(),
-        share_data: $('#shareData').is(':checked'),
-        email_notifications: $('#emailNotifications').is(':checked'),
-        weekly_reports: $('#weeklyReports').is(':checked')
-    };
-
-    $.post('router.php?controller=profile', settings, function(resp) {
-        const data = parseJson(resp);
-        if (data.success) {
-            $('#settings-status').text('Settings saved successfully').removeClass('text-danger').addClass('text-success');
-            setTimeout(() => $('#settings-status').text(''), 3000);
-        } else {
-            $('#settings-status').text('Failed to save settings').removeClass('text-success').addClass('text-danger');
-        }
-    }).fail(function() {
-        $('#settings-status').text('Network error').removeClass('text-success').addClass('text-danger');
-    });
+    // Call the settings.js function
+    if (typeof window.settingsSaveSettings === 'function') {
+        window.settingsSaveSettings();
+    }
 }
 
 function resetSettings() {
-    if (window.coverage) window.coverage.logFunction('resetSettings', 'dashboard.js');
-    $('#weightUnit').val('kg');
-    $('#heightUnit').val('cm');
-    $('#dateFormat').val('uk');
-    $('#timezone').val('Europe/London');
-    $('#theme').val('glassmorphism');
-    $('#language').val('en');
-    $('#startOfWeek').val('monday');
-    $('#shareData').prop('checked', false);
-    $('#emailNotifications').prop('checked', false);
-    $('#weeklyReports').prop('checked', false);
-    updateDateExample();
-    saveSettings();
+    // Call the settings.js function
+    if (typeof window.settingsResetSettings === 'function') {
+        window.settingsResetSettings();
+    }
 }
 
 function updateDateExample() {
-    if (window.coverage) window.coverage.logFunction('updateDateExample', 'dashboard.js');
-    const format = $('#dateFormat').val();
-    const today = new Date();
-    let example = '';
-    
-    switch(format) {
-        case 'uk':
-            example = today.toLocaleDateString('en-GB');
-            break;
-        case 'us':
-            example = today.toLocaleDateString('en-US');
-            break;
-        case 'iso':
-            example = today.toISOString().split('T')[0];
-            break;
-        case 'euro':
-            example = today.toLocaleDateString('de-DE');
-            break;
-        default:
-            example = today.toLocaleDateString('en-GB');
+    // Call the settings.js function
+    if (typeof window.settingsUpdateDateExample === 'function') {
+        window.settingsUpdateDateExample();
     }
-    
-    $('#dateExample').text(example);
 }
 
 function initTabNavigation() {
@@ -1457,48 +1171,15 @@ function updateYearlyAchievementCards(yearlyData, currentYear) {
 }
 
 function updateAchievementCards(weightData) {
-    if (window.coverage) window.coverage.logFunction('updateAchievementCards', 'dashboard.js');
-    if (weightData.length === 0) return;
-    
-    // Sort by date for calculations
-    const sortedData = [...weightData].sort((a, b) => new Date(a.entry_date) - new Date(b.entry_date));
-    const firstWeight = parseFloat(sortedData[0].weight_kg);
-    const lastWeight = parseFloat(sortedData[sortedData.length - 1].weight_kg);
-    const totalLoss = firstWeight - lastWeight;
-    
-    // Update Total Progress card
-    const progressHtml = totalLoss > 0 
-        ? `<strong class="text-success">${totalLoss.toFixed(1)} kg lost</strong><br><small>Over ${sortedData.length} entries</small>`
-        : `<strong class="text-info">${Math.abs(totalLoss).toFixed(1)} kg gained</strong><br><small>Over ${sortedData.length} entries</small>`;
-    $('#total-progress').html(progressHtml);
-    
-    // Calculate streak (consecutive days with entries)
-    const today = new Date();
-    let streak = 0;
-    const sortedDates = sortedData.map(entry => new Date(entry.entry_date)).sort((a, b) => b - a);
-    
-    for (let i = 0; i < sortedDates.length; i++) {
-        const entryDate = sortedDates[i];
-        const daysDiff = Math.floor((today - entryDate) / (1000 * 60 * 60 * 24));
-        
-        if (i === 0 && daysDiff <= 1) {
-            streak = 1;
-        } else if (i > 0) {
-            const prevDate = sortedDates[i-1];
-            const daysBetween = Math.floor((prevDate - entryDate) / (1000 * 60 * 60 * 24));
-            if (daysBetween <= 2) { // Allow 1 day gap
-                streak++;
-            } else {
-                break;
-            }
-        }
+    // Call the achievements.js function
+    if (typeof window.achievementsUpdateAchievementCards === 'function') {
+        window.achievementsUpdateAchievementCards(weightData);
     }
-    
-    const streakHtml = streak > 0 
-        ? `<strong class="text-success">${streak} day${streak > 1 ? 's' : ''}</strong><br><small>Current logging streak</small>`
-        : `<span class="text-muted">No current streak</span><br><small>Log weight to start</small>`;
-    $('#streak-counter').html(streakHtml);
-    
-    // Simple goal achievement (placeholder)
-    $('#goals-achieved').html('<span class="text-info">🎯 Goal tracking</span><br><small>Set goals in Data tab</small>');
+}
+
+function refreshPersonalHealthBenefits() {
+    if (window.coverage) window.coverage.logFunction('refreshPersonalHealthBenefits', 'dashboard.js');
+
+    // Call the health.js function to update health benefit cards
+    updateHealthBenefitCards();
 }

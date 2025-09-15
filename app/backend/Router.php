@@ -537,6 +537,12 @@
             }
 
             if ($action === 'get_weight_progress') {
+                // Get user's height for BMI calculations
+                $stmt = $db->prepare("SELECT height_cm FROM {$schema}.user_profiles WHERE user_id = ?");
+                $stmt->execute([$userId]);
+                $profile = $stmt->fetch(PDO::FETCH_ASSOC);
+                $heightCm = $profile ? (int)$profile['height_cm'] : null;
+
                 // Get all weight entries ordered by date
                 $stmt = $db->prepare("SELECT weight_kg, entry_date FROM {$schema}.weight_entries WHERE user_id = ? ORDER BY entry_date ASC, id ASC");
                 $stmt->execute([$userId]);
@@ -580,6 +586,7 @@
                     'current_date' => $weights[count($weights) - 1]['entry_date'],
                     'weeks_elapsed' => $weeksDiff,
                     'avg_weekly_rate_kg' => round($weeklyRate, 2),
+                    'height_cm' => $heightCm,
                     'research_note' => 'Fat loss estimate based on typical 78% fat composition during weight loss (Garthe et al., 2011; Weinheimer et al., 2010)'
                 ]);
                 return;

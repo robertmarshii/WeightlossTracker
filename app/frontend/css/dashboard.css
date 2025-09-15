@@ -21,11 +21,35 @@
     flex-shrink: 0;
 }
 
+.header-top-row {
+    width: 100%;
+}
+
+.header-top-row .logo-section-compact {
+    flex-shrink: 0;
+    margin-right: 1rem;
+}
+
+.header-bottom-row {
+    width: 100%;
+}
+
+.header-bottom-row .header-left {
+    flex-shrink: 0;
+}
+
+.header-bottom-row .header-buttons {
+    flex-shrink: 0;
+}
+
 .user-info {
     font-size: 0.9rem;
 }
 
 .logo-section-compact {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
 }
 
@@ -152,7 +176,36 @@ select.form-control.glass-input {
 .card-title {
     color: white;
     font-weight: 600;
+    font-size: 1.2rem;
     margin-bottom: 1rem;
+}
+
+/* Card content text should be smaller than titles */
+.glass-card-small p,
+.glass-card-small div:not(.card-title),
+.glass-card-small span:not(.card-title),
+.glass-card-small small,
+.glass-card p,
+.glass-card div:not(.card-title),
+.glass-card span:not(.card-title),
+.glass-card small {
+    font-size: 0.9rem;
+}
+
+/* Ensure form elements in cards are appropriately sized */
+.glass-card-small .form-label,
+.glass-card .form-label {
+    font-size: 0.85rem;
+}
+
+.glass-card-small .glass-input,
+.glass-card .glass-input {
+    font-size: 0.9rem;
+}
+
+.glass-card-small .btn,
+.glass-card .btn {
+    font-size: 0.85rem;
 }
 
 .text-muted {
@@ -280,3 +333,799 @@ select.form-control.glass-input {
     color: rgba(255, 255, 255, 0.6) !important;
     font-size: 0.8rem;
 }
+
+/* Health Benefits Projections */
+.benefit-projection {
+    padding: 0.75rem;
+    background: rgba(20, 40, 60, 0.2);
+    border-radius: 8px;
+    border-left: 3px solid #64a6d8;
+}
+
+/* Chart Period Buttons - default desktop styling */
+.chart-period-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.chart-period-buttons .btn {
+    font-size: 0.8rem;
+    padding: 0.25rem 0.75rem;
+}
+
+/* ===== DASHBOARD RESPONSIVE DESIGN MEDIA QUERIES ===== */
+
+/* Large Tablets and Small Desktops (768px - 1024px) */
+@media (max-width: 1024px) {
+    .glass-card-small {
+        padding: 1.25rem;
+        margin-bottom: 1.25rem;
+        min-height: 180px;
+    }
+
+    .welcome-title {
+        font-size: 1.75rem;
+    }
+
+
+    .user-info {
+        margin-top: 0.5rem;
+    }
+
+    .nav-tabs .nav-link {
+        padding: 0.75rem 1.2rem;
+        margin: 0 0.25rem;
+    }
+}
+
+
+/* Mobile Devices (775px and below) - Consolidated Responsive Design */
+@media (max-width: 775px) {
+    /* Container and main layout fixes */
+    .container {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+
+    .row {
+        margin-left: -3px;
+        margin-right: -3px;
+    }
+
+    .col-md-6, .col-md-4, .col-md-3, [class*="col-"] {
+        padding-left: 3px;
+        padding-right: 3px;
+        margin-bottom: 0.5rem;
+    }
+
+    /* Glass cards - ultra compact for mobile */
+    .glass-card-small {
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        min-height: 100px;
+        border-radius: 8px;
+    }
+
+    .glass-card {
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        border-radius: 8px;
+    }
+
+    /* Header section - two row layout on mobile */
+    .header-top-row {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem !important;
+    }
+
+    .header-top-row .logo-section-compact {
+        margin-right: 1rem;
+        margin-bottom: 0;
+    }
+
+    .header-bottom-row {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+    }
+
+    .welcome-content {
+        text-align: right;
+        margin: 0 !important;
+        flex-grow: 1;
+    }
+
+    .header-left, .header-right {
+        flex-direction: row;
+    }
+
+    .progress-summary {
+        margin-top: 0 !important;
+    }
+
+    .health-score-margin {
+        margin-bottom: 0.5rem !important; /* Smaller margin for 775px and below */
+    }
+
+    /* Keep header buttons side by side on mobile - from utility classes */
+    .header-buttons {
+        gap: 0.3rem;
+    }
+
+    .header-buttons .btn {
+        font-size: 0.7rem;
+        padding: 4px 8px;
+        white-space: nowrap;
+    }
+
+    .welcome-title {
+        font-size: 1rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .welcome-subtitle {
+        font-size: 0.7rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .user-info {
+        font-size: 0.65rem;
+        text-align: center;
+    }
+
+    .logo-section-compact .logo-icon {
+        width: 30px;
+        height: 30px;
+        font-size: 12px;
+    }
+
+    .logo-section-compact .logo-text {
+        font-size: 0.4rem;
+        line-height: 1.1;
+    }
+
+    /* Form elements - make them smaller and more compact */
+    .glass-input {
+        padding: 4px 8px;
+        min-height: 32px;
+        font-size: 14px;
+    }
+
+    .glass-input select {
+        line-height: 1.2;
+    }
+
+    select.form-control.glass-input {
+        padding-right: 32px !important;
+        background-size: 14px 14px;
+        background-position: right 8px center !important;
+    }
+
+    .primary-btn, .secondary-btn, .danger-btn {
+        padding: 4px 8px;
+        font-size: 0.75rem;
+        min-height: 32px;
+    }
+
+    /* Navigation tabs - make them much smaller */
+    .nav-tabs .nav-link {
+        padding: 0.25rem 0.8rem;
+        font-size: 0.7rem;
+        margin: 0.05rem;
+        border-radius: 6px;
+    }
+
+    .nav-tabs .nav-link .tab-icon {
+        margin-right: 0.2rem;
+        font-size: 0.8rem;
+    }
+
+    /* Table improvements for mobile */
+    .glass-table {
+        font-size: 0.65rem;
+        border-radius: 10px;
+    }
+
+    .glass-table thead th {
+        padding: 0.3rem 0.1rem;
+        font-size: 0.65rem;
+        line-height: 1.1;
+    }
+
+    .glass-table tbody td {
+        padding: 0.25rem 0.1rem;
+        font-size: 0.65rem;
+        line-height: 1.2;
+    }
+
+    /* Make table responsive on mobile */
+    .table-responsive {
+        max-height: 250px;
+    }
+
+    /* Shorter date format for weight history table on small screens */
+    .glass-table .date-cell {
+        font-size: 0.6rem;
+        line-height: 1.1;
+    }
+
+    .table-actions {
+        gap: 0.2rem;
+        display: flex;
+        width: 100%;
+    }
+
+    .table-actions .btn {
+        flex: 1;
+        width: 50%;
+    }
+
+    /* Weight history table column widths for mobile */
+    .glass-table th:nth-child(1), .glass-table td:nth-child(1) { /* Date */
+        width: 20%;
+    }
+
+    .glass-table th:nth-child(2), .glass-table td:nth-child(2) { /* Weight */
+        width: 25%;
+    }
+
+    .glass-table th:nth-child(3), .glass-table td:nth-child(3) { /* Change */
+        width: 20%;
+    }
+
+    .glass-table th:nth-child(4), .glass-table td:nth-child(4) { /* Actions */
+        width: 35%;
+    }
+
+    .btn-sm {
+        padding: 0.2rem 0.4rem;
+        font-size: 0.7rem;
+    }
+
+    /* Form layout fixes for mobile */
+    .row .col-8, .row .col-4 {
+        margin-bottom: 0.25rem;
+    }
+
+    /* Make buttons stack on mobile when needed */
+    .row .col-4 .btn {
+        width: 100%;
+        font-size: 0.7rem;
+        padding: 4px;
+    }
+
+    .weight-input {
+        max-width: 60px;
+    }
+
+    .date-input {
+        max-width: 80px;
+    }
+
+    .tab-content {
+        min-height: 200px;
+    }
+
+    .form-label {
+        font-size: 0.8rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .text-muted {
+        font-size: 0.7rem !important;
+    }
+
+    .card-title {
+        font-size: 1.0rem;
+        margin-bottom: 0.5rem;
+        line-height: 1.2;
+    }
+
+    /* Card content for mobile */
+    .glass-card-small p,
+    .glass-card-small div:not(.card-title),
+    .glass-card-small span:not(.card-title),
+    .glass-card p,
+    .glass-card div:not(.card-title),
+    .glass-card span:not(.card-title) {
+        font-size: 0.75rem;
+    }
+
+    .glass-card-small .glass-input,
+    .glass-card .glass-input {
+        font-size: 0.8rem;
+    }
+
+    .glass-card-small .btn,
+    .glass-card .btn {
+        font-size: 0.75rem;
+    }
+
+    /* Achievement cards - remove center alignment on small screens */
+    .glass-card-small.text-center {
+        text-align: left;
+    }
+
+    .glass-card-small.text-center h6 {
+        font-size: 0.95rem;
+        text-align: left;
+    }
+
+    .glass-card-small.text-center .text-muted {
+        font-size: 0.65rem;
+        text-align: left;
+    }
+
+    /* Health cards content - left align for better readability */
+    .benefit-projection {
+        padding: 0.3rem;
+        margin-bottom: 0.3rem;
+        border-radius: 4px;
+        font-size: 0.7rem;
+        text-align: left;
+    }
+
+    /* General text content should be left-aligned on small screens */
+    .glass-card-small .text-muted,
+    .glass-card .text-muted {
+        text-align: left;
+    }
+
+    /* Card content should be left-aligned for better readability */
+    .glass-card-small h5.card-title {
+        text-align: left;
+    }
+
+    /* Health score displays and progress summaries should be left-aligned */
+    #personal-benefits-calculator,
+    #personal-benefits-display,
+    #bmi-block,
+    #body-fat-block,
+    #cardio-risk-block,
+    #ideal-weight-block,
+    #progress-block,
+    #gallbladder-block,
+    #diabetes-block,
+    #sleep-apnea-block,
+    #hypertension-block,
+    #fatty-liver-block,
+    #heart-disease-block,
+    #mental-health-block,
+    #joint-health-block,
+    #life-expectancy-block {
+        text-align: left !important;
+    }
+
+    /* Specifically target the health score card content */
+    .glass-card-small #personal-benefits-calculator,
+    .glass-card-small #personal-benefits-display {
+        text-align: left !important;
+    }
+
+    /* Any text content in health cards should be left-aligned */
+    .glass-card-small div.text-muted {
+        text-align: left !important;
+    }
+
+    /* Chart period buttons - grid layout for mobile */
+    .chart-period-buttons {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 0.25rem;
+        width: 100%;
+    }
+
+    .chart-period-buttons .btn {
+        border-radius: 6px !important;
+        font-size: 0.6rem;
+        padding: 3px 4px;
+        min-height: 26px;
+        margin-bottom: 0;
+    }
+
+    /* General button groups - stack them */
+    .btn-group {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .btn-group .btn {
+        margin-bottom: 0.2rem;
+        border-radius: 6px !important;
+    }
+
+    /* Chart container */
+    .chart-container {
+        height: 250px !important;
+        margin-bottom: 0.5rem;
+    }
+
+    /* Settings forms - stack everything */
+    .form-group {
+        margin-bottom: 0.75rem;
+    }
+
+    /* Make flexbox elements stack on mobile */
+    .d-flex.justify-content-center.flex-wrap {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .d-flex.justify-content-center.flex-wrap .btn {
+        margin-bottom: 0.25rem;
+        width: auto;
+        min-width: 120px;
+    }
+
+    .no-data {
+        padding: 1rem;
+        font-size: 0.9rem;
+    }
+
+    /* Health Score Responsive Adjustments */
+    .health-score-display,
+    .progress-summary {
+        text-align: left !important;
+    }
+
+    /* Keep header horizontal on mobile but allow wrapping */
+    .health-score-header {
+        flex-direction: row !important;
+        align-items: flex-start !important;
+    }
+
+    .health-score-display-stacked .health-score-number {
+        font-size: 14px;
+    }
+
+    .health-score-improvement-below {
+        font-size: 10px;
+        margin-top: 0.15rem;
+    }
+
+    .health-bar-container {
+        margin: 8px 0 30px 0;
+    }
+
+    .health-improvement-message {
+        margin-top: 60px !important;
+        padding: 10px;
+    }
+
+    .health-scale-label {
+        font-size: 10px;
+    }
+
+    .health-marker-label {
+        font-size: 10px;
+        padding: 1px 4px;
+    }
+
+    /* Utility Classes Responsive Adjustments */
+    .weight-history-container {
+        max-height: 200px;
+    }
+
+    .btn-gap {
+        gap: 0.25rem;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .form-gap {
+        gap: 0.5rem;
+    }
+
+    /* Weight history header stays horizontal on mobile */
+    .weight-history-header .btn {
+        font-size: 0.75rem;
+        padding: 4px 8px;
+        white-space: nowrap;
+    }
+}
+
+
+/* Landscape Mobile Orientation for Dashboard */
+@media (max-height: 500px) and (orientation: landscape) {
+    .glass-card-small {
+        padding: 0.6rem;
+        margin-bottom: 0.4rem;
+        min-height: 100px;
+    }
+
+    .welcome-title {
+        font-size: 1.1rem;
+        margin-bottom: 0.3rem;
+    }
+
+    .welcome-subtitle {
+        font-size: 0.75rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .nav-tabs {
+        margin-bottom: 0.8rem;
+    }
+
+    .nav-tabs .nav-link {
+        padding: 0.25rem 0.6rem;
+        margin: 0.05rem;
+    }
+
+    .tab-content {
+        min-height: 180px;
+    }
+}
+
+/* High DPI / Retina Display Adjustments */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .glass-table {
+        border-width: 0.5px;
+    }
+
+    .glass-card-small {
+        border-width: 0.5px;
+    }
+}
+
+/* ===== HEALTH SCORE CSS CLASSES (replacing inline styles) ===== */
+
+/* Health Score Display */
+.health-score-display {
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+/* Inline Health Score Display (right of title) */
+.health-score-display-inline {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Stacked Health Score Display (score on top, points below) */
+.health-score-display-stacked {
+    text-align: right;
+    line-height: 1.2;
+}
+
+.health-score-improvement-below {
+    font-size: 12px;
+    font-weight: 500;
+    margin-top: 0.2rem;
+}
+
+.health-score-header {
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.health-score-margin {
+    margin-bottom: 1rem; /* Default for larger screens */
+}
+
+.health-score-number {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.health-score-improvement {
+    margin-left: 10px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* Progress Summary */
+.progress-summary {
+    margin-top: 10px;
+    text-align: center;
+}
+
+/* Health Bar Container */
+.health-bar-container {
+    position: relative;
+    margin: 10px 0 40px 0;
+}
+
+/* Health Score Bar */
+.health-score-bar {
+    width: 100%;
+    height: 20px;
+    background: linear-gradient(to right, #e74c3c 0%, #f39c12 25%, #f1c40f 50%, #7bc96f 75%, #27ae60 100%);
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Health Bar Markers */
+.health-marker {
+    position: absolute;
+    top: -8px;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 36px;
+    background-color: #fff;
+    border-radius: 3px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.health-marker.start {
+    border: 2px solid #e74c3c;
+}
+
+.health-marker.current {
+    border: 2px solid #27ae60;
+}
+
+/* Health Bar Labels */
+.health-marker-label {
+    position: absolute;
+    top: -12px;
+    transform: translateX(-50%);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.health-marker-label.start {
+    background: #e74c3c;
+}
+
+.health-marker-label.current {
+    background: #27ae60;
+}
+
+/* Health Score Scale Labels */
+.health-scale-label {
+    position: absolute;
+    top: 30px;
+    font-size: 11px;
+    color: #bbb;
+    text-align: center;
+}
+
+.health-scale-label.poor {
+    left: 0;
+    transform: translateX(0%);
+}
+
+.health-scale-label.fair {
+    left: 25%;
+    transform: translateX(-50%);
+}
+
+.health-scale-label.good {
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.health-scale-label.very-good {
+    left: 75%;
+    transform: translateX(-50%);
+}
+
+.health-scale-label.excellent {
+    right: 0;
+    transform: translateX(0%);
+}
+
+/* Health Improvement Message */
+.health-improvement-message {
+    margin-top: 80px;
+    padding: 15px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 8px;
+    border-left: 4px solid #27ae60;
+}
+
+/* Health Message Text Styling */
+.health-message-success {
+    color: #27ae60;
+    font-weight: bold;
+}
+
+.health-message-warning {
+    color: #f39c12;
+    font-weight: bold;
+}
+
+.health-message-danger {
+    color: #e67e22;
+    font-weight: bold;
+}
+
+.health-message-critical {
+    color: #e74c3c;
+    font-weight: bold;
+}
+
+.health-message-text {
+    line-height: 1.4;
+}
+
+
+/* ===== UTILITY CLASSES FOR INLINE STYLE REPLACEMENT ===== */
+
+/* Layout Utilities */
+.btn-gap {
+    gap: 0.5rem;
+}
+
+.form-gap {
+    gap: 1rem;
+}
+
+.hidden {
+    display: none;
+}
+
+.personal-benefits-display {
+    display: none;
+    margin-top: 10px;
+}
+
+/* Table and Container Utilities */
+.weight-history-container {
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+.chart-container {
+    position: relative;
+    height: 400px;
+    margin-bottom: 1rem;
+}
+
+.chart-navigation {
+    display: none !important;
+}
+
+/* Icon Utilities */
+.icon-margin {
+    margin-right: 10px;
+}
+
+/* Welcome content styling */
+.welcome-content {
+    text-align: left;
+}
+
+/* Header buttons styling */
+.header-buttons {
+    gap: 0.5rem;
+}
+
+.header-buttons .btn {
+    white-space: nowrap;
+}
+
+/* Development Tools Styling */
+.dev-tools-card {
+    padding: 1rem;
+}
+
+.dev-tools-title {
+    color: white;
+    margin-bottom: 1rem;
+}
+
+.dev-tools-link {
+    margin-bottom: 0.5rem;
+}
+
+.dev-tools-link:last-child {
+    margin-bottom: 0;
+}
+
+/* Weight History Header Styling */
+.weight-history-header {
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+
