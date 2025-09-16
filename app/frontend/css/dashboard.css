@@ -401,6 +401,10 @@ select.form-control.glass-input {
 /* Mobile Devices (775px and below) - Consolidated Responsive Design */
 @media (max-width: 775px) {
 
+    .menu-text{
+        font-size:13px !important;  
+    }
+
     #profile-card{
         margin-top: 20px !important;
     }

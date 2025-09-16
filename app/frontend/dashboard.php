@@ -92,22 +92,22 @@ if (isset($_SESSION['login_time'])) {
             <div class="glass-card">
                 <ul class="nav nav-tabs d-flex justwrap" id="dashboardTabs" role="tablist">
                     <li class="nav-item flex-fill" role="presentation">
-                        <a class="nav-link active text-center" id="data-tab" data-toggle="tab" href="#data" role="tab">
+                        <a class="nav-link active text-center menu-text" id="data-tab" data-toggle="tab" href="#data" role="tab">
                             <span class="tab-icon">📊</span>Data
                         </a>
                     </li>
                     <li class="nav-item flex-fill" role="presentation">
-                        <a class="nav-link text-center" id="health-tab" data-toggle="tab" href="#health" role="tab">
+                        <a class="nav-link text-center menu-text" id="health-tab" data-toggle="tab" href="#health" role="tab">
                             <span class="tab-icon">💚</span>Health
                         </a>
                     </li>
                     <li class="nav-item flex-fill" role="presentation">
-                        <a class="nav-link text-center" id="achievements-tab" data-toggle="tab" href="#achievements" role="tab">
+                        <a class="nav-link text-center menu-text" id="achievements-tab" data-toggle="tab" href="#achievements" role="tab">
                             <span class="tab-icon">🏆</span>Achievements
                         </a>
                     </li>
                     <li class="nav-item flex-fill" role="presentation">
-                        <a class="nav-link text-center" id="settings-tab" data-toggle="tab" href="#settings" role="tab">
+                        <a class="nav-link text-center menu-text" id="settings-tab" data-toggle="tab" href="#settings" role="tab">
                             <span class="tab-icon">⚙️</span>Settings
                         </a>
                     </li>
