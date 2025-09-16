@@ -200,7 +200,7 @@ if (isset($_SESSION['login_time'])) {
             </div>
 
             <!-- Profile Card -->
-            <div class="glass-card">
+            <div id="profile-card" class="glass-card">
                 <h5 class="card-title">🔧 Profile Settings</h5>
                 <div class="row">
                     <div class="form-group col-md-3">
@@ -398,7 +398,7 @@ if (isset($_SESSION['login_time'])) {
                         </div>
                         
                         <!-- Achievement Cards -->
-                        <div class="row mt-4">
+                        <div class="row mt-3">
                             <div class="col-md-4">
                                 <div class="glass-card-small text-center">
                                     <h6 class="card-title">🎯 Goals Achieved</h6>

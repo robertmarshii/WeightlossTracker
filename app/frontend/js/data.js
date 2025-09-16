@@ -39,8 +39,8 @@ function loadWeightHistory() {
                     <td>${changeHtml}</td>
                     <td>
                         <div class="table-actions">
-                            <button class="btn btn-sm edit-btn" onclick="editWeight(${entry.id}, ${weight}, '${date}')">Edit</button>
-                            <button class="btn btn-sm delete-btn" onclick="deleteWeight(${entry.id})">Del</button>
+                            <button class="btn btn-sm edit-btn" onclick="editWeight(${entry.id}, ${weight}, '${date}')">✎</button>
+                            <button class="btn btn-sm delete-btn" onclick="deleteWeight(${entry.id})">✖</button>
                         </div>
                     </td>
                 </tr>
