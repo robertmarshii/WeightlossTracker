@@ -259,24 +259,24 @@ select.form-control.glass-input {
 }
 
 .edit-btn {
-    background: rgba(100, 150, 200, 0.6);
-    border: 1px solid rgba(100, 150, 200, 0.4);
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     color: white;
 }
 
 .edit-btn:hover {
-    background: rgba(120, 170, 220, 0.8);
+    background: rgba(255, 255, 255, 0.2);
     color: white;
 }
 
 .delete-btn {
-    background: rgba(200, 100, 40, 0.6);
-    border: 1px solid rgba(200, 100, 40, 0.4);
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     color: white;
 }
 
 .delete-btn:hover {
-    background: rgba(220, 120, 60, 0.8);
+    background: rgba(255, 255, 255, 0.2);
     color: white;
 }
 
@@ -747,6 +747,12 @@ select.form-control.glass-input {
     /* Settings forms - stack everything */
     .form-group {
         margin-bottom: 0.75rem;
+    }
+
+    .justwrap{
+        flex-wrap: nowrap!important;
+        justify-content: center !important;
+        align-items: center !important;
     }
 
     /* Make flexbox elements stack on mobile */

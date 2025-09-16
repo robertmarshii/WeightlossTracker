@@ -213,59 +213,6 @@
     }
 }
 
-/* Landscape Mobile Orientation for Index */
-@media (max-height: 500px) and (orientation: landscape) {
-    .glass-card {
-        padding: 0.8rem;
-        max-width: calc(100vw - 20px);
-    }
-
-    .logo-section {
-        margin-bottom: 0.8rem;
-    }
-
-    .logo-icon {
-        width: 35px;
-        height: 35px;
-        margin-bottom: 0.3rem;
-        font-size: 14px;
-    }
-
-    .logo-icon svg {
-        width: 18px;
-        height: 18px;
-    }
-
-    .welcome-title {
-        font-size: 1.1rem;
-        margin-bottom: 0.3rem;
-    }
-
-    .welcome-subtitle {
-        font-size: 0.7rem;
-        margin-bottom: 1rem;
-    }
-
-    .nav-tabs {
-        margin-bottom: 0.8rem;
-    }
-
-    .nav-tabs .nav-link {
-        padding: 0.25rem 0.6rem;
-        margin: 0.05rem;
-        font-size: 0.75rem;
-    }
-
-    .divider {
-        margin: 0.8rem 0;
-        font-size: 0.75rem;
-    }
-
-    .bottom-link {
-        margin-top: 0.6rem;
-        font-size: 0.7rem;
-    }
-}
 
 /* ===== INDEX PAGE UTILITY CLASSES ===== */
 

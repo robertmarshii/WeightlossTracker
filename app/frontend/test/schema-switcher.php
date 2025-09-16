@@ -1,3 +1,13 @@
+<?php
+session_start();
+require_once('/var/app/backend/AuthManager.php');
+
+// Check if user is logged in, redirect to index if not
+if (!AuthManager::isLoggedIn()) {
+    header('Location: ../index.php');
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 

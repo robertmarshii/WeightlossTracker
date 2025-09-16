@@ -7,9 +7,9 @@
             "file": "Router.php",
             "fullFile": "\/var\/app\/backend\/Router.php",
             "line": 910,
-            "callCount": 514,
+            "callCount": 569,
             "firstCalled": "2025-09-15 21:55:20",
-            "lastCalled": "2025-09-15 23:40:01"
+            "lastCalled": "2025-09-16 00:01:52"
         },
         "\/var\/app\/backend\/AuthManager.php:AuthManager::isLoggedIn": {
             "function": "isLoggedIn",
@@ -17,9 +17,9 @@
             "file": "AuthManager.php",
             "fullFile": "\/var\/app\/backend\/AuthManager.php",
             "line": 346,
-            "callCount": 236,
+            "callCount": 287,
             "firstCalled": "2025-09-15 21:55:20",
-            "lastCalled": "2025-09-15 23:41:04"
+            "lastCalled": "2025-09-16 00:02:37"
         },
         "\/var\/app\/backend\/LoginRouter.php:AuthController": {
             "function": "AuthController",
@@ -27,9 +27,9 @@
             "file": "LoginRouter.php",
             "fullFile": "\/var\/app\/backend\/LoginRouter.php",
             "line": 12,
-            "callCount": 82,
+            "callCount": 119,
             "firstCalled": "2025-09-15 21:55:21",
-            "lastCalled": "2025-09-15 23:40:00"
+            "lastCalled": "2025-09-16 00:01:14"
         },
         "\/var\/app\/backend\/Router.php:Router::ProfileController": {
             "function": "ProfileController",
@@ -37,9 +37,9 @@
             "file": "Router.php",
             "fullFile": "\/var\/app\/backend\/Router.php",
             "line": 84,
-            "callCount": 1181,
+            "callCount": 1377,
             "firstCalled": "2025-09-15 21:55:22",
-            "lastCalled": "2025-09-15 23:39:23"
+            "lastCalled": "2025-09-16 00:02:39"
         },
         "\/var\/app\/backend\/Router.php:Router::SchemaController": {
             "function": "SchemaController",
@@ -47,9 +47,9 @@
             "file": "Router.php",
             "fullFile": "\/var\/app\/backend\/Router.php",
             "line": 27,
-            "callCount": 189,
+            "callCount": 204,
             "firstCalled": "2025-09-15 21:55:22",
-            "lastCalled": "2025-09-15 23:39:22"
+            "lastCalled": "2025-09-16 00:02:37"
         },
         "\/var\/app\/backend\/Router.php:Router::SeederController": {
             "function": "SeederController",
@@ -57,9 +57,9 @@
             "file": "Router.php",
             "fullFile": "\/var\/app\/backend\/Router.php",
             "line": 55,
-            "callCount": 111,
+            "callCount": 112,
             "firstCalled": "2025-09-15 21:55:22",
-            "lastCalled": "2025-09-15 23:37:36"
+            "lastCalled": "2025-09-16 00:01:14"
         },
         "\/var\/app\/backend\/Router.php:Router::EmailController": {
             "function": "EmailController",
@@ -67,9 +67,9 @@
             "file": "Router.php",
             "fullFile": "\/var\/app\/backend\/Router.php",
             "line": 792,
-            "callCount": 64,
+            "callCount": 71,
             "firstCalled": "2025-09-15 21:55:37",
-            "lastCalled": "2025-09-15 23:37:36"
+            "lastCalled": "2025-09-16 00:01:15"
         },
         "\/var\/app\/backend\/Router.php:Router::Get1": {
             "function": "Get1",
@@ -82,5 +82,5 @@
             "lastCalled": "2025-09-15 21:57:05"
         }
     },
-    "lastUpdated": "2025-09-15 23:41:04"
+    "lastUpdated": "2025-09-16 00:02:39"
 }

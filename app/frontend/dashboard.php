@@ -1,9 +1,9 @@
 <?php
 session_start();
+require_once('/var/app/backend/AuthManager.php');
 
 // Simple dashboard shown after successful login
-$isLoggedIn = isset($_SESSION['user_id']) && isset($_SESSION['login_time']);
-if (!$isLoggedIn) {
+if (!AuthManager::isLoggedIn()) {
     header('Location: index.php');
     exit;
 }
@@ -81,7 +81,7 @@ if (isset($_SESSION['login_time'])) {
 
                     <div class="d-flex align-items-center header-buttons">
                         <?php if ($_SERVER['HTTP_HOST'] === '127.0.0.1:8111'): ?>
-                        <a class="btn secondary-btn btn-sm me-2" href="test/test-interface.html">🧪 Test Interface</a>
+                        <a class="btn secondary-btn btn-sm me-2" href="test/test-interface.php">🧪 Test Interface</a>
                         <?php endif; ?>
                         <button id="btn-logout" class="btn danger-btn btn-sm">🚪 Logout</button>
                     </div>
@@ -90,7 +90,7 @@ if (isset($_SESSION['login_time'])) {
             
             <!-- Dashboard Tabs -->
             <div class="glass-card">
-                <ul class="nav nav-tabs d-flex" id="dashboardTabs" role="tablist">
+                <ul class="nav nav-tabs d-flex justwrap" id="dashboardTabs" role="tablist">
                     <li class="nav-item flex-fill" role="presentation">
                         <a class="nav-link active text-center" id="data-tab" data-toggle="tab" href="#data" role="tab">
                             <span class="tab-icon">📊</span>Data

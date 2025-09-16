@@ -11,6 +11,14 @@ $(function() {
     });
 
     $('#btn-logout').on('click', function() {
+        // Show immediate feedback
+        $(this).prop('disabled', true).text('🚪 Logging out...');
+
+        // Set a timeout to ensure redirect happens even if server is slow
+        setTimeout(function() {
+            window.location.href = 'index.php';
+        }, 1000);
+
         $.post('login_router.php?controller=auth', { action: 'logout' }, function() {
             window.location.href = 'index.php';
         }).fail(function() {

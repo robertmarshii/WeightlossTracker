@@ -21,7 +21,7 @@ class Database
         COVERAGE_LOG('getInstance', __CLASS__, __FILE__, __LINE__);
         $username = $_ENV['PG_USER'] ?? 'user';
         $password = $_ENV['PG_PASSWORD'] ?? 'password';
-        $host = $_ENV['PG_HOST'] ?? 'mysql';
+        $host = $_ENV['PG_HOST'] ?? 'pgsql';
         $dbName = $_ENV['PG_DATABASE'] ?? 'db';
         $port = $_ENV['PG_PORT'] ?? '3306';
         if (self::$_dbInstance === null)
@@ -56,7 +56,7 @@ class Database
         try
         {
             $this->_dbHandle = new PDO("pgsql:host=$host;dbname=$database;port=$port", $username, $password); // creates the database handle with connection info
-            //$this->_dbHandle = new PDO('mysql:host=' . $host . ';dbname=' . $database,  $username, $password); // creates the database handle with connection info
+            //$this->_dbHandle = new PDO('pgsql:host=' . $host . ';dbname=' . $database,  $username, $password); // creates the database handle with connection info
             
         }
         catch(PDOException $e)

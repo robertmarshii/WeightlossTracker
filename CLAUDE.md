@@ -4,9 +4,9 @@ This file provides guidance to Claude Code when working with this repository. It
 
 ## 🏗️ Architecture Quick Reference
 
-**Stack**: LAMP (PHP 7.2-FPM + MySQL 5.7 + Nginx) in Docker containers
+**Stack**: LAMP (PHP 7.2-FPM + Postgres + Nginx) in Docker containers
 **Pattern**: Simple MVC with dual routing system
-**Access**: http://localhost:8111 (web) | localhost:3308 (MySQL: root/pass)
+**Access**: http://localhost:8111 (web) | localhost:3308 (postgres: root/pass)
 
 ### 🔀 Dual Router System
 - **`login_router.php`** - Public routes (authentication, registration) - No session required
@@ -27,7 +27,7 @@ $.post('router.php?controller=profile', { action: 'get_weight_history' })
 # Application
 docker compose up -d              # Start application
 docker compose down               # Stop application
-docker compose logs [service]     # View logs (docker-nginx|docker-php-fpm|mysql)
+docker compose logs [service]     # View logs (docker-nginx|docker-php-fpm|postgres)
 
 # Testing & Coverage
 npm run cypress:coverage          # Run tests with coverage report

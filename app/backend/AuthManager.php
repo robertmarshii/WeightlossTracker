@@ -321,7 +321,10 @@ class AuthManager {
             $_SESSION['first_name'] = $result['first_name'];
             $_SESSION['last_name'] = $result['last_name'];
             $_SESSION['login_time'] = time();
-            
+
+            // Set remember me token for 30 days
+            self::setRememberToken($result['user_id']);
+
             return ['success' => true, 'message' => 'Login successful'];
             
         } catch (Exception $e) {
@@ -338,6 +341,10 @@ class AuthManager {
     public static function logout() {
         COVERAGE_LOG('logout', __CLASS__, __FILE__, __LINE__);
         session_start();
+
+        // Clear remember me token
+        self::clearRememberToken();
+
         session_destroy();
         return ['success' => true, 'message' => 'Logged out successfully'];
     }
@@ -345,17 +352,99 @@ class AuthManager {
     public static function isLoggedIn() {
         COVERAGE_LOG('isLoggedIn', __CLASS__, __FILE__, __LINE__);
         session_start();
-        
-        if (!isset($_SESSION['user_id']) || !isset($_SESSION['login_time'])) {
-            return false;
+
+        // First check active session
+        if (isset($_SESSION['user_id']) && isset($_SESSION['login_time'])) {
+            // Check if session is older than 24 hours
+            if (time() - $_SESSION['login_time'] > 86400) {
+                session_destroy();
+                // Don't return false yet, check remember me token
+            } else {
+                return true;
+            }
         }
-        
-        // Check if session is older than 24 hours
-        if (time() - $_SESSION['login_time'] > 86400) {
-            session_destroy();
-            return false;
+
+        // Check remember me token if no active session
+        if (isset($_COOKIE['remember_token']) && isset($_COOKIE['user_id'])) {
+            try {
+                $db = Database::getInstance()->getDbConnection();
+                $schema = Database::getSchema();
+                $stmt = $db->prepare("SELECT * FROM {$schema}.users WHERE id = ? AND remember_token = ? AND remember_token_expires > NOW()");
+                $stmt->execute([$_COOKIE['user_id'], $_COOKIE['remember_token']]);
+                $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                if ($user) {
+                    // Restore session from remember token
+                    $_SESSION['user_id'] = $user['id'];
+                    $_SESSION['email'] = $user['email'];
+                    $_SESSION['first_name'] = $user['first_name'];
+                    $_SESSION['last_name'] = $user['last_name'];
+                    $_SESSION['login_time'] = time();
+
+                    // Extend remember token for another 30 days
+                    self::setRememberToken($user['id']);
+
+                    return true;
+                } else {
+                    // Invalid/expired token, clear cookies
+                    setcookie('remember_token', '', time() - 3600, '/');
+                    setcookie('user_id', '', time() - 3600, '/');
+                }
+            } catch (Exception $e) {
+                error_log("AuthManager::isLoggedIn remember token check error: " . $e->getMessage());
+                // Clear cookies on error
+                setcookie('remember_token', '', time() - 3600, '/');
+                setcookie('user_id', '', time() - 3600, '/');
+            }
         }
-        
-        return true;
+
+        return false;
+    }
+
+    private static function setRememberToken($userId) {
+        COVERAGE_LOG('setRememberToken', __CLASS__, __FILE__, __LINE__);
+
+        try {
+            // Generate secure random token
+            $token = bin2hex(random_bytes(32));
+            $expires = date('Y-m-d H:i:s', time() + (30 * 24 * 60 * 60)); // 30 days
+
+            // Store token in database
+            $db = Database::getInstance()->getDbConnection();
+            $schema = Database::getSchema();
+            $stmt = $db->prepare("UPDATE {$schema}.users SET remember_token = ?, remember_token_expires = ? WHERE id = ?");
+            $stmt->execute([$token, $expires, $userId]);
+
+            // Set cookies (30 days)
+            setcookie('remember_token', $token, time() + (30 * 24 * 60 * 60), '/', '', false, true); // httpOnly=true for security
+            setcookie('user_id', $userId, time() + (30 * 24 * 60 * 60), '/', '', false, false);
+        } catch (Exception $e) {
+            error_log("AuthManager::setRememberToken error: " . $e->getMessage());
+            // Don't fail the login if remember token fails, just log the error
+        }
+    }
+
+    public static function clearRememberToken($userId = null) {
+        COVERAGE_LOG('clearRememberToken', __CLASS__, __FILE__, __LINE__);
+
+        if (!$userId && isset($_SESSION['user_id'])) {
+            $userId = $_SESSION['user_id'];
+        }
+
+        if ($userId) {
+            try {
+                // Clear token from database
+                $db = Database::getInstance()->getDbConnection();
+                $schema = Database::getSchema();
+                $stmt = $db->prepare("UPDATE {$schema}.users SET remember_token = NULL, remember_token_expires = NULL WHERE id = ?");
+                $stmt->execute([$userId]);
+            } catch (Exception $e) {
+                error_log("AuthManager::clearRememberToken error: " . $e->getMessage());
+            }
+        }
+
+        // Clear cookies
+        setcookie('remember_token', '', time() - 3600, '/');
+        setcookie('user_id', '', time() - 3600, '/');
     }
 }
