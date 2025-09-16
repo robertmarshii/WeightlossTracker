@@ -20,9 +20,9 @@ if (AuthManager::isLoggedIn()) {
     <!-- Schema Logger -->
     <script src="schema-logger.js"></script>
     <!-- Global Styles -->
-    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/global.css?v=<?php echo time(); ?>">
     <!-- Page-specific Styles -->
-    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/index.css?v=<?php echo time(); ?>">
 </head>
 <body>
     <!-- Fixed Alert Container -->
@@ -309,10 +309,10 @@ if (AuthManager::isLoggedIn()) {
     </div>
 
     <!-- Coverage Logging (Development only) -->
-    <script src="js/coverage.js"></script>
+    <script src="js/coverage.js?v=<?php echo time(); ?>"></script>
     <!-- Global Scripts -->
-    <script src="js/global.js"></script>
+    <script src="js/global.js?v=<?php echo time(); ?>"></script>
     <!-- Page-specific Scripts -->
-    <script src="js/index.js"></script>
+    <script src="js/index.js?v=<?php echo time(); ?>"></script>
 </body>
 </html>

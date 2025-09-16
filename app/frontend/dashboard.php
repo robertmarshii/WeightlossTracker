@@ -36,9 +36,9 @@ if (isset($_SESSION['login_time'])) {
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Global Styles -->
-    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/global.css?v=<?php echo time(); ?>">
     <!-- Page-specific Styles -->
-    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/dashboard.css?v=<?php echo time(); ?>">
 </head>
 <body>
 <!-- Fixed Alert Container -->
@@ -562,14 +562,14 @@ if (isset($_SESSION['login_time'])) {
 </div>
 
 <!-- Coverage Logging (Development only) -->
-<script src="js/coverage.js"></script>
+<script src="js/coverage.js?v=<?php echo time(); ?>"></script>
 <!-- Global Scripts -->
-<script src="js/global.js"></script>
+<script src="js/global.js?v=<?php echo time(); ?>"></script>
 <!-- Modular JS files -->
-<script src="js/health.js"></script>
-<script src="js/data.js"></script>
-<script src="js/achievements.js"></script>
-<script src="js/settings.js"></script>
-<script src="js/dashboard.js"></script>
+<script src="js/health.js?v=<?php echo time(); ?>"></script>
+<script src="js/data.js?v=<?php echo time(); ?>"></script>
+<script src="js/achievements.js?v=<?php echo time(); ?>"></script>
+<script src="js/settings.js?v=<?php echo time(); ?>"></script>
+<script src="js/dashboard.js?v=<?php echo time(); ?>"></script>
 </body>
 </html>
