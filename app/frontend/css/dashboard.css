@@ -1,6 +1,24 @@
 
 /* Dashboard-specific styles */
 
+/* Reduced padding for primary buttons to prevent wrapping */
+.primary-btn {
+    padding: 6px 12px !important;
+}
+
+/* Vertical alignment for save button containers */
+#btn-add-weight,
+#btn-save-goal {
+    align-self: center;
+}
+
+/* Make the parent containers flex with center alignment */
+.col-4:has(#btn-add-weight),
+.col-4:has(#btn-save-goal) {
+    display: flex;
+    align-items: center;
+}
+
 .glass-card-small {
     background: rgba(30, 58, 95, 0.4);
     backdrop-filter: blur(15px);

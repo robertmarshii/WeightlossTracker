@@ -11,3 +11,6 @@ cypress/videos/
 /.claude
 /.husky
 /.workables
+app/backend/coverage-data.json
+
+app/backend/coverage.log

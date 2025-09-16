@@ -12,7 +12,7 @@ $(function() {
 
     $('#btn-logout').on('click', function() {
         // Show immediate feedback
-        $(this).prop('disabled', true).text('🚪 Logging out...');
+        $(this).prop('disabled', true).text('↪ Logging out...');
 
         // Set a timeout to ensure redirect happens even if server is slow
         setTimeout(function() {

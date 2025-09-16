@@ -81,9 +81,9 @@ if (isset($_SESSION['login_time'])) {
 
                     <div class="d-flex align-items-center header-buttons">
                         <?php if ($_SERVER['HTTP_HOST'] === '127.0.0.1:8111'): ?>
-                        <a class="btn secondary-btn btn-sm me-2" href="test/test-interface.php">🧪 Test Interface</a>
+                        <a class="btn secondary-btn btn-sm me-2" href="test/test-interface.php">⚗ Test Interface</a>
                         <?php endif; ?>
-                        <button id="btn-logout" class="btn danger-btn btn-sm">🚪 Logout</button>
+                        <button id="btn-logout" class="btn danger-btn btn-sm">↪ Logout</button>
                     </div>
                 </div>
             </div>
@@ -126,7 +126,7 @@ if (isset($_SESSION['login_time'])) {
                                 <input type="number" step="0.1" min="0" id="weightKg" class="form-control glass-input" placeholder="Weight (kg)">
                             </div>
                             <div class="col-4">
-                                <button id="btn-add-weight" class="btn primary-btn w-100">Save</button>
+                                <button id="btn-add-weight" class="btn primary-btn w-100">✓ Save</button>
                             </div>
                         </div>
                         <small class="text-muted d-block mt-2" id="latest-weight"></small>
@@ -145,7 +145,7 @@ if (isset($_SESSION['login_time'])) {
                                 <input type="date" id="goalDate" class="form-control glass-input">
                             </div>
                             <div class="col-4">
-                                <button id="btn-save-goal" class="btn primary-btn w-100">Save</button>
+                                <button id="btn-save-goal" class="btn primary-btn w-100">✓ Save</button>
                             </div>
                         </div>
                         <small class="text-muted d-block mt-2" id="current-goal"></small>
@@ -158,7 +158,7 @@ if (isset($_SESSION['login_time'])) {
             <div class="glass-card">
                 <div class="d-flex justify-content-between align-items-center mb-3 weight-history-header">
                     <h5 class="card-title mb-0">📈 Weight History</h5>
-                    <button id="btn-add-entry" class="btn primary-btn">➕ Add Entry</button>
+                    <button id="btn-add-entry" class="btn primary-btn">+ Add Entry</button>
                 </div>
                 
                 <!-- Add New Entry Form (hidden by default) -->
@@ -201,7 +201,7 @@ if (isset($_SESSION['login_time'])) {
 
             <!-- Profile Card -->
             <div class="glass-card">
-                <h5 class="card-title">👤 Profile Settings</h5>
+                <h5 class="card-title">🔧 Profile Settings</h5>
                 <div class="row">
                     <div class="form-group col-md-3">
                         <label for="heightCm" class="form-label">Height (cm)</label>
@@ -233,8 +233,8 @@ if (isset($_SESSION['login_time'])) {
                     </div>
                 </div>
                 <div class="d-flex justify-content-between align-items-center">
-                    <button id="btn-save-profile" class="btn primary-btn">💾 Save Profile</button>
                     <span id="profile-status" class="text-muted"></span>
+                    <button id="btn-save-profile" class="btn primary-btn">✓ Save Profile</button>
                 </div>
             </div>
                     </div>
@@ -548,7 +548,7 @@ if (isset($_SESSION['login_time'])) {
                         
                         <!-- Save Settings -->
                         <div class="text-center mt-4">
-                            <button id="btn-save-settings" class="btn primary-btn mr-2">💾 Save Settings</button>
+                            <button id="btn-save-settings" class="btn primary-btn mr-2">✓ Save Settings</button>
                             <button id="btn-reset-settings" class="btn secondary-btn">↻ Reset to Defaults</button>
                             <div class="mt-2">
                                 <span id="settings-status" class="text-muted"></span>
