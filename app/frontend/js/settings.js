@@ -64,6 +64,21 @@ function saveSettings() {
     $.post('router.php?controller=profile', settings, function(resp) {
         const data = parseJson(resp);
         if (data.success) {
+            // Update weight unit in localStorage and refresh displays
+            console.log('Settings saved, updating weight unit to:', settings.weight_unit);
+            setWeightUnit(settings.weight_unit);
+
+            console.log('Current weight unit after save:', getWeightUnit());
+
+            if (typeof window.updateWeightUnitDisplay === 'function') {
+                console.log('Calling updateWeightUnitDisplay');
+                window.updateWeightUnitDisplay();
+            }
+            if (typeof window.refreshAllWeightDisplays === 'function') {
+                console.log('Calling refreshAllWeightDisplays');
+                window.refreshAllWeightDisplays();
+            }
+
             $('#settings-status').text('Settings saved successfully').removeClass('text-danger').addClass('text-success');
             setTimeout(() => $('#settings-status').text(''), 3000);
         } else {

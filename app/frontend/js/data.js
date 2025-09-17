@@ -18,30 +18,43 @@ function loadWeightHistory() {
         }
 
         let html = '';
+        const unit = getWeightUnitLabel();
+        const threshold = unit === 'st' ? 0.05 : 0.1;
+
         history.forEach((entry, index) => {
             const weight = parseFloat(entry.weight_kg);
             const date = entry.entry_date;
             const bmi = entry.bmi || 'N/A';
+            const displayWeight = convertFromKg(weight);
 
             // Calculate change from previous chronological entry (which is next in newest-first array)
             let changeHtml = '<span class="text-muted">-</span>';
             if (index < history.length - 1) {
                 const previousEntry = history[index + 1];
                 const previousWeight = parseFloat(previousEntry.weight_kg);
-                const change = weight - previousWeight;
-                const changeClass = change > 0 ? 'text-danger' : change < 0 ? 'text-success' : 'text-muted';
-                const changeSymbol = change > 0 ? '+' : '';
-                changeHtml = `<span class="${changeClass}">${changeSymbol}${change.toFixed(1)} kg</span>`;
+
+                // Convert both weights to display unit first, then calculate difference
+                const currentDisplayWeight = parseFloat(displayWeight);
+                const previousDisplayWeight = parseFloat(convertFromKg(previousWeight));
+                const change = currentDisplayWeight - previousDisplayWeight;
+
+                if (Math.abs(change) >= threshold) { // Only show if change is meaningful
+                    const changeClass = change > 0 ? 'text-danger' : change < 0 ? 'text-success' : 'text-muted';
+                    const changeSymbol = change > 0 ? '+' : '';
+                    changeHtml = `<span class="${changeClass}">${changeSymbol}${change.toFixed(1)} ${unit}</span>`;
+                } else {
+                    changeHtml = '<span class="text-muted">-</span>';
+                }
             }
 
             html += `
                 <tr data-id="${entry.id}">
                     <td>${formatDate(date)}</td>
-                    <td><strong>${weight} kg</strong></td>
+                    <td><strong>${displayWeight} ${unit}</strong></td>
                     <td>${changeHtml}</td>
                     <td>
                         <div class="table-actions">
-                            <button class="btn btn-sm edit-btn" onclick="editWeight(${entry.id}, ${weight}, '${date}')">✎</button>
+                            <button class="btn btn-sm edit-btn" onclick="editWeight(${entry.id}, ${displayWeight}, '${date}')">✎</button>
                             <button class="btn btn-sm delete-btn" onclick="deleteWeight(${entry.id})">✖</button>
                         </div>
                     </td>
@@ -69,30 +82,43 @@ function loadWeightHistory() {
         // Data already comes sorted newest first from backend
         const history = data.history;
 
+        const unit = getWeightUnitLabel();
+        const threshold = unit === 'st' ? 0.05 : 0.1;
+
         history.forEach((entry, index) => {
             const weight = parseFloat(entry.weight_kg);
             const date = entry.entry_date;
             const bmi = entry.bmi || 'N/A';
+            const displayWeight = convertFromKg(weight);
 
             // Calculate change from previous chronological entry (which is next in newest-first array)
             let changeHtml = '<span class="text-muted">-</span>';
             if (index < history.length - 1) {
                 const previousEntry = history[index + 1];
                 const previousWeight = parseFloat(previousEntry.weight_kg);
-                const change = weight - previousWeight;
-                const changeClass = change > 0 ? 'text-danger' : change < 0 ? 'text-success' : 'text-muted';
-                const changeSymbol = change > 0 ? '+' : '';
-                changeHtml = `<span class="${changeClass}">${changeSymbol}${change.toFixed(1)} kg</span>`;
+
+                // Convert both weights to display unit first, then calculate difference
+                const currentDisplayWeight = parseFloat(displayWeight);
+                const previousDisplayWeight = parseFloat(convertFromKg(previousWeight));
+                const change = currentDisplayWeight - previousDisplayWeight;
+
+                if (Math.abs(change) >= threshold) { // Only show if change is meaningful
+                    const changeClass = change > 0 ? 'text-danger' : change < 0 ? 'text-success' : 'text-muted';
+                    const changeSymbol = change > 0 ? '+' : '';
+                    changeHtml = `<span class="${changeClass}">${changeSymbol}${change.toFixed(1)} ${unit}</span>`;
+                } else {
+                    changeHtml = '<span class="text-muted">-</span>';
+                }
             }
 
             html += `
                 <tr data-id="${entry.id}">
                     <td>${formatDate(date)}</td>
-                    <td><strong>${weight} kg</strong></td>
+                    <td><strong>${displayWeight} ${unit}</strong></td>
                     <td>${changeHtml}</td>
                     <td>
                         <div class="table-actions">
-                            <button class="btn btn-sm edit-btn" onclick="editWeight(${entry.id}, ${weight}, '${date}')">✎</button>
+                            <button class="btn btn-sm edit-btn" onclick="editWeight(${entry.id}, ${displayWeight}, '${date}')">✎</button>
                             <button class="btn btn-sm delete-btn" onclick="deleteWeight(${entry.id})">✖</button>
                         </div>
                     </td>

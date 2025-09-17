@@ -3,6 +3,69 @@
 // Global variables
 let currentAlertTimeout = null;
 
+// Weight unit system
+const WEIGHT_UNITS = {
+    kg: { label: 'kg', decimal: 1 },
+    lbs: { label: 'lbs', decimal: 1 },
+    st: { label: 'st', decimal: 1 }
+};
+
+// Get user's preferred weight unit (default: kg)
+function getWeightUnit() {
+    return localStorage.getItem('weightUnit') || 'kg';
+}
+
+// Set user's preferred weight unit
+function setWeightUnit(unit) {
+    if (WEIGHT_UNITS[unit]) {
+        localStorage.setItem('weightUnit', unit);
+    }
+}
+
+// Convert kg to user's preferred unit
+function convertFromKg(weightKg, targetUnit = null) {
+    if (window.coverage) window.coverage.logFunction('convertFromKg', 'global.js');
+
+    const unit = targetUnit || getWeightUnit();
+    const weight = parseFloat(weightKg);
+
+    if (isNaN(weight)) return '';
+
+    switch (unit) {
+        case 'lbs':
+            return (weight * 2.20462).toFixed(1);
+        case 'st':
+            return (weight * 0.157473).toFixed(1);
+        default: // kg
+            return weight.toFixed(1);
+    }
+}
+
+// Convert user's input to kg for storage
+function convertToKg(weightInput, sourceUnit = null) {
+    if (window.coverage) window.coverage.logFunction('convertToKg', 'global.js');
+
+    const unit = sourceUnit || getWeightUnit();
+
+    if (unit === 'kg') {
+        return parseFloat(weightInput);
+    } else if (unit === 'lbs') {
+        return parseFloat(weightInput) / 2.20462;
+    } else if (unit === 'st') {
+        // Handle decimal stones (e.g., "18.7" or "18.7st")
+        const cleanInput = weightInput.toString().replace(/st$/i, '').trim();
+        return parseFloat(cleanInput) / 0.157473;
+    }
+
+    return parseFloat(weightInput);
+}
+
+// Get weight unit label for display
+function getWeightUnitLabel(unit = null) {
+    const targetUnit = unit || getWeightUnit();
+    return WEIGHT_UNITS[targetUnit]?.label || 'kg';
+}
+
 /**
  * Universal alert/toast system
  * Used by both index and dashboard pages

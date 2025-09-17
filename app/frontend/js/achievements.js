@@ -11,9 +11,11 @@ function updateAchievementCards(weightData) {
     const totalLoss = firstWeight - lastWeight;
 
     // Update Total Progress card
+    const unit = getWeightUnitLabel();
+    const displayTotalLoss = convertFromKg(Math.abs(totalLoss));
     const progressHtml = totalLoss > 0
-        ? `<strong class="text-success">${totalLoss.toFixed(1)} kg lost</strong><br><small>Over ${sortedData.length} entries</small>`
-        : `<strong class="text-info">${Math.abs(totalLoss).toFixed(1)} kg gained</strong><br><small>Over ${sortedData.length} entries</small>`;
+        ? `<strong class="text-success">${displayTotalLoss} ${unit} lost</strong><br><small>Over ${sortedData.length} entries</small>`
+        : `<strong class="text-info">${displayTotalLoss} ${unit} gained</strong><br><small>Over ${sortedData.length} entries</small>`;
     $('#total-progress').html(progressHtml);
 
     // Calculate streak (consecutive days with entries)

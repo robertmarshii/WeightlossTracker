@@ -123,7 +123,7 @@ if (isset($_SESSION['login_time'])) {
                         <h5 class="card-title">📊 Log Current Weight</h5>
                         <div class="row">
                             <div class="col-8">
-                                <input type="number" step="0.1" min="0" id="weightKg" class="form-control glass-input" placeholder="Weight (kg)">
+                                <input type="number" step="0.1" min="0" id="weightKg" class="form-control glass-input" placeholder="Weight">
                             </div>
                             <div class="col-4">
                                 <button id="btn-add-weight" class="btn primary-btn w-100">✓ Save</button>
@@ -137,7 +137,7 @@ if (isset($_SESSION['login_time'])) {
                         <h5 class="card-title">🎯 Set Weight Goal</h5>
                         <div class="row mb-2">
                             <div class="col-12">
-                                <input type="number" step="0.1" min="0" id="goalWeight" class="form-control glass-input mb-2" placeholder="Target weight (kg)">
+                                <input type="number" step="0.1" min="0" id="goalWeight" class="form-control glass-input mb-2" placeholder="Target weight">
                             </div>
                         </div>
                         <div class="row">
@@ -165,7 +165,7 @@ if (isset($_SESSION['login_time'])) {
                 <div id="add-entry-form" class="mb-4 hidden">
                     <div class="row">
                         <div class="col-md-4">
-                            <label for="newWeight" class="form-label">Weight (kg)</label>
+                            <label for="newWeight" class="form-label" id="new-weight-label">Weight</label>
                             <input type="number" step="0.1" min="0" id="newWeight" class="form-control glass-input weight-input" placeholder="e.g. 75.5">
                         </div>
                         <div class="col-md-4">
@@ -185,7 +185,7 @@ if (isset($_SESSION['login_time'])) {
                         <thead>
                             <tr>
                                 <th>Date</th>
-                                <th>Weight (kg)</th>
+                                <th id="weight-column-header">Weight</th>
                                 <th>Change</th>
                                 <th>Actions</th>
                             </tr>

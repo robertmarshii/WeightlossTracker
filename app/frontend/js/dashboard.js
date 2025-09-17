@@ -3,6 +3,9 @@
 window.globalDashboardData = null;
 
 $(function() {
+    // Initialize weight unit system first
+    initializeWeightUnit();
+
     // Log active schema to console for debugging
     $.post('router.php?controller=schema', { action: 'get' }, function(resp) {
         try {
@@ -53,9 +56,17 @@ $(function() {
 
     // Handlers
     $('#btn-add-weight').on('click', function() {
-        const w = parseFloat($('#weightKg').val());
-        if (!w) { return; }
-        $.post('router.php?controller=profile', { action: 'add_weight', weight_kg: w }, function(resp) {
+        const weightInput = $('#weightKg').val().trim();
+        if (!weightInput) { return; }
+
+        // Convert user input to kg for storage
+        const weightKg = convertToKg(weightInput);
+        if (isNaN(weightKg) || weightKg <= 0) {
+            showAlert('Please enter a valid weight', 'warning');
+            return;
+        }
+
+        $.post('router.php?controller=profile', { action: 'add_weight', weight_kg: weightKg.toFixed(2) }, function(resp) {
             const data = parseJson(resp);
             if (data.success) {
                 showToast('Weight saved');
@@ -96,17 +107,24 @@ $(function() {
     });
     
     $('#btn-save-entry').on('click', function() {
-        const weight = parseFloat($('#newWeight').val());
+        const weightInput = $('#newWeight').val().trim();
         const date = $('#newDate').val();
-        
-        if (!weight || !date) {
+
+        if (!weightInput || !date) {
             showToast('Please enter both weight and date');
             return;
         }
-        
+
+        // Convert user input to kg for storage
+        const weightKg = convertToKg(weightInput);
+        if (isNaN(weightKg) || weightKg <= 0) {
+            showToast('Please enter a valid weight');
+            return;
+        }
+
         $.post('router.php?controller=profile', {
             action: 'add_weight',
-            weight_kg: weight,
+            weight_kg: weightKg.toFixed(2),
             entry_date: date
         }, function(resp) {
             const data = parseJson(resp);
@@ -142,10 +160,18 @@ $(function() {
     });
 
     $('#btn-save-goal').on('click', function() {
-        const w = parseFloat($('#goalWeight').val());
+        const goalInput = $('#goalWeight').val().trim();
         const d = $('#goalDate').val();
-        if (!w) { return; }
-        $.post('router.php?controller=profile', { action: 'save_goal', target_weight_kg: w, target_date: d }, function(resp) {
+        if (!goalInput) { return; }
+
+        // Convert user input to kg for storage
+        const weightKg = convertToKg(goalInput);
+        if (isNaN(weightKg) || weightKg <= 0) {
+            showAlert('Please enter a valid goal weight', 'warning');
+            return;
+        }
+
+        $.post('router.php?controller=profile', { action: 'save_goal', target_weight_kg: weightKg.toFixed(2), target_date: d }, function(resp) {
             const data = parseJson(resp);
             if (data.success) {
                 showToast('Goal saved');
@@ -317,7 +343,9 @@ function refreshLatestWeight() {
         console.log('📊 Using global data for latest weight');
         const latestWeight = window.globalDashboardData.latest_weight;
         const formattedDate = formatDate(latestWeight.entry_date);
-        $('#latest-weight').text('Latest: ' + latestWeight.weight_kg + ' kg on ' + formattedDate);
+        const displayWeight = convertFromKg(latestWeight.weight_kg);
+        const unit = getWeightUnitLabel();
+        $('#latest-weight').text(`Latest: ${displayWeight} ${unit} on ${formattedDate}`);
         return;
     }
 
@@ -327,7 +355,9 @@ function refreshLatestWeight() {
         const data = parseJson(resp);
         if (data.latest) {
             const formattedDate = formatDate(data.latest.entry_date);
-            $('#latest-weight').text('Latest: ' + data.latest.weight_kg + ' kg on ' + formattedDate);
+            const displayWeight = convertFromKg(data.latest.weight_kg);
+            const unit = getWeightUnitLabel();
+            $('#latest-weight').text(`Latest: ${displayWeight} ${unit} on ${formattedDate}`);
         } else {
             $('#latest-weight').text('No weight entries yet');
         }
@@ -345,7 +375,9 @@ function refreshGoal() {
         console.log('📊 Using global data for goal');
         const goal = window.globalDashboardData.goal;
         const date = goal.target_date || 'n/a';
-        $('#current-goal').text('Current goal: ' + goal.target_weight_kg + ' kg by ' + date);
+        const displayWeight = convertFromKg(goal.target_weight_kg);
+        const unit = getWeightUnitLabel();
+        $('#current-goal').text(`Current goal: ${displayWeight} ${unit} by ${date}`);
         return;
     }
 
@@ -362,7 +394,9 @@ function refreshGoal() {
         const data = parseJson(resp);
         if (data.goal) {
             const date = data.goal.target_date || 'n/a';
-            $('#current-goal').text('Current goal: ' + data.goal.target_weight_kg + ' kg by ' + date);
+            const displayWeight = convertFromKg(data.goal.target_weight_kg);
+            const unit = getWeightUnitLabel();
+            $('#current-goal').text(`Current goal: ${displayWeight} ${unit} by ${date}`);
         } else {
             $('#current-goal').text('No active goal set');
         }
@@ -430,11 +464,15 @@ function refreshWeightProgress() {
         const el = $('#progress-block');
 
         const lines = [];
-        lines.push(`Total Weight Lost: <strong>${data.total_weight_lost_kg} kg</strong>`);
+        const unit = getWeightUnitLabel();
+        const displayTotalLost = convertFromKg(data.total_weight_lost_kg);
+        lines.push(`Total Weight Lost: <strong>${displayTotalLost} ${unit}</strong>`);
         if (data.estimated_fat_loss_kg) {
-            lines.push(`Estimated Fat Loss: <strong class="text-success">${data.estimated_fat_loss_kg} kg</strong> (${data.fat_loss_percentage}%)`);
+            const fatLoss = convertFromKg(data.estimated_fat_loss_kg);
+            lines.push(`Estimated Fat Loss: <strong class="text-success">${fatLoss} ${unit}</strong> (${data.fat_loss_percentage}%)`);
         }
-        lines.push(`<small class="text-muted">Over ${data.weeks_elapsed || data.weeks_tracked} weeks (${data.avg_weekly_rate_kg || data.average_weekly_loss_kg} kg/week average)</small>`);
+        const avgWeeklyRate = convertFromKg(data.avg_weekly_rate_kg || data.average_weekly_loss_kg);
+        lines.push(`<small class="text-muted">Over ${data.weeks_elapsed || data.weeks_tracked} weeks (${avgWeeklyRate} ${unit}/week average)</small>`);
         if (data.research_note) {
             lines.push(`<small class="text-muted">${data.research_note}</small>`);
         }
@@ -455,9 +493,13 @@ function refreshWeightProgress() {
         }
 
         const lines = [];
-        lines.push(`Total Weight Lost: <strong>${data.total_weight_lost_kg} kg</strong>`);
-        lines.push(`Estimated Fat Loss: <strong class="text-success">${data.estimated_fat_loss_kg} kg</strong> (${data.fat_loss_percentage}%)`);
-        lines.push(`<small class="text-muted">Over ${data.weeks_elapsed} weeks (${data.avg_weekly_rate_kg} kg/week average)</small>`);
+        const unit = getWeightUnitLabel();
+        const displayTotalLost = convertFromKg(data.total_weight_lost_kg);
+        lines.push(`Total Weight Lost: <strong>${displayTotalLost} ${unit}</strong>`);
+        const fatLoss = convertFromKg(data.estimated_fat_loss_kg);
+        lines.push(`Estimated Fat Loss: <strong class="text-success">${fatLoss} ${unit}</strong> (${data.fat_loss_percentage}%)`);
+        const avgWeeklyRate = convertFromKg(data.avg_weekly_rate_kg);
+        lines.push(`<small class="text-muted">Over ${data.weeks_elapsed} weeks (${avgWeeklyRate} ${unit}/week average)</small>`);
         lines.push(`<small class="text-muted">${data.research_note}</small>`);
 
         el.html(lines.join('<br>')).removeClass('text-muted');
@@ -581,14 +623,17 @@ function resetToLineChart() {
     if (window.coverage) window.coverage.logFunction('resetToLineChart', 'dashboard.js');
     // Reset chart type and configuration for line charts
     weightChart.config.type = 'line';
-    
+
     // Reset scale configuration
     weightChart.options.scales.y.beginAtZero = false;
-    
+
     // Reset tooltip to default
     if (weightChart.options.plugins.tooltip) {
         delete weightChart.options.plugins.tooltip;
     }
+
+    // Hide legend for single-dataset charts
+    weightChart.options.plugins.legend.display = false;
     
     // Ensure single dataset structure for simple line charts
     if (!weightChart.data.datasets[0] || weightChart.data.datasets.length > 1) {
@@ -623,9 +668,12 @@ function resetToBarChart(yearlyData) {
     if (window.coverage) window.coverage.logFunction('resetToBarChart', 'dashboard.js');
     // Reset chart type and configuration for bar charts
     weightChart.config.type = 'bar';
-    
+
     // Set bar chart scale configuration
     weightChart.options.scales.y.beginAtZero = true;
+
+    // Hide legend for single-dataset bar charts
+    weightChart.options.plugins.legend.display = false;
     
     // Set custom tooltip for bar charts
     weightChart.options.plugins.tooltip = {
@@ -634,7 +682,9 @@ function resetToBarChart(yearlyData) {
                 const monthData = yearlyData[context.dataIndex];
                 const lines = [];
                 if (monthData.averageWeight > 0) {
-                    lines.push(`Average weight: ${monthData.averageWeight.toFixed(1)} kg`);
+                    const displayAverage = convertFromKg(monthData.averageWeight);
+                    const unit = getWeightUnitLabel();
+                    lines.push(`Average weight: ${displayAverage} ${unit}`);
                 }
                 lines.push(`Entries logged: ${monthData.entryCount}`);
                 return lines;
@@ -832,7 +882,7 @@ function updateWeightChart(period) {
             });
         });
         
-        const weights = filteredData.map(entry => parseFloat(entry.weight_kg));
+        const weights = filteredData.map(entry => parseFloat(convertFromKg(entry.weight_kg)));
         
         // Reset to single-line chart configuration
         resetToLineChart();
@@ -840,6 +890,22 @@ function updateWeightChart(period) {
         // Update chart
         weightChart.data.labels = labels;
         weightChart.data.datasets[0].data = weights;
+
+        // Update Y-axis title with current unit
+        const unit = getWeightUnitLabel();
+        if (weightChart.options.scales.y.title) {
+            weightChart.options.scales.y.title.text = `Weight (${unit})`;
+        } else {
+            weightChart.options.scales.y.title = {
+                display: true,
+                text: `Weight (${unit})`,
+                color: '#ffffff',
+                font: {
+                    family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+                }
+            };
+        }
+
         weightChart.update();
         
         $('#chart-status').hide();
@@ -892,7 +958,7 @@ function updateMonthlyChart(sortedData) {
             if (entryDate >= month.start && entryDate <= month.end) {
                 month.data.push({
                     date: entryDate,
-                    weight: parseFloat(entry.weight_kg),
+                    weight: parseFloat(convertFromKg(entry.weight_kg)),
                     dayOfMonth: entryDate.getDate()
                 });
             }
@@ -942,10 +1008,29 @@ function updateMonthlyChart(sortedData) {
     
     // Reset to multi-line chart configuration
     resetToLineChart();
-    
+
+    // Show legend for monthly chart (multiple datasets)
+    weightChart.options.plugins.legend.display = true;
+
     // Update chart with multiple datasets
     weightChart.data.labels = labels;
     weightChart.data.datasets = datasets;
+
+    // Update Y-axis title with current unit
+    const unit = getWeightUnitLabel();
+    if (weightChart.options.scales.y.title) {
+        weightChart.options.scales.y.title.text = `Weight (${unit})`;
+    } else {
+        weightChart.options.scales.y.title = {
+            display: true,
+            text: `Weight (${unit})`,
+            color: '#ffffff',
+            font: {
+                family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+            }
+        };
+    }
+
     weightChart.update();
     
     $('#chart-status').hide();
@@ -979,14 +1064,18 @@ function updateMonthlyAchievementCards(monthsWithData) {
     });
     
     // Update Total Progress card
-    const progressHtml = totalLoss > 0 
-        ? `<strong class="text-success">${totalLoss.toFixed(1)} kg lost</strong><br><small>Over ${monthsWithData.length} months (${totalEntries} entries)</small>`
-        : `<strong class="text-info">${Math.abs(totalLoss).toFixed(1)} kg gained</strong><br><small>Over ${monthsWithData.length} months (${totalEntries} entries)</small>`;
+    const unit = getWeightUnitLabel();
+    const displayTotalLoss = convertFromKg(Math.abs(totalLoss));
+    const progressHtml = totalLoss > 0
+        ? `<strong class="text-success">${displayTotalLoss} ${unit} lost</strong><br><small>Over ${monthsWithData.length} months (${totalEntries} entries)</small>`
+        : `<strong class="text-info">${displayTotalLoss} ${unit} gained</strong><br><small>Over ${monthsWithData.length} months (${totalEntries} entries)</small>`;
     $('#total-progress').html(progressHtml);
     
     // Update Goals Achieved with best month
     if (bestMonth && bestLoss > 0) {
-        const goalHtml = `<strong class="text-success" style="color: ${bestMonth.color} !important;">🏆 ${bestMonth.name}</strong><br><small>Best month: ${bestLoss.toFixed(1)} kg lost</small>`;
+        const unit = getWeightUnitLabel();
+        const displayBestLoss = convertFromKg(bestLoss);
+        const goalHtml = `<strong class="text-success" style="color: ${bestMonth.color} !important;">🏆 ${bestMonth.name}</strong><br><small>Best month: ${displayBestLoss} ${unit} lost</small>`;
         $('#goals-achieved').html(goalHtml);
     } else {
         $('#goals-achieved').html('<span class="text-muted">🎯 No clear winner</span><br><small>Need more data for comparison</small>');
@@ -1374,3 +1463,76 @@ function refreshPersonalHealthBenefits() {
     // Call the health.js function to update health benefit cards
     updateHealthBenefitCards();
 }
+
+// Weight unit functions
+function initializeWeightUnit() {
+    if (window.coverage) window.coverage.logFunction('initializeWeightUnit', 'dashboard.js');
+
+    // Sync localStorage with settings system when settings are loaded
+    setTimeout(() => {
+        const settingsUnit = $('#weightUnit').val() || 'kg';
+        setWeightUnit(settingsUnit);
+        updateWeightUnitDisplay();
+
+        // Refresh displays to show in correct unit
+        refreshAllWeightDisplays();
+    }, 500); // Increased timeout to ensure settings are loaded
+
+    // Weight unit change handler - just update display, don't save yet
+    $('#weightUnit').on('change', function() {
+        const newUnit = $(this).val();
+        setWeightUnit(newUnit);
+        updateWeightUnitDisplay();
+        refreshAllWeightDisplays();
+    });
+}
+
+function updateWeightUnitDisplay() {
+    if (window.coverage) window.coverage.logFunction('updateWeightUnitDisplay', 'dashboard.js');
+
+    const unit = getWeightUnitLabel();
+
+    // Update weight history table header and form labels
+    $('#weight-column-header').text(`Weight (${unit})`);
+    $('#new-weight-label').text(`Weight (${unit})`);
+
+    // Update placeholders based on unit
+    if (getWeightUnit() === 'st') {
+        $('#weightKg').attr('placeholder', 'e.g. 18.7');
+        $('#goalWeight').attr('placeholder', 'e.g. 16.5');
+        $('#newWeight').attr('placeholder', 'e.g. 18.7');
+    } else if (getWeightUnit() === 'lbs') {
+        $('#weightKg').attr('placeholder', 'e.g. 155.4');
+        $('#goalWeight').attr('placeholder', 'e.g. 140.0');
+        $('#newWeight').attr('placeholder', 'e.g. 155.4');
+    } else { // kg
+        $('#weightKg').attr('placeholder', 'e.g. 70.5');
+        $('#goalWeight').attr('placeholder', 'e.g. 65.0');
+        $('#newWeight').attr('placeholder', 'e.g. 70.5');
+    }
+}
+
+function refreshAllWeightDisplays() {
+    if (window.coverage) window.coverage.logFunction('refreshAllWeightDisplays', 'dashboard.js');
+
+    // Refresh all weight-related displays
+    refreshLatestWeight();
+    refreshGoal();
+    loadWeightHistory();
+
+    // Refresh health calculations
+    refreshBMI();
+    refreshIdealWeight();
+    refreshWeightProgress();
+    refreshPersonalHealthBenefits();
+
+    // Update chart if visible
+    const activePeriod = $('.btn-group .active').attr('id')?.replace('chart-', '') || '90days';
+    if (typeof updateWeightChart === 'function') {
+        updateWeightChart(activePeriod);
+    }
+}
+
+// Make functions globally available for settings
+window.updateWeightUnitDisplay = updateWeightUnitDisplay;
+window.refreshAllWeightDisplays = refreshAllWeightDisplays;

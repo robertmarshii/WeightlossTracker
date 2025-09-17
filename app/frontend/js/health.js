@@ -393,7 +393,7 @@ function updateHealthBenefitCards() {
                             <div class="progress-summary">
                                 <strong>Progress Summary</strong><br>
                                 Started at: <strong>${startingHealthScore}/100</strong><br>
-                                <small class="text-muted">Based on ${weightLoss.toFixed(1)} kg weight loss across all 14 health categories on this page</small>
+                                <small class="text-muted">Based on ${convertFromKg(weightLoss)} ${getWeightUnitLabel()} weight loss across all 14 health categories on this page</small>
                             </div>
                         </div>
 
@@ -662,7 +662,10 @@ function refreshIdealWeight() {
         }
 
         const lines = [];
-        lines.push(`<strong>${data.min_weight_kg} - ${data.max_weight_kg} kg</strong>`);
+        const minWeight = convertFromKg(data.min_weight_kg);
+        const maxWeight = convertFromKg(data.max_weight_kg);
+        const unit = getWeightUnitLabel();
+        lines.push(`<strong>${minWeight} - ${maxWeight} ${unit}</strong>`);
 
         // Add timeline prediction if available
         if (data.timeline && data.timeline.target_date) {
@@ -671,7 +674,9 @@ function refreshIdealWeight() {
                 month: 'long'
             });
             lines.push(`<small class="text-success">Projected to reach upper limit by ${targetMonth}</small>`);
-            lines.push(`<small class="text-muted">Based on current rate of ${data.timeline.current_rate_kg_per_week} kg/week</small>`);
+            const unit = getWeightUnitLabel();
+            const weeklyRate = convertFromKg(data.timeline.current_rate_kg_per_week);
+            lines.push(`<small class="text-muted">Based on current rate of ${weeklyRate} ${unit}/week</small>`);
         }
 
         lines.push(`<small class="text-muted">${data.note}</small>`);
@@ -709,7 +714,9 @@ function refreshGallbladderHealth() {
 
         if (data.risk_reduction_percentage > 0) {
             lines.push(`Risk Reduction: <strong class="text-success">${data.risk_reduction_percentage}%</strong>`);
-            lines.push(`<small class="text-muted">Based on ${data.weight_lost_kg}kg lost, BMI ${data.current_bmi}</small>`);
+            const unit = getWeightUnitLabel();
+            const weightLost = convertFromKg(data.weight_lost_kg);
+            lines.push(`<small class="text-muted">Based on ${weightLost}${unit} lost, BMI ${data.current_bmi}</small>`);
         } else {
             lines.push(`<small class="text-muted">Continue weight loss for gallbladder benefits</small>`);
         }
@@ -742,7 +749,9 @@ function refreshGallbladderHealth() {
 
         if (data.risk_reduction_percentage > 0) {
             lines.push(`Risk Reduction: <strong class="text-success">${data.risk_reduction_percentage}%</strong>`);
-            lines.push(`<small class="text-muted">Based on ${data.weight_lost_kg}kg lost, BMI ${data.current_bmi}</small>`);
+            const unit = getWeightUnitLabel();
+            const weightLost = convertFromKg(data.weight_lost_kg);
+            lines.push(`<small class="text-muted">Based on ${weightLost}${unit} lost, BMI ${data.current_bmi}</small>`);
         } else {
             lines.push(`<small class="text-muted">Continue weight loss for gallbladder benefits</small>`);
         }
