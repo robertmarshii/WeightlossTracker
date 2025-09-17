@@ -103,7 +103,8 @@ class OAuthManager {
 
         } catch (Exception $e) {
             error_log("OAuthManager::handleCallback error for $provider: " . $e->getMessage());
-            return ['success' => false, 'message' => 'Authentication failed'];
+            error_log("Full exception: " . $e->getTraceAsString());
+            return ['success' => false, 'message' => 'Authentication failed: ' . $e->getMessage()];
         }
     }
 
