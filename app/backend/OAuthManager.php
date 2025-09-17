@@ -84,29 +84,36 @@ class OAuthManager {
             error_log("Access token obtained successfully");
             error_log("Token: " . substr($accessToken->getToken(), 0, 20) . "...");
 
-            // Get user details - try direct Graph API call
+            // Get user details
             try {
-                // Direct call to Microsoft Graph API
-                $graphUrl = 'https://graph.microsoft.com/v1.0/me';
-                $context = stream_context_create([
-                    'http' => [
-                        'method' => 'GET',
-                        'header' => 'Authorization: Bearer ' . $accessToken->getToken()
-                    ]
-                ]);
+                error_log("Processing provider: " . $provider);
+                if ($provider === 'microsoft') {
+                    // Direct call to Microsoft Graph API (library method doesn't work)
+                    $graphUrl = 'https://graph.microsoft.com/v1.0/me';
+                    $context = stream_context_create([
+                        'http' => [
+                            'method' => 'GET',
+                            'header' => 'Authorization: Bearer ' . $accessToken->getToken()
+                        ]
+                    ]);
 
-                $response = file_get_contents($graphUrl, false, $context);
-                if ($response === false) {
-                    throw new Exception("Failed to call Graph API");
+                    $response = file_get_contents($graphUrl, false, $context);
+                    if ($response === false) {
+                        throw new Exception("Failed to call Graph API");
+                    }
+
+                    $userDetails = json_decode($response, true);
+                    if (!$userDetails) {
+                        throw new Exception("Invalid JSON response from Graph API");
+                    }
+
+                    error_log("User details retrieved successfully from Graph API");
+                } else {
+                    // Use standard OAuth library method for other providers (Google)
+                    $resourceOwner = $providerInstance->getResourceOwner($accessToken);
+                    $userDetails = $resourceOwner->toArray();
+                    error_log("User details retrieved successfully");
                 }
-
-                $userDetails = json_decode($response, true);
-                if (!$userDetails) {
-                    throw new Exception("Invalid JSON response from Graph API");
-                }
-
-                error_log("User details retrieved successfully from Graph API");
-                error_log("User data: " . print_r($userDetails, true));
 
             } catch (Exception $e) {
                 error_log("Failed to get user details: " . $e->getMessage());
