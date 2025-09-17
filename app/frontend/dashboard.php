@@ -204,7 +204,7 @@ if (isset($_SESSION['login_time'])) {
                 <h5 class="card-title">🔧 Profile Settings</h5>
                 <div class="row">
                     <div class="form-group col-md-3">
-                        <label for="heightCm" class="form-label">Height (cm)</label>
+                        <label for="heightCm" class="form-label" id="height-label">Height</label>
                         <input type="number" min="50" max="300" id="heightCm" class="form-control glass-input" placeholder="e.g. 175">
                     </div>
                     <div class="form-group col-md-3">
@@ -505,7 +505,7 @@ if (isset($_SESSION['login_time'])) {
                                     <div class="form-check mb-3">
                                         <input class="form-check-input" type="checkbox" id="weeklyReports">
                                         <label class="form-check-label" for="weeklyReports">
-                                            Weekly progress reports
+                                            Monthly progress reports
                                         </label>
                                     </div>
                                 </div>

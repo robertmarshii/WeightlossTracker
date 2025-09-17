@@ -66,6 +66,67 @@ function getWeightUnitLabel(unit = null) {
     return WEIGHT_UNITS[targetUnit]?.label || 'kg';
 }
 
+// Height unit system
+const HEIGHT_UNITS = {
+    cm: { label: 'cm' },
+    ft: { label: 'ft/in' },
+    m: { label: 'm' }
+};
+
+// Get user's preferred height unit (default: cm)
+function getHeightUnit() {
+    return localStorage.getItem('heightUnit') || 'cm';
+}
+
+// Set user's preferred height unit
+function setHeightUnit(unit) {
+    if (HEIGHT_UNITS[unit]) {
+        localStorage.setItem('heightUnit', unit);
+    }
+}
+
+// Convert cm to user's preferred unit
+function convertFromCm(heightCm, targetUnit = null) {
+    if (window.coverage) window.coverage.logFunction('convertFromCm', 'global.js');
+
+    const unit = targetUnit || getHeightUnit();
+    const height = parseFloat(heightCm);
+
+    if (isNaN(height)) return '';
+
+    switch (unit) {
+        case 'ft':
+            return (height / 30.48).toFixed(2);
+        case 'm':
+            return (height / 100).toFixed(2);
+        default: // cm
+            return height.toFixed(0);
+    }
+}
+
+// Convert user's input to cm for storage
+function convertToCm(heightInput, sourceUnit = null) {
+    if (window.coverage) window.coverage.logFunction('convertToCm', 'global.js');
+
+    const unit = sourceUnit || getHeightUnit();
+
+    if (unit === 'cm') {
+        return parseFloat(heightInput);
+    } else if (unit === 'ft') {
+        return parseFloat(heightInput) * 30.48; // Treat as decimal feet
+    } else if (unit === 'm') {
+        return parseFloat(heightInput) * 100;
+    }
+
+    return parseFloat(heightInput);
+}
+
+// Get height unit label for display
+function getHeightUnitLabel(unit = null) {
+    const targetUnit = unit || getHeightUnit();
+    return HEIGHT_UNITS[targetUnit]?.label || 'cm';
+}
+
 /**
  * Universal alert/toast system
  * Used by both index and dashboard pages

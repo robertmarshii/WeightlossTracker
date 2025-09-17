@@ -3,8 +3,9 @@
 window.globalDashboardData = null;
 
 $(function() {
-    // Initialize weight unit system first
+    // Initialize unit systems first
     initializeWeightUnit();
+    initializeHeightUnit();
 
     // Log active schema to console for debugging
     $.post('router.php?controller=schema', { action: 'get' }, function(resp) {
@@ -182,9 +183,20 @@ $(function() {
     });
 
     $('#btn-save-profile').on('click', function() {
+        const heightInput = $('#heightCm').val().trim();
+        let heightCm = 0;
+
+        if (heightInput) {
+            heightCm = convertToCm(heightInput);
+            if (isNaN(heightCm) || heightCm <= 0) {
+                showAlert('Please enter a valid height', 'warning');
+                return;
+            }
+        }
+
         const payload = {
             action: 'save_profile',
-            height_cm: parseInt($('#heightCm').val() || ''),
+            height_cm: Math.round(heightCm),
             body_frame: $('#bodyFrame').val(),
             age: parseInt($('#age').val() || ''),
             activity_level: $('#activityLevel').val()
@@ -410,7 +422,8 @@ function loadProfile() {
     if (window.globalDashboardData && window.globalDashboardData.profile) {
         console.log('📊 Using global data for profile');
         const profile = window.globalDashboardData.profile;
-        $('#heightCm').val(profile.height_cm || '');
+        const displayHeight = profile.height_cm ? convertFromCm(profile.height_cm) : '';
+        $('#heightCm').val(displayHeight).data('current-unit', getHeightUnit());
         $('#bodyFrame').val(profile.body_frame || '');
         $('#age').val(profile.age || '');
         $('#activityLevel').val(profile.activity_level || '');
@@ -422,7 +435,8 @@ function loadProfile() {
     $.post('router.php?controller=profile', { action: 'get_profile' }, function(resp) {
         const data = parseJson(resp);
         if (data.profile) {
-            $('#heightCm').val(data.profile.height_cm || '');
+            const displayHeight = data.profile.height_cm ? convertFromCm(data.profile.height_cm) : '';
+            $('#heightCm').val(displayHeight);
             $('#bodyFrame').val(data.profile.body_frame || '');
             $('#age').val(data.profile.age || '');
             $('#activityLevel').val(data.profile.activity_level || '');
@@ -1533,6 +1547,58 @@ function refreshAllWeightDisplays() {
     }
 }
 
+// Height unit functions
+function initializeHeightUnit() {
+    if (window.coverage) window.coverage.logFunction('initializeHeightUnit', 'dashboard.js');
+
+    // Sync localStorage with settings system when settings are loaded
+    setTimeout(() => {
+        const settingsUnit = $('#heightUnit').val() || 'cm';
+        setHeightUnit(settingsUnit);
+        updateHeightUnitDisplay();
+    }, 500);
+
+    // Height unit change handler - just update display, don't save yet
+    $('#heightUnit').on('change', function() {
+        const newUnit = $(this).val();
+        setHeightUnit(newUnit);
+        updateHeightUnitDisplay();
+    });
+}
+
+function updateHeightUnitDisplay() {
+    if (window.coverage) window.coverage.logFunction('updateHeightUnitDisplay', 'dashboard.js');
+
+    const unit = getHeightUnitLabel();
+
+    // Update height form label
+    $('#height-label').text(`Height (${unit})`);
+
+    // Convert current value if there is one and this is a unit change (not initial load)
+    const currentValue = $('#heightCm').val();
+    const previousUnit = $('#heightCm').data('current-unit');
+
+    if (currentValue && !isNaN(parseFloat(currentValue)) && previousUnit && previousUnit !== getHeightUnit()) {
+        // Convert current value to cm first, then to new unit
+        const heightInCm = convertToCm(currentValue, previousUnit);
+        const convertedValue = convertFromCm(heightInCm);
+        $('#heightCm').val(convertedValue);
+    }
+
+    // Always store current unit for next conversion
+    $('#heightCm').data('current-unit', getHeightUnit());
+
+    // Update placeholders based on unit
+    if (getHeightUnit() === 'ft') {
+        $('#heightCm').attr('placeholder', 'e.g. 5.83');
+    } else if (getHeightUnit() === 'm') {
+        $('#heightCm').attr('placeholder', 'e.g. 1.75');
+    } else { // cm
+        $('#heightCm').attr('placeholder', 'e.g. 175');
+    }
+}
+
 // Make functions globally available for settings
 window.updateWeightUnitDisplay = updateWeightUnitDisplay;
 window.refreshAllWeightDisplays = refreshAllWeightDisplays;
+window.updateHeightUnitDisplay = updateHeightUnitDisplay;

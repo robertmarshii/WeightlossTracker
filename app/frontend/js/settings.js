@@ -12,6 +12,10 @@ function loadSettings() {
         const s = window.globalDashboardData.settings;
         $('#weightUnit').val(s.weight_unit || 'kg');
         $('#heightUnit').val(s.height_unit || 'cm');
+
+        // Update localStorage with loaded settings
+        setWeightUnit(s.weight_unit || 'kg');
+        setHeightUnit(s.height_unit || 'cm');
         $('#dateFormat').val(s.date_format || 'uk');
         $('#timezone').val(s.timezone || 'Europe/London');
         $('#theme').val(s.theme || 'glassmorphism');
@@ -77,6 +81,13 @@ function saveSettings() {
             if (typeof window.refreshAllWeightDisplays === 'function') {
                 console.log('Calling refreshAllWeightDisplays');
                 window.refreshAllWeightDisplays();
+            }
+
+            // Update height unit in localStorage and refresh displays
+            setHeightUnit(settings.height_unit);
+            if (typeof window.updateHeightUnitDisplay === 'function') {
+                console.log('Calling updateHeightUnitDisplay');
+                window.updateHeightUnitDisplay();
             }
 
             $('#settings-status').text('Settings saved successfully').removeClass('text-danger').addClass('text-success');
