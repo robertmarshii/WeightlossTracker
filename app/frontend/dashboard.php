@@ -126,10 +126,12 @@ if (isset($_SESSION['login_time'])) {
                                 <input type="number" step="0.1" min="0" id="weightKg" class="form-control glass-input" placeholder="Weight">
                             </div>
                             <div class="col-4">
-                                <button id="btn-add-weight" class="btn primary-btn w-100">✓ Save</button>
+                                <button id="btn-add-weight" class="btn primary-btn w-100" style="height: 34px;">✓ Save</button>
                             </div>
                         </div>
                         <small class="text-muted d-block mt-2" id="latest-weight"></small>
+                        <small class="text-muted d-block mt-1" id="last-week-weight"></small>
+                        <small class="text-muted d-block mt-1" id="last-month-weight"></small>
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -145,7 +147,7 @@ if (isset($_SESSION['login_time'])) {
                                 <input type="date" id="goalDate" class="form-control glass-input">
                             </div>
                             <div class="col-4">
-                                <button id="btn-save-goal" class="btn primary-btn w-100">✓ Save</button>
+                                <button id="btn-save-goal" class="btn primary-btn w-100" style="height: 34px;">✓ Save</button>
                             </div>
                         </div>
                         <small class="text-muted d-block mt-2" id="current-goal"></small>
@@ -158,23 +160,23 @@ if (isset($_SESSION['login_time'])) {
             <div class="glass-card">
                 <div class="d-flex justify-content-between align-items-center mb-3 weight-history-header">
                     <h5 class="card-title mb-0">📈 Weight History</h5>
-                    <button id="btn-add-entry" class="btn primary-btn">+ Add Entry</button>
+                    <button id="btn-add-entry" class="btn primary-btn" style="height: 34px;">+ Add Entry</button>
                 </div>
                 
                 <!-- Add New Entry Form (hidden by default) -->
                 <div id="add-entry-form" class="mb-4 hidden">
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-12 col-md-5">
                             <label for="newWeight" class="form-label" id="new-weight-label">Weight</label>
                             <input type="number" step="0.1" min="0" id="newWeight" class="form-control glass-input weight-input" placeholder="e.g. 75.5">
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-12 col-md-4">
                             <label for="newDate" class="form-label">Date</label>
                             <input type="date" id="newDate" class="form-control glass-input date-input">
                         </div>
-                        <div class="col-md-4 d-flex align-items-end form-gap">
-                            <button id="btn-save-entry" class="btn primary-btn">💾 Save</button>
-                            <button id="btn-cancel-entry" class="btn secondary-btn">❌ Cancel</button>
+                        <div class="col-12 col-md-3 d-flex flex-row flex-md-column align-items-end form-gap mt-3 mt-md-0" style="gap: 0.5rem;">
+                            <button id="btn-save-entry" class="btn primary-btn w-100" style="height: 34px;">✓ Save</button>
+                            <button id="btn-cancel-entry" class="btn secondary-btn w-100" style="height: 34px;">✖ Cancel</button>
                         </div>
                     </div>
                 </div>
@@ -234,7 +236,7 @@ if (isset($_SESSION['login_time'])) {
                 </div>
                 <div class="d-flex justify-content-between align-items-center">
                     <span id="profile-status" class="text-muted"></span>
-                    <button id="btn-save-profile" class="btn primary-btn">✓ Save Profile</button>
+                    <button id="btn-save-profile" class="btn primary-btn" style="height: 34px;">✓ Save Profile</button>
                 </div>
             </div>
                     </div>
@@ -449,10 +451,10 @@ if (isset($_SESSION['login_time'])) {
                                 </div>
                             </div>
                             
-                            <!-- Date & Time -->
+                            <!-- Date Format -->
                             <div class="col-md-6">
                                 <div class="glass-card-small">
-                                    <h5 class="card-title">📅 Date & Time</h5>
+                                    <h5 class="card-title">📅 Date Format</h5>
                                     
                                     <div class="form-group mb-3">
                                         <label for="dateFormat" class="form-label">Date Format</label>
@@ -465,18 +467,6 @@ if (isset($_SESSION['login_time'])) {
                                         <small class="text-muted">Example: <span id="dateExample">11/09/2025</span></small>
                                     </div>
                                     
-                                    
-                                    <div class="form-group mb-3">
-                                        <label for="timezone" class="form-label">Timezone</label>
-                                        <select id="timezone" class="form-control glass-input">
-                                            <option value="Europe/London">London (GMT/BST)</option>
-                                            <option value="America/New_York">New York (EST/EDT)</option>
-                                            <option value="America/Los_Angeles">Los Angeles (PST/PDT)</option>
-                                            <option value="Europe/Paris">Paris (CET/CEST)</option>
-                                            <option value="Asia/Tokyo">Tokyo (JST)</option>
-                                            <option value="Australia/Sydney">Sydney (AEDT/AEST)</option>
-                                        </select>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -534,22 +524,14 @@ if (isset($_SESSION['login_time'])) {
                                             <option value="de">Deutsch</option>
                                         </select>
                                     </div>
-                                    
-                                    <div class="form-group mb-3">
-                                        <label for="startOfWeek" class="form-label">Start of Week</label>
-                                        <select id="startOfWeek" class="form-control glass-input">
-                                            <option value="monday">Monday</option>
-                                            <option value="sunday">Sunday</option>
-                                        </select>
-                                    </div>
                                 </div>
                             </div>
                         </div>
                         
                         <!-- Save Settings -->
                         <div class="text-center mt-4">
-                            <button id="btn-save-settings" class="btn primary-btn mr-2">✓ Save Settings</button>
-                            <button id="btn-reset-settings" class="btn secondary-btn">↻ Reset to Defaults</button>
+                            <button id="btn-save-settings" class="btn primary-btn mr-2" style="height: 34px;">✓ Save Settings</button>
+                            <button id="btn-reset-settings" class="btn secondary-btn" style="height: 34px;">↻ Reset to Defaults</button>
                             <div class="mt-2">
                                 <span id="settings-status" class="text-muted"></span>
                             </div>

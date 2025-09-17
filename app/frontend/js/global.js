@@ -211,3 +211,43 @@ function openModal(modalId) {
     if (window.coverage) coverage.logFunction('openModal', 'global.js');
     $('#' + modalId).modal('show');
 }
+
+/**
+ * Get user's preferred date format from settings
+ * @returns {string} Date format: 'uk', 'us', 'iso', or 'euro'
+ */
+function getDateFormat() {
+    // Try to get from settings if available
+    if (window.globalDashboardData && window.globalDashboardData.settings) {
+        return window.globalDashboardData.settings.date_format || 'uk';
+    }
+    // Fallback to uk format
+    return 'uk';
+}
+
+/**
+ * Format a date according to user's preferred format from settings
+ * @param {string|Date} dateInput - Date string or Date object to format
+ * @returns {string} Formatted date string
+ */
+function formatDateBySettings(dateInput) {
+    if (window.coverage) coverage.logFunction('formatDateBySettings', 'global.js');
+
+    const date = new Date(dateInput);
+    if (isNaN(date.getTime())) return dateInput; // Return original if invalid date
+
+    const format = getDateFormat();
+
+    switch(format) {
+        case 'uk':
+            return date.toLocaleDateString('en-GB');
+        case 'us':
+            return date.toLocaleDateString('en-US');
+        case 'iso':
+            return date.toISOString().split('T')[0];
+        case 'euro':
+            return date.toLocaleDateString('de-DE');
+        default:
+            return date.toLocaleDateString('en-GB');
+    }
+}

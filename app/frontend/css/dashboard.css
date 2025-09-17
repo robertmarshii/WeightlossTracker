@@ -299,11 +299,11 @@ select.form-control.glass-input {
 }
 
 .weight-input {
-    max-width: 120px;
+    /* max-width removed for better responsive behavior */
 }
 
 .date-input {
-    max-width: 150px;
+    /* max-width removed for better responsive behavior */
 }
 
 .no-data {
@@ -632,13 +632,6 @@ select.form-control.glass-input {
         padding: 4px;
     }
 
-    .weight-input {
-        max-width: 60px;
-    }
-
-    .date-input {
-        max-width: 80px;
-    }
 
     .tab-content {
         min-height: 200px;

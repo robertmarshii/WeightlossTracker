@@ -358,6 +358,7 @@ function refreshLatestWeight() {
         const displayWeight = convertFromKg(latestWeight.weight_kg);
         const unit = getWeightUnitLabel();
         $('#latest-weight').text(`Latest: ${displayWeight} ${unit} on ${formattedDate}`);
+        refreshHistoricalWeights();
         return;
     }
 
@@ -370,10 +371,98 @@ function refreshLatestWeight() {
             const displayWeight = convertFromKg(data.latest.weight_kg);
             const unit = getWeightUnitLabel();
             $('#latest-weight').text(`Latest: ${displayWeight} ${unit} on ${formattedDate}`);
+            refreshHistoricalWeights();
         } else {
             $('#latest-weight').text('No weight entries yet');
+            $('#last-week-weight').text('');
+            $('#last-month-weight').text('');
         }
     });
+}
+
+function refreshHistoricalWeights() {
+    if (window.coverage) window.coverage.logFunction('refreshHistoricalWeights', 'dashboard.js');
+
+    // Calculate dates for one week ago and one month ago
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+    const oneMonthAgo = new Date();
+    oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+
+    let weightHistory = [];
+
+    // Check if we have global data first
+    if (window.globalDashboardData && window.globalDashboardData.weight_history) {
+        weightHistory = window.globalDashboardData.weight_history;
+        findAndDisplayHistoricalWeights(weightHistory, oneWeekAgo, oneMonthAgo);
+        return;
+    }
+
+    // Fallback to API call if global data not available
+    $.post('router.php?controller=profile', { action: 'get_weight_history' }, function(resp) {
+        const data = parseJson(resp);
+        if (data.success && data.history) {
+            weightHistory = data.history;
+            findAndDisplayHistoricalWeights(weightHistory, oneWeekAgo, oneMonthAgo);
+        } else {
+            $('#last-week-weight').text('');
+            $('#last-month-weight').text('');
+        }
+    }).fail(function() {
+        $('#last-week-weight').text('');
+        $('#last-month-weight').text('');
+    });
+}
+
+function findAndDisplayHistoricalWeights(weightHistory, oneWeekAgo, oneMonthAgo) {
+    if (window.coverage) window.coverage.logFunction('findAndDisplayHistoricalWeights', 'dashboard.js');
+
+    const unit = getWeightUnitLabel();
+
+    // Find closest weight to one week ago
+    let lastWeekWeight = null;
+    let minWeekDiff = Infinity;
+
+    // Find closest weight to one month ago
+    let lastMonthWeight = null;
+    let minMonthDiff = Infinity;
+
+    weightHistory.forEach(entry => {
+        const entryDate = new Date(entry.entry_date);
+
+        // Check for week
+        const weekDiff = Math.abs(entryDate - oneWeekAgo);
+        if (weekDiff < minWeekDiff) {
+            minWeekDiff = weekDiff;
+            lastWeekWeight = entry;
+        }
+
+        // Check for month
+        const monthDiff = Math.abs(entryDate - oneMonthAgo);
+        if (monthDiff < minMonthDiff) {
+            minMonthDiff = monthDiff;
+            lastMonthWeight = entry;
+        }
+    });
+
+    // Display last week weight
+    if (lastWeekWeight && minWeekDiff <= 10 * 24 * 60 * 60 * 1000) { // Within 10 days
+        const displayWeight = convertFromKg(lastWeekWeight.weight_kg);
+        const formattedDate = formatDate(lastWeekWeight.entry_date);
+        $('#last-week-weight').text(`Last Week: ${displayWeight} ${unit} on ${formattedDate}`);
+    } else {
+        $('#last-week-weight').text('Last Week: -');
+    }
+
+    // Display last month weight
+    if (lastMonthWeight && minMonthDiff <= 45 * 24 * 60 * 60 * 1000) { // Within 45 days
+        const displayWeight = convertFromKg(lastMonthWeight.weight_kg);
+        const formattedDate = formatDate(lastMonthWeight.entry_date);
+        $('#last-month-weight').text(`Last Month: ${displayWeight} ${unit} on ${formattedDate}`);
+    } else {
+        $('#last-month-weight').text('Last Month: -');
+    }
 }
 
 function refreshGoal() {
@@ -386,10 +475,10 @@ function refreshGoal() {
     if (window.globalDashboardData && window.globalDashboardData.goal) {
         console.log('📊 Using global data for goal');
         const goal = window.globalDashboardData.goal;
-        const date = goal.target_date || 'n/a';
+        const formattedDate = goal.target_date ? formatDateBySettings(goal.target_date) : 'n/a';
         const displayWeight = convertFromKg(goal.target_weight_kg);
         const unit = getWeightUnitLabel();
-        $('#current-goal').text(`Current goal: ${displayWeight} ${unit} by ${date}`);
+        $('#current-goal').text(`Current goal: ${displayWeight} ${unit} by ${formattedDate}`);
         return;
     }
 
@@ -405,10 +494,10 @@ function refreshGoal() {
     $.post('router.php?controller=profile', { action: 'get_goal' }, function(resp) {
         const data = parseJson(resp);
         if (data.goal) {
-            const date = data.goal.target_date || 'n/a';
+            const formattedDate = data.goal.target_date ? formatDateBySettings(data.goal.target_date) : 'n/a';
             const displayWeight = convertFromKg(data.goal.target_weight_kg);
             const unit = getWeightUnitLabel();
-            $('#current-goal').text(`Current goal: ${displayWeight} ${unit} by ${date}`);
+            $('#current-goal').text(`Current goal: ${displayWeight} ${unit} by ${formattedDate}`);
         } else {
             $('#current-goal').text('No active goal set');
         }

@@ -17,10 +17,8 @@ function loadSettings() {
         setWeightUnit(s.weight_unit || 'kg');
         setHeightUnit(s.height_unit || 'cm');
         $('#dateFormat').val(s.date_format || 'uk');
-        $('#timezone').val(s.timezone || 'Europe/London');
         $('#theme').val(s.theme || 'glassmorphism');
         $('#language').val(s.language || 'en');
-        $('#startOfWeek').val(s.start_of_week || 'monday');
         $('#shareData').prop('checked', s.share_data === true);
         $('#emailNotifications').prop('checked', s.email_notifications === true);
         $('#weeklyReports').prop('checked', s.weekly_reports === true);
@@ -37,11 +35,9 @@ function loadSettings() {
             $('#weightUnit').val(s.weight_unit || 'kg');
             $('#heightUnit').val(s.height_unit || 'cm');
             $('#dateFormat').val(s.date_format || 'uk');
-            $('#timezone').val(s.timezone || 'Europe/London');
             $('#theme').val(s.theme || 'glassmorphism');
             $('#language').val(s.language || 'en');
-            $('#startOfWeek').val(s.start_of_week || 'monday');
-            $('#shareData').prop('checked', s.share_data === true);
+                $('#shareData').prop('checked', s.share_data === true);
             $('#emailNotifications').prop('checked', s.email_notifications === true);
             $('#weeklyReports').prop('checked', s.weekly_reports === true);
             updateDateExample();
@@ -56,10 +52,8 @@ function saveSettings() {
         weight_unit: $('#weightUnit').val(),
         height_unit: $('#heightUnit').val(),
         date_format: $('#dateFormat').val(),
-        timezone: $('#timezone').val(),
         theme: $('#theme').val(),
         language: $('#language').val(),
-        start_of_week: $('#startOfWeek').val(),
         share_data: $('#shareData').is(':checked'),
         email_notifications: $('#emailNotifications').is(':checked'),
         weekly_reports: $('#weeklyReports').is(':checked')
@@ -105,10 +99,8 @@ function resetSettings() {
     $('#weightUnit').val('kg');
     $('#heightUnit').val('cm');
     $('#dateFormat').val('uk');
-    $('#timezone').val('Europe/London');
     $('#theme').val('glassmorphism');
     $('#language').val('en');
-    $('#startOfWeek').val('monday');
     $('#shareData').prop('checked', false);
     $('#emailNotifications').prop('checked', false);
     $('#weeklyReports').prop('checked', false);
