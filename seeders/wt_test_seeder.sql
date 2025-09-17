@@ -204,6 +204,36 @@ INSERT INTO wt_test.goals (user_id, target_weight_kg, target_date, is_active) VA
     (3, 85.0, '2024-02-01', false), -- Intermediate goal
     (8, 100.0, '2024-02-01', false); -- First milestone
 
+-- User profiles for comprehensive testing
+INSERT INTO wt_test.user_profiles (user_id, height_cm, body_frame, age, activity_level) VALUES
+    (1, 170, 'medium', 28, 'moderate'),     -- test@dev.com - Primary test user
+    (2, 183, 'large', 35, 'active'),        -- robertmarshgb@gmail.com
+    (3, 165, 'small', 24, 'very'),          -- Carol - aggressive cut user
+    (4, 178, 'medium', 22, 'very'),         -- David - bulk phase user
+    (5, 162, 'medium', 30, 'light'),        -- Emma - inconsistent logger
+    (6, 175, 'large', 40, 'moderate'),      -- Frank
+    (7, 158, 'small', 26, 'active'),        -- Grace - maintenance user
+    (8, 180, 'large', 32, 'light'),         -- Henry - big cut user
+    (9, 155, 'small', 20, 'sedentary'),     -- Ivy - reverse diet user
+    (10, 185, 'large', 45, 'moderate'),     -- Jack - transformation user
+    (11, 175, 'medium', 35, 'moderate'),    -- admin@test.com
+    (12, 170, 'medium', 30, 'active');      -- manager@test.com
+
+-- User settings for comprehensive testing
+INSERT INTO wt_test.user_settings (user_id, weight_unit, height_unit, date_format, theme) VALUES
+    (1, 'kg', 'cm', 'uk', 'glassmorphism'),      -- test@dev.com - Default UK settings
+    (2, 'kg', 'cm', 'uk', 'glassmorphism'),      -- robertmarshgb@gmail.com
+    (3, 'kg', 'cm', 'iso', 'dark'),              -- Carol - ISO date format
+    (4, 'lbs', 'ft', 'us', 'light'),             -- David - US format
+    (5, 'kg', 'cm', 'euro', 'glassmorphism'),    -- Emma - European format
+    (6, 'st', 'ft', 'uk', 'glassmorphism'),      -- Frank - UK stones
+    (7, 'kg', 'cm', 'uk', 'glassmorphism'),      -- Grace - Default
+    (8, 'kg', 'cm', 'uk', 'glassmorphism'),      -- Henry - Default
+    (9, 'kg', 'cm', 'uk', 'glassmorphism'),      -- Ivy - Default
+    (10, 'kg', 'cm', 'uk', 'glassmorphism'),     -- Jack - Default
+    (11, 'kg', 'cm', 'uk', 'glassmorphism'),     -- admin@test.com
+    (12, 'kg', 'cm', 'uk', 'glassmorphism');     -- manager@test.com
+
 -- Grant permissions (adjust as needed for your setup)
 -- GRANT ALL PRIVILEGES ON SCHEMA wt_test TO your_app_user;
 -- GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA wt_test TO your_app_user;

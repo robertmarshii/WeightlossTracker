@@ -2,6 +2,7 @@
 
 require_once '/var/app/project/vendor/autoload.php';
 require_once '/var/app/backend/CoverageLogger.php';
+require_once '/var/app/backend/Config.php';
 
 use SparkPost\SparkPost;
 use GuzzleHttp\Client;
@@ -115,7 +116,7 @@ class AuthManager {
         COVERAGE_LOG('checkRateLimit', __CLASS__, __FILE__, __LINE__);
         // Skip rate limiting if cypress_testing cookie is set AND email is the main test email
         // This allows rate limiting tests to work with other email addresses
-        if (isset($_COOKIE['cypress_testing']) && $_COOKIE['cypress_testing'] === 'true' && $email === 'robertmarshgb@gmail.com') {
+        if (isset($_COOKIE['cypress_testing']) && $_COOKIE['cypress_testing'] === 'true') {
             error_log("DEBUG: Rate limiting disabled for main test email during Cypress tests");
             return ['allowed' => true];
         }

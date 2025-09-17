@@ -101,6 +101,17 @@ cy.assertFunctionTested('functionName');
 - Separate CSS/JS files reduce code duplication by ~450 lines
 - Coverage instrumentation is automatic for tracked JavaScript functions
 
+## ⚠️ CRITICAL TEST STABILITY RULES
+
+**NEVER change HTML element IDs, classes, or selectors in existing code**:
+- `#loginEmail`, `#sendLoginCodeBtn`, `#loginForm`, `#loginCode`, `#verifyLoginForm` - Authentication
+- `#signupEmail`, `#signupCode`, `#verifySignupForm`, `#agreeTerms` - Registration
+- `#weightKg`, `#newWeight`, `#newDate`, `#add-entry-form`, `#heightCm` - Dashboard forms
+- `#goalWeight`, `#goalDate`, `#btn-add-weight`, `#btn-save-goal` - Goal management
+- `.glass-card`, `.glass-card-small`, `.nav-link`, `.nav-tabs` - UI components
+
+**Changing these breaks ALL Cypress tests**. Only modify selectors if explicitly requested and update ALL affected test files simultaneously.
+
 ## 📂 Claude File Organization Rules
 
 **IMPORTANT**: All Claude-generated files, scripts, logs, and documentation (except CLAUDE.md) should be created in the `.claude/` folder:

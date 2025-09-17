@@ -65,7 +65,7 @@ if (AuthManager::isLoggedIn()) {
                                     <div class="form-group">
                                         <input type="email" class="form-control glass-input" id="loginEmail" placeholder="Enter your email" required>
                                     </div>
-                                    <button type="submit" class="btn primary-btn">Send Login Code →</button>
+                                    <button type="submit" class="btn primary-btn" id="sendLoginCodeBtn">Send Login Code →</button>
                                 </form>
                                 
                                 <div id="loginSocialSection">
@@ -104,7 +104,7 @@ if (AuthManager::isLoggedIn()) {
                                     </div>
                                     <button type="submit" class="btn primary-btn">Verify & Login</button>
                                     <div class="bottom-link">
-                                        <a href="#" onclick="backToEmailLogin(); return false;">← Back to email</a>
+                                        <a href="#" id="backToEmailLink" onclick="backToEmailLogin(); return false;">← Back to email</a>
                                     </div>
                                 </form>
                             </div>

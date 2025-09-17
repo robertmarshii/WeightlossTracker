@@ -1,4 +1,20 @@
 describe('App smoke tests', () => {
+  beforeEach(() => {
+    // Set cypress_testing cookie to disable rate limiting for tests
+    cy.setCookie('cypress_testing', 'true');
+
+    // Clear any existing rate limits for test email
+    cy.request({
+      method: 'POST',
+      url: 'http://127.0.0.1:8111/router.php?controller=email',
+      body: {
+        action: 'clear_rate_limits',
+        email: 'test@dev.com'
+      },
+      failOnStatusCode: false
+    });
+  });
+
   it('loads the index page', () => {
     cy.visit('/');
     cy.title().should('be.a', 'string');

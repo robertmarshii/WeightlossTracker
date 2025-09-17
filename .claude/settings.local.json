@@ -41,7 +41,12 @@
       "Bash(for i in {1..5})",
       "Bash(for i in {1..10})",
       "Bash(timeout:*)",
-      "Bash(for i in {1..20})"
+      "Bash(for i in {1..20})",
+      "Bash(git restore:*)",
+      "Bash(while read file)",
+      "Bash(do echo \"=== $file ===\")",
+      "Bash(grep:*)",
+      "Bash(rg:*)"
     ],
     "deny": [],
     "ask": []

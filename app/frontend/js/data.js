@@ -13,19 +13,19 @@ function loadWeightHistory() {
 
         let html = '';
 
-        // Reverse the data to display newest first (but calculate changes based on chronological order)
-        const reversedHistory = [...data.history].reverse();
+        // Data already comes sorted newest first from backend
+        const history = data.history;
 
-        reversedHistory.forEach((entry, index) => {
+        history.forEach((entry, index) => {
             const weight = parseFloat(entry.weight_kg);
             const date = entry.entry_date;
             const bmi = entry.bmi || 'N/A';
 
-            // Calculate change from previous chronological entry (which is next in reversed array)
+            // Calculate change from previous chronological entry (which is next in newest-first array)
             let changeHtml = '<span class="text-muted">-</span>';
-            if (index < reversedHistory.length - 1) {
-                const nextEntry = reversedHistory[index + 1];
-                const previousWeight = parseFloat(nextEntry.weight_kg);
+            if (index < history.length - 1) {
+                const previousEntry = history[index + 1];
+                const previousWeight = parseFloat(previousEntry.weight_kg);
                 const change = weight - previousWeight;
                 const changeClass = change > 0 ? 'text-danger' : change < 0 ? 'text-success' : 'text-muted';
                 const changeSymbol = change > 0 ? '+' : '';

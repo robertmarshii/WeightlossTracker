@@ -238,8 +238,8 @@
                 $profile = $stmt->fetch(PDO::FETCH_ASSOC);
                 $heightCm = $profile ? (int)$profile['height_cm'] : null;
 
-                // Get weight history ordered by date (oldest first)
-                $stmt = $db->prepare("SELECT id, weight_kg, entry_date, notes FROM {$schema}.weight_entries WHERE user_id = ? ORDER BY entry_date ASC, id ASC");
+                // Get weight history ordered by date (newest first)
+                $stmt = $db->prepare("SELECT id, weight_kg, entry_date, notes FROM {$schema}.weight_entries WHERE user_id = ? ORDER BY entry_date DESC, id DESC");
                 $stmt->execute([$userId]);
                 $entries = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
