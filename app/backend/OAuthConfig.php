@@ -19,7 +19,7 @@ class OAuthConfig {
         return [
             'clientId'     => $_ENV['MICROSOFT_CLIENT_ID'] ?? '',
             'clientSecret' => $_ENV['MICROSOFT_CLIENT_SECRET'] ?? '',
-            'redirectUri'  => self::getBaseUrl() . '/login_router.php?controller=auth&action=oauth_callback&provider=microsoft',
+            'redirectUri'  => self::getBaseUrl() . '/oauth-callback-microsoft.php',
             'tenant'       => $_ENV['MICROSOFT_TENANT'] ?? 'common', // 'common', 'organizations', 'consumers', or specific tenant ID
         ];
     }

@@ -23,7 +23,12 @@ class OAuthManager {
 
             // Generate state for security
             $state = bin2hex(random_bytes(32));
-            session_start();
+
+            // Ensure session is started properly
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
+
             $_SESSION['oauth_state'] = $state;
             $_SESSION['oauth_provider'] = $provider;
 
@@ -46,15 +51,25 @@ class OAuthManager {
     public static function handleCallback($provider, $code, $state) {
         COVERAGE_LOG('handleCallback', __CLASS__, __FILE__, __LINE__);
 
-        session_start();
+        // Ensure session is started properly
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        // Debug logging
+        error_log("OAuth callback - Provider: $provider, State: $state");
+        error_log("Session state: " . ($_SESSION['oauth_state'] ?? 'not set'));
+        error_log("Session provider: " . ($_SESSION['oauth_provider'] ?? 'not set'));
 
         // Verify state parameter
         if (!isset($_SESSION['oauth_state']) || $state !== $_SESSION['oauth_state']) {
+            error_log("State mismatch - Expected: " . ($_SESSION['oauth_state'] ?? 'null') . ", Got: $state");
             return ['success' => false, 'message' => 'Invalid state parameter'];
         }
 
         // Verify provider matches
         if (!isset($_SESSION['oauth_provider']) || $provider !== $_SESSION['oauth_provider']) {
+            error_log("Provider mismatch - Expected: " . ($_SESSION['oauth_provider'] ?? 'null') . ", Got: $provider");
             return ['success' => false, 'message' => 'Provider mismatch'];
         }
 
