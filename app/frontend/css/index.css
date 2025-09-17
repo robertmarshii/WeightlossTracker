@@ -104,6 +104,17 @@
     text-decoration: none;
 }
 
+#agreeTerms{
+    transform: scale(2);
+    margin-top: 13px;
+    margin-left: 1px;
+}
+
+#agreeTermsLabel{
+    margin-left: 28px;
+    max-width:300px;
+}
+
 .bottom-link a:hover {
     text-decoration: underline;
 }

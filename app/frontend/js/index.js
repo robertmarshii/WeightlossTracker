@@ -1,4 +1,14 @@
 $(document).ready(function() {
+    // Check for OAuth error in URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const oauthError = urlParams.get('error');
+    if (oauthError) {
+        showAlert('❌ OAuth Error: ' + decodeURIComponent(oauthError), 'danger');
+        // Clean up URL without reloading
+        const newUrl = window.location.pathname;
+        window.history.replaceState(null, '', newUrl);
+    }
+
     // Disable login and create account buttons initially
     $('#loginForm button[type="submit"]').prop('disabled', true);
     $('#signupForm button[type="submit"]').prop('disabled', true);
@@ -52,19 +62,41 @@ function isValidEmail(email) {
 function continueWithGoogle() {
     if (window.coverage) window.coverage.logFunction('continueWithGoogle', 'index.js');
     showAlert('🔄 Redirecting to Google...', 'info');
-    // TODO: Implement Google OAuth integration
-    setTimeout(() => {
-        showAlert('🚧 Google login integration coming soon!', 'info');
-    }, 1500);
+
+    $.post('login_router.php?controller=auth', {
+        action: 'oauth_start',
+        provider: 'google'
+    }, function(response) {
+        const data = typeof response === 'string' ? JSON.parse(response) : response;
+        if (data.success && data.authorization_url) {
+            // Redirect to Google OAuth
+            window.location.href = data.authorization_url;
+        } else {
+            showAlert('❌ ' + (data.message || 'Failed to start Google authentication'), 'danger');
+        }
+    }).fail(function() {
+        showAlert('🔌 Network error. Please check your connection and try again.', 'danger');
+    });
 }
 
 function continueWithMicrosoft() {
     if (window.coverage) window.coverage.logFunction('continueWithMicrosoft', 'index.js');
     showAlert('🔄 Redirecting to Microsoft...', 'info');
-    // TODO: Implement Microsoft OAuth integration
-    setTimeout(() => {
-        showAlert('🚧 Microsoft login integration coming soon!', 'info');
-    }, 1500);
+
+    $.post('login_router.php?controller=auth', {
+        action: 'oauth_start',
+        provider: 'microsoft'
+    }, function(response) {
+        const data = typeof response === 'string' ? JSON.parse(response) : response;
+        if (data.success && data.authorization_url) {
+            // Redirect to Microsoft OAuth
+            window.location.href = data.authorization_url;
+        } else {
+            showAlert('❌ ' + (data.message || 'Failed to start Microsoft authentication'), 'danger');
+        }
+    }).fail(function() {
+        showAlert('🔌 Network error. Please check your connection and try again.', 'danger');
+    });
 }
 
 function sendLoginCode() {

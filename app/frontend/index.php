@@ -120,9 +120,9 @@ if (AuthManager::isLoggedIn()) {
                                     <div class="form-group">
                                         <input type="email" class="form-control glass-input" id="signupEmail" placeholder="Enter your email" required>
                                     </div>
-                                    <div class="form-check mb-3">
+                                    <div class="form-check mb-3" id="termsCheck">
                                         <input type="checkbox" class="form-check-input" id="agreeTerms" required>
-                                        <label class="form-check-label small" for="agreeTerms">
+                                        <label class="form-check-label small" id="agreeTermsLabel" for="agreeTerms">
                                             I agree to the <a href="#" onclick="openModal('termsModal'); return false;">Terms and Conditions</a>, 
                                             <a href="#" onclick="openModal('privacyModal'); return false;">Privacy Policy</a>, and 
                                             <a href="#" onclick="openModal('cookieModal'); return false;">Cookie Policy</a>

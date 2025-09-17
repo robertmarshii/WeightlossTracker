@@ -11,12 +11,40 @@ if(isset($_GET["controller"])) {
 function AuthController() {
     COVERAGE_LOG('AuthController', null, __FILE__, __LINE__);
     require_once ('/var/app/backend/AuthManager.php');
+    require_once ('/var/app/backend/OAuthManager.php');
     require_once ('/var/app/backend/Config.php');
-    
+
+    // Handle OAuth callback via GET parameters
+    if (isset($_GET['action']) && $_GET['action'] === 'oauth_callback') {
+        $provider = htmlspecialchars($_GET['provider'] ?? '');
+        $code = htmlspecialchars($_GET['code'] ?? '');
+        $state = htmlspecialchars($_GET['state'] ?? '');
+
+        if ($provider && $code && $state) {
+            $result = OAuthManager::handleCallback($provider, $code, $state);
+            if ($result['success']) {
+                // Redirect to dashboard on success
+                header('Location: dashboard.php');
+                exit;
+            } else {
+                // Redirect to index with error
+                header('Location: index.php?error=' . urlencode($result['message']));
+                exit;
+            }
+        } else {
+            header('Location: index.php?error=' . urlencode('Invalid OAuth callback parameters'));
+            exit;
+        }
+    }
+
     if (isset($_POST['action'])) {
         $action = htmlspecialchars($_POST['action']);
-        
-        if ($action === 'send_login_code' && isset($_POST['email'])) {
+
+        if ($action === 'oauth_start' && isset($_POST['provider'])) {
+            $provider = htmlspecialchars($_POST['provider']);
+            $result = OAuthManager::getAuthorizationUrl($provider);
+            echo json_encode($result);
+        } elseif ($action === 'send_login_code' && isset($_POST['email'])) {
             $email = htmlspecialchars($_POST['email']);
             $result = AuthManager::sendLoginCode($email);
             echo json_encode($result);
