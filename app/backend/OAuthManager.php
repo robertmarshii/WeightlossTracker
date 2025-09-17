@@ -43,7 +43,6 @@ class OAuthManager {
             ];
 
         } catch (Exception $e) {
-            error_log("OAuthManager::getAuthorizationUrl error for $provider: " . $e->getMessage());
             return ['success' => false, 'message' => 'Failed to generate authorization URL'];
         }
     }
@@ -56,20 +55,14 @@ class OAuthManager {
             session_start();
         }
 
-        // Debug logging
-        error_log("OAuth callback - Provider: $provider, State: $state");
-        error_log("Session state: " . ($_SESSION['oauth_state'] ?? 'not set'));
-        error_log("Session provider: " . ($_SESSION['oauth_provider'] ?? 'not set'));
 
         // Verify state parameter
         if (!isset($_SESSION['oauth_state']) || $state !== $_SESSION['oauth_state']) {
-            error_log("State mismatch - Expected: " . ($_SESSION['oauth_state'] ?? 'null') . ", Got: $state");
             return ['success' => false, 'message' => 'Invalid state parameter'];
         }
 
         // Verify provider matches
         if (!isset($_SESSION['oauth_provider']) || $provider !== $_SESSION['oauth_provider']) {
-            error_log("Provider mismatch - Expected: " . ($_SESSION['oauth_provider'] ?? 'null') . ", Got: $provider");
             return ['success' => false, 'message' => 'Provider mismatch'];
         }
 
@@ -81,12 +74,8 @@ class OAuthManager {
                 'code' => $code
             ]);
 
-            error_log("Access token obtained successfully");
-            error_log("Token: " . substr($accessToken->getToken(), 0, 20) . "...");
-
             // Get user details
             try {
-                error_log("Processing provider: " . $provider);
                 if ($provider === 'microsoft') {
                     // Direct call to Microsoft Graph API (library method doesn't work)
                     $graphUrl = 'https://graph.microsoft.com/v1.0/me';
@@ -107,16 +96,13 @@ class OAuthManager {
                         throw new Exception("Invalid JSON response from Graph API");
                     }
 
-                    error_log("User details retrieved successfully from Graph API");
                 } else {
                     // Use standard OAuth library method for other providers (Google)
                     $resourceOwner = $providerInstance->getResourceOwner($accessToken);
                     $userDetails = $resourceOwner->toArray();
-                    error_log("User details retrieved successfully");
                 }
 
             } catch (Exception $e) {
-                error_log("Failed to get user details: " . $e->getMessage());
                 throw $e;
             }
 
@@ -137,9 +123,7 @@ class OAuthManager {
             return $result;
 
         } catch (Exception $e) {
-            error_log("OAuthManager::handleCallback error for $provider: " . $e->getMessage());
-            error_log("Full exception: " . $e->getTraceAsString());
-            return ['success' => false, 'message' => 'Authentication failed: ' . $e->getMessage()];
+            return ['success' => false, 'message' => 'Authentication failed'];
         }
     }
 
@@ -230,7 +214,6 @@ class OAuthManager {
             return ['success' => true, 'message' => 'Login successful'];
 
         } catch (Exception $e) {
-            error_log("OAuthManager::createOrLoginUser error: " . $e->getMessage());
             return ['success' => false, 'message' => 'Failed to create or login user'];
         }
     }
@@ -277,7 +260,6 @@ class OAuthManager {
 
             return true;
         } catch (Exception $e) {
-            error_log("OAuthManager::setRememberToken error: " . $e->getMessage());
             return false;
         }
     }

@@ -8,11 +8,6 @@ require_once('/var/app/backend/OAuthManager.php');
 $code = $_GET['code'] ?? '';
 $state = $_GET['state'] ?? '';
 
-// Debug logging
-error_log("OAuth callback - Received state: " . $state);
-error_log("OAuth callback - Session state: " . ($_SESSION['oauth_state'] ?? 'not set'));
-error_log("OAuth callback - Session ID: " . session_id());
-
 if ($code && $state) {
     $result = OAuthManager::handleCallback('microsoft', $code, $state);
     if ($result['success']) {
