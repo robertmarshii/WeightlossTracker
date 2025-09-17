@@ -2,6 +2,59 @@
 
 function loadWeightHistory() {
     if (window.coverage) window.coverage.logFunction('loadWeightHistory', 'data.js');
+
+    // Check if we have global data first
+    console.log('🔍 loadWeightHistory - checking global data:', window.globalDashboardData);
+    console.log('🔍 weight_history in global data:', window.globalDashboardData?.weight_history);
+
+    if (window.globalDashboardData && window.globalDashboardData.weight_history) {
+        console.log('📊 Using global data for weight history');
+        const tbody = $('#weight-history-body');
+        const history = window.globalDashboardData.weight_history;
+
+        if (!history || history.length === 0) {
+            tbody.html('<tr><td colspan="4" class="no-data">No weight entries found. Add your first entry above!</td></tr>');
+            return;
+        }
+
+        let html = '';
+        history.forEach((entry, index) => {
+            const weight = parseFloat(entry.weight_kg);
+            const date = entry.entry_date;
+            const bmi = entry.bmi || 'N/A';
+
+            // Calculate change from previous chronological entry (which is next in newest-first array)
+            let changeHtml = '<span class="text-muted">-</span>';
+            if (index < history.length - 1) {
+                const previousEntry = history[index + 1];
+                const previousWeight = parseFloat(previousEntry.weight_kg);
+                const change = weight - previousWeight;
+                const changeClass = change > 0 ? 'text-danger' : change < 0 ? 'text-success' : 'text-muted';
+                const changeSymbol = change > 0 ? '+' : '';
+                changeHtml = `<span class="${changeClass}">${changeSymbol}${change.toFixed(1)} kg</span>`;
+            }
+
+            html += `
+                <tr data-id="${entry.id}">
+                    <td>${formatDate(date)}</td>
+                    <td><strong>${weight} kg</strong></td>
+                    <td>${changeHtml}</td>
+                    <td>
+                        <div class="table-actions">
+                            <button class="btn btn-sm edit-btn" onclick="editWeight(${entry.id}, ${weight}, '${date}')">✎</button>
+                            <button class="btn btn-sm delete-btn" onclick="deleteWeight(${entry.id})">✖</button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        });
+
+        tbody.html(html);
+        return;
+    }
+
+    // Fallback to API call if global data not available
+    console.log('🌐 Making API call for weight history (global data not available)');
     $.post('router.php?controller=profile', { action: 'get_weight_history' }, function(resp) {
         const data = parseJson(resp);
         const tbody = $('#weight-history-body');

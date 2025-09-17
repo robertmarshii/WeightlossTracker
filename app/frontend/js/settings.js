@@ -2,6 +2,30 @@
 
 function loadSettings() {
     if (window.coverage) window.coverage.logFunction('loadSettings', 'settings.js');
+
+    // Check if we have global data first
+    console.log('🔍 loadSettings - checking global data:', window.globalDashboardData);
+    console.log('🔍 settings in global data:', window.globalDashboardData?.settings);
+
+    if (window.globalDashboardData && window.globalDashboardData.settings) {
+        console.log('📊 Using global data for settings');
+        const s = window.globalDashboardData.settings;
+        $('#weightUnit').val(s.weight_unit || 'kg');
+        $('#heightUnit').val(s.height_unit || 'cm');
+        $('#dateFormat').val(s.date_format || 'uk');
+        $('#timezone').val(s.timezone || 'Europe/London');
+        $('#theme').val(s.theme || 'glassmorphism');
+        $('#language').val(s.language || 'en');
+        $('#startOfWeek').val(s.start_of_week || 'monday');
+        $('#shareData').prop('checked', s.share_data === true);
+        $('#emailNotifications').prop('checked', s.email_notifications === true);
+        $('#weeklyReports').prop('checked', s.weekly_reports === true);
+        updateDateExample();
+        return;
+    }
+
+    // Fallback to API call if global data not available
+    console.log('🌐 Making API call for settings (global data not available)');
     $.post('router.php?controller=profile', { action: 'get_settings' }, function(resp) {
         const data = parseJson(resp);
         if (data.success && data.settings) {

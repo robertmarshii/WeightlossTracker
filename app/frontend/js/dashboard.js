@@ -1,4 +1,7 @@
 
+// Global variable to store consolidated dashboard data
+window.globalDashboardData = null;
+
 $(function() {
     // Log active schema to console for debugging
     $.post('router.php?controller=schema', { action: 'get' }, function(resp) {
@@ -27,18 +30,23 @@ $(function() {
         });
     });
 
-    // Load existing data
-    refreshLatestWeight();
-    refreshGoal();
-    loadProfile();
-    refreshBMI();
-    refreshHealth();
-    refreshIdealWeight();
-    refreshWeightProgress();
-    refreshGallbladderHealth();
-    refreshPersonalHealthBenefits();
-    loadWeightHistory();
-    loadSettings();
+    // FIRST: Load consolidated data, THEN load individual data
+    testConsolidatedDashboardData(function() {
+        // This callback runs after consolidated data is loaded
+        console.log('🎯 Consolidated data loaded, now calling individual functions...');
+
+        refreshLatestWeight();
+        refreshGoal();
+        loadProfile();
+        refreshBMI();
+        refreshHealth();
+        refreshIdealWeight();
+        refreshWeightProgress();
+        refreshGallbladderHealth();
+        refreshPersonalHealthBenefits();
+        loadWeightHistory();
+        loadSettings();
+    });
     
     // Set today's date as default for new entries
     $('#newDate').val(new Date().toISOString().split('T')[0]);
@@ -52,14 +60,25 @@ $(function() {
             if (data.success) {
                 showToast('Weight saved');
                 $('#weightKg').val('');
-                refreshLatestWeight();
-                refreshBMI();
-                refreshHealth();
-                refreshIdealWeight();
-                refreshWeightProgress();
-                refreshGallbladderHealth();
-                refreshPersonalHealthBenefits();
-                loadWeightHistory();
+
+                // Reload global data first, then refresh all functions
+                reloadGlobalDashboardData(function() {
+                    // Functions using global data
+                    refreshLatestWeight();
+                    refreshBMI();
+                    refreshHealth(); // body fat uses global, cardiovascular risk uses individual API
+                    refreshWeightProgress();
+                    refreshGallbladderHealth();
+                    loadWeightHistory();
+
+                    // Functions using individual API calls
+                    refreshIdealWeight(); // always uses individual API call
+                    refreshPersonalHealthBenefits();
+
+                    // Update the weight chart with current period
+                    const activePeriod = $('.btn-group .active').attr('id')?.replace('chart-', '') || '90days';
+                    updateWeightChart(activePeriod);
+                });
             }
         });
     });
@@ -96,13 +115,24 @@ $(function() {
                 $('#add-entry-form').slideUp();
                 $('#newWeight').val('');
                 $('#newDate').val(new Date().toISOString().split('T')[0]);
-                loadWeightHistory();
-                refreshLatestWeight();
-                refreshBMI();
-                refreshHealth();
-                refreshIdealWeight();
-                refreshWeightProgress();
-                refreshGallbladderHealth();
+
+                // Reload global data first, then refresh all functions
+                reloadGlobalDashboardData(function() {
+                    // Functions using global data
+                    refreshLatestWeight();
+                    refreshBMI();
+                    refreshHealth(); // body fat uses global, cardiovascular risk uses individual API
+                    refreshWeightProgress();
+                    refreshGallbladderHealth();
+                    loadWeightHistory();
+
+                    // Functions using individual API calls
+                    refreshIdealWeight(); // always uses individual API call
+
+                    // Update the weight chart with current period
+                    const activePeriod = $('.btn-group .active').attr('id')?.replace('chart-', '') || '90days';
+                    updateWeightChart(activePeriod);
+                });
             } else {
                 showToast('Failed to save weight entry');
             }
@@ -138,10 +168,23 @@ $(function() {
             if (data.success) {
                 $('#profile-status').text('Profile saved').removeClass('text-danger').addClass('text-success');
                 setTimeout(() => $('#profile-status').text(''), 3000);
-                refreshBMI();
-                refreshHealth();
-                refreshIdealWeight();
-                refreshPersonalHealthBenefits();
+
+                // Reload global data first, then refresh all functions
+                reloadGlobalDashboardData(function() {
+                    // Functions using global data
+                    refreshBMI();
+                    refreshHealth(); // body fat uses global, cardiovascular risk uses individual API
+                    refreshWeightProgress();
+                    refreshGallbladderHealth();
+
+                    // Functions using individual API calls
+                    refreshIdealWeight(); // always uses individual API call
+                    refreshPersonalHealthBenefits();
+
+                    // Update the weight chart with current period (profile changes might affect BMI data in chart)
+                    const activePeriod = $('.btn-group .active').attr('id')?.replace('chart-', '') || '90days';
+                    updateWeightChart(activePeriod);
+                });
             } else {
                 $('#profile-status').text('Save failed').removeClass('text-success').addClass('text-danger');
             }
@@ -199,9 +242,87 @@ $(function() {
     });
 });
 
+function reloadGlobalDashboardData(callback) {
+    console.log('🔄 Reloading global dashboard data...');
+    $.post('router.php?controller=profile', { action: 'get_all_dashboard_data' }, function(resp) {
+        const result = parseJson(resp);
+        console.log('Reloaded dashboard data result:', result);
+
+        if (result.success) {
+            // Store the data globally so other functions can use it
+            window.globalDashboardData = result.data;
+            console.log('✅ Global dashboard data updated');
+
+            if (callback) {
+                callback();
+            }
+        } else {
+            console.log('❌ Failed to reload global dashboard data:', result.message);
+            // Clear global data on failure
+            window.globalDashboardData = null;
+
+            if (callback) {
+                callback();
+            }
+        }
+    }).fail(function() {
+        console.log('❌ Network error reloading global dashboard data');
+        window.globalDashboardData = null;
+
+        if (callback) {
+            callback();
+        }
+    });
+}
+
+function testConsolidatedDashboardData(callback) {
+    console.log('Testing consolidated dashboard data endpoint...');
+    $.post('router.php?controller=profile', { action: 'get_all_dashboard_data' }, function(resp) {
+        const result = parseJson(resp);
+        console.log('Consolidated dashboard data result:', result);
+
+        if (result.success) {
+            // Store the data globally so other functions can use it
+            window.globalDashboardData = result.data;
+
+            console.log('✅ Consolidated endpoint working!');
+            console.log('📊 Data received:', Object.keys(result.data || {}));
+            console.log('🌍 Global dashboard data stored:', window.globalDashboardData);
+        } else {
+            console.log('❌ Consolidated endpoint failed:', result.message);
+        }
+
+        // Call the callback regardless of success/failure
+        if (callback && typeof callback === 'function') {
+            callback();
+        }
+    }).fail(function() {
+        console.log('❌ Network error calling consolidated endpoint');
+
+        // Call the callback even on failure so individual functions still run
+        if (callback && typeof callback === 'function') {
+            callback();
+        }
+    });
+}
 
 function refreshLatestWeight() {
     if (window.coverage) window.coverage.logFunction('refreshLatestWeight', 'dashboard.js');
+
+    // Check if we have global data first
+    console.log('🔍 refreshLatestWeight - checking global data:', window.globalDashboardData);
+    console.log('🔍 latest_weight in global data:', window.globalDashboardData?.latest_weight);
+
+    if (window.globalDashboardData && window.globalDashboardData.latest_weight) {
+        console.log('📊 Using global data for latest weight');
+        const latestWeight = window.globalDashboardData.latest_weight;
+        const formattedDate = formatDate(latestWeight.entry_date);
+        $('#latest-weight').text('Latest: ' + latestWeight.weight_kg + ' kg on ' + formattedDate);
+        return;
+    }
+
+    // Fallback to API call if global data not available
+    console.log('🌐 Making API call for latest weight (global data not available)');
     $.post('router.php?controller=profile', { action: 'get_latest_weight' }, function(resp) {
         const data = parseJson(resp);
         if (data.latest) {
@@ -215,6 +336,28 @@ function refreshLatestWeight() {
 
 function refreshGoal() {
     if (window.coverage) window.coverage.logFunction('refreshGoal', 'dashboard.js');
+
+    // Check if we have global data first
+    console.log('🔍 refreshGoal - checking global data:', window.globalDashboardData);
+    console.log('🔍 goal in global data:', window.globalDashboardData?.goal);
+
+    if (window.globalDashboardData && window.globalDashboardData.goal) {
+        console.log('📊 Using global data for goal');
+        const goal = window.globalDashboardData.goal;
+        const date = goal.target_date || 'n/a';
+        $('#current-goal').text('Current goal: ' + goal.target_weight_kg + ' kg by ' + date);
+        return;
+    }
+
+    // Check if global data loaded but no goal exists
+    if (window.globalDashboardData && !window.globalDashboardData.goal) {
+        console.log('📊 Using global data for goal (no goal set)');
+        $('#current-goal').text('No active goal set');
+        return;
+    }
+
+    // Fallback to API call if global data not available
+    console.log('🌐 Making API call for goal (global data not available)');
     $.post('router.php?controller=profile', { action: 'get_goal' }, function(resp) {
         const data = parseJson(resp);
         if (data.goal) {
@@ -228,6 +371,20 @@ function refreshGoal() {
 
 function loadProfile() {
     if (window.coverage) window.coverage.logFunction('loadProfile', 'dashboard.js');
+
+    // Check if we have global data first
+    if (window.globalDashboardData && window.globalDashboardData.profile) {
+        console.log('📊 Using global data for profile');
+        const profile = window.globalDashboardData.profile;
+        $('#heightCm').val(profile.height_cm || '');
+        $('#bodyFrame').val(profile.body_frame || '');
+        $('#age').val(profile.age || '');
+        $('#activityLevel').val(profile.activity_level || '');
+        return;
+    }
+
+    // Fallback to API call if global data not available
+    console.log('🌐 Making API call for profile (global data not available)');
     $.post('router.php?controller=profile', { action: 'get_profile' }, function(resp) {
         const data = parseJson(resp);
         if (data.profile) {
@@ -262,21 +419,47 @@ function refreshIdealWeight() {
 
 function refreshWeightProgress() {
     if (window.coverage) window.coverage.logFunction('refreshWeightProgress', 'dashboard.js');
+
+    // Check if we have global data first
+    console.log('🔍 refreshWeightProgress - checking global data:', window.globalDashboardData);
+    console.log('🔍 weight_progress in global data:', window.globalDashboardData?.weight_progress);
+
+    if (window.globalDashboardData && window.globalDashboardData.weight_progress) {
+        console.log('📊 Using global data for weight progress');
+        const data = window.globalDashboardData.weight_progress;
+        const el = $('#progress-block');
+
+        const lines = [];
+        lines.push(`Total Weight Lost: <strong>${data.total_weight_lost_kg} kg</strong>`);
+        if (data.estimated_fat_loss_kg) {
+            lines.push(`Estimated Fat Loss: <strong class="text-success">${data.estimated_fat_loss_kg} kg</strong> (${data.fat_loss_percentage}%)`);
+        }
+        lines.push(`<small class="text-muted">Over ${data.weeks_elapsed || data.weeks_tracked} weeks (${data.avg_weekly_rate_kg || data.average_weekly_loss_kg} kg/week average)</small>`);
+        if (data.research_note) {
+            lines.push(`<small class="text-muted">${data.research_note}</small>`);
+        }
+
+        el.html(lines.join('<br>')).removeClass('text-muted');
+        return;
+    }
+
+    // Fallback to API call if global data not available
+    console.log('🌐 Making API call for weight progress (global data not available)');
     $.post('router.php?controller=profile', { action: 'get_weight_progress' }, function(resp) {
         const data = parseJson(resp);
         const el = $('#progress-block');
-        
+
         if (!data.success) {
             el.text(data.message || 'Need at least 2 weight entries to show progress').addClass('text-muted');
             return;
         }
-        
+
         const lines = [];
         lines.push(`Total Weight Lost: <strong>${data.total_weight_lost_kg} kg</strong>`);
         lines.push(`Estimated Fat Loss: <strong class="text-success">${data.estimated_fat_loss_kg} kg</strong> (${data.fat_loss_percentage}%)`);
         lines.push(`<small class="text-muted">Over ${data.weeks_elapsed} weeks (${data.avg_weekly_rate_kg} kg/week average)</small>`);
         lines.push(`<small class="text-muted">${data.research_note}</small>`);
-        
+
         el.html(lines.join('<br>')).removeClass('text-muted');
     }).fail(function() {
         $('#progress-block').text('Failed to calculate weight progress').addClass('text-muted');

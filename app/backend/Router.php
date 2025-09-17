@@ -782,6 +782,419 @@
                 return;
             }
 
+            if ($action === 'get_all_dashboard_data') {
+                // New consolidated endpoint that gets ALL dashboard data in one call
+                // This is for testing - to compare with individual endpoint results
+                $allData = [];
+
+                // Get latest weight (like get_latest_weight)
+                $stmt = $db->prepare("SELECT weight_kg, entry_date FROM {$schema}.weight_entries WHERE user_id = ? ORDER BY entry_date DESC, id DESC LIMIT 1");
+                $stmt->execute([$userId]);
+                $latestWeight = $stmt->fetch(PDO::FETCH_ASSOC);
+                $allData['latest_weight'] = $latestWeight ?: null;
+
+                // Get goal (like get_goal)
+                $stmt = $db->prepare("SELECT target_weight_kg, target_date FROM {$schema}.goals WHERE user_id = ? AND is_active = true ORDER BY created_at DESC, id DESC LIMIT 1");
+                $stmt->execute([$userId]);
+                $goal = $stmt->fetch(PDO::FETCH_ASSOC);
+                $allData['goal'] = $goal ?: null;
+
+                // Get profile (like get_profile)
+                $stmt = $db->prepare("SELECT user_id, height_cm, body_frame, age, activity_level FROM {$schema}.user_profiles WHERE user_id = ?");
+                $stmt->execute([$userId]);
+                $profile = $stmt->fetch(PDO::FETCH_ASSOC);
+                $allData['profile'] = $profile ?: null;
+
+                // Get weight history (like get_weight_history)
+                $stmt = $db->prepare("SELECT id, weight_kg, entry_date, notes FROM {$schema}.weight_entries WHERE user_id = ? ORDER BY entry_date DESC, id DESC");
+                $stmt->execute([$userId]);
+                $weightHistory = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $allData['weight_history'] = $weightHistory;
+
+                // Get settings (like get_settings)
+                $stmt = $db->prepare("SELECT * FROM {$schema}.user_settings WHERE user_id = ?");
+                $stmt->execute([$userId]);
+                $settings = $stmt->fetch(PDO::FETCH_ASSOC);
+                if (!$settings) {
+                    // Return default settings if none exist
+                    $settings = [
+                        'weight_unit' => 'kg',
+                        'height_unit' => 'cm',
+                        'temperature_unit' => 'c',
+                        'date_format' => 'uk',
+                        'time_format' => '24',
+                        'timezone' => 'Europe/London',
+                        'theme' => 'glassmorphism',
+                        'language' => 'en',
+                        'start_of_week' => 'monday',
+                        'share_data' => false,
+                        'email_notifications' => false,
+                        'weekly_reports' => false
+                    ];
+                } else {
+                    // Convert string booleans to actual booleans
+                    $settings['share_data'] = $settings['share_data'] === '1' || $settings['share_data'] === 'true';
+                    $settings['email_notifications'] = $settings['email_notifications'] === '1' || $settings['email_notifications'] === 'true';
+                    $settings['weekly_reports'] = $settings['weekly_reports'] === '1' || $settings['weekly_reports'] === 'true';
+                }
+                $allData['settings'] = $settings;
+
+                // Add health stats (like get_health_stats)
+                $allData['health_stats'] = null;
+                if ($profile && isset($profile['height_cm']) && $profile['height_cm'] > 0 && $latestWeight) {
+                    $heightCm = (int)$profile['height_cm'];
+                    $age = isset($profile['age']) ? (int)$profile['age'] : null;
+                    $frame = isset($profile['body_frame']) ? strtolower($profile['body_frame']) : 'medium';
+                    $activity = isset($profile['activity_level']) ? strtolower($profile['activity_level']) : '';
+                    $weightKg = (float)$latestWeight['weight_kg'];
+
+                    $h = $heightCm / 100.0;
+                    $bmi = $weightKg / ($h * $h);
+
+                    $category = 'normal';
+                    if ($bmi < 18.5) $category = 'underweight';
+                    elseif ($bmi < 25) $category = 'normal';
+                    elseif ($bmi < 30) $category = 'overweight';
+                    else $category = 'obese';
+
+                    // Frame-adjusted BMI (heuristic)
+                    $frameFactor = 1.0;
+                    if ($frame === 'small') $frameFactor = 1.03;
+                    if ($frame === 'large') $frameFactor = 0.97;
+                    $adjBmi = $bmi * $frameFactor;
+                    $adjCategory = 'normal';
+                    if ($adjBmi < 18.5) $adjCategory = 'underweight';
+                    elseif ($adjBmi < 25) $adjCategory = 'normal';
+                    elseif ($adjBmi < 30) $adjCategory = 'overweight';
+                    else $adjCategory = 'obese';
+
+                    // Estimated body fat percentage range using Deurenberg formula bounds
+                    $bfpRange = null;
+                    $bfpNotes = [];
+                    if ($age !== null) {
+                        $bfpMale = 1.2 * $bmi + 0.23 * $age - 16.2;   // male
+                        $bfpFemale = 1.2 * $bmi + 0.23 * $age - 5.4; // female
+                        $min = min($bfpMale, $bfpFemale);
+                        $max = max($bfpMale, $bfpFemale);
+                        $bfpRange = [round($min, 1), round($max, 1)];
+                        $bfpNotes[] = 'Body fat estimated via Deurenberg formula (BMI, age). Range spans male–female.';
+                    } else {
+                        $bfpNotes[] = 'Add your age in profile to estimate body fat percentage.';
+                    }
+
+                    // Simple cardiovascular risk impression (non-diagnostic)
+                    $riskScore = 0;
+                    if ($category === 'overweight') $riskScore += 1;
+                    if ($category === 'obese') $riskScore += 2;
+                    if ($activity === 'sedentary') $riskScore += 1;
+                    if ($activity === 'very' || $activity === 'athlete') $riskScore -= 1;
+                    if ($age !== null) {
+                        if ($age >= 65) $riskScore += 2; elseif ($age >= 55) $riskScore += 1;
+                    }
+                    if ($riskScore < -1) $riskScore = -1; if ($riskScore > 3) $riskScore = 3;
+                    $riskLabel = 'baseline';
+                    if ($riskScore <= -1) $riskLabel = 'below baseline';
+                    elseif ($riskScore === 0) $riskLabel = 'baseline';
+                    elseif ($riskScore === 1) $riskLabel = 'moderately increased';
+                    elseif ($riskScore === 2) $riskLabel = 'highly increased';
+                    else $riskLabel = 'very high';
+                    $riskNotes = [
+                        'This is a general, non-diagnostic impression based on BMI, age and activity.',
+                        'For cardiovascular risk, clinical calculators (e.g., Framingham, ASCVD) require blood pressure and lab values.'
+                    ];
+
+                    $allData['health_stats'] = [
+                        'bmi' => round($bmi, 1),
+                        'category' => $category,
+                        'adjusted_bmi' => round($adjBmi, 1),
+                        'adjusted_category' => $adjCategory,
+                        'estimated_body_fat_range' => $bfpRange,
+                        'body_fat_notes' => $bfpNotes,
+                        'cvd_risk_label' => $riskLabel,
+                        'cvd_risk_notes' => $riskNotes,
+                        'height_cm' => $heightCm,
+                        'age' => $age,
+                    ];
+                }
+
+                // Add ideal weight calculation (like get_ideal_weight)
+                $allData['ideal_weight'] = null;
+                if ($profile && isset($profile['height_cm']) && $profile['height_cm'] > 0) {
+                    $heightCm = (float)$profile['height_cm'];
+                    $bodyFrame = strtolower($profile['body_frame'] ?? 'medium');
+
+                    // Convert height to inches for Hamwi formula (using original calculation method)
+                    $heightInches = $heightCm / 2.54;
+                    $baseHeightInches = 60; // 5 feet = 60 inches
+                    $additionalInches = max(0, $heightInches - $baseHeightInches);
+
+                    // Using gender-neutral approach from original
+                    $baseWeight = 103; // lbs (average of male/female)
+                    $weightPerInch = 5.5; // Average of 6 lbs (male) and 5 lbs (female)
+
+                    $idealWeightLbs = $baseWeight + ($additionalInches * $weightPerInch);
+
+                    // Body frame adjustments: ±10%
+                    $adjustment = 0;
+                    if ($bodyFrame === 'small') {
+                        $adjustment = -0.1; // -10%
+                    } elseif ($bodyFrame === 'large') {
+                        $adjustment = 0.1; // +10%
+                    }
+
+                    $minWeightLbs = $idealWeightLbs * (1 + $adjustment - 0.05); // ±5% range
+                    $maxWeightLbs = $idealWeightLbs * (1 + $adjustment + 0.05);
+
+                    // Convert to kg
+                    $minWeightKg = $minWeightLbs / 2.20462;
+                    $maxWeightKg = $maxWeightLbs / 2.20462;
+                    $idealWeightKg = $idealWeightLbs / 2.20462;
+
+                    // Calculate timeline to reach upper limit of ideal range
+                    $timeline = null;
+                    if (count($weightHistory) >= 2 && $latestWeight && (float)$latestWeight['weight_kg'] > $maxWeightKg) {
+                        // Calculate weight loss rate from recent entries
+                        $recentWeights = array_slice($weightHistory, 0, min(8, count($weightHistory))); // Last 8 entries or all available
+                        if (count($recentWeights) >= 2) {
+                            $oldestRecent = end($recentWeights);
+                            $newestRecent = $recentWeights[0];
+
+                            $weightDiff = (float)$oldestRecent['weight_kg'] - (float)$newestRecent['weight_kg'];
+                            $timeDiff = (strtotime($newestRecent['entry_date']) - strtotime($oldestRecent['entry_date'])) / (24 * 60 * 60); // days
+
+                            if ($timeDiff > 0 && $weightDiff > 0) {
+                                $ratePerWeek = ($weightDiff / $timeDiff) * 7;
+                                $remainingWeight = (float)$newestRecent['weight_kg'] - $maxWeightKg;
+
+                                if ($remainingWeight > 0) {
+                                    $weeksToGoal = ceil($remainingWeight / $ratePerWeek);
+                                    $targetDate = new DateTime($newestRecent['entry_date']);
+                                    $targetDate->add(new DateInterval('P' . ($weeksToGoal * 7) . 'D'));
+
+                                    $timeline = [
+                                        'weeks_to_goal' => $weeksToGoal,
+                                        'target_date' => $targetDate->format('Y-m'),
+                                        'current_rate_kg_per_week' => round($ratePerWeek, 2),
+                                        'remaining_weight_kg' => round($remainingWeight, 1)
+                                    ];
+                                }
+                            }
+                        }
+                    }
+
+                    $allData['ideal_weight'] = [
+                        'success' => true,
+                        'min_weight_kg' => round($minWeightKg, 1),
+                        'max_weight_kg' => round($maxWeightKg, 1),
+                        'ideal_weight_kg' => round($idealWeightKg, 1),
+                        'body_frame' => $bodyFrame,
+                        'timeline' => $timeline,
+                        'note' => "Ideal weight range calculated using modified Hamwi formula for {$bodyFrame} frame"
+                    ];
+                }
+
+                // Add weight progress calculation (like get_weight_progress)
+                $allData['weight_progress'] = null;
+                if (count($weightHistory) >= 2) {
+                    // Reverse for chronological order (oldest first)
+                    $chronological = array_reverse($weightHistory);
+                    $oldestWeight = (float)$chronological[0]['weight_kg'];
+                    $newestWeight = (float)$chronological[count($chronological) - 1]['weight_kg'];
+                    $totalWeightLost = $oldestWeight - $newestWeight;
+
+                    // Research-based assumptions for weight loss composition
+                    $fatLossPercentage = 0.78;
+                    $estimatedFatLoss = $totalWeightLost * $fatLossPercentage;
+
+                    // Calculate BMI change if height available
+                    $bmiChange = null;
+                    if ($profile && isset($profile['height_cm']) && $profile['height_cm'] > 0) {
+                        $heightCm = (int)$profile['height_cm'];
+                        $h = $heightCm / 100.0;
+                        $oldestBmi = $oldestWeight / ($h * $h);
+                        $newestBmi = $newestWeight / ($h * $h);
+                        $bmiChange = round($oldestBmi - $newestBmi, 1);
+                    }
+
+                    // Calculate time period
+                    $startDate = new DateTime($chronological[0]['entry_date']);
+                    $endDate = new DateTime($chronological[count($chronological) - 1]['entry_date']);
+                    $daysDiff = $startDate->diff($endDate)->days;
+                    $weeksDiff = round($daysDiff / 7, 1);
+
+                    // Calculate average weekly loss
+                    $avgWeeklyLoss = $weeksDiff > 0 ? round($totalWeightLost / $weeksDiff, 2) : 0;
+
+                    $allData['weight_progress'] = [
+                        'success' => true,
+                        'total_weight_lost_kg' => round($totalWeightLost, 1),
+                        'start_weight_kg' => round($oldestWeight, 1),
+                        'current_weight_kg' => round($newestWeight, 1),
+                        'estimated_fat_loss_kg' => round($estimatedFatLoss, 1),
+                        'fat_loss_percentage' => round($fatLossPercentage * 100, 1),
+                        'weeks_elapsed' => round($weeksDiff, 1),
+                        'avg_weekly_rate_kg' => round($avgWeeklyLoss, 2),
+                        'research_note' => 'Research suggests ~78% of weight loss is fat when combined with exercise',
+                        'oldest_weight_kg' => round($oldestWeight, 1),
+                        'newest_weight_kg' => round($newestWeight, 1),
+                        'start_date' => $chronological[0]['entry_date'],
+                        'end_date' => $chronological[count($chronological) - 1]['entry_date'],
+                        'days_tracked' => $daysDiff,
+                        'weeks_tracked' => $weeksDiff,
+                        'average_weekly_loss_kg' => $avgWeeklyLoss,
+                        'bmi_change' => $bmiChange,
+                        'total_entries' => count($weightHistory)
+                    ];
+                }
+
+                // Add cardiovascular risk calculation (like get_cardiovascular_risk)
+                $allData['cardiovascular_risk'] = null;
+                if ($profile && isset($profile['height_cm']) && $profile['height_cm'] > 0 && $latestWeight && count($weightHistory) >= 1) {
+                    $heightCm = (int)$profile['height_cm'];
+                    $age = (int)($profile['age'] ?? 0);
+                    $activity = strtolower($profile['activity_level'] ?? '');
+                    $currentWeight = (float)$latestWeight['weight_kg'];
+
+                    // Get starting weight
+                    $chronological = array_reverse($weightHistory);
+                    $startingWeight = count($chronological) > 1 ? (float)$chronological[0]['weight_kg'] : $currentWeight;
+
+                    // Calculate current BMI and starting BMI
+                    $h = $heightCm / 100.0;
+                    $currentBmi = $currentWeight / ($h * $h);
+                    $startingBmi = $startingWeight / ($h * $h);
+
+                    // Simplified cardiovascular risk calculation based on BMI, age, activity
+                    function calculateCvdRisk($bmi, $age, $activity) {
+                        $baseRisk = 10; // baseline 10%
+
+                        // BMI impact
+                        if ($bmi >= 30) $baseRisk += 15;      // Obese: +15%
+                        elseif ($bmi >= 25) $baseRisk += 8;   // Overweight: +8%
+                        elseif ($bmi < 18.5) $baseRisk += 5;  // Underweight: +5%
+
+                        // Age impact
+                        if ($age >= 65) $baseRisk += 20;
+                        elseif ($age >= 55) $baseRisk += 10;
+                        elseif ($age >= 45) $baseRisk += 5;
+
+                        // Activity impact
+                        if ($activity === 'sedentary') $baseRisk += 8;
+                        elseif ($activity === 'light') $baseRisk += 3;
+                        elseif ($activity === 'very' || $activity === 'athlete') $baseRisk -= 8;
+
+                        return max(5, min(50, $baseRisk)); // Cap between 5% and 50%
+                    }
+
+                    $currentRisk = calculateCvdRisk($currentBmi, $age, $activity);
+                    $originalRisk = calculateCvdRisk($startingBmi, $age, $activity);
+                    $riskImprovement = max(0, $originalRisk - $currentRisk);
+
+                    function getRiskCategory($risk) {
+                        if ($risk < 15) return 'Low';
+                        elseif ($risk < 25) return 'Moderate';
+                        elseif ($risk < 35) return 'High';
+                        else return 'Very High';
+                    }
+
+                    $allData['cardiovascular_risk'] = [
+                        'success' => true,
+                        'current_risk_percentage' => round($currentRisk, 1),
+                        'current_risk_category' => getRiskCategory($currentRisk),
+                        'original_risk_percentage' => round($originalRisk, 1),
+                        'original_risk_category' => getRiskCategory($originalRisk),
+                        'risk_improvement_percentage' => round($riskImprovement, 1),
+                        'notes' => [
+                            'Simplified risk model based on BMI, age, and activity level',
+                            'For clinical assessment, consult healthcare provider'
+                        ]
+                    ];
+                }
+
+                // Add gallbladder health calculation (like get_gallbladder_health)
+                $allData['gallbladder_health'] = null;
+                if ($profile && isset($profile['height_cm']) && $profile['height_cm'] > 0 && $latestWeight) {
+                    $heightCm = (int)$profile['height_cm'];
+                    $currentWeight = (float)$latestWeight['weight_kg'];
+
+                    // Get starting weight
+                    $chronological = array_reverse($weightHistory);
+                    $startingWeight = count($chronological) > 1 ? (float)$chronological[0]['weight_kg'] : $currentWeight;
+                    $weightLost = $startingWeight - $currentWeight;
+
+                    // Calculate current BMI
+                    $h = $heightCm / 100.0;
+                    $currentBmi = $currentWeight / ($h * $h);
+
+                    // Gallbladder health assessment based on research
+                    $benefits = [];
+                    $riskReduction = 0;
+
+                    // Weight loss reduces gallstone risk significantly
+                    if ($weightLost >= 5) {
+                        $riskReduction += 10; // 5-10kg loss reduces risk by ~10%
+                        $benefits[] = "Gallstone risk reduction from weight loss";
+                    }
+                    if ($weightLost >= 10) {
+                        $riskReduction += 8; // Additional benefit for substantial loss
+                        $benefits[] = "Notable reduction in cholecystitis risk";
+                    }
+                    if ($weightLost >= 20) {
+                        $riskReduction += 7; // Additional benefit for major weight loss
+                        $benefits[] = "Substantial improvement in gallbladder function";
+                    }
+
+                    // BMI-based assessment (current status matters more than just improvement)
+                    if ($currentBmi >= 35) {
+                        // Still severely obese - limits benefits regardless of weight loss
+                        $riskReduction = min($riskReduction, 15); // Cap benefits at 15% for severe obesity
+                        $benefits[] = "Continue weight loss for greater gallbladder benefits";
+                    } elseif ($currentBmi >= 30) {
+                        // Still obese but improved
+                        $riskReduction = min($riskReduction, 25); // Cap at 25% for obesity
+                        if ($weightLost > 0) {
+                            $benefits[] = "Some reduction in obesity-related gallbladder inflammation";
+                        }
+                    } elseif ($currentBmi >= 25) {
+                        // Overweight - much better
+                        $riskReduction += 10;
+                        $benefits[] = "Good BMI for gallbladder health";
+                    } else {
+                        // Normal weight - excellent
+                        $riskReduction += 15;
+                        $benefits[] = "Excellent BMI for gallbladder health";
+                    }
+
+                    // Baseline risk assessment
+                    $baselineRisk = 20; // General population baseline
+                    if ($currentBmi >= 30) $baselineRisk += 15;
+                    elseif ($currentBmi >= 25) $baselineRisk += 8;
+
+                    $currentRisk = max(5, $baselineRisk - $riskReduction);
+
+                    $allData['gallbladder_health'] = [
+                        'success' => true,
+                        'risk_reduction_percentage' => round($riskReduction, 1),
+                        'current_risk_percentage' => round($currentRisk, 1),
+                        'baseline_risk_percentage' => round($baselineRisk, 1),
+                        'weight_lost_kg' => round($weightLost, 1),
+                        'current_bmi' => round($currentBmi, 1),
+                        'benefits' => $benefits,
+                        'research_notes' => [
+                            'Weight loss of 5-10% can reduce gallstone risk by 40-50%',
+                            'Maintaining healthy BMI <25 significantly improves gallbladder function'
+                        ]
+                    ];
+                }
+
+                echo json_encode([
+                    'success' => true,
+                    'data' => $allData,
+                    'message' => 'Consolidated dashboard data (testing phase)'
+                ]);
+                return;
+            }
+
             echo json_encode(['success' => false, 'message' => 'Invalid action']);
         } catch (Exception $e) {
             echo json_encode(['success' => false, 'message' => 'Server error']);

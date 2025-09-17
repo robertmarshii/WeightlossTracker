@@ -442,6 +442,43 @@ function refreshPersonalHealthBenefits() {
 
 function refreshBMI() {
     if (window.coverage) window.coverage.logFunction('refreshBMI', 'health.js');
+
+    // Check if we have global data first
+    console.log('🔍 refreshBMI - checking global data:', window.globalDashboardData);
+    console.log('🔍 health_stats in global data:', window.globalDashboardData?.health_stats);
+
+    if (window.globalDashboardData && window.globalDashboardData.health_stats) {
+        console.log('📊 Using global data for BMI');
+        const data = window.globalDashboardData.health_stats;
+        const el = $('#bmi-block');
+
+        const lines = [];
+        lines.push(`Current BMI: <strong>${data.bmi}</strong> (${data.category})`);
+        if (data.adjusted_bmi) {
+            lines.push(`Frame-adjusted: <strong>${data.adjusted_bmi}</strong> (${data.adjusted_category})`);
+        }
+
+        // Get before/after comparison from global weight progress data
+        const progressData = window.globalDashboardData.weight_progress;
+        if (progressData && progressData.start_weight_kg && progressData.current_weight_kg !== progressData.start_weight_kg) {
+            const heightCm = data.height_cm;
+            if (heightCm) {
+                const h = heightCm / 100.0;
+                const startingBmi = progressData.start_weight_kg / (h * h);
+                const improvement = startingBmi - data.bmi;
+                if (improvement > 0.1) {
+                    lines.push(`<small class="text-success">BMI decreased by ${improvement.toFixed(1)} points since starting!</small>`);
+                    lines.push(`<small class="text-muted">Started at ${startingBmi.toFixed(1)} BMI</small>`);
+                }
+            }
+        }
+
+        el.html(lines.join('<br>')).removeClass('text-muted');
+        return;
+    }
+
+    // Fallback to API call if global data not available
+    console.log('🌐 Making API call for BMI (global data not available)');
     $.post('router.php?controller=profile', { action: 'get_bmi' }, function(resp) {
         const data = parseJson(resp);
         const el = $('#bmi-block');
@@ -485,57 +522,108 @@ function refreshBMI() {
 
 function refreshHealth() {
     if (window.coverage) window.coverage.logFunction('refreshHealth', 'health.js');
-    // Load body fat with before/after comparison
-    $.post('router.php?controller=profile', { action: 'get_health_stats' }, function(resp) {
-        const data = parseJson(resp);
+
+    // Check if we have global data first
+    console.log('🔍 refreshHealth - checking global data:', window.globalDashboardData);
+    console.log('🔍 health_stats in global data:', window.globalDashboardData?.health_stats);
+
+    // Handle body fat data
+    if (window.globalDashboardData && window.globalDashboardData.health_stats) {
+        console.log('📊 Using global data for health stats (body fat)');
+        const data = window.globalDashboardData.health_stats;
 
         // Body Fat Block with before/after
         const bodyFatEl = $('#body-fat-block');
-        if (!data.success) {
-            bodyFatEl.text(data.message || 'Body fat estimation not available').addClass('text-muted');
-        } else if (Array.isArray(data.estimated_body_fat_range)) {
+        if (Array.isArray(data.estimated_body_fat_range)) {
             const bodyFatLines = [];
             const currentMin = data.estimated_body_fat_range[0];
             const currentMax = data.estimated_body_fat_range[1];
             bodyFatLines.push(`Current: <strong>${currentMin}–${currentMax}%</strong>`);
 
-            // Always show research notes
-            bodyFatLines.push(`<small class="text-muted">Body fat estimated via Deurenberg formula (BMI + age). Each 1% body fat reduction can improve metabolic health (Jackson et al., 2002)</small>`);
+            // Check for weight progress data to calculate historical body fat
+            const progressData = window.globalDashboardData.weight_progress;
+            if (progressData && progressData.start_weight_kg && progressData.current_weight_kg !== progressData.start_weight_kg) {
+                const heightCm = data.height_cm;
+                const age = data.age;
+                if (heightCm && age && heightCm > 0 && age > 0) {
+                    const h = heightCm / 100.0;
+                    const startingBmi = progressData.start_weight_kg / (h * h);
+                    const startingBfpMale = 1.2 * startingBmi + 0.23 * age - 16.2;
+                    const startingBfpFemale = 1.2 * startingBmi + 0.23 * age - 5.4;
+                    const startingMin = Math.min(startingBfpMale, startingBfpFemale);
+                    const startingMax = Math.max(startingBfpMale, startingBfpFemale);
 
-            // Get before/after body fat comparison
-            $.post('router.php?controller=profile', { action: 'get_weight_progress' }, function(progressResp) {
-                const progressData = parseJson(progressResp);
-                if (progressData.success && progressData.start_weight_kg && progressData.current_weight_kg !== progressData.start_weight_kg) {
-                    // Calculate starting body fat estimate
-                    const heightCm = data.height_cm;
-                    const age = data.age;
-                    if (heightCm && age && heightCm > 0 && age > 0) {
-                        const h = heightCm / 100.0;
-                        const startingBmi = progressData.start_weight_kg / (h * h);
-                        const startingBfpMale = 1.2 * startingBmi + 0.23 * age - 16.2;
-                        const startingBfpFemale = 1.2 * startingBmi + 0.23 * age - 5.4;
-                        const startingMin = Math.min(startingBfpMale, startingBfpFemale);
-                        const startingMax = Math.max(startingBfpMale, startingBfpFemale);
+                    const avgImprovement = ((startingMin + startingMax) / 2) - ((currentMin + currentMax) / 2);
 
-                        const avgImprovement = ((startingMin + startingMax) / 2) - ((currentMin + currentMax) / 2);
-
-                        if (avgImprovement > 0.1) {
-                            bodyFatLines.splice(1, 0, `Change: <strong class="text-success">-${avgImprovement.toFixed(1)}%</strong>`);
-                            bodyFatLines.splice(2, 0, `Started: <strong>${startingMin.toFixed(1)}–${startingMax.toFixed(1)}%</strong>`);
-                        }
+                    if (avgImprovement > 0.1) {
+                        bodyFatLines.splice(1, 0, `Change: <strong class="text-success">-${avgImprovement.toFixed(1)}%</strong>`);
+                        bodyFatLines.splice(2, 0, `Started: <strong>${startingMin.toFixed(1)}–${startingMax.toFixed(1)}%</strong>`);
                     }
                 }
-                bodyFatEl.html(bodyFatLines.join('<br>')).removeClass('text-muted');
-            }).fail(function() {
-                // If progress fails, still show the current data
-                bodyFatEl.html(bodyFatLines.join('<br>')).removeClass('text-muted');
-            });
-        } else {
-            bodyFatEl.text('Add your age to estimate body fat percentage').addClass('text-muted');
-        }
-    });
+            }
 
-    // Load enhanced cardiovascular risk
+            // Show research notes
+            bodyFatLines.push(`<small class="text-muted">Body fat estimated via Deurenberg formula (BMI + age). Each 1% body fat reduction can improve metabolic health (Jackson et al., 2002)</small>`);
+
+            bodyFatEl.html(bodyFatLines.join('<br>')).removeClass('text-muted');
+        } else {
+            bodyFatEl.text('Body fat estimation not available').addClass('text-muted');
+        }
+    } else {
+        // Fallback to API call for body fat data
+        console.log('🌐 Making API call for health stats (global data not available)');
+        $.post('router.php?controller=profile', { action: 'get_health_stats' }, function(resp) {
+            const data = parseJson(resp);
+
+            // Body Fat Block with before/after
+            const bodyFatEl = $('#body-fat-block');
+            if (!data.success) {
+                bodyFatEl.text(data.message || 'Body fat estimation not available').addClass('text-muted');
+            } else if (Array.isArray(data.estimated_body_fat_range)) {
+                const bodyFatLines = [];
+                const currentMin = data.estimated_body_fat_range[0];
+                const currentMax = data.estimated_body_fat_range[1];
+                bodyFatLines.push(`Current: <strong>${currentMin}–${currentMax}%</strong>`);
+
+                // Always show research notes
+                bodyFatLines.push(`<small class="text-muted">Body fat estimated via Deurenberg formula (BMI + age). Each 1% body fat reduction can improve metabolic health (Jackson et al., 2002)</small>`);
+
+                // Get before/after body fat comparison
+                $.post('router.php?controller=profile', { action: 'get_weight_progress' }, function(progressResp) {
+                    const progressData = parseJson(progressResp);
+                    if (progressData.success && progressData.start_weight_kg && progressData.current_weight_kg !== progressData.start_weight_kg) {
+                        // Calculate starting body fat estimate
+                        const heightCm = data.height_cm;
+                        const age = data.age;
+                        if (heightCm && age && heightCm > 0 && age > 0) {
+                            const h = heightCm / 100.0;
+                            const startingBmi = progressData.start_weight_kg / (h * h);
+                            const startingBfpMale = 1.2 * startingBmi + 0.23 * age - 16.2;
+                            const startingBfpFemale = 1.2 * startingBmi + 0.23 * age - 5.4;
+                            const startingMin = Math.min(startingBfpMale, startingBfpFemale);
+                            const startingMax = Math.max(startingBfpMale, startingBfpFemale);
+
+                            const avgImprovement = ((startingMin + startingMax) / 2) - ((currentMin + currentMax) / 2);
+
+                            if (avgImprovement > 0.1) {
+                                bodyFatLines.splice(1, 0, `Change: <strong class="text-success">-${avgImprovement.toFixed(1)}%</strong>`);
+                                bodyFatLines.splice(2, 0, `Started: <strong>${startingMin.toFixed(1)}–${startingMax.toFixed(1)}%</strong>`);
+                            }
+                        }
+                    }
+                    bodyFatEl.html(bodyFatLines.join('<br>')).removeClass('text-muted');
+                }).fail(function() {
+                    // If progress fails, still show the current data
+                    bodyFatEl.html(bodyFatLines.join('<br>')).removeClass('text-muted');
+                });
+            } else {
+                bodyFatEl.text('Add your age to estimate body fat percentage').addClass('text-muted');
+            }
+        });
+    }
+
+    // Load enhanced cardiovascular risk (always use API call)
+    console.log('🌐 Making API call for cardiovascular risk');
     $.post('router.php?controller=profile', { action: 'get_cardiovascular_risk' }, function(resp) {
         const data = parseJson(resp);
         const cardioEl = $('#cardio-risk-block');
@@ -561,6 +649,9 @@ function refreshHealth() {
 
 function refreshIdealWeight() {
     if (window.coverage) window.coverage.logFunction('refreshIdealWeight', 'health.js');
+
+    // Always use API call for ideal weight
+    console.log('🌐 Making API call for ideal weight');
     $.post('router.php?controller=profile', { action: 'get_ideal_weight' }, function(resp) {
         const data = parseJson(resp);
         const el = $('#ideal-weight-block');
@@ -599,6 +690,44 @@ window.healthRefreshGallbladderHealth = refreshGallbladderHealth;
 
 function refreshGallbladderHealth() {
     if (window.coverage) window.coverage.logFunction('refreshGallbladderHealth', 'health.js');
+
+    // Check if we have global data first
+    console.log('🔍 refreshGallbladderHealth - checking global data:', window.globalDashboardData);
+    console.log('🔍 gallbladder_health in global data:', window.globalDashboardData?.gallbladder_health);
+
+    if (window.globalDashboardData && window.globalDashboardData.gallbladder_health) {
+        console.log('📊 Using global data for gallbladder health');
+        const data = window.globalDashboardData.gallbladder_health;
+        const el = $('#gallbladder-block');
+
+        if (!data.success) {
+            el.text('Complete profile to assess gallbladder health benefits').addClass('text-muted');
+            return;
+        }
+
+        const lines = [];
+
+        if (data.risk_reduction_percentage > 0) {
+            lines.push(`Risk Reduction: <strong class="text-success">${data.risk_reduction_percentage}%</strong>`);
+            lines.push(`<small class="text-muted">Based on ${data.weight_lost_kg}kg lost, BMI ${data.current_bmi}</small>`);
+        } else {
+            lines.push(`<small class="text-muted">Continue weight loss for gallbladder benefits</small>`);
+        }
+
+        if (data.benefits && data.benefits.length > 0) {
+            lines.push(`<small class="text-success">${data.benefits[0]}</small>`);
+        }
+
+        if (data.research_notes && data.research_notes.length > 0) {
+            lines.push(`<small class="text-muted">${data.research_notes[0]}</small>`);
+        }
+
+        el.html(lines.join('<br>')).removeClass('text-muted');
+        return;
+    }
+
+    // Fallback to API call if global data not available
+    console.log('🌐 Making API call for gallbladder health (global data not available)');
     $.post('router.php?controller=profile', { action: 'get_gallbladder_health' }, function(resp) {
         const data = parseJson(resp);
         const el = $('#gallbladder-block');
