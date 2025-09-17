@@ -138,7 +138,7 @@ class OAuthManager {
         if ($provider === 'google') {
             return ['openid', 'email', 'profile'];
         } elseif ($provider === 'microsoft') {
-            return ['openid', 'email', 'profile'];
+            return ['openid', 'profile', 'User.Read'];
         }
         return [];
     }
