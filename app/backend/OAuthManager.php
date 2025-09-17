@@ -81,9 +81,18 @@ class OAuthManager {
                 'code' => $code
             ]);
 
+            error_log("Access token obtained successfully");
+            error_log("Token: " . substr($accessToken->getToken(), 0, 20) . "...");
+
             // Get user details
-            $resourceOwner = $providerInstance->getResourceOwner($accessToken);
-            $userDetails = $resourceOwner->toArray();
+            try {
+                $resourceOwner = $providerInstance->getResourceOwner($accessToken);
+                $userDetails = $resourceOwner->toArray();
+                error_log("User details retrieved successfully");
+            } catch (Exception $e) {
+                error_log("Failed to get user details: " . $e->getMessage());
+                throw $e;
+            }
 
             // Extract email from user details
             $email = self::extractEmail($provider, $userDetails);
