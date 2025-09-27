@@ -22,7 +22,11 @@ function loadSettings() {
         $('#shareData').prop('checked', s.share_data === true);
         $('#emailNotifications').prop('checked', s.email_notifications === true);
         $('#weeklyReports').prop('checked', s.weekly_reports === true);
+        $('#emailDay').val(s.email_day || 'monday');
+        $('#emailTime').val(s.email_time || '09:00');
         updateDateExample();
+        updateThemeOptions(s.theme || 'glassmorphism');
+        toggleEmailSchedule();
         return;
     }
 
@@ -40,7 +44,11 @@ function loadSettings() {
                 $('#shareData').prop('checked', s.share_data === true);
             $('#emailNotifications').prop('checked', s.email_notifications === true);
             $('#weeklyReports').prop('checked', s.weekly_reports === true);
+            $('#emailDay').val(s.email_day || 'monday');
+            $('#emailTime').val(s.email_time || '09:00');
             updateDateExample();
+            updateThemeOptions(s.theme || 'glassmorphism');
+            toggleEmailSchedule();
         }
     });
 }
@@ -56,7 +64,9 @@ function saveSettings() {
         language: $('#language').val(),
         share_data: $('#shareData').is(':checked'),
         email_notifications: $('#emailNotifications').is(':checked'),
-        weekly_reports: $('#weeklyReports').is(':checked')
+        weekly_reports: $('#weeklyReports').is(':checked'),
+        email_day: $('#emailDay').val(),
+        email_time: $('#emailTime').val()
     };
 
     $.post('router.php?controller=profile', settings, function(resp) {
@@ -83,6 +93,9 @@ function saveSettings() {
                 console.log('Calling updateHeightUnitDisplay');
                 window.updateHeightUnitDisplay();
             }
+
+            // Update theme display to show new current theme
+            updateThemeOptions(settings.theme);
 
             $('#settings-status').text('Settings saved successfully').removeClass('text-danger').addClass('text-success');
             setTimeout(() => $('#settings-status').text(''), 3000);
@@ -134,8 +147,58 @@ function updateDateExample() {
     $('#dateExample').text(example);
 }
 
+function toggleEmailSchedule() {
+    if (window.coverage) window.coverage.logFunction('toggleEmailSchedule', 'settings.js');
+    const emailNotificationsChecked = $('#emailNotifications').is(':checked');
+    if (emailNotificationsChecked) {
+        $('#emailSchedule').show();
+    } else {
+        $('#emailSchedule').hide();
+    }
+}
+
+function updateThemeOptions(currentTheme) {
+    if (window.coverage) window.coverage.logFunction('updateThemeOptions', 'settings.js');
+
+    // Remove (Current) from all options first
+    $('#theme option').each(function() {
+        const text = $(this).text().replace(' (Current)', '');
+        $(this).text(text);
+    });
+
+    // Add (Current) to the current theme
+    const currentOption = $('#theme option[value="' + currentTheme + '"]');
+    if (currentOption.length) {
+        const currentText = currentOption.text();
+        currentOption.text(currentText + ' (Current)');
+    }
+
+    // Load the theme CSS
+    loadThemeCSS(currentTheme);
+}
+
+function loadThemeCSS(themeName) {
+    if (window.coverage) window.coverage.logFunction('loadThemeCSS', 'settings.js');
+
+    const themeLink = document.getElementById('theme-css');
+    if (themeLink) {
+        const timestamp = new Date().getTime();
+        themeLink.href = `css/themes/${themeName}.css?v=${timestamp}`;
+
+        // Update chart colors when theme changes
+        setTimeout(() => {
+            if (typeof window.updateChartThemeColors === 'function') {
+                window.updateChartThemeColors();
+            }
+        }, 100); // Small delay to ensure CSS is loaded
+    }
+}
+
 // Make functions globally available
 window.settingsLoadSettings = loadSettings;
 window.settingsSaveSettings = saveSettings;
 window.settingsResetSettings = resetSettings;
 window.settingsUpdateDateExample = updateDateExample;
+window.settingsToggleEmailSchedule = toggleEmailSchedule;
+window.settingsUpdateThemeOptions = updateThemeOptions;
+window.settingsLoadThemeCSS = loadThemeCSS;

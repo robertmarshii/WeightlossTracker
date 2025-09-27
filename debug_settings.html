@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Settings Debug</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+    <h1>Settings Debug Test</h1>
+
+    <div>
+        <input type="checkbox" id="shareData"> Share Data
+        <br><br>
+        <button onclick="saveTest()">Save Settings</button>
+        <button onclick="loadTest()">Load Settings</button>
+        <button onclick="clearLogs()">Clear Logs</button>
+    </div>
+
+    <div id="logs" style="margin-top: 20px; padding: 10px; background: #f0f0f0; white-space: pre-wrap; font-family: monospace;"></div>
+
+    <script>
+        function log(message) {
+            const logs = document.getElementById('logs');
+            logs.textContent += new Date().toLocaleTimeString() + ': ' + message + '\n';
+        }
+
+        function clearLogs() {
+            document.getElementById('logs').textContent = '';
+        }
+
+        function saveTest() {
+            const isChecked = $('#shareData').is(':checked');
+            log('Saving settings - shareData checkbox is: ' + isChecked);
+
+            const settings = {
+                action: 'save_settings',
+                weight_unit: 'kg',
+                height_unit: 'cm',
+                date_format: 'uk',
+                theme: 'glassmorphism',
+                language: 'en',
+                share_data: isChecked,
+                email_notifications: false,
+                weekly_reports: false
+            };
+
+            log('Sending data: ' + JSON.stringify(settings));
+
+            $.post('http://127.0.0.1:8111/router.php?controller=profile', settings)
+                .done(function(resp) {
+                    log('Response: ' + resp);
+                    try {
+                        const data = JSON.parse(resp);
+                        log('Parsed response: ' + JSON.stringify(data));
+                    } catch(e) {
+                        log('Failed to parse response as JSON: ' + e.message);
+                    }
+                })
+                .fail(function(xhr, status, error) {
+                    log('Save failed: ' + status + ' - ' + error);
+                });
+        }
+
+        function loadTest() {
+            log('Loading settings...');
+
+            $.post('http://127.0.0.1:8111/router.php?controller=profile', { action: 'get_settings' })
+                .done(function(resp) {
+                    log('Load response: ' + resp);
+                    try {
+                        const data = JSON.parse(resp);
+                        log('Parsed load response: ' + JSON.stringify(data));
+
+                        if (data.success && data.settings) {
+                            const shareData = data.settings.share_data;
+                            log('share_data value: ' + shareData + ' (type: ' + typeof shareData + ')');
+                            log('Setting checkbox to: ' + (shareData === true));
+                            $('#shareData').prop('checked', shareData === true);
+                        }
+                    } catch(e) {
+                        log('Failed to parse load response as JSON: ' + e.message);
+                    }
+                })
+                .fail(function(xhr, status, error) {
+                    log('Load failed: ' + status + ' - ' + error);
+                });
+        }
+    </script>
+</body>
+</html>

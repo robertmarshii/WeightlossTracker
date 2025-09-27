@@ -77,6 +77,8 @@ CREATE TABLE wt_dev.user_settings (
     start_of_week VARCHAR(10) DEFAULT 'monday', -- monday, sunday
     share_data BOOLEAN DEFAULT false,
     email_notifications BOOLEAN DEFAULT false,
+    email_day VARCHAR(10) DEFAULT 'monday', -- monday, tuesday, etc.
+    email_time VARCHAR(5) DEFAULT '09:00', -- HH:MM format
     weekly_reports BOOLEAN DEFAULT false,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -112,6 +114,8 @@ INSERT INTO wt_dev.weight_entries (user_id, weight_kg, entry_date, notes) VALUES
     (1, 119.4, '2025-08-22', 'Weight entry'),
     (1, 119.2, '2025-08-29', 'Weight entry'),
     (1, 119.0, '2025-09-05', 'Weight entry'),
+    (1, 118.7, '2025-09-12', 'Weight entry'),
+    (1, 117.9, '2025-09-19', 'Weight entry'),
     -- Other users
     (2, 80.0, '2024-01-01', 'Test user baseline'),
     (2, 79.5, '2024-01-08', 'Test progress');

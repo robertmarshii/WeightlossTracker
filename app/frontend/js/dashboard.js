@@ -235,7 +235,11 @@ $(function() {
     $('#dateFormat').on('change', function() {
         updateDateExample();
     });
-    
+
+    $('#emailNotifications').on('change', function() {
+        toggleEmailSchedule();
+    });
+
     $('#btn-save-settings').on('click', function() {
         saveSettings();
     });
@@ -400,6 +404,10 @@ function refreshHistoricalWeights() {
     }
 
     // Fallback to API call if global data not available
+    if (typeof $ === 'undefined' || typeof $.post !== 'function') {
+        console.log('⚠️ jQuery not available for refreshHistoricalWeights, skipping API call');
+        return;
+    }
     $.post('router.php?controller=profile', { action: 'get_weight_history' }, function(resp) {
         const data = parseJson(resp);
         if (data.success && data.history) {
@@ -491,6 +499,10 @@ function refreshGoal() {
 
     // Fallback to API call if global data not available
     console.log('🌐 Making API call for goal (global data not available)');
+    if (typeof $ === 'undefined' || typeof $.post !== 'function') {
+        console.log('⚠️ jQuery not available for refreshGoal, skipping API call');
+        return;
+    }
     $.post('router.php?controller=profile', { action: 'get_goal' }, function(resp) {
         const data = parseJson(resp);
         if (data.goal) {
@@ -521,6 +533,10 @@ function loadProfile() {
 
     // Fallback to API call if global data not available
     console.log('🌐 Making API call for profile (global data not available)');
+    if (typeof $ === 'undefined' || typeof $.post !== 'function') {
+        console.log('⚠️ jQuery not available for loadProfile, skipping API call');
+        return;
+    }
     $.post('router.php?controller=profile', { action: 'get_profile' }, function(resp) {
         const data = parseJson(resp);
         if (data.profile) {
@@ -586,6 +602,10 @@ function refreshWeightProgress() {
 
     // Fallback to API call if global data not available
     console.log('🌐 Making API call for weight progress (global data not available)');
+    if (typeof $ === 'undefined' || typeof $.post !== 'function') {
+        console.log('⚠️ jQuery not available for refreshWeightProgress, skipping API call');
+        return;
+    }
     $.post('router.php?controller=profile', { action: 'get_weight_progress' }, function(resp) {
         const data = parseJson(resp);
         const el = $('#progress-block');
@@ -722,6 +742,125 @@ let weightChart = null;
 let chartData = [];
 let currentPeriodOffset = 0; // 0 = current period, 1 = previous period, etc.
 
+// Function to get theme-appropriate chart colors
+function getChartTextColor() {
+    // Check current theme by looking at the theme CSS link
+    const themeLink = document.getElementById('theme-css');
+    if (themeLink && themeLink.href) {
+        if (themeLink.href.includes('minimalism') || themeLink.href.includes('material')) {
+            return '#212529'; // Dark text for light themes
+        }
+        if (themeLink.href.includes('skeuomorphism')) {
+            return '#8b4513'; // Brown text for skeuomorphism theme
+        }
+    }
+    return '#ffffff'; // White text for dark themes
+}
+
+// Function to update chart colors when theme changes
+function updateChartThemeColors() {
+    if (typeof weightChart !== 'undefined' && weightChart) {
+        // Update axis colors
+        if (weightChart.options.scales) {
+            if (weightChart.options.scales.x && weightChart.options.scales.x.ticks) {
+                weightChart.options.scales.x.ticks.color = getChartTextColor();
+            }
+            if (weightChart.options.scales.y && weightChart.options.scales.y.ticks) {
+                weightChart.options.scales.y.ticks.color = getChartTextColor();
+            }
+            if (weightChart.options.scales.x && weightChart.options.scales.x.grid) {
+                weightChart.options.scales.x.grid.color = getChartGridColor();
+            }
+            if (weightChart.options.scales.y && weightChart.options.scales.y.grid) {
+                weightChart.options.scales.y.grid.color = getChartGridColor();
+            }
+        }
+
+        // Update axis title colors
+        if (weightChart.options.scales && weightChart.options.scales.y && weightChart.options.scales.y.title) {
+            weightChart.options.scales.y.title.color = getChartTextColor();
+        }
+
+        // Update dataset colors
+        if (weightChart.data && weightChart.data.datasets) {
+            weightChart.data.datasets.forEach(dataset => {
+                if (dataset.borderColor) dataset.borderColor = getChartLineColor();
+                if (dataset.pointBackgroundColor) dataset.pointBackgroundColor = getChartLineColor();
+                if (dataset.pointBorderColor) dataset.pointBorderColor = getChartTextColor();
+            });
+        }
+
+        // Update the chart
+        weightChart.update();
+    }
+}
+
+// Make function globally available
+window.updateChartThemeColors = updateChartThemeColors;
+
+function getChartGridColor() {
+    // Check current theme by looking at the theme CSS link
+    const themeLink = document.getElementById('theme-css');
+    if (themeLink && themeLink.href) {
+        if (themeLink.href.includes('minimalism') || themeLink.href.includes('material')) {
+            return 'rgba(33, 37, 41, 0.1)'; // Dark grid for light themes
+        }
+        if (themeLink.href.includes('skeuomorphism')) {
+            return 'rgba(139, 69, 19, 0.1)'; // Brown grid for skeuomorphism theme
+        }
+    }
+    return 'rgba(255, 255, 255, 0.1)'; // White grid for dark themes
+}
+
+function getChartLineColor() {
+    // Check current theme by looking at the theme CSS link
+    const themeLink = document.getElementById('theme-css');
+    if (themeLink && themeLink.href) {
+        if (themeLink.href.includes('skeuomorphism')) {
+            return '#8b4513'; // Brown lines for skeuomorphism theme
+        }
+        if (themeLink.href.includes('neumorphism')) {
+            return '#bb86fc'; // Purple lines for neumorphism theme
+        }
+        if (themeLink.href.includes('material')) {
+            return '#4caf50'; // Green lines for material design theme
+        }
+        if (themeLink.href.includes('minimalism')) {
+            return '#495057'; // Dark gray lines for minimalism theme
+        }
+        if (themeLink.href.includes('retro')) {
+            return '#33bb55'; // Muted green lines for retro theme
+        }
+    }
+    return '#64a6d8'; // Default blue for other themes
+}
+
+function getChartStyling() {
+    // Check current theme by looking at the theme CSS link
+    const themeLink = document.getElementById('theme-css');
+    if (themeLink && themeLink.href) {
+        if (themeLink.href.includes('minimalism')) {
+            return {
+                borderWidth: 1,
+                pointRadius: 2,
+                pointHoverRadius: 4,
+                tension: 0,
+                fill: false,
+                pointBorderWidth: 1
+            };
+        }
+    }
+    // Default styling for other themes
+    return {
+        borderWidth: 3,
+        pointRadius: 5,
+        pointHoverRadius: 8,
+        tension: 0.4,
+        fill: true,
+        pointBorderWidth: 2
+    };
+}
+
 function resetToLineChart() {
     if (window.coverage) window.coverage.logFunction('resetToLineChart', 'dashboard.js');
     // Reset chart type and configuration for line charts
@@ -740,27 +879,28 @@ function resetToLineChart() {
     
     // Ensure single dataset structure for simple line charts
     if (!weightChart.data.datasets[0] || weightChart.data.datasets.length > 1) {
+        const styling = getChartStyling();
         weightChart.data.datasets = [{
             label: 'Weight (kg)',
             data: [],
-            borderColor: '#64a6d8',
-            backgroundColor: 'rgba(100, 166, 216, 0.1)',
-            borderWidth: 3,
-            fill: true,
-            tension: 0.4,
-            pointBackgroundColor: '#64a6d8',
-            pointBorderColor: '#ffffff',
-            pointBorderWidth: 2,
-            pointRadius: 5,
-            pointHoverRadius: 8
+            borderColor: getChartLineColor(),
+            backgroundColor: styling.fill ? 'rgba(100, 166, 216, 0.1)' : 'transparent',
+            borderWidth: styling.borderWidth,
+            fill: styling.fill,
+            tension: styling.tension,
+            pointBackgroundColor: getChartLineColor(),
+            pointBorderColor: getChartTextColor(),
+            pointBorderWidth: styling.pointBorderWidth,
+            pointRadius: styling.pointRadius,
+            pointHoverRadius: styling.pointHoverRadius
         }];
     } else {
         // Ensure existing dataset has consistent colors
         const dataset = weightChart.data.datasets[0];
-        dataset.borderColor = '#64a6d8';
+        dataset.borderColor = getChartLineColor();
         dataset.backgroundColor = 'rgba(100, 166, 216, 0.1)';
-        dataset.pointBackgroundColor = '#64a6d8';
-        dataset.pointBorderColor = '#ffffff';
+        dataset.pointBackgroundColor = getChartLineColor();
+        dataset.pointBorderColor = getChartTextColor();
         dataset.pointBorderWidth = 2;
         dataset.pointRadius = 5;
         dataset.pointHoverRadius = 8;
@@ -820,13 +960,13 @@ function initWeightChart() {
             datasets: [{
                 label: 'Weight (kg)',
                 data: [],
-                borderColor: '#64a6d8',
+                borderColor: getChartLineColor(),
                 backgroundColor: 'rgba(100, 166, 216, 0.1)',
                 borderWidth: 3,
                 fill: true,
                 tension: 0.4,
-                pointBackgroundColor: '#64a6d8',
-                pointBorderColor: '#ffffff',
+                pointBackgroundColor: getChartLineColor(),
+                pointBorderColor: getChartTextColor(),
                 pointBorderWidth: 2,
                 pointRadius: 5,
                 pointHoverRadius: 8
@@ -838,7 +978,7 @@ function initWeightChart() {
             plugins: {
                 legend: {
                     labels: {
-                        color: '#ffffff',
+                        color: getChartTextColor(),
                         font: {
                             family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
                         }
@@ -848,24 +988,24 @@ function initWeightChart() {
             scales: {
                 x: {
                     ticks: {
-                        color: '#ffffff',
+                        color: getChartTextColor(),
                         font: {
                             family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
                         }
                     },
                     grid: {
-                        color: 'rgba(255, 255, 255, 0.1)'
+                        color: getChartGridColor()
                     }
                 },
                 y: {
                     ticks: {
-                        color: '#ffffff',
+                        color: getChartTextColor(),
                         font: {
                             family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
                         }
                     },
                     grid: {
-                        color: 'rgba(255, 255, 255, 0.1)'
+                        color: getChartGridColor()
                     }
                 }
             },
@@ -1002,7 +1142,7 @@ function updateWeightChart(period) {
             weightChart.options.scales.y.title = {
                 display: true,
                 text: `Weight (${unit})`,
-                color: '#ffffff',
+                color: getChartTextColor(),
                 font: {
                     family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
                 }
@@ -1027,7 +1167,7 @@ function updateMonthlyChart(sortedData) {
     
     // Define colors for each month (6 distinct colors)
     const monthColors = [
-        '#64a6d8', // Blue (current theme color)
+        getChartLineColor(), // Primary theme color
         '#7bc96f', // Green  
         '#f39c12', // Orange
         '#e74c3c', // Red
@@ -1102,7 +1242,7 @@ function updateMonthlyChart(sortedData) {
         fill: false,
         tension: 0.4,
         pointBackgroundColor: month.color,
-        pointBorderColor: '#ffffff',
+        pointBorderColor: getChartTextColor(),
         pointBorderWidth: 2,
         pointRadius: 4,
         pointHoverRadius: 7,
@@ -1127,7 +1267,7 @@ function updateMonthlyChart(sortedData) {
         weightChart.options.scales.y.title = {
             display: true,
             text: `Weight (${unit})`,
-            color: '#ffffff',
+            color: getChartTextColor(),
             font: {
                 family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
             }
@@ -1310,11 +1450,11 @@ function updateWeeklyChart(sortedData) {
         const loss = weeklyLosses[index];
         
         // Gray for weeks with no data
-        if (!week.hasData) return 'rgba(255, 255, 255, 0.1)';
+        if (!week.hasData) return getChartGridColor();
         
         // Color coding for weeks with data
         if (loss > 1) return '#7bc96f'; // Green for excellent loss (>1kg/week)
-        else if (loss > 0.5) return '#64a6d8'; // Blue for good loss (0.5-1kg)
+        else if (loss > 0.5) return getChartLineColor(); // Primary theme color for good loss (0.5-1kg)
         else if (loss > 0) return '#1abc9c'; // Teal for moderate loss (0-0.5kg)
         else if (loss > -0.5) return '#f39c12'; // Orange for small gain
         else return '#e74c3c'; // Red for significant gain
@@ -1469,7 +1609,7 @@ function updateYearlyChart(sortedData) {
     // Create bar chart showing weight loss per month
     const barColors = monthlyLosses.map(loss => {
         if (loss > 2) return '#7bc96f'; // Green for good loss (>2kg)
-        else if (loss > 0) return '#64a6d8'; // Blue for moderate loss
+        else if (loss > 0) return getChartLineColor(); // Primary theme color for moderate loss
         else if (loss < -1) return '#e74c3c'; // Red for significant gain
         else return '#f39c12'; // Orange for minimal change
     });

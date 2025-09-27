@@ -1,0 +1,524 @@
+/* Skeuomorphism Theme - Warm autumn colors with realistic textures and depth */
+
+/* Base Layout */
+body {
+    background:
+        radial-gradient(circle at 20% 80%, #d2691e 0%, #cd853f 50%),
+        linear-gradient(135deg, #8b4513 0%, #a0522d 25%, #cd853f 75%, #daa520 100%);
+    min-height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Skeuomorphic Components */
+.glass-card {
+    background: linear-gradient(145deg, #faf0e6 0%, #f5deb3 100%);
+    border-radius: 12px;
+    border: 1px solid #daa520;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.8),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1),
+        0 4px 8px rgba(0, 0, 0, 0.3),
+        0 1px 2px rgba(0, 0, 0, 0.2);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    color: #8b4513;
+    position: relative;
+    overflow: hidden;
+}
+
+.glass-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+}
+
+.glass-input {
+    background: linear-gradient(180deg, #fff8dc 0%, #f5deb3 100%);
+    border: 1px solid #cd853f;
+    border-radius: 6px;
+    color: #8b4513;
+    padding: 12px 16px;
+    font-size: 0.9rem;
+    box-shadow:
+        inset 0 1px 2px rgba(0, 0, 0, 0.1),
+        0 1px 0 rgba(255, 255, 255, 0.8);
+    transition: all 0.2s ease;
+}
+
+.glass-input::placeholder {
+    color: rgba(139, 69, 19, 0.6);
+}
+
+.glass-input:focus {
+    background: linear-gradient(180deg, #fffaf0 0%, #fff8dc 100%);
+    border-color: #ff8c00;
+    box-shadow:
+        inset 0 1px 2px rgba(0, 0, 0, 0.1),
+        0 0 0 2px rgba(255, 140, 0, 0.3),
+        0 1px 0 rgba(255, 255, 255, 0.8);
+    outline: none;
+    color: #8b4513;
+}
+
+/* Logo Components */
+.logo-icon {
+    background: linear-gradient(145deg, #ff8c00 0%, #d2691e 100%);
+    border: 1px solid #8b4513;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.2),
+        0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.logo-icon svg {
+    width: 28px;
+    height: 28px;
+}
+
+.logo-text {
+    color: #cd853f;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 0;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+/* Button Styles */
+.primary-btn {
+    background: linear-gradient(145deg, #ff8c00 0%, #d2691e 100%);
+    border: 1px solid #8b4513;
+    border-radius: 8px;
+    color: white;
+    font-weight: 600;
+    padding: 12px;
+    transition: all 0.2s ease;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.2),
+        0 2px 4px rgba(0, 0, 0, 0.3),
+        0 1px 1px rgba(0, 0, 0, 0.2);
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.3);
+}
+
+.primary-btn:hover:not(:disabled) {
+    background: linear-gradient(145deg, #5ba0f2 0%, #ff8c00 100%);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.4),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1),
+        0 1px 2px rgba(0, 0, 0, 0.3);
+    transform: translateY(-1px);
+    color: white;
+}
+
+.primary-btn:active {
+    box-shadow:
+        inset 0 1px 2px rgba(0, 0, 0, 0.3),
+        0 1px 0 rgba(255, 255, 255, 0.8);
+    transform: translateY(0);
+}
+
+.primary-btn:disabled {
+    background: linear-gradient(145deg, #ccc 0%, #bbb 100%);
+    color: #888;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* Navigation Tabs */
+.nav-tabs {
+    border: none;
+    justify-content: center;
+    margin-bottom: 2rem;
+    background: linear-gradient(145deg, #f5deb3 0%, #daa520 100%);
+    border-radius: 8px;
+    padding: 4px;
+    box-shadow:
+        inset 0 1px 2px rgba(0, 0, 0, 0.1),
+        0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.nav-tabs .nav-link {
+    background: none;
+    border: none;
+    color: #8b4513;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    margin: 0 2px;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.nav-tabs .nav-link.active {
+    background: linear-gradient(145deg, #fffaf0 0%, #faf0e6 100%);
+    color: #ff8c00;
+    box-shadow:
+        inset 0 1px 2px rgba(0, 0, 0, 0.1),
+        0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.nav-tabs .nav-link:hover {
+    border: none;
+    color: #ff8c00;
+    background: linear-gradient(145deg, #fff8dc 0%, #f5deb3 100%);
+}
+
+/* Form Elements */
+.form-check-label {
+    color: #8b4513;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.form-check-label a {
+    color: #ff8c00;
+}
+
+/* Alert System */
+#alert-container .alert {
+    margin-bottom: 0;
+    background: linear-gradient(145deg, #fffaf0 0%, #faf0e6 100%) !important;
+    border: 1px solid #daa520;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.8),
+        0 2px 4px rgba(0, 0, 0, 0.2);
+    color: #8b4513 !important;
+    border-radius: 8px;
+}
+
+#alert-container .alert-success {
+    background: linear-gradient(145deg, #f0e68c 0%, #daa520 100%) !important;
+    border-color: #daa520;
+    color: #8b4513 !important;
+}
+
+#alert-container .alert-danger {
+    background: linear-gradient(145deg, #ffefd5 0%, #ffb347 100%) !important;
+    border-color: #ff8c00;
+    color: #d2691e !important;
+}
+
+#alert-container .alert-info {
+    background: linear-gradient(145deg, #fff8dc 0%, #daa520 100%) !important;
+    border-color: #daa520;
+    color: #8b4513 !important;
+}
+
+/* Text Colors */
+.text-muted {
+    color: #cd853f !important;
+}
+
+/* Link Colors */
+.btn-link {
+    color: #ff8c00;
+}
+
+.btn-link:hover {
+    color: #d2691e;
+}
+
+.text-info {
+    color: #ff8c00 !important;
+}
+
+.text-success {
+    color: #8b4513 !important;
+}
+
+.text-danger {
+    color: #d2691e !important;
+}
+
+/* Glass Card Small */
+.glass-card-small {
+    background: linear-gradient(145deg, #faf0e6 0%, #f5deb3 100%);
+    border-radius: 12px;
+    border: 1px solid #daa520;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.8),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1),
+        0 4px 8px rgba(0, 0, 0, 0.3),
+        0 1px 2px rgba(0, 0, 0, 0.2);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: #8b4513;
+    min-height: 220px;
+    position: relative;
+    overflow: hidden;
+}
+
+.glass-card-small::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+}
+
+/* Glass Table */
+.glass-table {
+    background: linear-gradient(145deg, #fffaf0 0%, #faf0e6 100%);
+    border-radius: 8px;
+    border: 1px solid #daa520;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.8),
+        0 2px 4px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+.glass-table thead th {
+    background: linear-gradient(145deg, #daa520 0%, #cd853f 100%);
+    color: white;
+    font-weight: 600;
+    border: none;
+    padding: 1rem;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.3);
+}
+
+.glass-table tbody td {
+    background: linear-gradient(145deg, #fffaf0 0%, #fff8dc 100%);
+    color: #8b4513;
+    border: 1px solid #daa520;
+    padding: 0.75rem 1rem;
+}
+
+.glass-table tbody tr:hover {
+    background: linear-gradient(145deg, #fff8dc 0%, #f5deb3 100%);
+}
+
+/* Secondary Button */
+.secondary-btn {
+    background: linear-gradient(145deg, #f5deb3 0%, #daa520 100%);
+    border: 1px solid #cd853f;
+    border-radius: 8px;
+    color: #8b4513;
+    font-weight: 600;
+    padding: 8px 14px;
+    transition: all 0.2s ease;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1),
+        0 1px 2px rgba(0, 0, 0, 0.2);
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.secondary-btn:hover {
+    background: linear-gradient(145deg, #fff8dc 0%, #f0e68c 100%);
+    color: #8b4513;
+}
+
+.secondary-btn.active {
+    background: linear-gradient(145deg, #ff8c00 0%, #d2691e 100%);
+    color: white;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.3);
+    box-shadow:
+        inset 0 1px 2px rgba(0, 0, 0, 0.3),
+        0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+/* Danger Button */
+.danger-btn {
+    background: linear-gradient(145deg, #ffefd5 0%, #ffb347 100%);
+    border: 1px solid #ff8c00;
+    border-radius: 8px;
+    color: #d2691e;
+    font-weight: 600;
+    padding: 8px 14px;
+    transition: all 0.2s ease;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1),
+        0 1px 2px rgba(0, 0, 0, 0.2);
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.danger-btn:hover {
+    background: linear-gradient(145deg, #ff8c00 0%, #ff6347 100%);
+    color: white;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* Theme-aware strong tags and highlights */
+strong {
+    color: #ff8c00 !important;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.health-message-success {
+    color: #8b4513 !important;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+/* Fix text visibility - override white text */
+.card-title,
+h1, h2, h3, h4, h5, h6 {
+    color: #8b4513 !important;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+/* Form labels */
+.form-label,
+label {
+    color: #cd853f !important;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+/* Small text elements */
+small,
+.small,
+.text-muted {
+    color: #cd853f !important;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+/* Chart and dashboard text */
+.chart-container,
+.chart-container * {
+    color: #8b4513 !important;
+}
+
+/* Table action buttons */
+.table-actions .btn,
+.table-actions .btn-sm {
+    background: linear-gradient(145deg, #daa520 0%, #cd853f 100%) !important;
+    color: white !important;
+    border: 1px solid #8b4513 !important;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.3);
+}
+
+.table-actions .btn:hover,
+.table-actions .btn-sm:hover {
+    background: linear-gradient(145deg, #ff8c00 0%, #daa520 100%) !important;
+    color: white !important;
+}
+
+/* Input placeholders and text */
+.glass-input,
+input[type="time"],
+input[type="date"],
+input[type="email"],
+input[type="number"],
+select,
+.form-control,
+#emailTime,
+#emailDay {
+    color: #8b4513 !important;
+    background: linear-gradient(180deg, #fff8dc 0%, #f5deb3 100%) !important;
+}
+
+/* Time input specific styling */
+input[type="time"]::-webkit-datetime-edit,
+input[type="time"]::-webkit-datetime-edit-text,
+input[type="time"]::-webkit-datetime-edit-hour-field,
+input[type="time"]::-webkit-datetime-edit-minute-field {
+    color: #8b4513 !important;
+}
+
+.glass-input::placeholder,
+input::placeholder {
+    color: rgba(139, 69, 19, 0.6) !important;
+}
+
+/* General text elements */
+.text-white {
+    color: #8b4513 !important;
+}
+
+/* Progress text and numbers */
+.progress-text,
+.health-score,
+.bmi-value,
+.weight-value {
+    color: #8b4513 !important;
+}
+
+/* Skeuomorphism Realistic Checkboxes */
+.form-check-input {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 22px !important;
+    height: 22px !important;
+    background: linear-gradient(145deg, #fff8dc 0%, #f5deb3 100%);
+    border: 1px solid #cd853f !important;
+    border-radius: 4px;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow:
+        inset 0 1px 2px rgba(0, 0, 0, 0.1),
+        0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.form-check-input:checked {
+    background: linear-gradient(145deg, #daa520 0%, #cd853f 100%);
+    border-color: #8b4513 !important;
+    box-shadow:
+        inset 0 1px 2px rgba(0, 0, 0, 0.2),
+        0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.form-check-input:checked::before {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.3);
+}
+
+.form-check-input:not(:checked)::before {
+    content: '';
+}
+
+.form-check-input:hover {
+    background: linear-gradient(145deg, #fffaf0 0%, #fff8dc 100%);
+    border-color: #daa520 !important;
+}
+
+/* Small text elements */
+small,
+.small,
+.text-muted,
+small.text-muted,
+small.text-info,
+p small,
+div small,
+span small,
+* small {
+    color: #8b4513 !important;
+}
+
+.glass-card small,
+.glass-card-small small {
+    color: #8b4513 !important;
+}
+
+/* Skeuomorphism Logo Colors */
+.logo-icon {
+    background: rgba(139, 69, 19, 0.2) !important;
+    color: #8b4513 !important;
+}
+
+.logo-text {
+    color: #8b4513 !important;
+}
+
+/* Skeuomorphism Progress Ring */
+.progress-ring-circle {
+    stroke: #8b4513 !important;
+}

@@ -39,6 +39,28 @@ body {
     color: white;
 }
 
+/* Time input styling */
+input[type="time"] {
+    color: white !important;
+    color-scheme: dark;
+}
+
+/* Hide the time picker icon */
+input[type="time"]::-webkit-calendar-picker-indicator {
+    display: none;
+}
+
+input[type="time"]::-webkit-datetime-edit-text {
+    color: white;
+}
+
+input[type="time"]::-webkit-datetime-edit-hour-field,
+input[type="time"]::-webkit-datetime-edit-minute-field {
+    color: white;
+}
+
+/* NOTE: Checkbox styling moved to individual theme files for better theming */
+
 /* Logo Components */
 .logo-icon {
     background: rgba(100, 150, 200, 0.3);
@@ -114,6 +136,82 @@ body {
 .primary-btn:disabled {
     background: rgba(100, 150, 200, 0.3);
     color: rgba(255, 255, 255, 0.4);
+}
+
+/* Coffee Button */
+.coffee-btn {
+    background: linear-gradient(135deg, #8B4513 0%, #D2691E 50%, #CD853F 100%);
+    border: 1px solid rgba(139, 69, 19, 0.6);
+    border-radius: 10px;
+    color: white;
+    font-weight: 600;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 15px rgba(139, 69, 19, 0.2);
+}
+
+.coffee-btn:hover {
+    background: linear-gradient(135deg, #A0522D 0%, #FF8C00 50%, #DEB887 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(139, 69, 19, 0.3);
+    color: white;
+    text-decoration: none;
+}
+
+.coffee-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 10px rgba(139, 69, 19, 0.2);
+}
+
+/* Save Settings Button */
+#btn-save-settings {
+    min-width: 150px;
+    width: auto;
+}
+
+/* Navigation Layout Fixes */
+.nav-item.flex-fill {
+    flex: 1 1 0%;
+    min-width: 0;
+}
+
+.nav-tabs .nav-item.flex-fill .nav-link {
+    font-size: 0.8rem;
+}
+
+/* Ensure tabs stay on one row */
+.nav-tabs.d-flex {
+    flex-wrap: nowrap !important;
+}
+
+/* Responsive navigation adjustments */
+@media (max-width: 768px) {
+    .nav-item.flex-fill .nav-link {
+        padding: 0.5rem 0.25rem;
+        font-size: 0.8rem;
+    }
+
+    .nav-item.flex-fill .tab-icon {
+        display: block;
+        font-size: 1rem;
+        margin-bottom: 0.2rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .nav-item.flex-fill .nav-link {
+        padding: 0.4rem 0.2rem;
+        font-size: 0.7rem;
+    }
+
+    .nav-item.flex-fill .tab-icon {
+        font-size: 0.9rem;
+    }
 }
 
 /* Navigation Tabs */
@@ -345,3 +443,7 @@ body {
         padding: 0.3rem 0.8rem;
     }
 }
+
+/* ===== FINAL OVERRIDES - Must be at end of file ===== */
+
+/* NOTE: Checkbox styling moved to individual theme files for better theming */

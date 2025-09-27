@@ -385,14 +385,16 @@
                         'start_of_week' => 'monday',
                         'share_data' => false,
                         'email_notifications' => false,
+                        'email_day' => 'monday',
+                        'email_time' => '09:00',
                         'weekly_reports' => false
                     ];
                     echo json_encode(['success' => true, 'settings' => $defaultSettings]);
                 } else {
-                    // Convert string booleans to actual booleans
-                    $settings['share_data'] = $settings['share_data'] === '1' || $settings['share_data'] === 'true';
-                    $settings['email_notifications'] = $settings['email_notifications'] === '1' || $settings['email_notifications'] === 'true';
-                    $settings['weekly_reports'] = $settings['weekly_reports'] === '1' || $settings['weekly_reports'] === 'true';
+                    // Convert string/integer/boolean values to actual booleans
+                    $settings['share_data'] = $settings['share_data'] === '1' || $settings['share_data'] === 'true' || $settings['share_data'] === 1 || $settings['share_data'] === true;
+                    $settings['email_notifications'] = $settings['email_notifications'] === '1' || $settings['email_notifications'] === 'true' || $settings['email_notifications'] === 1 || $settings['email_notifications'] === true;
+                    $settings['weekly_reports'] = $settings['weekly_reports'] === '1' || $settings['weekly_reports'] === 'true' || $settings['weekly_reports'] === 1 || $settings['weekly_reports'] === true;
                     echo json_encode(['success' => true, 'settings' => $settings]);
                 }
                 return;
@@ -408,16 +410,18 @@
                 $theme = isset($_POST['theme']) ? $_POST['theme'] : 'glassmorphism';
                 $language = isset($_POST['language']) ? $_POST['language'] : 'en';
                 $startOfWeek = isset($_POST['start_of_week']) ? $_POST['start_of_week'] : 'monday';
-                $shareData = isset($_POST['share_data']) && $_POST['share_data'] === 'true' ? 1 : 0;
-                $emailNotifications = isset($_POST['email_notifications']) && $_POST['email_notifications'] === 'true' ? 1 : 0;
-                $weeklyReports = isset($_POST['weekly_reports']) && $_POST['weekly_reports'] === 'true' ? 1 : 0;
+                $shareData = isset($_POST['share_data']) && ($_POST['share_data'] === 'true' || $_POST['share_data'] === true) ? 1 : 0;
+                $emailNotifications = isset($_POST['email_notifications']) && ($_POST['email_notifications'] === 'true' || $_POST['email_notifications'] === true) ? 1 : 0;
+                $emailDay = isset($_POST['email_day']) ? $_POST['email_day'] : 'monday';
+                $emailTime = isset($_POST['email_time']) ? $_POST['email_time'] : '09:00';
+                $weeklyReports = isset($_POST['weekly_reports']) && ($_POST['weekly_reports'] === 'true' || $_POST['weekly_reports'] === true) ? 1 : 0;
 
                 $sql = "INSERT INTO {$schema}.user_settings (
-                    user_id, weight_unit, height_unit, temperature_unit, date_format, time_format, 
-                    timezone, theme, language, start_of_week, share_data, email_notifications, 
-                    weekly_reports, updated_at
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
-                ON CONFLICT (user_id) DO UPDATE SET 
+                    user_id, weight_unit, height_unit, temperature_unit, date_format, time_format,
+                    timezone, theme, language, start_of_week, share_data, email_notifications,
+                    email_day, email_time, weekly_reports, updated_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
+                ON CONFLICT (user_id) DO UPDATE SET
                     weight_unit = EXCLUDED.weight_unit,
                     height_unit = EXCLUDED.height_unit,
                     temperature_unit = EXCLUDED.temperature_unit,
@@ -429,13 +433,16 @@
                     start_of_week = EXCLUDED.start_of_week,
                     share_data = EXCLUDED.share_data,
                     email_notifications = EXCLUDED.email_notifications,
+                    email_day = EXCLUDED.email_day,
+                    email_time = EXCLUDED.email_time,
                     weekly_reports = EXCLUDED.weekly_reports,
                     updated_at = NOW()";
-                
+
                 $stmt = $db->prepare($sql);
                 $stmt->execute([
                     $userId, $weightUnit, $heightUnit, $temperatureUnit, $dateFormat, $timeFormat,
-                    $timezone, $theme, $language, $startOfWeek, $shareData, $emailNotifications, $weeklyReports
+                    $timezone, $theme, $language, $startOfWeek, $shareData, $emailNotifications,
+                    $emailDay, $emailTime, $weeklyReports
                 ]);
                 
                 echo json_encode(['success' => true, 'message' => 'Settings saved']);
@@ -829,13 +836,15 @@
                         'start_of_week' => 'monday',
                         'share_data' => false,
                         'email_notifications' => false,
+                        'email_day' => 'monday',
+                        'email_time' => '09:00',
                         'weekly_reports' => false
                     ];
                 } else {
-                    // Convert string booleans to actual booleans
-                    $settings['share_data'] = $settings['share_data'] === '1' || $settings['share_data'] === 'true';
-                    $settings['email_notifications'] = $settings['email_notifications'] === '1' || $settings['email_notifications'] === 'true';
-                    $settings['weekly_reports'] = $settings['weekly_reports'] === '1' || $settings['weekly_reports'] === 'true';
+                    // Convert string/integer booleans to actual booleans
+                    $settings['share_data'] = $settings['share_data'] === '1' || $settings['share_data'] === 'true' || $settings['share_data'] === 1 || $settings['share_data'] === true;
+                    $settings['email_notifications'] = $settings['email_notifications'] === '1' || $settings['email_notifications'] === 'true' || $settings['email_notifications'] === 1 || $settings['email_notifications'] === true;
+                    $settings['weekly_reports'] = $settings['weekly_reports'] === '1' || $settings['weekly_reports'] === 'true' || $settings['weekly_reports'] === 1 || $settings['weekly_reports'] === true;
                 }
                 $allData['settings'] = $settings;
 

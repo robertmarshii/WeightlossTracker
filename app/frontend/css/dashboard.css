@@ -3,7 +3,7 @@
 
 /* Reduced padding for primary buttons to prevent wrapping */
 .primary-btn {
-    padding: 6px 12px !important;
+    padding: 3px 6px !important;
 }
 
 /* Vertical alignment for save button containers */
@@ -160,7 +160,7 @@ select.form-control.glass-input {
     border-radius: 10px;
     color: white;
     font-weight: 500;
-    padding: 8px 14px;
+    padding: 3px 6px;
     transition: all 0.3s ease;
 }
 
@@ -333,6 +333,10 @@ select.form-control.glass-input {
 }
 
 .form-check-input {
+    margin-top: .3rem;
+    margin-left: -2rem!important;
+    margin-right: 5px!important;
+    vertical-align: super!important;
     background: rgba(20, 40, 60, 0.6);
     border: 1px solid rgba(100, 150, 200, 0.3);
 }
@@ -347,8 +351,12 @@ select.form-control.glass-input {
     color: rgba(255, 255, 255, 0.9);
 }
 
+/* Settings page form-check spacing */
+.form-check.mb-3 {
+    padding-left: 2rem!important;
+}
+
 .form-text.text-muted {
-    color: rgba(255, 255, 255, 0.6) !important;
     font-size: 0.8rem;
 }
 

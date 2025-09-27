@@ -39,6 +39,8 @@ if (isset($_SESSION['login_time'])) {
     <link rel="stylesheet" href="css/global.css?v=<?php echo time(); ?>">
     <!-- Page-specific Styles -->
     <link rel="stylesheet" href="css/dashboard.css?v=<?php echo time(); ?>">
+    <!-- Dynamic Theme Loader -->
+    <link id="theme-css" rel="stylesheet" href="css/themes/glassmorphism.css?v=<?php echo time(); ?>">
 </head>
 <body>
 <!-- Fixed Alert Container -->
@@ -80,9 +82,7 @@ if (isset($_SESSION['login_time'])) {
                     </div>
 
                     <div class="d-flex align-items-center header-buttons">
-                        <?php if ($_SERVER['HTTP_HOST'] === '127.0.0.1:8111'): ?>
-                        <a class="btn secondary-btn btn-sm me-2" href="test/test-interface.php">⚗ Test Interface</a>
-                        <?php endif; ?>
+                        <a class="btn coffee-btn btn-sm me-2" href="https://buymeacoffee.com/robertmarshii" target="_blank" rel="noopener noreferrer">☕ Buy me a coffee</a>
                         <button id="btn-logout" class="btn danger-btn btn-sm">↪ Logout</button>
                     </div>
                 </div>
@@ -488,14 +488,36 @@ if (isset($_SESSION['login_time'])) {
                                     <div class="form-check mb-3">
                                         <input class="form-check-input" type="checkbox" id="emailNotifications">
                                         <label class="form-check-label" for="emailNotifications">
-                                            Email notifications for reminders
+                                            Email notifications for weight tracking reminders
                                         </label>
+                                    </div>
+
+                                    <!-- Email notification schedule (hidden by default) -->
+                                    <div id="emailSchedule" style="display: none; margin-left: 25px; margin-bottom: 15px;">
+                                        <div class="row">
+                                            <div class="col-md-7">
+                                                <label for="emailDay" class="form-label">Day of week</label>
+                                                <select id="emailDay" class="form-control glass-input">
+                                                    <option value="monday">Monday</option>
+                                                    <option value="tuesday">Tuesday</option>
+                                                    <option value="wednesday">Wednesday</option>
+                                                    <option value="thursday">Thursday</option>
+                                                    <option value="friday">Friday</option>
+                                                    <option value="saturday">Saturday</option>
+                                                    <option value="sunday">Sunday</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <label for="emailTime" class="form-label">Time</label>
+                                                <input type="time" id="emailTime" class="form-control glass-input" value="09:00">
+                                            </div>
+                                        </div>
                                     </div>
                                     
                                     <div class="form-check mb-3">
                                         <input class="form-check-input" type="checkbox" id="weeklyReports">
                                         <label class="form-check-label" for="weeklyReports">
-                                            Monthly progress reports
+                                            Recieve monthly progress report emails
                                         </label>
                                     </div>
                                 </div>
@@ -509,9 +531,12 @@ if (isset($_SESSION['login_time'])) {
                                     <div class="form-group mb-3">
                                         <label for="theme" class="form-label">Theme</label>
                                         <select id="theme" class="form-control glass-input">
-                                            <option value="glassmorphism">Glassmorphism (Current)</option>
-                                            <option value="dark">Dark Mode</option>
-                                            <option value="light">Light Mode</option>
+                                            <option value="glassmorphism">Glassmorphism</option>
+                                            <option value="neumorphism">Neumorphism</option>
+                                            <option value="skeuomorphism">Skeuomorphism</option>
+                                            <option value="minimalism">Minimalism</option>
+                                            <option value="retro">Retro</option>
+                                            <option value="material">Material Design</option>
                                         </select>
                                     </div>
                                     

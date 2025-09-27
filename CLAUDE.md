@@ -101,8 +101,22 @@ cy.assertFunctionTested('functionName');
 - Separate CSS/JS files reduce code duplication by ~450 lines
 - Coverage instrumentation is automatic for tracked JavaScript functions
 
-## ⚠️ CRITICAL TEST STABILITY RULES
+## ⚠️ CRITICAL ARCHITECTURAL PRESERVATION RULES
 
+### **🚨 NEVER BREAK THE GLOBAL DATA SYSTEM**
+The global data system (commit f382580) is PRODUCTION-CRITICAL and FRAGILE:
+- `testConsolidatedDashboardData()` MUST be called first in dashboard.js
+- Individual functions MUST check `window.globalDashboardData` before API calls
+- ONE consolidated API call replaces 10+ individual calls - preserve this optimization
+- ANY automatic instrumentation can trigger fallback individual calls = BROKEN
+
+### **🛡️ PRODUCTION-FIRST DEVELOPMENT**
+- Testing tools MUST be opt-in only (`?coverage=1` parameter)
+- NEVER auto-enable coverage or instrumentation
+- User experience trumps testing convenience
+- Global optimizations are sacred
+
+### **🔒 TEST STABILITY RULES**
 **NEVER change HTML element IDs, classes, or selectors in existing code**:
 - `#loginEmail`, `#sendLoginCodeBtn`, `#loginForm`, `#loginCode`, `#verifyLoginForm` - Authentication
 - `#signupEmail`, `#signupCode`, `#verifySignupForm`, `#agreeTerms` - Registration

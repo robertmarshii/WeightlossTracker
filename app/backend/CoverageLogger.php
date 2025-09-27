@@ -16,8 +16,10 @@ class CoverageLogger {
     private $maxErrors = 10; // Circuit breaker: disable after 10 errors
 
     private function __construct() {
-        // Only enable in development environment
-        $this->enabled = ($_SERVER['HTTP_HOST'] ?? '') === '127.0.0.1:8111';
+        // Only enable when explicitly requested via URL parameter ?coverage=1
+        $isCoverageMode = isset($_GET['coverage']) && $_GET['coverage'] === '1';
+        $isTestEnvironment = ($_SERVER['HTTP_HOST'] ?? '') === '127.0.0.1:8111';
+        $this->enabled = $isCoverageMode && $isTestEnvironment;
         $this->sessionId = time() . '_' . uniqid();
         $this->logFile = '/var/app/backend/coverage.log';
         
@@ -45,8 +47,9 @@ class CoverageLogger {
      * @param string $className Class name (for methods)
      * @param string $fileName File name
      * @param int $lineNumber Line number
+     * @param array $context Additional context information
      */
-    public function logFunction($functionName, $className = null, $fileName = null, $lineNumber = null) {
+    public function logFunction($functionName, $className = null, $fileName = null, $lineNumber = null, $context = []) {
         // Critical safety measure: Prevent infinite recursion
         $guardKey = $functionName . '::' . ($className ?? 'global');
         if (isset($this->recursionGuard[$guardKey])) {
@@ -75,13 +78,36 @@ class CoverageLogger {
                     'line' => $lineNumber,
                     'callCount' => 0,
                     'firstCalled' => date('Y-m-d H:i:s'),
-                    'lastCalled' => date('Y-m-d H:i:s')
+                    'lastCalled' => date('Y-m-d H:i:s'),
+                    'contexts' => [],
+                    'stackTraces' => [],
+                    'requestData' => []
                 ];
                 error_log("Added new function to coverage: {$fullKey}");
             }
 
             $this->functionCalls[$fullKey]['callCount']++;
             $this->functionCalls[$fullKey]['lastCalled'] = date('Y-m-d H:i:s');
+
+            // Store context and request information
+            if (!empty($context)) {
+                $this->functionCalls[$fullKey]['contexts'][] = [
+                    'timestamp' => date('Y-m-d H:i:s'),
+                    'data' => $context
+                ];
+            }
+
+            // Store request data for analysis
+            $this->functionCalls[$fullKey]['requestData'][] = [
+                'timestamp' => date('Y-m-d H:i:s'),
+                'method' => $_SERVER['REQUEST_METHOD'] ?? 'unknown',
+                'uri' => $_SERVER['REQUEST_URI'] ?? 'unknown',
+                'userAgent' => $_SERVER['HTTP_USER_AGENT'] ?? 'unknown',
+                'remoteAddr' => $_SERVER['REMOTE_ADDR'] ?? 'unknown'
+            ];
+
+            // Store simplified stack trace
+            $this->functionCalls[$fullKey]['stackTraces'][] = $this->getStackTrace();
             
             error_log("Updated function coverage: {$fullKey} (calls: {$this->functionCalls[$fullKey]['callCount']})");
 
@@ -153,7 +179,7 @@ class CoverageLogger {
      * Get the file that called the coverage logger
      */
     private function getCallerFile() {
-        $this->logFunction('getCallerFile', __CLASS__, __FILE__, __LINE__);
+        // Skip recursion check for this internal method
         try {
             $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
             if (empty($backtrace) || count($backtrace) < 3) {
@@ -162,6 +188,34 @@ class CoverageLogger {
             return $backtrace[2]['file'] ?? 'unknown';
         } catch (Exception $e) {
             return 'unknown';
+        }
+    }
+
+    /**
+     * Get a simplified stack trace for debugging
+     */
+    private function getStackTrace() {
+        try {
+            $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 6);
+            $trace = [];
+
+            for ($i = 2; $i < min(6, count($backtrace)); $i++) {
+                $frame = $backtrace[$i];
+                $class = $frame['class'] ?? '';
+                $function = $frame['function'] ?? '';
+                $file = basename($frame['file'] ?? '');
+                $line = $frame['line'] ?? '';
+
+                if (!empty($class)) {
+                    $trace[] = "{$class}::{$function}() in {$file}:{$line}";
+                } else {
+                    $trace[] = "{$function}() in {$file}:{$line}";
+                }
+            }
+
+            return implode(' → ', $trace);
+        } catch (Exception $e) {
+            return 'trace_unavailable';
         }
     }
 
@@ -186,13 +240,54 @@ class CoverageLogger {
     public function getReport() {
         $this->logFunction('getReport', __CLASS__, __FILE__, __LINE__);
         error_log("getReport called. Function count: " . count($this->functionCalls));
-        error_log("Functions: " . print_r(array_keys($this->functionCalls), true));
-        
+
+        // Analyze coverage statistics
+        $stats = [
+            'totalFunctions' => count($this->functionCalls),
+            'totalCalls' => 0,
+            'byClass' => [],
+            'byFile' => [],
+            'mostCalled' => null,
+            'maxCalls' => 0
+        ];
+
+        foreach ($this->functionCalls as $key => $data) {
+            $stats['totalCalls'] += $data['callCount'];
+
+            // Track by class
+            $className = $data['class'] ?? 'global';
+            if (!isset($stats['byClass'][$className])) {
+                $stats['byClass'][$className] = ['count' => 0, 'calls' => 0];
+            }
+            $stats['byClass'][$className]['count']++;
+            $stats['byClass'][$className]['calls'] += $data['callCount'];
+
+            // Track by file
+            $fileName = $data['file'];
+            if (!isset($stats['byFile'][$fileName])) {
+                $stats['byFile'][$fileName] = ['count' => 0, 'calls' => 0];
+            }
+            $stats['byFile'][$fileName]['count']++;
+            $stats['byFile'][$fileName]['calls'] += $data['callCount'];
+
+            // Track most called function
+            if ($data['callCount'] > $stats['maxCalls']) {
+                $stats['maxCalls'] = $data['callCount'];
+                $stats['mostCalled'] = $key;
+            }
+        }
+
         return [
             'sessionId' => $this->sessionId,
             'totalFunctions' => count($this->functionCalls),
             'functions' => $this->functionCalls,
-            'generatedAt' => date('Y-m-d H:i:s')
+            'statistics' => $stats,
+            'generatedAt' => date('Y-m-d H:i:s'),
+            'environment' => [
+                'host' => $_SERVER['HTTP_HOST'] ?? 'unknown',
+                'serverSoftware' => $_SERVER['SERVER_SOFTWARE'] ?? 'unknown',
+                'phpVersion' => PHP_VERSION
+            ]
         ];
     }
 

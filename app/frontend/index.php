@@ -175,19 +175,16 @@ if (AuthManager::isLoggedIn()) {
                     </div>
                 </div>
 
-                <?php if ($_SERVER['HTTP_HOST'] === '127.0.0.1:8111'): ?>
                 <div class="mt-4">
-                    <div class="glass-card" class="dev-tools-card">
-                        <h6 class="dev-tools-title">Development Tools</h6>
-                        <a href="test/test-interface.html" class="social-btn" class="dev-tools-link">
-                            🧪 Test Interface
-                        </a>
-                        <a href="test/schema-switcher.html" class="social-btn" class="dev-tools-link">
-                            🔄 Schema Switcher
-                        </a>
+                    <div class="glass-card">
+                        <h6 class="text-center mb-3">Support Development</h6>
+                        <div class="text-center">
+                            <a href="https://buymeacoffee.com/robertmarshii" target="_blank" rel="noopener noreferrer" class="coffee-btn">
+                                ☕ Buy me a coffee
+                            </a>
+                        </div>
                     </div>
                 </div>
-                <?php endif; ?>
             </div>
         </div>
     </div>

@@ -46,7 +46,9 @@
       "Bash(while read file)",
       "Bash(do echo \"=== $file ===\")",
       "Bash(grep:*)",
-      "Bash(rg:*)"
+      "Bash(rg:*)",
+      "Bash(winpty docker compose exec docker-php-fpm ls -la //var/app/)",
+      "Bash(git add:*)"
     ],
     "deny": [],
     "ask": []

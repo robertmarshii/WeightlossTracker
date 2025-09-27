@@ -1,0 +1,363 @@
+/* Neumorphism Theme - Dark Mode with soft shadows */
+
+/* Base Layout */
+body {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 25%, #1e1e1e 75%, #0f0f0f 100%);
+    min-height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Dark Neumorphism Components */
+.glass-card {
+    background: #2c2c2c;
+    border-radius: 20px;
+    border: none;
+    box-shadow:
+        9px 9px 16px #0a0a0a,
+        -9px -9px 16px #404040;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    color: #e0e0e0;
+}
+
+.glass-input {
+    background: #2c2c2c;
+    border: none;
+    border-radius: 10px;
+    color: #e0e0e0;
+    padding: 12px 16px;
+    font-size: 0.9rem;
+    box-shadow:
+        inset 6px 6px 12px #0a0a0a,
+        inset -6px -6px 12px #404040;
+}
+
+.glass-input::placeholder {
+    color: rgba(224, 224, 224, 0.6);
+}
+
+.glass-input:focus {
+    box-shadow:
+        inset 8px 8px 16px #0a0a0a,
+        inset -8px -8px 16px #404040;
+    outline: none;
+}
+
+/* Logo Components */
+.logo-icon {
+    background: #2c2c2c;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #bb86fc;
+    box-shadow:
+        6px 6px 12px #0a0a0a,
+        -6px -6px 12px #404040;
+}
+
+.logo-icon svg {
+    width: 28px;
+    height: 28px;
+}
+
+.logo-text {
+    color: #a0a0a0;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 0;
+}
+
+/* Button Styles */
+.primary-btn {
+    background: #2c2c2c;
+    border: none;
+    border-radius: 10px;
+    color: #bb86fc;
+    font-weight: 600;
+    padding: 12px;
+    transition: all 0.3s ease;
+    box-shadow:
+        6px 6px 12px #0a0a0a,
+        -6px -6px 12px #404040;
+}
+
+.primary-btn:hover:not(:disabled) {
+    box-shadow:
+        4px 4px 8px #0a0a0a,
+        -4px -4px 8px #404040;
+    transform: translateY(-1px);
+    color: #bb86fc;
+}
+
+.primary-btn:disabled {
+    background: #1a1a1a;
+    color: rgba(224, 224, 224, 0.4);
+    box-shadow: none;
+}
+
+/* Navigation Tabs */
+.nav-tabs {
+    border: none;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.nav-tabs .nav-link {
+    background: #2c2c2c;
+    border: none;
+    color: rgba(224, 224, 224, 0.6);
+    font-weight: 500;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    box-shadow:
+        4px 4px 8px #0a0a0a,
+        -4px -4px 8px #404040;
+    margin: 0 5px;
+}
+
+.nav-tabs .nav-link.active {
+    box-shadow:
+        inset 4px 4px 8px #0a0a0a,
+        inset -4px -4px 8px #404040;
+    color: #bb86fc;
+}
+
+.nav-tabs .nav-link:hover {
+    border: none;
+    color: #bb86fc;
+    box-shadow:
+        2px 2px 4px #0a0a0a,
+        -2px -2px 4px #404040;
+}
+
+/* Form Elements */
+.form-check-label {
+    color: rgba(224, 224, 224, 0.8);
+}
+
+.form-check-label a {
+    color: #bb86fc;
+}
+
+/* Alert System */
+#alert-container .alert {
+    margin-bottom: 0;
+    background: #2c2c2c !important;
+    border: none;
+    box-shadow:
+        9px 9px 16px #0a0a0a,
+        -9px -9px 16px #404040;
+    color: #e0e0e0 !important;
+}
+
+#alert-container .alert-success {
+    background: #1b5e20 !important;
+    color: #c8e6c9 !important;
+}
+
+#alert-container .alert-danger {
+    background: #c62828 !important;
+    color: #ffcdd2 !important;
+}
+
+#alert-container .alert-info {
+    background: #1565c0 !important;
+    color: #bbdefb !important;
+}
+
+/* Text Colors */
+.text-muted {
+    color: rgba(224, 224, 224, 0.6) !important;
+}
+
+/* Link Colors */
+.btn-link {
+    color: #bb86fc;
+}
+
+.btn-link:hover {
+    color: #cf6679;
+}
+
+.text-info {
+    color: #bb86fc !important;
+}
+
+.text-success {
+    color: #4caf50 !important;
+}
+
+.text-danger {
+    color: #cf6679 !important;
+}
+
+/* Glass Card Small */
+.glass-card-small {
+    background: #2c2c2c;
+    border-radius: 20px;
+    border: none;
+    box-shadow:
+        9px 9px 16px #0a0a0a,
+        -9px -9px 16px #404040;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: #e0e0e0;
+    min-height: 220px;
+}
+
+/* Glass Table */
+.glass-table {
+    background: #2c2c2c;
+    border-radius: 15px;
+    border: none;
+    box-shadow:
+        6px 6px 12px #0a0a0a,
+        -6px -6px 12px #404040;
+    overflow: hidden;
+}
+
+.glass-table thead th {
+    background: #1a1a1a;
+    color: #bb86fc;
+    font-weight: 600;
+    border: none;
+    padding: 1rem;
+}
+
+.glass-table tbody td {
+    background: #2c2c2c;
+    color: #e0e0e0;
+    border: 1px solid rgba(224, 224, 224, 0.1);
+    padding: 0.75rem 1rem;
+}
+
+.glass-table tbody tr:hover {
+    background: #404040;
+}
+
+/* Secondary Button */
+.secondary-btn {
+    background: #2c2c2c;
+    border: none;
+    border-radius: 10px;
+    color: rgba(224, 224, 224, 0.8);
+    font-weight: 500;
+    padding: 8px 14px;
+    transition: all 0.3s ease;
+    box-shadow:
+        4px 4px 8px #0a0a0a,
+        -4px -4px 8px #404040;
+}
+
+.secondary-btn:hover {
+    box-shadow:
+        2px 2px 4px #0a0a0a,
+        -2px -2px 4px #404040;
+    color: #bb86fc;
+}
+
+.secondary-btn.active {
+    box-shadow:
+        inset 4px 4px 8px #0a0a0a,
+        inset -4px -4px 8px #404040;
+    color: #bb86fc;
+}
+
+/* Danger Button */
+.danger-btn {
+    background: #2c2c2c;
+    border: none;
+    border-radius: 10px;
+    color: #cf6679;
+    font-weight: 500;
+    padding: 8px 14px;
+    transition: all 0.3s ease;
+    box-shadow:
+        4px 4px 8px #0a0a0a,
+        -4px -4px 8px #404040;
+}
+
+.danger-btn:hover {
+    box-shadow:
+        2px 2px 4px #0a0a0a,
+        -2px -2px 4px #404040;
+    color: #ff6b9d;
+}
+
+/* Theme-aware strong tags and highlights */
+strong {
+    color: #bb86fc !important;
+}
+
+.health-message-success {
+    color: #4caf50 !important;
+}
+
+/* Neumorphism Checkboxes */
+.form-check-input {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 22px !important;
+    height: 22px !important;
+    background: #2c2c2c;
+    border: none !important;
+    border-radius: 6px;
+    position: relative;
+    cursor: pointer;
+    box-shadow:
+        4px 4px 8px #0a0a0a,
+        -4px -4px 8px #404040;
+    transition: all 0.3s ease;
+}
+
+.form-check-input:checked {
+    background: #2c2c2c;
+    box-shadow:
+        inset 2px 2px 4px #0a0a0a,
+        inset -2px -2px 4px #404040;
+}
+
+.form-check-input:checked::before {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #bb86fc;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.form-check-input:not(:checked)::before {
+    content: '✗';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: rgba(224, 224, 224, 0.4);
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.form-check-input:hover {
+    box-shadow:
+        2px 2px 4px #0a0a0a,
+        -2px -2px 4px #404040;
+}
+
+/* Neumorphism Logo Colors */
+.logo-icon {
+    background: rgba(187, 134, 252, 0.2) !important;
+    color: #bb86fc !important;
+}
+
+.logo-text {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* Neumorphism Progress Ring */
+.progress-ring-circle {
+    stroke: #bb86fc !important;
+}

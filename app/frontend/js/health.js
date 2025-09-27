@@ -493,6 +493,12 @@ function refreshBMI() {
         }
 
         // Get before/after comparison
+        if (typeof $ === 'undefined' || typeof $.post !== 'function') {
+            console.log('⚠️ jQuery not available for BMI progress, showing basic BMI');
+            lines.push(`<small class="text-muted">BMI correlates with health risks. BMI reduction significantly lowers disease risk (Prospective Studies Collaboration, 2009)</small>`);
+            el.html(lines.join('<br>')).removeClass('text-muted');
+            return;
+        }
         $.post('router.php?controller=profile', { action: 'get_weight_progress' }, function(progressResp) {
             const progressData = parseJson(progressResp);
             if (progressData.success && progressData.start_weight_kg && progressData.current_weight_kg !== progressData.start_weight_kg) {
@@ -572,6 +578,11 @@ function refreshHealth() {
     } else {
         // Fallback to API call for body fat data
         console.log('🌐 Making API call for health stats (global data not available)');
+        if (typeof $ === 'undefined' || typeof $.post !== 'function') {
+            console.log('⚠️ jQuery not available for health stats, skipping API call');
+            $('#body-fat-block').text('Body fat estimation not available').addClass('text-muted');
+            return;
+        }
         $.post('router.php?controller=profile', { action: 'get_health_stats' }, function(resp) {
             const data = parseJson(resp);
 
@@ -589,6 +600,10 @@ function refreshHealth() {
                 bodyFatLines.push(`<small class="text-muted">Body fat estimated via Deurenberg formula (BMI + age). Each 1% body fat reduction can improve metabolic health (Jackson et al., 2002)</small>`);
 
                 // Get before/after body fat comparison
+                if (typeof $ === 'undefined' || typeof $.post !== 'function') {
+                    bodyFatEl.html(bodyFatLines.join('<br>')).removeClass('text-muted');
+                    return;
+                }
                 $.post('router.php?controller=profile', { action: 'get_weight_progress' }, function(progressResp) {
                     const progressData = parseJson(progressResp);
                     if (progressData.success && progressData.start_weight_kg && progressData.current_weight_kg !== progressData.start_weight_kg) {
@@ -624,6 +639,11 @@ function refreshHealth() {
 
     // Load enhanced cardiovascular risk (always use API call)
     console.log('🌐 Making API call for cardiovascular risk');
+    if (typeof $ === 'undefined' || typeof $.post !== 'function') {
+        console.log('⚠️ jQuery not available for cardiovascular risk, skipping API call');
+        $('#cardio-risk-block').text('Cardiovascular risk not available').addClass('text-muted');
+        return;
+    }
     $.post('router.php?controller=profile', { action: 'get_cardiovascular_risk' }, function(resp) {
         const data = parseJson(resp);
         const cardioEl = $('#cardio-risk-block');
@@ -652,6 +672,11 @@ function refreshIdealWeight() {
 
     // Always use API call for ideal weight
     console.log('🌐 Making API call for ideal weight');
+    if (typeof $ === 'undefined' || typeof $.post !== 'function') {
+        console.log('⚠️ jQuery not available for ideal weight, skipping API call');
+        $('#ideal-weight-block').text('Set your height to calculate ideal weight range').addClass('text-muted');
+        return;
+    }
     $.post('router.php?controller=profile', { action: 'get_ideal_weight' }, function(resp) {
         const data = parseJson(resp);
         const el = $('#ideal-weight-block');
@@ -735,6 +760,11 @@ function refreshGallbladderHealth() {
 
     // Fallback to API call if global data not available
     console.log('🌐 Making API call for gallbladder health (global data not available)');
+    if (typeof $ === 'undefined' || typeof $.post !== 'function') {
+        console.log('⚠️ jQuery not available for gallbladder health, skipping API call');
+        $('#gallbladder-block').text('Complete profile to assess gallbladder health benefits').addClass('text-muted');
+        return;
+    }
     $.post('router.php?controller=profile', { action: 'get_gallbladder_health' }, function(resp) {
         const data = parseJson(resp);
         const el = $('#gallbladder-block');

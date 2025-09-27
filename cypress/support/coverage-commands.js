@@ -33,6 +33,22 @@ Cypress.Commands.add('enableCoverageTracking', () => {
         if (win.coverage) {
             win.coverage.setTestMode(true);
             console.log('🧪 Coverage tracking enabled for test');
+
+            // Force immediate instrumentation
+            if (win.autoInstrumentGlobalFunctions) {
+                win.autoInstrumentGlobalFunctions();
+            }
+
+            // Force instrumentation of known functions
+            if (win.instrumentGlobals) {
+                win.instrumentGlobals();
+            }
+
+            // Log current function count
+            const report = win.coverage.getReport();
+            console.log(`📊 Coverage tracking: ${report.totalFunctions} functions tracked`);
+        } else {
+            console.warn('⚠️ Coverage logger not found on window object');
         }
     });
 });
@@ -116,10 +132,49 @@ Cypress.Commands.add('collectBackendCoverage', (testName) => {
     });
 });
 
+// Force comprehensive function instrumentation
+Cypress.Commands.add('forceInstrumentation', () => {
+    cy.window().then((win) => {
+        console.log('🔧 Forcing comprehensive instrumentation...');
+
+        // Check all window functions
+        let instrumentedCount = 0;
+        Object.keys(win).forEach(key => {
+            if (typeof win[key] === 'function' && !key.startsWith('_') && !key.includes('webkit')) {
+                try {
+                    // Wrap the function to log calls
+                    const originalFunction = win[key];
+                    win[key] = function(...args) {
+                        if (win.coverage) {
+                            win.coverage.logFunction(key, 'window');
+                        }
+                        return originalFunction.apply(this, args);
+                    };
+                    instrumentedCount++;
+                } catch (e) {
+                    // Skip functions that can't be wrapped
+                }
+            }
+        });
+
+        console.log(`🔧 Forced instrumentation: ${instrumentedCount} functions wrapped`);
+
+        // Also check for specific functions we know exist
+        const targetFunctions = ['updateSignupButton', 'sendLoginCode', 'createAccount', 'isValidEmail'];
+        targetFunctions.forEach(funcName => {
+            if (typeof win[funcName] === 'function') {
+                console.log(`✅ Found target function: ${funcName}`);
+            } else {
+                console.log(`❌ Missing target function: ${funcName}`);
+            }
+        });
+    });
+});
+
 // Export reporter for use in plugins
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { 
+    module.exports = {
         getCoverageReporter: () => coverageReporter,
-        CypressCoverageReporter 
+        CypressCoverageReporter
     };
 }
