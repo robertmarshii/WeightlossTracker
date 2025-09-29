@@ -31,7 +31,8 @@ function saveSettings() {
 
     fetch('router.php?controller=profile', {
         method: 'POST',
-        body: formData
+        body: formData,
+        credentials: 'same-origin'
     })
     .then(response => response.text())
     .then(responseText => {

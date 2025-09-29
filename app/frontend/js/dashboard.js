@@ -10,7 +10,8 @@ function postRequest(url, data) {
     });
     return fetch(url, {
         method: 'POST',
-        body: formData
+        body: formData,
+        credentials: 'same-origin'
     }).then(response => response.text());
 }
 
@@ -35,7 +36,8 @@ $(function() {
     formData.append('action', 'get');
     fetch('router.php?controller=schema', {
         method: 'POST',
-        body: formData
+        body: formData,
+        credentials: 'same-origin'
     })
     .then(response => response.text())
     .then(resp => {
@@ -63,7 +65,8 @@ $(function() {
         logoutFormData.append('action', 'logout');
         fetch('login_router.php?controller=auth', {
             method: 'POST',
-            body: logoutFormData
+            body: logoutFormData,
+            credentials: 'same-origin'
         })
         .then(() => {
             window.location.href = 'index.php';
@@ -829,7 +832,8 @@ function loadSettings() {
 
     fetch('router.php?controller=profile', {
         method: 'POST',
-        body: formData
+        body: formData,
+        credentials: 'same-origin'
     })
     .then(response => response.text())
     .then(responseText => {

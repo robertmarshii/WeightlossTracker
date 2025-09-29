@@ -9,7 +9,8 @@ function postRequest(url, data) {
     });
     return fetch(url, {
         method: 'POST',
-        body: formData
+        body: formData,
+        credentials: 'same-origin'
     }).then(response => response.text());
 }
 
