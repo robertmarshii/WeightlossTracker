@@ -278,7 +278,7 @@ if (!AuthManager::isLoggedIn()) {
                     appendResult(`❌ API Test FAILED: ${e.message}`);
                     updateTestStatus('api', 'error');
                 }
-            }).fail(function() {
+            }).catch(function() {
                 appendResult('❌ API Test FAILED: Network error');
                 updateTestStatus('api', 'error');
             });
@@ -495,7 +495,7 @@ if (!AuthManager::isLoggedIn()) {
                     appendResult(`❌ ${schemaName} reset failed: ${e.message}`);
                     updateTestStatus(statusId, 'error');
                 }
-            }).fail(function() {
+            }).catch(function() {
                 showAlert(`${schemaName} schema reset failed: Network error`, 'danger');
                 appendResult(`❌ ${schemaName} reset failed: Network error`);
                 updateTestStatus(statusId, 'error');
@@ -537,7 +537,7 @@ if (!AuthManager::isLoggedIn()) {
                     appendResult(`❌ Live migration failed: ${e.message}`);
                     updateTestStatus('migrate', 'error');
                 }
-            }).fail(function() {
+            }).catch(function() {
                 showAlert('Live migration failed: Network error', 'danger');
                 appendResult('❌ Live migration failed: Network error');
                 updateTestStatus('migrate', 'error');

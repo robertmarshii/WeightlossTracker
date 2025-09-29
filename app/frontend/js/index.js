@@ -1,8 +1,21 @@
+// Helper function for standardized fetch requests
+function postRequest(url, data) {
+    const formData = new FormData();
+    Object.keys(data).forEach(key => {
+        formData.append(key, data[key]);
+    });
+    return fetch(url, {
+        method: 'POST',
+        body: formData
+    }).then(response => response.text());
+}
+
 $(document).ready(function() {
     // Check for OAuth error in URL parameters
     const urlParams = new URLSearchParams(window.location.search);
     const oauthError = urlParams.get('error');
     if (oauthError) {
+        if (window.coverage) window.coverage.logFunction('if', 'index.js');
         showAlert('❌ OAuth Error: ' + decodeURIComponent(oauthError), 'danger');
         // Clean up URL without reloading
         const newUrl = window.location.pathname;
@@ -63,18 +76,20 @@ function continueWithGoogle() {
     if (window.coverage) window.coverage.logFunction('continueWithGoogle', 'index.js');
     showAlert('🔄 Redirecting to Google...', 'info');
 
-    $.post('login_router.php?controller=auth', {
+    postRequest('login_router.php?controller=auth', {
         action: 'oauth_start',
         provider: 'google'
-    }, function(response) {
+    })
+    .then(response => {
         const data = typeof response === 'string' ? JSON.parse(response) : response;
         if (data.success && data.authorization_url) {
+            if (window.coverage) window.coverage.logFunction('if', 'index.js');
             // Redirect to Google OAuth
             window.location.href = data.authorization_url;
         } else {
             showAlert('❌ ' + (data.message || 'Failed to start Google authentication'), 'danger');
         }
-    }).fail(function() {
+    }).catch(function() {
         showAlert('🔌 Network error. Please check your connection and try again.', 'danger');
     });
 }
@@ -83,47 +98,57 @@ function continueWithMicrosoft() {
     if (window.coverage) window.coverage.logFunction('continueWithMicrosoft', 'index.js');
     showAlert('🔄 Redirecting to Microsoft...', 'info');
 
-    $.post('login_router.php?controller=auth', {
+    postRequest('login_router.php?controller=auth', {
         action: 'oauth_start',
         provider: 'microsoft'
-    }, function(response) {
+    })
+    .then(response => {
         const data = typeof response === 'string' ? JSON.parse(response) : response;
         if (data.success && data.authorization_url) {
+            if (window.coverage) window.coverage.logFunction('if', 'index.js');
             // Redirect to Microsoft OAuth
             window.location.href = data.authorization_url;
         } else {
             showAlert('❌ ' + (data.message || 'Failed to start Microsoft authentication'), 'danger');
         }
-    }).fail(function() {
+    }).catch(function() {
         showAlert('🔌 Network error. Please check your connection and try again.', 'danger');
     });
 }
 
 function sendLoginCode() {
     if (window.coverage) window.coverage.logFunction('sendLoginCode', 'index.js');
-    const email = $('#loginEmail').val();
-    
+    const email = document.getElementById('loginEmail').value;
+
     // Validate email format
     if (!isValidEmail(email)) {
         showAlert('❌ Please enter a valid email address', 'danger');
         return;
     }
-    
+
     // Show loading message
     showAlert('📧 Sending your login code via email...', 'info');
-    
-    $.post('login_router.php?controller=auth', {
-        action: 'send_login_code',
-        email: email
-    }, function(response) {
-        const data = typeof response === 'string' ? JSON.parse(response) : response;
+
+    // Use native fetch instead of jQuery
+    const formData = new FormData();
+    formData.append('action', 'send_login_code');
+    formData.append('email', email);
+
+    fetch('login_router.php?controller=auth', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.text())
+    .then(responseText => {
+        const data = typeof responseText === 'string' ? JSON.parse(responseText) : responseText;
         if (data.success) {
+            if (window.coverage) window.coverage.logFunction('if', 'index.js');
             showAlert('✅ Login code sent successfully! Check your email inbox (and spam folder). The code is also in the subject line.', 'success');
-            $('#loginForm').hide();
-            $('#loginSocialSection').hide();
-            $('#loginWelcomeSection').hide();
-            $('#verifyLoginForm').show();
-            
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('loginSocialSection').style.display = 'none';
+            document.getElementById('loginWelcomeSection').style.display = 'none';
+            document.getElementById('verifyLoginForm').style.display = 'block';
+
             // Show tip after success message finishes (10s + 1s buffer)
             setTimeout(() => {
                 showAlert('💡 Tip: Your 6-digit code is included in the email subject line for easy access!', 'info');
@@ -131,35 +156,44 @@ function sendLoginCode() {
         } else {
             showAlert('❌ ' + data.message, 'danger');
         }
-    }).fail(function() {
+    })
+    .catch(error => {
+        console.error('Fetch error:', error);
         showAlert('🔌 Network error. Please check your connection and try again.', 'danger');
     });
 }
 
 function createAccount() {
     if (window.coverage) window.coverage.logFunction('createAccount', 'index.js');
-    const email = $('#signupEmail').val();
-    
+    const email = document.getElementById('signupEmail').value;
+
     // Validate email format
     if (!isValidEmail(email)) {
         showAlert('❌ Please enter a valid email address', 'danger');
         return;
     }
-    
+
     showAlert('🔄 Creating your account and sending verification code...', 'info');
-    
-    $.post('login_router.php?controller=auth', {
-        action: 'create_account',
-        email: email
-    }, function(response) {
-        const data = typeof response === 'string' ? JSON.parse(response) : response;
+
+    const formData = new FormData();
+    formData.append('action', 'create_account');
+    formData.append('email', email);
+
+    fetch('login_router.php?controller=auth', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.text())
+    .then(responseText => {
+        const data = typeof responseText === 'string' ? JSON.parse(responseText) : responseText;
         if (data.success) {
+            if (window.coverage) window.coverage.logFunction('if', 'index.js');
             showAlert('✅ Account created! Verification code sent to your email. Check your inbox (and spam folder).', 'success');
-            $('#signupForm').hide();
-            $('#signupSocialSection').hide();
-            $('#signupWelcomeSection').hide();
-            $('#verifySignupForm').show();
-            
+            document.getElementById('signupForm').style.display = 'none';
+            document.getElementById('signupSocialSection').style.display = 'none';
+            document.getElementById('signupWelcomeSection').style.display = 'none';
+            document.getElementById('verifySignupForm').style.display = 'block';
+
             // Show tip after success message finishes (10s + 1s buffer)
             setTimeout(() => {
                 showAlert('💡 Your verification code is in the email subject line!', 'info');
@@ -167,25 +201,34 @@ function createAccount() {
         } else {
             showAlert('❌ ' + data.message, 'danger');
         }
-    }).fail(function() {
+    })
+    .catch(error => {
+        console.error('Fetch error:', error);
         showAlert('🔌 Network error. Please check your connection and try again.', 'danger');
     });
 }
 
 function verifyLoginCode() {
     if (window.coverage) window.coverage.logFunction('verifyLoginCode', 'index.js');
-    const email = $('#loginEmail').val();
-    const code = $('#loginCode').val();
-    
+    const email = document.getElementById('loginEmail').value;
+    const code = document.getElementById('loginCode').value;
+
     showAlert('Verifying code...', 'info');
-    
-    $.post('login_router.php?controller=auth', {
-        action: 'verify_login',
-        email: email,
-        code: code
-    }, function(response) {
-        const data = typeof response === 'string' ? JSON.parse(response) : response;
+
+    const formData = new FormData();
+    formData.append('action', 'verify_login');
+    formData.append('email', email);
+    formData.append('code', code);
+
+    fetch('login_router.php?controller=auth', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.text())
+    .then(responseText => {
+        const data = typeof responseText === 'string' ? JSON.parse(responseText) : responseText;
         if (data.success) {
+            if (window.coverage) window.coverage.logFunction('if', 'index.js');
             showAlert('Login successful! Redirecting...', 'success');
             setTimeout(() => {
                 window.location.href = 'dashboard.php';
@@ -193,25 +236,34 @@ function verifyLoginCode() {
         } else {
             showAlert(data.message, 'danger');
         }
-    }).fail(function() {
+    })
+    .catch(error => {
+        console.error('Fetch error:', error);
         showAlert('Network error. Please try again.', 'danger');
     });
 }
 
 function verifySignupCode() {
     if (window.coverage) window.coverage.logFunction('verifySignupCode', 'index.js');
-    const email = $('#signupEmail').val();
-    const code = $('#signupCode').val();
-    
+    const email = document.getElementById('signupEmail').value;
+    const code = document.getElementById('signupCode').value;
+
     showAlert('Verifying account...', 'info');
-    
-    $.post('login_router.php?controller=auth', {
-        action: 'verify_signup',
-        email: email,
-        code: code
-    }, function(response) {
-        const data = typeof response === 'string' ? JSON.parse(response) : response;
+
+    const formData = new FormData();
+    formData.append('action', 'verify_signup');
+    formData.append('email', email);
+    formData.append('code', code);
+
+    fetch('login_router.php?controller=auth', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.text())
+    .then(responseText => {
+        const data = typeof responseText === 'string' ? JSON.parse(responseText) : responseText;
         if (data.success) {
+            if (window.coverage) window.coverage.logFunction('if', 'index.js');
             showAlert('Account created successfully! Redirecting...', 'success');
             setTimeout(() => {
                 window.location.href = 'dashboard.php';
@@ -219,7 +271,9 @@ function verifySignupCode() {
         } else {
             showAlert(data.message, 'danger');
         }
-    }).fail(function() {
+    })
+    .catch(error => {
+        console.error('Fetch error:', error);
         showAlert('Network error. Please try again.', 'danger');
     });
 }

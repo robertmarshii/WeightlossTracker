@@ -1,57 +1,8 @@
 // Settings tab functionality - User preferences and configuration
+console.log('📋 Settings.js loaded');
 
-function loadSettings() {
-    if (window.coverage) window.coverage.logFunction('loadSettings', 'settings.js');
-
-    // Check if we have global data first
-    console.log('🔍 loadSettings - checking global data:', window.globalDashboardData);
-    console.log('🔍 settings in global data:', window.globalDashboardData?.settings);
-
-    if (window.globalDashboardData && window.globalDashboardData.settings) {
-        console.log('📊 Using global data for settings');
-        const s = window.globalDashboardData.settings;
-        $('#weightUnit').val(s.weight_unit || 'kg');
-        $('#heightUnit').val(s.height_unit || 'cm');
-
-        // Update localStorage with loaded settings
-        setWeightUnit(s.weight_unit || 'kg');
-        setHeightUnit(s.height_unit || 'cm');
-        $('#dateFormat').val(s.date_format || 'uk');
-        $('#theme').val(s.theme || 'glassmorphism');
-        $('#language').val(s.language || 'en');
-        $('#shareData').prop('checked', s.share_data === true);
-        $('#emailNotifications').prop('checked', s.email_notifications === true);
-        $('#weeklyReports').prop('checked', s.weekly_reports === true);
-        $('#emailDay').val(s.email_day || 'monday');
-        $('#emailTime').val(s.email_time || '09:00');
-        updateDateExample();
-        updateThemeOptions(s.theme || 'glassmorphism');
-        toggleEmailSchedule();
-        return;
-    }
-
-    // Fallback to API call if global data not available
-    console.log('🌐 Making API call for settings (global data not available)');
-    $.post('router.php?controller=profile', { action: 'get_settings' }, function(resp) {
-        const data = parseJson(resp);
-        if (data.success && data.settings) {
-            const s = data.settings;
-            $('#weightUnit').val(s.weight_unit || 'kg');
-            $('#heightUnit').val(s.height_unit || 'cm');
-            $('#dateFormat').val(s.date_format || 'uk');
-            $('#theme').val(s.theme || 'glassmorphism');
-            $('#language').val(s.language || 'en');
-                $('#shareData').prop('checked', s.share_data === true);
-            $('#emailNotifications').prop('checked', s.email_notifications === true);
-            $('#weeklyReports').prop('checked', s.weekly_reports === true);
-            $('#emailDay').val(s.email_day || 'monday');
-            $('#emailTime').val(s.email_time || '09:00');
-            updateDateExample();
-            updateThemeOptions(s.theme || 'glassmorphism');
-            toggleEmailSchedule();
-        }
-    });
-}
+// Note: loadSettings() function is in dashboard.js (called during dashboard initialization)
+// Note: saveSettings() function is in this file but called via dashboard.js wrapper
 
 function saveSettings() {
     if (window.coverage) window.coverage.logFunction('saveSettings', 'settings.js');
@@ -69,8 +20,22 @@ function saveSettings() {
         email_time: $('#emailTime').val()
     };
 
-    $.post('router.php?controller=profile', settings, function(resp) {
-        const data = parseJson(resp);
+    const formData = new FormData();
+    Object.keys(settings).forEach(key => {
+        if (typeof settings[key] === 'boolean') {
+            formData.append(key, settings[key] ? 'true' : 'false');
+        } else {
+            formData.append(key, settings[key]);
+        }
+    });
+
+    fetch('router.php?controller=profile', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.text())
+    .then(responseText => {
+        const data = parseJson(responseText);
         if (data.success) {
             // Update weight unit in localStorage and refresh displays
             console.log('Settings saved, updating weight unit to:', settings.weight_unit);
@@ -79,6 +44,7 @@ function saveSettings() {
             console.log('Current weight unit after save:', getWeightUnit());
 
             if (typeof window.updateWeightUnitDisplay === 'function') {
+                if (window.coverage) window.coverage.logFunction('if', 'settings.js');
                 console.log('Calling updateWeightUnitDisplay');
                 window.updateWeightUnitDisplay();
             }
@@ -90,6 +56,7 @@ function saveSettings() {
             // Update height unit in localStorage and refresh displays
             setHeightUnit(settings.height_unit);
             if (typeof window.updateHeightUnitDisplay === 'function') {
+                if (window.coverage) window.coverage.logFunction('if', 'settings.js');
                 console.log('Calling updateHeightUnitDisplay');
                 window.updateHeightUnitDisplay();
             }
@@ -97,13 +64,21 @@ function saveSettings() {
             // Update theme display to show new current theme
             updateThemeOptions(settings.theme);
 
-            $('#settings-status').text('Settings saved successfully').removeClass('text-danger').addClass('text-success');
-            setTimeout(() => $('#settings-status').text(''), 3000);
+            document.getElementById('settings-status').textContent = 'Settings saved successfully';
+            document.getElementById('settings-status').classList.remove('text-danger');
+            document.getElementById('settings-status').classList.add('text-success');
+            setTimeout(() => document.getElementById('settings-status').textContent = '', 3000);
         } else {
-            $('#settings-status').text('Failed to save settings').removeClass('text-success').addClass('text-danger');
+            document.getElementById('settings-status').textContent = 'Failed to save settings';
+            document.getElementById('settings-status').classList.remove('text-success');
+            document.getElementById('settings-status').classList.add('text-danger');
         }
-    }).fail(function() {
-        $('#settings-status').text('Network error').removeClass('text-success').addClass('text-danger');
+    })
+    .catch(error => {
+        console.error('Settings save error:', error);
+        document.getElementById('settings-status').textContent = 'Network error';
+        document.getElementById('settings-status').classList.remove('text-success');
+        document.getElementById('settings-status').classList.add('text-danger');
     });
 }
 
@@ -127,6 +102,7 @@ function updateDateExample() {
     const today = new Date();
     let example = '';
 
+    if (window.coverage) window.coverage.logFunction('switch', 'settings.js');
     switch(format) {
         case 'uk':
             example = today.toLocaleDateString('en-GB');
@@ -188,6 +164,7 @@ function loadThemeCSS(themeName) {
         // Update chart colors when theme changes
         setTimeout(() => {
             if (typeof window.updateChartThemeColors === 'function') {
+                if (window.coverage) window.coverage.logFunction('if', 'settings.js');
                 window.updateChartThemeColors();
             }
         }, 100); // Small delay to ensure CSS is loaded
@@ -195,7 +172,6 @@ function loadThemeCSS(themeName) {
 }
 
 // Make functions globally available
-window.settingsLoadSettings = loadSettings;
 window.settingsSaveSettings = saveSettings;
 window.settingsResetSettings = resetSettings;
 window.settingsUpdateDateExample = updateDateExample;

@@ -3,22 +3,89 @@
  * Tracks function calls to identify untested code paths
  */
 
+// JQUERY COMPATIBILITY FIX
+// Fix for jQuery CDN loading issues where $.post method might be missing
+(function() {
+    // Wait for jQuery to be available
+    function waitForJQuery() {
+        if (typeof window.$ !== 'undefined' && window.$) {
+            // Patch missing jQuery methods
+            if (typeof window.$.post === 'undefined' && typeof window.$.ajax === 'function') {
+                window.$.post = function(url, data, success, dataType) {
+                    return window.$.ajax({
+                        type: 'POST',
+                        url: url,
+                        data: data,
+                        success: success,
+                        dataType: dataType
+                    });
+                };
+                console.log('🔧 Coverage: Patched $.post method');
+            }
+
+            if (typeof window.$.get === 'undefined' && typeof window.$.ajax === 'function') {
+                window.$.get = function(url, data, success, dataType) {
+                    return window.$.ajax({
+                        type: 'GET',
+                        url: url,
+                        data: data,
+                        success: success,
+                        dataType: dataType
+                    });
+                };
+                console.log('🔧 Coverage: Patched $.get method');
+            }
+        } else {
+            // jQuery not ready yet, wait a bit more
+            setTimeout(waitForJQuery, 10);
+        }
+    }
+
+    // Start checking immediately
+    waitForJQuery();
+})();
+
 class CoverageLogger {
     constructor() {
-        // Only enable when explicitly requested via URL parameter ?coverage=1
+        // Check multiple ways coverage can be enabled:
+        // 1. URL parameter ?coverage=1
+        // 2. Cookie 'coverage_enabled=1' or 'cypress_testing=true'
+        // 3. Cypress environment detection
         const urlParams = new URLSearchParams(window.location.search);
-        const isCoverageMode = urlParams.get('coverage') === '1';
+        const urlCoverage = urlParams.get('coverage') === '1';
+        const cookieCoverage = this.getCookie('coverage_enabled') === '1' || this.getCookie('cypress_testing') === 'true';
+        const cypressDetected = !!(window.Cypress || window.__coverage__ || document.querySelector('[data-cy]'));
         const isTestEnvironment = window.location.hostname === '127.0.0.1';
-        this.enabled = isCoverageMode && isTestEnvironment;
+
+        this.enabled = (urlCoverage || cookieCoverage || cypressDetected) && isTestEnvironment;
         this.functionCalls = new Map();
         this.sessionId = Date.now();
         this.testMode = this.detectTestMode();
 
         // Auto-enable test mode if Cypress is detected
-        if (window.Cypress || window.__coverage__ || document.querySelector('[data-cy]')) {
+        if (cypressDetected) {
             this.testMode = true;
-            console.log('🧪 Coverage logging: TEST MODE auto-detected');
+            this.enabled = true; // Force enable for Cypress
+            console.log('🧪 Coverage logging: CYPRESS auto-detected and enabled');
+        } else if (this.enabled) {
+            console.log('🧪 Coverage logging: ENABLED via', {
+                url: urlCoverage,
+                cookie: cookieCoverage,
+                environment: isTestEnvironment
+            });
         }
+    }
+
+    /**
+     * Get cookie value by name
+     * @param {string} name - Cookie name
+     * @returns {string|null} Cookie value or null if not found
+     */
+    getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+        return null;
     }
 
     /**
@@ -32,7 +99,9 @@ class CoverageLogger {
             navigator.userAgent.includes('Cypress') ||
             document.querySelector('[data-cy]') ||
             window.location.search.includes('cypress') ||
-            window.parent !== window // Running in iframe (typical for tests)
+            window.parent !== window || // Running in iframe (typical for tests)
+            this.getCookie('cypress_testing') === 'true' ||
+            this.getCookie('coverage_enabled') === '1'
         );
     }
 
@@ -502,28 +571,39 @@ function enhancedInstrumentation() {
     // Note: MutationObserver disabled to prevent excessive re-instrumentation
     // Functions are caught by the initial run + delayed run
 
-    // Wait for both jQuery and DOM to be ready
-    const waitForDependencies = () => {
-        if (typeof $ !== 'undefined' && typeof $.post === 'function' && document.readyState === 'complete') {
-            // All dependencies ready, safe to instrument
-            console.log('🎯 All dependencies ready, starting instrumentation...');
+    // IMMEDIATE instrumentation - don't wait for page completion
+    console.log('🎯 Starting IMMEDIATE instrumentation (no delays)...');
+
+    // Instrument functions that already exist
+    autoInstrumentGlobalFunctions();
+
+    // Set up continuous instrumentation to catch functions as they're defined
+    const continuousInstrumentation = () => {
+        if (window.coverage && window.coverage.enabled) {
             autoInstrumentGlobalFunctions();
-            instrumentEventHandlers();
-        } else {
-            // Dependencies not ready, wait longer
-            setTimeout(waitForDependencies, 200);
+            if (typeof $ !== 'undefined') {
+                instrumentEventHandlers();
+            }
         }
     };
 
-    // Start checking after a short delay to let everything load
-    setTimeout(waitForDependencies, 1000);
+    // Run instrumentation multiple times to catch functions as scripts load
+    setTimeout(continuousInstrumentation, 100);   // Very early
+    setTimeout(continuousInstrumentation, 500);   // After initial scripts
+    setTimeout(continuousInstrumentation, 1000);  // After most scripts
+    setTimeout(continuousInstrumentation, 2000);  // Late functions
 
-    // Additional late instrumentation only if needed
-    setTimeout(() => {
+    // Also instrument when jQuery becomes available
+    const checkForJQuery = () => {
         if (typeof $ !== 'undefined' && typeof $.post === 'function') {
+            console.log('🎯 jQuery detected, running additional instrumentation...');
             autoInstrumentGlobalFunctions();
+            instrumentEventHandlers();
+        } else {
+            setTimeout(checkForJQuery, 100);
         }
-    }, 3000);
+    };
+    checkForJQuery();
 }
 
 // Console helpers for development

@@ -2,20 +2,52 @@
 // Global variable to store consolidated dashboard data
 window.globalDashboardData = null;
 
+// Helper function for standardized fetch requests
+function postRequest(url, data) {
+    const formData = new FormData();
+    Object.keys(data).forEach(key => {
+        formData.append(key, data[key]);
+    });
+    return fetch(url, {
+        method: 'POST',
+        body: formData
+    }).then(response => response.text());
+}
+
 $(function() {
+    console.log('🚀 Dashboard.js loaded and ready');
     // Initialize unit systems first
     initializeWeightUnit();
     initializeHeightUnit();
 
+    // Load settings data
+    setTimeout(() => {
+        if (typeof window.settingsLoadSettings === 'function') {
+            console.log('📋 Loading settings on dashboard init');
+            window.settingsLoadSettings();
+        } else {
+            console.log('❌ Settings load function not available yet');
+        }
+    }, 500);
+
     // Log active schema to console for debugging
-    $.post('router.php?controller=schema', { action: 'get' }, function(resp) {
+    const formData = new FormData();
+    formData.append('action', 'get');
+    fetch('router.php?controller=schema', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.text())
+    .then(resp => {
         try {
             const data = typeof resp === 'string' ? JSON.parse(resp) : resp;
             if (data && data.schema) {
+                if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
                 console.log('Active schema:', data.schema);
             }
         } catch (e) {}
-    });
+    })
+    .catch(error => console.error('Schema fetch error:', error));
 
     $('#btn-logout').on('click', function() {
         // Show immediate feedback
@@ -23,12 +55,20 @@ $(function() {
 
         // Set a timeout to ensure redirect happens even if server is slow
         setTimeout(function() {
+            if (window.coverage) window.coverage.logFunction('setTimeout', 'dashboard.js');
             window.location.href = 'index.php';
         }, 1000);
 
-        $.post('login_router.php?controller=auth', { action: 'logout' }, function() {
+        const logoutFormData = new FormData();
+        logoutFormData.append('action', 'logout');
+        fetch('login_router.php?controller=auth', {
+            method: 'POST',
+            body: logoutFormData
+        })
+        .then(() => {
             window.location.href = 'index.php';
-        }).fail(function() {
+        })
+        .catch(() => {
             // Even if network fails, try redirect
             window.location.href = 'index.php';
         });
@@ -36,6 +76,7 @@ $(function() {
 
     // FIRST: Load consolidated data, THEN load individual data
     testConsolidatedDashboardData(function() {
+        if (window.coverage) window.coverage.logFunction('testConsolidatedDashboardData', 'dashboard.js');
         // This callback runs after consolidated data is loaded
         console.log('🎯 Consolidated data loaded, now calling individual functions...');
 
@@ -49,7 +90,9 @@ $(function() {
         refreshGallbladderHealth();
         refreshPersonalHealthBenefits();
         loadWeightHistory();
-        loadSettings();
+        setTimeout(() => {
+            loadSettings();
+        }, 1000);
     });
     
     // Set today's date as default for new entries
@@ -59,6 +102,7 @@ $(function() {
     $('#btn-add-weight').on('click', function() {
         const weightInput = $('#weightKg').val().trim();
         if (!weightInput) { return; }
+            if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
 
         // Convert user input to kg for storage
         const weightKg = convertToKg(weightInput);
@@ -67,7 +111,8 @@ $(function() {
             return;
         }
 
-        $.post('router.php?controller=profile', { action: 'add_weight', weight_kg: weightKg.toFixed(2) }, function(resp) {
+        postRequest('router.php?controller=profile', { action: 'add_weight', weight_kg: weightKg.toFixed(2) })
+        .then(resp => {
             const data = parseJson(resp);
             if (data.success) {
                 showToast('Weight saved');
@@ -75,6 +120,7 @@ $(function() {
 
                 // Reload global data first, then refresh all functions
                 reloadGlobalDashboardData(function() {
+                    if (window.coverage) window.coverage.logFunction('reloadGlobalDashboardData', 'dashboard.js');
                     // Functions using global data
                     refreshLatestWeight();
                     refreshBMI();
@@ -91,7 +137,12 @@ $(function() {
                     const activePeriod = $('.btn-group .active').attr('id')?.replace('chart-', '') || '90days';
                     updateWeightChart(activePeriod);
                 });
+            } else {
+                showAlert('Failed to save weight', 'danger');
             }
+        })
+        .catch(() => {
+            showAlert('Network error', 'danger');
         });
     });
     
@@ -112,6 +163,7 @@ $(function() {
         const date = $('#newDate').val();
 
         if (!weightInput || !date) {
+            if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
             showToast('Please enter both weight and date');
             return;
         }
@@ -123,11 +175,12 @@ $(function() {
             return;
         }
 
-        $.post('router.php?controller=profile', {
+        postRequest('router.php?controller=profile', {
             action: 'add_weight',
             weight_kg: weightKg.toFixed(2),
             entry_date: date
-        }, function(resp) {
+        })
+        .then(resp => {
             const data = parseJson(resp);
             if (data.success) {
                 showToast('Weight entry saved');
@@ -137,6 +190,7 @@ $(function() {
 
                 // Reload global data first, then refresh all functions
                 reloadGlobalDashboardData(function() {
+                    if (window.coverage) window.coverage.logFunction('reloadGlobalDashboardData', 'dashboard.js');
                     // Functions using global data
                     refreshLatestWeight();
                     refreshBMI();
@@ -155,7 +209,8 @@ $(function() {
             } else {
                 showToast('Failed to save weight entry');
             }
-        }).fail(function() {
+        })
+        .catch(() => {
             showToast('Network error');
         });
     });
@@ -164,6 +219,7 @@ $(function() {
         const goalInput = $('#goalWeight').val().trim();
         const d = $('#goalDate').val();
         if (!goalInput) { return; }
+            if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
 
         // Convert user input to kg for storage
         const weightKg = convertToKg(goalInput);
@@ -172,13 +228,20 @@ $(function() {
             return;
         }
 
-        $.post('router.php?controller=profile', { action: 'save_goal', target_weight_kg: weightKg.toFixed(2), target_date: d }, function(resp) {
+        postRequest('router.php?controller=profile', { action: 'save_goal', target_weight_kg: weightKg.toFixed(2), target_date: d })
+        .then(resp => {
             const data = parseJson(resp);
             if (data.success) {
+                if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
                 showToast('Goal saved');
                 refreshGoal();
                 refreshPersonalHealthBenefits();
+            } else {
+                showAlert('Failed to save goal', 'warning');
             }
+        })
+        .catch(() => {
+            showAlert('Network error', 'danger');
         });
     });
 
@@ -187,6 +250,7 @@ $(function() {
         let heightCm = 0;
 
         if (heightInput) {
+            if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
             heightCm = convertToCm(heightInput);
             if (isNaN(heightCm) || heightCm <= 0) {
                 showAlert('Please enter a valid height', 'warning');
@@ -209,6 +273,7 @@ $(function() {
 
                 // Reload global data first, then refresh all functions
                 reloadGlobalDashboardData(function() {
+                    if (window.coverage) window.coverage.logFunction('reloadGlobalDashboardData', 'dashboard.js');
                     // Functions using global data
                     refreshBMI();
                     refreshHealth(); // body fat uses global, cardiovascular risk uses individual API
@@ -226,7 +291,8 @@ $(function() {
             } else {
                 $('#profile-status').text('Save failed').removeClass('text-success').addClass('text-danger');
             }
-        }).fail(function() {
+        })
+    .catch(() => {
             $('#profile-status').text('Network error').removeClass('text-success').addClass('text-danger');
         });
     });
@@ -240,11 +306,19 @@ $(function() {
         toggleEmailSchedule();
     });
 
-    $('#btn-save-settings').on('click', function() {
+    $(document).on('click', '#btn-save-settings', function() {
+        console.log('🔵 Save Settings button clicked!');
         saveSettings();
     });
+
+    // Debug: Check if button exists
+    setTimeout(() => {
+        const btn = $('#btn-save-settings');
+        console.log('🔍 Button exists:', btn.length > 0);
+        console.log('🔍 Button element:', btn[0]);
+    }, 2000);
     
-    $('#btn-reset-settings').on('click', function() {
+    $(document).on('click', '#btn-reset-settings', function() {
         if (confirm('Are you sure you want to reset all settings to defaults?')) {
             resetSettings();
         }
@@ -285,12 +359,15 @@ $(function() {
 });
 
 function reloadGlobalDashboardData(callback) {
+    if (window.coverage) window.coverage.logFunction('reloadGlobalDashboardData', 'dashboard.js');
     console.log('🔄 Reloading global dashboard data...');
-    $.post('router.php?controller=profile', { action: 'get_all_dashboard_data' }, function(resp) {
+    postRequest('router.php?controller=profile', { action: 'get_all_dashboard_data' })
+    .then(resp => {
         const result = parseJson(resp);
         console.log('Reloaded dashboard data result:', result);
 
         if (result.success) {
+            if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
             // Store the data globally so other functions can use it
             window.globalDashboardData = result.data;
             console.log('✅ Global dashboard data updated');
@@ -304,10 +381,12 @@ function reloadGlobalDashboardData(callback) {
             window.globalDashboardData = null;
 
             if (callback) {
+                if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
                 callback();
             }
         }
-    }).fail(function() {
+    })
+    .catch(() => {
         console.log('❌ Network error reloading global dashboard data');
         window.globalDashboardData = null;
 
@@ -318,12 +397,15 @@ function reloadGlobalDashboardData(callback) {
 }
 
 function testConsolidatedDashboardData(callback) {
+    if (window.coverage) window.coverage.logFunction('testConsolidatedDashboardData', 'dashboard.js');
     console.log('Testing consolidated dashboard data endpoint...');
-    $.post('router.php?controller=profile', { action: 'get_all_dashboard_data' }, function(resp) {
+    postRequest('router.php?controller=profile', { action: 'get_all_dashboard_data' })
+    .then(resp => {
         const result = parseJson(resp);
         console.log('Consolidated dashboard data result:', result);
 
         if (result.success) {
+            if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
             // Store the data globally so other functions can use it
             window.globalDashboardData = result.data;
 
@@ -336,9 +418,11 @@ function testConsolidatedDashboardData(callback) {
 
         // Call the callback regardless of success/failure
         if (callback && typeof callback === 'function') {
+            if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
             callback();
         }
-    }).fail(function() {
+    })
+    .catch(() => {
         console.log('❌ Network error calling consolidated endpoint');
 
         // Call the callback even on failure so individual functions still run
@@ -356,6 +440,7 @@ function refreshLatestWeight() {
     console.log('🔍 latest_weight in global data:', window.globalDashboardData?.latest_weight);
 
     if (window.globalDashboardData && window.globalDashboardData.latest_weight) {
+        if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
         console.log('📊 Using global data for latest weight');
         const latestWeight = window.globalDashboardData.latest_weight;
         const formattedDate = formatDate(latestWeight.entry_date);
@@ -368,9 +453,11 @@ function refreshLatestWeight() {
 
     // Fallback to API call if global data not available
     console.log('🌐 Making API call for latest weight (global data not available)');
-    $.post('router.php?controller=profile', { action: 'get_latest_weight' }, function(resp) {
+    postRequest('router.php?controller=profile', { action: 'get_latest_weight' })
+    .then(resp => {
         const data = parseJson(resp);
         if (data.latest) {
+            if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
             const formattedDate = formatDate(data.latest.entry_date);
             const displayWeight = convertFromKg(data.latest.weight_kg);
             const unit = getWeightUnitLabel();
@@ -398,6 +485,7 @@ function refreshHistoricalWeights() {
 
     // Check if we have global data first
     if (window.globalDashboardData && window.globalDashboardData.weight_history) {
+        if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
         weightHistory = window.globalDashboardData.weight_history;
         findAndDisplayHistoricalWeights(weightHistory, oneWeekAgo, oneMonthAgo);
         return;
@@ -408,16 +496,19 @@ function refreshHistoricalWeights() {
         console.log('⚠️ jQuery not available for refreshHistoricalWeights, skipping API call');
         return;
     }
-    $.post('router.php?controller=profile', { action: 'get_weight_history' }, function(resp) {
+    postRequest('router.php?controller=profile', { action: 'get_weight_history' })
+    .then(resp => {
         const data = parseJson(resp);
         if (data.success && data.history) {
+            if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
             weightHistory = data.history;
             findAndDisplayHistoricalWeights(weightHistory, oneWeekAgo, oneMonthAgo);
         } else {
             $('#last-week-weight').text('');
             $('#last-month-weight').text('');
         }
-    }).fail(function() {
+    })
+    .catch(() => {
         $('#last-week-weight').text('');
         $('#last-month-weight').text('');
     });
@@ -442,6 +533,7 @@ function findAndDisplayHistoricalWeights(weightHistory, oneWeekAgo, oneMonthAgo)
         // Check for week
         const weekDiff = Math.abs(entryDate - oneWeekAgo);
         if (weekDiff < minWeekDiff) {
+            if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
             minWeekDiff = weekDiff;
             lastWeekWeight = entry;
         }
@@ -456,6 +548,7 @@ function findAndDisplayHistoricalWeights(weightHistory, oneWeekAgo, oneMonthAgo)
 
     // Display last week weight
     if (lastWeekWeight && minWeekDiff <= 10 * 24 * 60 * 60 * 1000) { // Within 10 days
+        if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
         const displayWeight = convertFromKg(lastWeekWeight.weight_kg);
         const formattedDate = formatDate(lastWeekWeight.entry_date);
         $('#last-week-weight').text(`Last Week: ${displayWeight} ${unit} on ${formattedDate}`);
@@ -481,6 +574,7 @@ function refreshGoal() {
     console.log('🔍 goal in global data:', window.globalDashboardData?.goal);
 
     if (window.globalDashboardData && window.globalDashboardData.goal) {
+        if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
         console.log('📊 Using global data for goal');
         const goal = window.globalDashboardData.goal;
         const formattedDate = goal.target_date ? formatDateBySettings(goal.target_date) : 'n/a';
@@ -492,6 +586,7 @@ function refreshGoal() {
 
     // Check if global data loaded but no goal exists
     if (window.globalDashboardData && !window.globalDashboardData.goal) {
+        if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
         console.log('📊 Using global data for goal (no goal set)');
         $('#current-goal').text('No active goal set');
         return;
@@ -503,9 +598,11 @@ function refreshGoal() {
         console.log('⚠️ jQuery not available for refreshGoal, skipping API call');
         return;
     }
-    $.post('router.php?controller=profile', { action: 'get_goal' }, function(resp) {
+    postRequest('router.php?controller=profile', { action: 'get_goal' })
+    .then(resp => {
         const data = parseJson(resp);
         if (data.goal) {
+            if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
             const formattedDate = data.goal.target_date ? formatDateBySettings(data.goal.target_date) : 'n/a';
             const displayWeight = convertFromKg(data.goal.target_weight_kg);
             const unit = getWeightUnitLabel();
@@ -521,6 +618,7 @@ function loadProfile() {
 
     // Check if we have global data first
     if (window.globalDashboardData && window.globalDashboardData.profile) {
+        if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
         console.log('📊 Using global data for profile');
         const profile = window.globalDashboardData.profile;
         const displayHeight = profile.height_cm ? convertFromCm(profile.height_cm) : '';
@@ -537,9 +635,11 @@ function loadProfile() {
         console.log('⚠️ jQuery not available for loadProfile, skipping API call');
         return;
     }
-    $.post('router.php?controller=profile', { action: 'get_profile' }, function(resp) {
+    postRequest('router.php?controller=profile', { action: 'get_profile' })
+    .then(resp => {
         const data = parseJson(resp);
         if (data.profile) {
+            if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
             const displayHeight = data.profile.height_cm ? convertFromCm(data.profile.height_cm) : '';
             $('#heightCm').val(displayHeight);
             $('#bodyFrame').val(data.profile.body_frame || '');
@@ -550,6 +650,7 @@ function loadProfile() {
 }
 
 function refreshBMI() {
+    if (window.coverage) window.coverage.logFunction('refreshBMI', 'dashboard.js');
     // Call the health.js function
     if (typeof window.healthRefreshBMI === 'function') {
         window.healthRefreshBMI();
@@ -557,6 +658,7 @@ function refreshBMI() {
 }
 
 function refreshHealth() {
+    if (window.coverage) window.coverage.logFunction('refreshHealth', 'dashboard.js');
     // Call the health.js function
     if (typeof window.healthRefreshHealth === 'function') {
         window.healthRefreshHealth();
@@ -564,6 +666,7 @@ function refreshHealth() {
 }
 
 function refreshIdealWeight() {
+    if (window.coverage) window.coverage.logFunction('refreshIdealWeight', 'dashboard.js');
     // Call the health.js function
     if (typeof window.healthRefreshIdealWeight === 'function') {
         window.healthRefreshIdealWeight();
@@ -578,6 +681,7 @@ function refreshWeightProgress() {
     console.log('🔍 weight_progress in global data:', window.globalDashboardData?.weight_progress);
 
     if (window.globalDashboardData && window.globalDashboardData.weight_progress) {
+        if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
         console.log('📊 Using global data for weight progress');
         const data = window.globalDashboardData.weight_progress;
         const el = $('#progress-block');
@@ -593,6 +697,7 @@ function refreshWeightProgress() {
         const avgWeeklyRate = convertFromKg(data.avg_weekly_rate_kg || data.average_weekly_loss_kg);
         lines.push(`<small class="text-muted">Over ${data.weeks_elapsed || data.weeks_tracked} weeks (${avgWeeklyRate} ${unit}/week average)</small>`);
         if (data.research_note) {
+            if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
             lines.push(`<small class="text-muted">${data.research_note}</small>`);
         }
 
@@ -606,11 +711,13 @@ function refreshWeightProgress() {
         console.log('⚠️ jQuery not available for refreshWeightProgress, skipping API call');
         return;
     }
-    $.post('router.php?controller=profile', { action: 'get_weight_progress' }, function(resp) {
+    postRequest('router.php?controller=profile', { action: 'get_weight_progress' })
+    .then(resp => {
         const data = parseJson(resp);
         const el = $('#progress-block');
 
         if (!data.success) {
+            if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
             el.text(data.message || 'Need at least 2 weight entries to show progress').addClass('text-muted');
             return;
         }
@@ -626,12 +733,14 @@ function refreshWeightProgress() {
         lines.push(`<small class="text-muted">${data.research_note}</small>`);
 
         el.html(lines.join('<br>')).removeClass('text-muted');
-    }).fail(function() {
+    })
+    .catch(() => {
         $('#progress-block').text('Failed to calculate weight progress').addClass('text-muted');
     });
 }
 
 function refreshGallbladderHealth() {
+    if (window.coverage) window.coverage.logFunction('refreshGallbladderHealth', 'dashboard.js');
     // Call the health.js function
     if (typeof window.healthRefreshGallbladderHealth === 'function') {
         window.healthRefreshGallbladderHealth();
@@ -639,6 +748,7 @@ function refreshGallbladderHealth() {
 }
 
 function loadWeightHistory() {
+    if (window.coverage) window.coverage.logFunction('loadWeightHistory', 'dashboard.js');
     // Call the data.js function
     if (typeof window.dataLoadWeightHistory === 'function') {
         window.dataLoadWeightHistory();
@@ -646,6 +756,7 @@ function loadWeightHistory() {
 }
 
 function formatDate(dateString) {
+    if (window.coverage) window.coverage.logFunction('formatDate', 'dashboard.js');
     // Call the data.js function
     if (typeof window.dataFormatDate === 'function') {
         return window.dataFormatDate(dateString);
@@ -654,6 +765,7 @@ function formatDate(dateString) {
 }
 
 function editWeight(id, weight, date) {
+    if (window.coverage) window.coverage.logFunction('editWeight', 'dashboard.js');
     // Call the data.js function
     if (typeof window.dataEditWeight === 'function') {
         window.dataEditWeight(id, weight, date);
@@ -661,6 +773,7 @@ function editWeight(id, weight, date) {
 }
 
 function deleteWeight(id) {
+    if (window.coverage) window.coverage.logFunction('deleteWeight', 'dashboard.js');
     // Call the data.js function
     if (typeof window.dataDeleteWeight === 'function') {
         window.dataDeleteWeight(id);
@@ -669,20 +782,100 @@ function deleteWeight(id) {
 
 
 function loadSettings() {
-    // Call the settings.js function
-    if (typeof window.settingsLoadSettings === 'function') {
-        window.settingsLoadSettings();
+    if (window.coverage) window.coverage.logFunction('loadSettings', 'dashboard.js');
+    console.log('🔧 loadSettings() called in dashboard.js');
+    console.log('🔍 globalDashboardData:', window.globalDashboardData);
+
+    // Check if we have global data first
+    if (window.globalDashboardData && window.globalDashboardData.settings) {
+        console.log('📊 Using global data for settings');
+        const s = window.globalDashboardData.settings;
+        console.log('🔧 Settings data:', s);
+
+        // Check if elements exist
+        console.log('🔍 #shareData exists:', $('#shareData').length);
+        console.log('🔍 #emailNotifications exists:', $('#emailNotifications').length);
+        console.log('🔍 #weeklyReports exists:', $('#weeklyReports').length);
+
+        $('#weightUnit').val(s.weight_unit || 'kg');
+        $('#heightUnit').val(s.height_unit || 'cm');
+        setWeightUnit(s.weight_unit || 'kg');
+        setHeightUnit(s.height_unit || 'cm');
+        $('#dateFormat').val(s.date_format || 'uk');
+        $('#theme').val(s.theme || 'glassmorphism');
+        $('#language').val(s.language || 'en');
+
+        console.log('🔧 Setting checkboxes:', {
+            share_data: s.share_data,
+            email_notifications: s.email_notifications,
+            weekly_reports: s.weekly_reports
+        });
+
+        $('#shareData').prop('checked', s.share_data === true);
+        $('#emailNotifications').prop('checked', s.email_notifications === true);
+        $('#weeklyReports').prop('checked', s.weekly_reports === true);
+        $('#emailDay').val(s.email_day || 'monday');
+        $('#emailTime').val(s.email_time || '09:00');
+        updateDateExample();
+        updateThemeOptions(s.theme || 'glassmorphism');
+        toggleEmailSchedule();
+        return;
     }
+
+    // Fallback to API call if global data not available
+    console.log('🌐 Making API call for settings (global data not available)');
+    const formData = new FormData();
+    formData.append('action', 'get_settings');
+
+    fetch('router.php?controller=profile', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.text())
+    .then(responseText => {
+        const data = parseJson(responseText);
+        if (data.success && data.settings) {
+            const s = data.settings;
+            $('#weightUnit').val(s.weight_unit || 'kg');
+            $('#heightUnit').val(s.height_unit || 'cm');
+            $('#dateFormat').val(s.date_format || 'uk');
+            $('#theme').val(s.theme || 'glassmorphism');
+            $('#language').val(s.language || 'en');
+            $('#shareData').prop('checked', s.share_data === true);
+            $('#emailNotifications').prop('checked', s.email_notifications === true);
+            $('#weeklyReports').prop('checked', s.weekly_reports === true);
+            $('#emailDay').val(s.email_day || 'monday');
+            $('#emailTime').val(s.email_time || '09:00');
+            updateDateExample();
+            updateThemeOptions(s.theme || 'glassmorphism');
+            toggleEmailSchedule();
+        }
+    })
+    .catch(error => {
+        console.error('Settings load error:', error);
+    });
 }
 
 function saveSettings() {
+    if (window.coverage) window.coverage.logFunction('saveSettings', 'dashboard.js');
     // Call the settings.js function
     if (typeof window.settingsSaveSettings === 'function') {
         window.settingsSaveSettings();
     }
 }
 
+function toggleEmailSchedule() {
+    if (window.coverage) window.coverage.logFunction('toggleEmailSchedule', 'dashboard.js');
+    const emailNotificationsChecked = $('#emailNotifications').is(':checked');
+    if (emailNotificationsChecked) {
+        $('#emailSchedule').show();
+    } else {
+        $('#emailSchedule').hide();
+    }
+}
+
 function resetSettings() {
+    if (window.coverage) window.coverage.logFunction('resetSettings', 'dashboard.js');
     // Call the settings.js function
     if (typeof window.settingsResetSettings === 'function') {
         window.settingsResetSettings();
@@ -690,6 +883,7 @@ function resetSettings() {
 }
 
 function updateDateExample() {
+    if (window.coverage) window.coverage.logFunction('updateDateExample', 'dashboard.js');
     // Call the settings.js function
     if (typeof window.settingsUpdateDateExample === 'function') {
         window.settingsUpdateDateExample();
@@ -703,6 +897,20 @@ function initTabNavigation() {
         const target = $(e.target).attr('href');
         const tabName = target.substring(1); // Remove the # symbol
         window.location.hash = 'tab=' + tabName;
+
+        // Load settings when settings tab is shown
+        if (tabName === 'settings') {
+            console.log('🔧 Settings tab shown, loading settings...');
+            console.log('🔍 loadSettings function type:', typeof loadSettings);
+            console.log('🔍 window.settingsLoadSettings type:', typeof window.settingsLoadSettings);
+            if (typeof loadSettings === 'function') {
+                loadSettings();
+            } else if (typeof window.settingsLoadSettings === 'function') {
+                window.settingsLoadSettings();
+            } else {
+                console.error('❌ No loadSettings function available');
+            }
+        }
     });
 
     // Check URL hash on page load and activate correct tab
@@ -713,6 +921,7 @@ function initTabNavigation() {
         const tabExists = $(tabSelector).length > 0;
         
         if (tabExists) {
+            if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
             // Deactivate current active tab
             $('.nav-link.active').removeClass('active');
             $('.tab-pane.active').removeClass('active show');
@@ -720,6 +929,11 @@ function initTabNavigation() {
             // Activate the target tab
             $(tabSelector).addClass('active');
             $('#' + tabName).addClass('active show');
+
+            // Load settings if settings tab is activated on page load
+            if (tabName === 'settings') {
+                loadSettings();
+            }
         }
     }
 
@@ -744,9 +958,11 @@ let currentPeriodOffset = 0; // 0 = current period, 1 = previous period, etc.
 
 // Function to get theme-appropriate chart colors
 function getChartTextColor() {
+    if (window.coverage) window.coverage.logFunction('getChartTextColor', 'dashboard.js');
     // Check current theme by looking at the theme CSS link
     const themeLink = document.getElementById('theme-css');
     if (themeLink && themeLink.href) {
+        if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
         if (themeLink.href.includes('minimalism') || themeLink.href.includes('material')) {
             return '#212529'; // Dark text for light themes
         }
@@ -759,9 +975,11 @@ function getChartTextColor() {
 
 // Function to update chart colors when theme changes
 function updateChartThemeColors() {
+    if (window.coverage) window.coverage.logFunction('updateChartThemeColors', 'dashboard.js');
     if (typeof weightChart !== 'undefined' && weightChart) {
         // Update axis colors
         if (weightChart.options.scales) {
+            if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
             if (weightChart.options.scales.x && weightChart.options.scales.x.ticks) {
                 weightChart.options.scales.x.ticks.color = getChartTextColor();
             }
@@ -772,6 +990,7 @@ function updateChartThemeColors() {
                 weightChart.options.scales.x.grid.color = getChartGridColor();
             }
             if (weightChart.options.scales.y && weightChart.options.scales.y.grid) {
+                if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
                 weightChart.options.scales.y.grid.color = getChartGridColor();
             }
         }
@@ -783,6 +1002,7 @@ function updateChartThemeColors() {
 
         // Update dataset colors
         if (weightChart.data && weightChart.data.datasets) {
+            if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
             weightChart.data.datasets.forEach(dataset => {
                 if (dataset.borderColor) dataset.borderColor = getChartLineColor();
                 if (dataset.pointBackgroundColor) dataset.pointBackgroundColor = getChartLineColor();
@@ -799,9 +1019,11 @@ function updateChartThemeColors() {
 window.updateChartThemeColors = updateChartThemeColors;
 
 function getChartGridColor() {
+    if (window.coverage) window.coverage.logFunction('getChartGridColor', 'dashboard.js');
     // Check current theme by looking at the theme CSS link
     const themeLink = document.getElementById('theme-css');
     if (themeLink && themeLink.href) {
+        if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
         if (themeLink.href.includes('minimalism') || themeLink.href.includes('material')) {
             return 'rgba(33, 37, 41, 0.1)'; // Dark grid for light themes
         }
@@ -813,9 +1035,11 @@ function getChartGridColor() {
 }
 
 function getChartLineColor() {
+    if (window.coverage) window.coverage.logFunction('getChartLineColor', 'dashboard.js');
     // Check current theme by looking at the theme CSS link
     const themeLink = document.getElementById('theme-css');
     if (themeLink && themeLink.href) {
+        if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
         if (themeLink.href.includes('skeuomorphism')) {
             return '#8b4513'; // Brown lines for skeuomorphism theme
         }
@@ -836,9 +1060,11 @@ function getChartLineColor() {
 }
 
 function getChartStyling() {
+    if (window.coverage) window.coverage.logFunction('getChartStyling', 'dashboard.js');
     // Check current theme by looking at the theme CSS link
     const themeLink = document.getElementById('theme-css');
     if (themeLink && themeLink.href) {
+        if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
         if (themeLink.href.includes('minimalism')) {
             return {
                 borderWidth: 1,
@@ -879,6 +1105,7 @@ function resetToLineChart() {
     
     // Ensure single dataset structure for simple line charts
     if (!weightChart.data.datasets[0] || weightChart.data.datasets.length > 1) {
+        if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
         const styling = getChartStyling();
         weightChart.data.datasets = [{
             label: 'Weight (kg)',
@@ -922,9 +1149,11 @@ function resetToBarChart(yearlyData) {
     weightChart.options.plugins.tooltip = {
         callbacks: {
             afterLabel: function(context) {
+                if (window.coverage) window.coverage.logFunction('afterLabel', 'dashboard.js');
                 const monthData = yearlyData[context.dataIndex];
                 const lines = [];
                 if (monthData.averageWeight > 0) {
+                    if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
                     const displayAverage = convertFromKg(monthData.averageWeight);
                     const unit = getWeightUnitLabel();
                     lines.push(`Average weight: ${displayAverage} ${unit}`);
@@ -1024,10 +1253,12 @@ function updateWeightChart(period) {
     if (window.coverage) window.coverage.logFunction('updateWeightChart', 'dashboard.js');
     $('#chart-status').text('Loading chart data...').show();
     
-    $.post('router.php?controller=profile', { action: 'get_weight_history' }, function(resp) {
+    postRequest('router.php?controller=profile', { action: 'get_weight_history' })
+    .then(resp => {
         const data = parseJson(resp);
         
         if (!data.success || !data.history || data.history.length === 0) {
+            if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
             $('#chart-status').text('No weight data available for chart').show();
             $('#chart-navigation').hide();
             weightChart.data.labels = [];
@@ -1043,6 +1274,7 @@ function updateWeightChart(period) {
         let periodInfo = '';
         
         if (period === 'weekly') {
+            if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
             // Weekly view - show bar chart for weeks of current year
             $('#chart-navigation').hide();
             updateWeeklyChart(sortedData);
@@ -1084,6 +1316,7 @@ function updateWeightChart(period) {
             const endStr = periodEnd.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: '2-digit' });
             
             if (currentPeriodOffset === 0) {
+                if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
                 periodInfo = `Current ${daysInPeriod} days (${startStr} - ${endStr})`;
             } else {
                 periodInfo = `${currentPeriodOffset * daysInPeriod}-${(currentPeriodOffset + 1) * daysInPeriod} days ago (${startStr} - ${endStr})`;
@@ -1105,6 +1338,7 @@ function updateWeightChart(period) {
         $('#chart-period-info').text(periodInfo);
         
         if (filteredData.length === 0) {
+            if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
             $('#chart-status').text(`No weight data available for ${periodInfo.toLowerCase()}`).show();
             weightChart.data.labels = [];
             weightChart.data.datasets[0].data = [];
@@ -1137,6 +1371,7 @@ function updateWeightChart(period) {
         // Update Y-axis title with current unit
         const unit = getWeightUnitLabel();
         if (weightChart.options.scales.y.title) {
+            if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
             weightChart.options.scales.y.title.text = `Weight (${unit})`;
         } else {
             weightChart.options.scales.y.title = {
@@ -1156,7 +1391,8 @@ function updateWeightChart(period) {
         // Update achievement cards with current period data
         updateAchievementCards(filteredData);
         
-    }).fail(function() {
+    })
+    .catch(() => {
         $('#chart-status').text('Failed to load chart data').show();
     });
 }
@@ -1180,6 +1416,7 @@ function updateMonthlyChart(sortedData) {
     const months = [];
     
     for (let i = 0; i < 6; i++) {
+        if (window.coverage) window.coverage.logFunction('for', 'dashboard.js');
         const monthDate = new Date(now.getFullYear(), now.getMonth() - i, 1);
         const monthEnd = new Date(now.getFullYear(), now.getMonth() - i + 1, 0);
         
@@ -1199,6 +1436,7 @@ function updateMonthlyChart(sortedData) {
         
         months.forEach(month => {
             if (entryDate >= month.start && entryDate <= month.end) {
+                if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
                 month.data.push({
                     date: entryDate,
                     weight: parseFloat(convertFromKg(entry.weight_kg)),
@@ -1215,6 +1453,7 @@ function updateMonthlyChart(sortedData) {
     });
     
     if (monthsWithData.length === 0) {
+        if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
         $('#chart-status').text('No weight data available for monthly view').show();
         weightChart.data.labels = [];
         weightChart.data.datasets = [];
@@ -1225,6 +1464,7 @@ function updateMonthlyChart(sortedData) {
     // Create labels (days of month 1-31)
     const labels = [];
     for (let day = 1; day <= 31; day++) {
+        if (window.coverage) window.coverage.logFunction('for', 'dashboard.js');
         labels.push(day.toString());
     }
     
@@ -1262,6 +1502,7 @@ function updateMonthlyChart(sortedData) {
     // Update Y-axis title with current unit
     const unit = getWeightUnitLabel();
     if (weightChart.options.scales.y.title) {
+        if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
         weightChart.options.scales.y.title.text = `Weight (${unit})`;
     } else {
         weightChart.options.scales.y.title = {
@@ -1297,6 +1538,7 @@ function updateMonthlyAchievementCards(monthsWithData) {
             const monthLoss = monthStart - monthEnd;
             
             if (monthLoss > bestLoss) {
+                if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
                 bestLoss = monthLoss;
                 bestMonth = month;
             }
@@ -1316,6 +1558,7 @@ function updateMonthlyAchievementCards(monthsWithData) {
     
     // Update Goals Achieved with best month
     if (bestMonth && bestLoss > 0) {
+        if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
         const unit = getWeightUnitLabel();
         const displayBestLoss = convertFromKg(bestLoss);
         const goalHtml = `<strong class="text-success" style="color: ${bestMonth.color} !important;">🏆 ${bestMonth.name}</strong><br><small>Best month: ${displayBestLoss} ${unit} lost</small>`;
@@ -1330,6 +1573,7 @@ function updateMonthlyAchievementCards(monthsWithData) {
     
     monthsWithData.forEach(month => {
         if (month.data.length > highestEntryCount) {
+            if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
             highestEntryCount = month.data.length;
             mostConsistentMonth = month;
         }
@@ -1352,6 +1596,7 @@ function updateWeeklyChart(sortedData) {
     
     // Calculate week numbers for the current year (1-52/53)
     function getWeekNumber(date) {
+        if (window.coverage) window.coverage.logFunction('getWeekNumber', 'dashboard.js');
         const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
         const dayNum = d.getUTCDay() || 7;
         d.setUTCDate(d.getUTCDate() + 4 - dayNum);
@@ -1364,6 +1609,7 @@ function updateWeeklyChart(sortedData) {
     const maxWeeks = 53; // Maximum possible weeks in a year
     
     for (let weekNumber = 1; weekNumber <= maxWeeks; weekNumber++) {
+        if (window.coverage) window.coverage.logFunction('for', 'dashboard.js');
         // Calculate approximate start/end dates for this week
         const yearStart = new Date(currentYear, 0, 1);
         const daysToFirstMonday = (8 - yearStart.getDay()) % 7;
@@ -1391,6 +1637,7 @@ function updateWeeklyChart(sortedData) {
             
             // Calculate weight loss for the week (start vs end)
             if (weekData.length >= 2) {
+                if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
                 const sortedWeekData = weekData.sort((a, b) => new Date(a.entry_date) - new Date(b.entry_date));
                 const startWeight = parseFloat(sortedWeekData[0].weight_kg);
                 const endWeight = parseFloat(sortedWeekData[sortedWeekData.length - 1].weight_kg);
@@ -1404,6 +1651,7 @@ function updateWeeklyChart(sortedData) {
                 });
                 
                 if (prevWeekData.length > 0) {
+                    if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
                     const prevWeekSorted = prevWeekData.sort((a, b) => new Date(a.entry_date) - new Date(b.entry_date));
                     const prevWeight = parseFloat(prevWeekSorted[prevWeekSorted.length - 1].weight_kg);
                     const currentWeight = parseFloat(weekData[0].weight_kg);
@@ -1434,6 +1682,7 @@ function updateWeeklyChart(sortedData) {
     );
     
     if (weeksToShow.length === 0) {
+        if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
         $('#chart-status').text(`No week data available for ${currentYear}`).show();
         weightChart.data.labels = [];
         weightChart.data.datasets = [];
@@ -1499,6 +1748,7 @@ function updateWeeklyAchievementCards(weeklyData, currentYear) {
             totalEntries += week.entryCount;
             
             if (week.weightLoss > bestLoss) {
+                if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
                 bestLoss = week.weightLoss;
                 bestWeek = week;
             }
@@ -1515,6 +1765,7 @@ function updateWeeklyAchievementCards(weeklyData, currentYear) {
     
     // Update Goals Achieved with best week
     if (bestWeek && bestLoss > 0) {
+        if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
         const weekStartStr = bestWeek.weekStart.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit' });
         const goalHtml = `<strong class="text-success">🏆 ${bestWeek.weekLabel}</strong><br><small>Best week: ${bestLoss.toFixed(1)} kg (${weekStartStr})</small>`;
         $('#goals-achieved').html(goalHtml);
@@ -1528,6 +1779,7 @@ function updateWeeklyAchievementCards(weeklyData, currentYear) {
     
     weeklyData.forEach(week => {
         if (week.entryCount > highestEntryCount) {
+            if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
             highestEntryCount = week.entryCount;
             mostActiveWeek = week;
         }
@@ -1556,6 +1808,7 @@ function updateYearlyChart(sortedData) {
     const monthlyAverages = [];
     
     for (let monthIndex = 0; monthIndex < 12; monthIndex++) {
+        if (window.coverage) window.coverage.logFunction('for', 'dashboard.js');
         const monthStart = new Date(currentYear, monthIndex, 1);
         const monthEnd = new Date(currentYear, monthIndex + 1, 0);
         
@@ -1575,6 +1828,7 @@ function updateYearlyChart(sortedData) {
             
             // Calculate weight loss for the month (start vs end)
             if (monthData.length >= 2) {
+                if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
                 const sortedMonthData = monthData.sort((a, b) => new Date(a.entry_date) - new Date(b.entry_date));
                 const startWeight = parseFloat(sortedMonthData[0].weight_kg);
                 const endWeight = parseFloat(sortedMonthData[sortedMonthData.length - 1].weight_kg);
@@ -1599,6 +1853,7 @@ function updateYearlyChart(sortedData) {
     const monthsWithData = yearlyData.filter(month => month.hasData);
     
     if (monthsWithData.length === 0) {
+        if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
         $('#chart-status').text(`No weight data available for ${currentYear}`).show();
         weightChart.data.labels = [];
         weightChart.data.datasets = [];
@@ -1652,6 +1907,7 @@ function updateYearlyAchievementCards(yearlyData, currentYear) {
             totalEntries += month.entryCount;
             
             if (month.weightLoss > bestLoss) {
+                if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
                 bestLoss = month.weightLoss;
                 bestMonth = month;
             }
@@ -1668,6 +1924,7 @@ function updateYearlyAchievementCards(yearlyData, currentYear) {
     
     // Update Goals Achieved with best month
     if (bestMonth && bestLoss > 0) {
+        if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
         const goalHtml = `<strong class="text-success">🏆 ${bestMonth.month}</strong><br><small>Best month: ${bestLoss.toFixed(1)} kg lost</small>`;
         $('#goals-achieved').html(goalHtml);
     } else {
@@ -1680,6 +1937,7 @@ function updateYearlyAchievementCards(yearlyData, currentYear) {
     
     yearlyData.forEach(month => {
         if (month.entryCount > highestEntryCount) {
+            if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
             highestEntryCount = month.entryCount;
             mostActiveMonth = month;
         }
@@ -1694,6 +1952,7 @@ function updateYearlyAchievementCards(yearlyData, currentYear) {
 }
 
 function updateAchievementCards(weightData) {
+    if (window.coverage) window.coverage.logFunction('updateAchievementCards', 'dashboard.js');
     // Call the achievements.js function
     if (typeof window.achievementsUpdateAchievementCards === 'function') {
         window.achievementsUpdateAchievementCards(weightData);

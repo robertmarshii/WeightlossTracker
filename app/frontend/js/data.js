@@ -1,5 +1,17 @@
 // Data tab functionality - Weight history management
 
+// Helper function for standardized fetch requests
+function postRequest(url, data) {
+    const formData = new FormData();
+    Object.keys(data).forEach(key => {
+        formData.append(key, data[key]);
+    });
+    return fetch(url, {
+        method: 'POST',
+        body: formData
+    }).then(response => response.text());
+}
+
 function loadWeightHistory() {
     if (window.coverage) window.coverage.logFunction('loadWeightHistory', 'data.js');
 
@@ -13,6 +25,7 @@ function loadWeightHistory() {
         const history = window.globalDashboardData.weight_history;
 
         if (!history || history.length === 0) {
+            if (window.coverage) window.coverage.logFunction('if', 'data.js');
             tbody.html('<tr><td colspan="4" class="no-data">No weight entries found. Add your first entry above!</td></tr>');
             return;
         }
@@ -30,6 +43,7 @@ function loadWeightHistory() {
             // Calculate change from previous chronological entry (which is next in newest-first array)
             let changeHtml = '<span class="text-muted">-</span>';
             if (index < history.length - 1) {
+                if (window.coverage) window.coverage.logFunction('if', 'data.js');
                 const previousEntry = history[index + 1];
                 const previousWeight = parseFloat(previousEntry.weight_kg);
 
@@ -68,11 +82,13 @@ function loadWeightHistory() {
 
     // Fallback to API call if global data not available
     console.log('🌐 Making API call for weight history (global data not available)');
-    $.post('router.php?controller=profile', { action: 'get_weight_history' }, function(resp) {
+    postRequest('router.php?controller=profile', { action: 'get_weight_history' })
+    .then(resp => {
         const data = parseJson(resp);
         const tbody = $('#weight-history-body');
 
         if (!data.success || !data.history || data.history.length === 0) {
+            if (window.coverage) window.coverage.logFunction('if', 'data.js');
             tbody.html('<tr><td colspan="4" class="no-data">No weight entries found. Add your first entry above!</td></tr>');
             return;
         }
@@ -94,6 +110,7 @@ function loadWeightHistory() {
             // Calculate change from previous chronological entry (which is next in newest-first array)
             let changeHtml = '<span class="text-muted">-</span>';
             if (index < history.length - 1) {
+                if (window.coverage) window.coverage.logFunction('if', 'data.js');
                 const previousEntry = history[index + 1];
                 const previousWeight = parseFloat(previousEntry.weight_kg);
 
@@ -127,7 +144,7 @@ function loadWeightHistory() {
         });
 
         tbody.html(html);
-    }).fail(function() {
+    }).catch(function() {
         $('#weight-history-body').html('<tr><td colspan="4" class="no-data text-danger">Failed to load weight history</td></tr>');
     });
 }
@@ -140,6 +157,7 @@ function formatDate(dateString) {
     const isMobile = window.innerWidth <= 768;
 
     if (isMobile) {
+        if (window.coverage) window.coverage.logFunction('if', 'data.js');
         // Short format: 12/09/25
         return date.toLocaleDateString('en-GB', {
             day: '2-digit',
@@ -174,12 +192,13 @@ function deleteWeight(id) {
         return;
     }
 
-    $.post('router.php?controller=profile', {
+    postRequest('router.php?controller=profile', {
         action: 'delete_weight',
         id: id
     }, function(resp) {
         const data = parseJson(resp);
         if (data.success) {
+            if (window.coverage) window.coverage.logFunction('if', 'data.js');
             showToast('Weight entry deleted');
             loadWeightHistory();
             refreshLatestWeight();
@@ -190,12 +209,13 @@ function deleteWeight(id) {
                 window.healthRefreshHealth();
             }
             if (typeof window.healthRefreshIdealWeight === 'function') {
+                if (window.coverage) window.coverage.logFunction('if', 'data.js');
                 window.healthRefreshIdealWeight();
             }
         } else {
             showToast('Failed to delete weight entry');
         }
-    }).fail(function() {
+    }).catch(function() {
         showToast('Network error');
     });
 }

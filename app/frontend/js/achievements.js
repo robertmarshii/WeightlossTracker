@@ -24,6 +24,7 @@ function updateAchievementCards(weightData) {
     const sortedDates = sortedData.map(entry => new Date(entry.entry_date)).sort((a, b) => b - a);
 
     for (let i = 0; i < sortedDates.length; i++) {
+        if (window.coverage) window.coverage.logFunction('for', 'achievements.js');
         const entryDate = sortedDates[i];
         const daysDiff = Math.floor((today - entryDate) / (1000 * 60 * 60 * 24));
 
@@ -33,6 +34,7 @@ function updateAchievementCards(weightData) {
             const prevDate = sortedDates[i-1];
             const daysBetween = Math.floor((prevDate - entryDate) / (1000 * 60 * 60 * 24));
             if (daysBetween <= 2) { // Allow 1 day gap
+                if (window.coverage) window.coverage.logFunction('if', 'achievements.js');
                 streak++;
             } else {
                 break;

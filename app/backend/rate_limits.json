@@ -1,37 +1,8 @@
 {
     "test@example.com:login_code": {
         "attempts": [
-            1759012281
-        ],
-        "blocked_until": 0
-    },
-    "robertmarshgb@gmail.com:login_code": {
-        "attempts": [
-            1758976037
-        ],
-        "blocked_until": 0
-    },
-    "newuser@example.com:signup_code": {
-        "attempts": [
-            1759012283
-        ],
-        "blocked_until": 0
-    },
-    "test0@example.com:login_code": {
-        "attempts": [
-            1759012284
-        ],
-        "blocked_until": 0
-    },
-    "test1@example.com:login_code": {
-        "attempts": [
-            1759012285
-        ],
-        "blocked_until": 0
-    },
-    "test2@example.com:login_code": {
-        "attempts": [
-            1759012285
+            1759127558,
+            1759127565
         ],
         "blocked_until": 0
     }

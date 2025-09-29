@@ -12,11 +12,13 @@ const WEIGHT_UNITS = {
 
 // Get user's preferred weight unit (default: kg)
 function getWeightUnit() {
+    if (window.coverage) window.coverage.logFunction('getWeightUnit', 'global.js');
     return localStorage.getItem('weightUnit') || 'kg';
 }
 
 // Set user's preferred weight unit
 function setWeightUnit(unit) {
+    if (window.coverage) window.coverage.logFunction('setWeightUnit', 'global.js');
     if (WEIGHT_UNITS[unit]) {
         localStorage.setItem('weightUnit', unit);
     }
@@ -48,6 +50,7 @@ function convertToKg(weightInput, sourceUnit = null) {
     const unit = sourceUnit || getWeightUnit();
 
     if (unit === 'kg') {
+        if (window.coverage) window.coverage.logFunction('if', 'global.js');
         return parseFloat(weightInput);
     } else if (unit === 'lbs') {
         return parseFloat(weightInput) / 2.20462;
@@ -62,6 +65,7 @@ function convertToKg(weightInput, sourceUnit = null) {
 
 // Get weight unit label for display
 function getWeightUnitLabel(unit = null) {
+    if (window.coverage) window.coverage.logFunction('getWeightUnitLabel', 'global.js');
     const targetUnit = unit || getWeightUnit();
     return WEIGHT_UNITS[targetUnit]?.label || 'kg';
 }
@@ -75,11 +79,13 @@ const HEIGHT_UNITS = {
 
 // Get user's preferred height unit (default: cm)
 function getHeightUnit() {
+    if (window.coverage) window.coverage.logFunction('getHeightUnit', 'global.js');
     return localStorage.getItem('heightUnit') || 'cm';
 }
 
 // Set user's preferred height unit
 function setHeightUnit(unit) {
+    if (window.coverage) window.coverage.logFunction('setHeightUnit', 'global.js');
     if (HEIGHT_UNITS[unit]) {
         localStorage.setItem('heightUnit', unit);
     }
@@ -111,6 +117,7 @@ function convertToCm(heightInput, sourceUnit = null) {
     const unit = sourceUnit || getHeightUnit();
 
     if (unit === 'cm') {
+        if (window.coverage) window.coverage.logFunction('if', 'global.js');
         return parseFloat(heightInput);
     } else if (unit === 'ft') {
         return parseFloat(heightInput) * 30.48; // Treat as decimal feet
@@ -123,6 +130,7 @@ function convertToCm(heightInput, sourceUnit = null) {
 
 // Get height unit label for display
 function getHeightUnitLabel(unit = null) {
+    if (window.coverage) window.coverage.logFunction('getHeightUnitLabel', 'global.js');
     const targetUnit = unit || getHeightUnit();
     return HEIGHT_UNITS[targetUnit]?.label || 'cm';
 }
@@ -135,11 +143,13 @@ function getHeightUnitLabel(unit = null) {
  * @param {number|null} duration - Custom duration in ms, null for default
  */
 function showAlert(message, type, duration = null) {
+    if (window.coverage) window.coverage.logFunction('showAlert', 'global.js');
     // Coverage logging
     if (window.coverage) coverage.logFunction('showAlert', 'global.js');
     
     // Clear any existing timeout to prevent conflicts
     if (currentAlertTimeout) {
+        if (window.coverage) window.coverage.logFunction('if', 'global.js');
         clearTimeout(currentAlertTimeout);
         currentAlertTimeout = null;
     }
@@ -160,6 +170,7 @@ function showAlert(message, type, duration = null) {
     let autoDismissTime = duration;
     if (autoDismissTime === null) {
         if (type === 'success') {
+            if (window.coverage) window.coverage.logFunction('if', 'global.js');
             autoDismissTime = 10000; // 10 seconds for success messages
         } else if (type === 'info') {
             autoDismissTime = 8000;  // 8 seconds for info messages
@@ -171,6 +182,7 @@ function showAlert(message, type, duration = null) {
     }
     
     if (autoDismissTime > 0) {
+        if (window.coverage) window.coverage.logFunction('if', 'global.js');
         currentAlertTimeout = setTimeout(() => {
             $('#alert-container .alert').alert('close');
             currentAlertTimeout = null;
@@ -184,6 +196,7 @@ function showAlert(message, type, duration = null) {
  * @param {string} msg - The message to display
  */
 function showToast(msg) {
+    if (window.coverage) window.coverage.logFunction('showToast', 'global.js');
     if (window.coverage) coverage.logFunction('showToast', 'global.js');
     showAlert(msg, 'success');
 }
@@ -195,6 +208,7 @@ function showToast(msg) {
  * @returns {object} - Parsed object or empty object if parsing fails
  */
 function parseJson(resp) {
+    if (window.coverage) window.coverage.logFunction('parseJson', 'global.js');
     if (window.coverage) coverage.logFunction('parseJson', 'global.js');
     try { 
         return typeof resp === 'string' ? JSON.parse(resp) : resp; 
@@ -208,6 +222,7 @@ function parseJson(resp) {
  * @param {string} modalId - ID of the modal to open
  */
 function openModal(modalId) {
+    if (window.coverage) window.coverage.logFunction('openModal', 'global.js');
     if (window.coverage) coverage.logFunction('openModal', 'global.js');
     $('#' + modalId).modal('show');
 }
@@ -217,8 +232,10 @@ function openModal(modalId) {
  * @returns {string} Date format: 'uk', 'us', 'iso', or 'euro'
  */
 function getDateFormat() {
+    if (window.coverage) window.coverage.logFunction('getDateFormat', 'global.js');
     // Try to get from settings if available
     if (window.globalDashboardData && window.globalDashboardData.settings) {
+        if (window.coverage) window.coverage.logFunction('if', 'global.js');
         return window.globalDashboardData.settings.date_format || 'uk';
     }
     // Fallback to uk format
@@ -231,6 +248,7 @@ function getDateFormat() {
  * @returns {string} Formatted date string
  */
 function formatDateBySettings(dateInput) {
+    if (window.coverage) window.coverage.logFunction('formatDateBySettings', 'global.js');
     if (window.coverage) coverage.logFunction('formatDateBySettings', 'global.js');
 
     const date = new Date(dateInput);

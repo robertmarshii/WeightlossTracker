@@ -437,6 +437,10 @@ describe('Comprehensive Authentication Test Suite', () => {
             cy.wait(1000);
 
             cy.get('#loginCode', { timeout: 10000 }).should('be.visible').clear().type(fixedCode);
+
+            // Flush coverage before form submission triggers navigation
+            cy.flushCoverageBeforeNavigation();
+
             cy.get('#verifyLoginForm button[type="submit"]').click();
 
             // Wait for redirect with proper timeout

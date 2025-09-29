@@ -16,8 +16,10 @@ class CoverageLogger {
     private $maxErrors = 10; // Circuit breaker: disable after 10 errors
 
     private function __construct() {
-        // Only enable when explicitly requested via URL parameter ?coverage=1
-        $isCoverageMode = isset($_GET['coverage']) && $_GET['coverage'] === '1';
+        // Only enable when explicitly requested via URL parameter ?coverage=1 or when forced by tests
+        $isCoverageMode = (isset($_GET['coverage']) && $_GET['coverage'] === '1') ||
+                         (isset($_POST['coverage']) && $_POST['coverage'] === '1') ||
+                         (isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], 'Cypress') !== false);
         $isTestEnvironment = ($_SERVER['HTTP_HOST'] ?? '') === '127.0.0.1:8111';
         $this->enabled = $isCoverageMode && $isTestEnvironment;
         $this->sessionId = time() . '_' . uniqid();

@@ -16,6 +16,16 @@ Cypress.Commands.add('initCoverage', () => {
     }
 });
 
+// Custom visit command that automatically enables coverage
+Cypress.Commands.add('visitWithCoverage', (url = '/') => {
+    // Ensure URL has coverage parameter
+    const fullUrl = new URL(url, Cypress.config('baseUrl') || 'http://127.0.0.1:8111');
+    fullUrl.searchParams.set('coverage', '1');
+
+    console.log(`🔗 Visiting with coverage enabled: ${fullUrl.toString()}`);
+    cy.visit(fullUrl.toString());
+});
+
 // Collect coverage from current test
 Cypress.Commands.add('collectCoverage', (testName) => {
     cy.window().then((win) => {
@@ -27,10 +37,34 @@ Cypress.Commands.add('collectCoverage', (testName) => {
     });
 });
 
+// Flush coverage batch before navigation
+Cypress.Commands.add('flushCoverageBeforeNavigation', () => {
+    cy.window().then((win) => {
+        if (win.coverage && typeof win.coverage.flushBatchToServer === 'function') {
+            console.log('🔄 Flushing coverage batch before navigation...');
+            win.coverage.flushBatchToServer();
+            console.log('✅ Coverage batch flushed');
+        }
+    });
+});
+
 // Set test mode for coverage logging
 Cypress.Commands.add('enableCoverageTracking', () => {
+    // First ensure we're visiting with coverage parameter
+    const currentUrl = new URL(Cypress.config('baseUrl') || 'http://127.0.0.1:8111');
+    currentUrl.searchParams.set('coverage', '1');
+
     cy.window().then((win) => {
-        if (win.coverage) {
+        // Force enable coverage even if URL param wasn't set initially
+        if (win.CoverageLogger) {
+            // Temporarily override the enabled check for testing
+            const coverage = new win.CoverageLogger();
+            coverage.enabled = true;
+            coverage.testMode = true;
+            win.coverage = coverage;
+            console.log('🧪 Coverage tracking force-enabled for test');
+        } else if (win.coverage) {
+            win.coverage.enabled = true;
             win.coverage.setTestMode(true);
             console.log('🧪 Coverage tracking enabled for test');
 
@@ -99,7 +133,7 @@ Cypress.Commands.add('assertFunctionTested', (functionName, fileName = null) => 
 Cypress.Commands.add('collectBackendCoverage', (testName) => {
     cy.request({
         method: 'POST',
-        url: '/router.php?controller=coverage',
+        url: '/router.php?controller=coverage&coverage=1',
         form: true,
         body: { action: 'get_report' },
         failOnStatusCode: false

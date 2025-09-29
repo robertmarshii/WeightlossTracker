@@ -1,8 +1,21 @@
 // Health Tab Functionality
 // Contains all health-related calculations, risk assessments, and health score logic
 
+// Helper function for standardized fetch requests
+function postRequest(url, data) {
+    const formData = new FormData();
+    Object.keys(data).forEach(key => {
+        formData.append(key, data[key]);
+    });
+    return fetch(url, {
+        method: 'POST',
+        body: formData
+    }).then(response => response.text());
+}
+
 // Health score calculation functions
 function getBMIRisk(bmi) {
+    if (window.coverage) window.coverage.logFunction('getBMIRisk', 'health.js');
     if (bmi < 25) return 8;      // Normal weight: ~8% risk
     else if (bmi < 30) return 15; // Overweight: ~15% risk
     else if (bmi < 35) return 25; // Obese Class I: ~25% risk
@@ -11,6 +24,7 @@ function getBMIRisk(bmi) {
 }
 
 function getSleepApneaRisk(bmi) {
+    if (window.coverage) window.coverage.logFunction('getSleepApneaRisk', 'health.js');
     if (bmi < 25) return 10;     // Normal weight: ~10% risk
     else if (bmi < 30) return 20; // Overweight: ~20% risk
     else if (bmi < 35) return 35; // Obese Class I: ~35% risk
@@ -19,6 +33,7 @@ function getSleepApneaRisk(bmi) {
 }
 
 function getHypertensionRisk(bmi) {
+    if (window.coverage) window.coverage.logFunction('getHypertensionRisk', 'health.js');
     if (bmi < 25) return 15;     // Normal weight: ~15% risk
     else if (bmi < 30) return 25; // Overweight: ~25% risk
     else if (bmi < 35) return 40; // Obese Class I: ~40% risk
@@ -27,6 +42,7 @@ function getHypertensionRisk(bmi) {
 }
 
 function getFattyLiverRisk(bmi) {
+    if (window.coverage) window.coverage.logFunction('getFattyLiverRisk', 'health.js');
     if (bmi < 25) return 12;     // Normal weight: ~12% risk
     else if (bmi < 30) return 22; // Overweight: ~22% risk
     else if (bmi < 35) return 35; // Obese Class I: ~35% risk
@@ -35,6 +51,7 @@ function getFattyLiverRisk(bmi) {
 }
 
 function getHeartDiseaseRisk(bmi) {
+    if (window.coverage) window.coverage.logFunction('getHeartDiseaseRisk', 'health.js');
     if (bmi < 25) return 8;      // Normal weight: ~8% risk
     else if (bmi < 30) return 14; // Overweight: ~14% risk
     else if (bmi < 35) return 22; // Obese Class I: ~22% risk
@@ -43,6 +60,7 @@ function getHeartDiseaseRisk(bmi) {
 }
 
 function getMentalHealthRisk(bmi) {
+    if (window.coverage) window.coverage.logFunction('getMentalHealthRisk', 'health.js');
     if (bmi < 25) return 12;     // Normal weight: ~12% risk
     else if (bmi < 30) return 18; // Overweight: ~18% risk
     else if (bmi < 35) return 25; // Obese Class I: ~25% risk
@@ -51,6 +69,7 @@ function getMentalHealthRisk(bmi) {
 }
 
 function getJointHealthRisk(bmi) {
+    if (window.coverage) window.coverage.logFunction('getJointHealthRisk', 'health.js');
     if (bmi < 25) return 15;     // Normal weight: ~15% risk
     else if (bmi < 30) return 25; // Overweight: ~25% risk
     else if (bmi < 35) return 35; // Obese Class I: ~35% risk
@@ -60,6 +79,7 @@ function getJointHealthRisk(bmi) {
 
 // Comprehensive health score calculation using ALL 14 health categories
 function calculateHealthScore(bmi) {
+    if (window.coverage) window.coverage.logFunction('calculateHealthScore', 'health.js');
     // Primary disease risks (from our health boxes)
     const diabetesRisk = getBMIRisk(bmi);
     const sleepRisk = getSleepApneaRisk(bmi);
@@ -74,6 +94,7 @@ function calculateHealthScore(bmi) {
 
     // Gallbladder risk
     const getGallbladderRisk = (bmi) => {
+        if (window.coverage) window.coverage.logFunction('getGallbladderRisk', 'health.js');
         if (bmi < 25) return 8;      // Normal weight: ~8% risk
         else if (bmi < 30) return 15; // Overweight: ~15% risk
         else if (bmi < 35) return 25; // Obese Class I: ~25% risk
@@ -84,6 +105,7 @@ function calculateHealthScore(bmi) {
 
     // BMI-related health impact (represents BMI Analysis box)
     const getBMIHealthImpact = (bmi) => {
+        if (window.coverage) window.coverage.logFunction('getBMIHealthImpact', 'health.js');
         if (bmi < 18.5) return 20;   // Underweight: health risks
         else if (bmi < 25) return 5; // Normal: minimal risk
         else if (bmi < 30) return 15; // Overweight: moderate risk
@@ -95,6 +117,7 @@ function calculateHealthScore(bmi) {
 
     // Body fat health impact (represents Body Fat Estimate box)
     const getBodyFatRisk = (bmi) => {
+        if (window.coverage) window.coverage.logFunction('getBodyFatRisk', 'health.js');
         // Approximated from BMI since we're calculating from BMI
         if (bmi < 25) return 8;      // Normal weight: low body fat risk
         else if (bmi < 30) return 18; // Overweight: moderate body fat risk
@@ -106,6 +129,7 @@ function calculateHealthScore(bmi) {
 
     // Weight progress impact (represents Weight Progress box)
     const getWeightProgressRisk = (bmi) => {
+        if (window.coverage) window.coverage.logFunction('getWeightProgressRisk', 'health.js');
         // Risk based on distance from healthy BMI range
         if (bmi < 18.5) return 25;   // Underweight risk
         else if (bmi < 25) return 0; // Healthy range: no risk
@@ -118,6 +142,7 @@ function calculateHealthScore(bmi) {
 
     // Ideal weight deviation (represents Ideal Weight Range box)
     const getIdealWeightRisk = (bmi) => {
+        if (window.coverage) window.coverage.logFunction('getIdealWeightRisk', 'health.js');
         // Risk based on deviation from ideal BMI (22)
         const deviation = Math.abs(bmi - 22);
         if (deviation < 3) return 5;     // Close to ideal: minimal risk
@@ -130,6 +155,7 @@ function calculateHealthScore(bmi) {
 
     // Life expectancy impact (represents Life Expectancy box)
     const getLifeExpectancyRisk = (bmi) => {
+        if (window.coverage) window.coverage.logFunction('getLifeExpectancyRisk', 'health.js');
         if (bmi < 18.5) return 30;   // Underweight: reduced life expectancy
         else if (bmi < 25) return 5; // Normal: minimal impact
         else if (bmi < 30) return 15; // Overweight: slight reduction
@@ -153,7 +179,9 @@ function calculateHealthScore(bmi) {
 
 // Generate health improvement message based on progress
 function getHealthImprovementMessage(healthScoreImprovement) {
+    if (window.coverage) window.coverage.logFunction('getHealthImprovementMessage', 'health.js');
     if (healthScoreImprovement >= 70) {
+        if (window.coverage) window.coverage.logFunction('if', 'health.js');
         return `<strong style="color: #27ae60;">Incredible transformation! You've achieved extraordinary health improvements!</strong><br>
         <small class="text-muted" style="line-height: 1.4;">
             You've achieved a complete health metamorphosis. Your body functions at an optimal level with dramatically reduced disease risks across all categories.
@@ -301,9 +329,11 @@ function getHealthImprovementMessage(healthScoreImprovement) {
 
 // Update health benefit cards with current data
 function updateHealthBenefitCards() {
+    if (window.coverage) window.coverage.logFunction('updateHealthBenefitCards', 'health.js');
     console.log('Health benefits - checking for data to update cards...');
 
-    $.post('router.php?controller=profile', { action: 'get_weight_progress' }, function(resp) {
+    postRequest('router.php?controller=profile', { action: 'get_weight_progress' })
+    .then(resp => {
         const data = parseJson(resp);
         console.log('Health benefits - weight progress data:', data);
 
@@ -318,6 +348,7 @@ function updateHealthBenefitCards() {
             const weightLoss = startWeight - currentWeight;
 
             if (bmiReduction > 0) { // Show any progress
+                if (window.coverage) window.coverage.logFunction('if', 'health.js');
                 // Calculate actual benefits based on user's BMI reduction
                 const benefitMultiplier = bmiReduction / 5.0;
 
@@ -437,6 +468,7 @@ function updateHealthBenefitCards() {
 
 // Refresh personal health benefits display
 function refreshPersonalHealthBenefits() {
+    if (window.coverage) window.coverage.logFunction('refreshPersonalHealthBenefits', 'health.js');
     updateHealthBenefitCards();
 }
 
@@ -455,6 +487,7 @@ function refreshBMI() {
         const lines = [];
         lines.push(`Current BMI: <strong>${data.bmi}</strong> (${data.category})`);
         if (data.adjusted_bmi) {
+            if (window.coverage) window.coverage.logFunction('if', 'health.js');
             lines.push(`Frame-adjusted: <strong>${data.adjusted_bmi}</strong> (${data.adjusted_category})`);
         }
 
@@ -467,6 +500,7 @@ function refreshBMI() {
                 const startingBmi = progressData.start_weight_kg / (h * h);
                 const improvement = startingBmi - data.bmi;
                 if (improvement > 0.1) {
+                    if (window.coverage) window.coverage.logFunction('if', 'health.js');
                     lines.push(`<small class="text-success">BMI decreased by ${improvement.toFixed(1)} points since starting!</small>`);
                     lines.push(`<small class="text-muted">Started at ${startingBmi.toFixed(1)} BMI</small>`);
                 }
@@ -479,10 +513,12 @@ function refreshBMI() {
 
     // Fallback to API call if global data not available
     console.log('🌐 Making API call for BMI (global data not available)');
-    $.post('router.php?controller=profile', { action: 'get_bmi' }, function(resp) {
+    postRequest('router.php?controller=profile', { action: 'get_bmi' })
+    .then(resp => {
         const data = parseJson(resp);
         const el = $('#bmi-block');
         if (!data.success) {
+            if (window.coverage) window.coverage.logFunction('if', 'health.js');
             el.text(data.message || 'BMI not available').addClass('text-muted');
             return;
         }
@@ -494,12 +530,14 @@ function refreshBMI() {
 
         // Get before/after comparison
         if (typeof $ === 'undefined' || typeof $.post !== 'function') {
+            if (window.coverage) window.coverage.logFunction('if', 'health.js');
             console.log('⚠️ jQuery not available for BMI progress, showing basic BMI');
             lines.push(`<small class="text-muted">BMI correlates with health risks. BMI reduction significantly lowers disease risk (Prospective Studies Collaboration, 2009)</small>`);
             el.html(lines.join('<br>')).removeClass('text-muted');
             return;
         }
-        $.post('router.php?controller=profile', { action: 'get_weight_progress' }, function(progressResp) {
+        postRequest('router.php?controller=profile', { action: 'get_weight_progress' })
+        .then(progressResp => {
             const progressData = parseJson(progressResp);
             if (progressData.success && progressData.start_weight_kg && progressData.current_weight_kg !== progressData.start_weight_kg) {
                 // Calculate starting BMI for comparison
@@ -510,6 +548,7 @@ function refreshBMI() {
                     const improvement = startingBmi - data.bmi;
                     // Determine starting BMI category
                     const getCategory = (bmi) => {
+                        if (window.coverage) window.coverage.logFunction('getCategory', 'health.js');
                         if (bmi < 18.5) return 'underweight';
                         else if (bmi < 25) return 'normal';
                         else if (bmi < 30) return 'overweight';
@@ -535,6 +574,7 @@ function refreshHealth() {
 
     // Handle body fat data
     if (window.globalDashboardData && window.globalDashboardData.health_stats) {
+        if (window.coverage) window.coverage.logFunction('if', 'health.js');
         console.log('📊 Using global data for health stats (body fat)');
         const data = window.globalDashboardData.health_stats;
 
@@ -552,6 +592,7 @@ function refreshHealth() {
                 const heightCm = data.height_cm;
                 const age = data.age;
                 if (heightCm && age && heightCm > 0 && age > 0) {
+                    if (window.coverage) window.coverage.logFunction('if', 'health.js');
                     const h = heightCm / 100.0;
                     const startingBmi = progressData.start_weight_kg / (h * h);
                     const startingBfpMale = 1.2 * startingBmi + 0.23 * age - 16.2;
@@ -562,6 +603,7 @@ function refreshHealth() {
                     const avgImprovement = ((startingMin + startingMax) / 2) - ((currentMin + currentMax) / 2);
 
                     if (avgImprovement > 0.1) {
+                        if (window.coverage) window.coverage.logFunction('if', 'health.js');
                         bodyFatLines.splice(1, 0, `Change: <strong class="text-success">-${avgImprovement.toFixed(1)}%</strong>`);
                         bodyFatLines.splice(2, 0, `Started: <strong>${startingMin.toFixed(1)}–${startingMax.toFixed(1)}%</strong>`);
                     }
@@ -579,16 +621,19 @@ function refreshHealth() {
         // Fallback to API call for body fat data
         console.log('🌐 Making API call for health stats (global data not available)');
         if (typeof $ === 'undefined' || typeof $.post !== 'function') {
+            if (window.coverage) window.coverage.logFunction('if', 'health.js');
             console.log('⚠️ jQuery not available for health stats, skipping API call');
             $('#body-fat-block').text('Body fat estimation not available').addClass('text-muted');
             return;
         }
-        $.post('router.php?controller=profile', { action: 'get_health_stats' }, function(resp) {
+        postRequest('router.php?controller=profile', { action: 'get_health_stats' })
+        .then(resp => {
             const data = parseJson(resp);
 
             // Body Fat Block with before/after
             const bodyFatEl = $('#body-fat-block');
             if (!data.success) {
+                if (window.coverage) window.coverage.logFunction('if', 'health.js');
                 bodyFatEl.text(data.message || 'Body fat estimation not available').addClass('text-muted');
             } else if (Array.isArray(data.estimated_body_fat_range)) {
                 const bodyFatLines = [];
@@ -601,16 +646,19 @@ function refreshHealth() {
 
                 // Get before/after body fat comparison
                 if (typeof $ === 'undefined' || typeof $.post !== 'function') {
+                    if (window.coverage) window.coverage.logFunction('if', 'health.js');
                     bodyFatEl.html(bodyFatLines.join('<br>')).removeClass('text-muted');
                     return;
                 }
-                $.post('router.php?controller=profile', { action: 'get_weight_progress' }, function(progressResp) {
+                postRequest('router.php?controller=profile', { action: 'get_weight_progress' })
+        .then(progressResp => {
                     const progressData = parseJson(progressResp);
                     if (progressData.success && progressData.start_weight_kg && progressData.current_weight_kg !== progressData.start_weight_kg) {
                         // Calculate starting body fat estimate
                         const heightCm = data.height_cm;
                         const age = data.age;
                         if (heightCm && age && heightCm > 0 && age > 0) {
+                            if (window.coverage) window.coverage.logFunction('if', 'health.js');
                             const h = heightCm / 100.0;
                             const startingBmi = progressData.start_weight_kg / (h * h);
                             const startingBfpMale = 1.2 * startingBmi + 0.23 * age - 16.2;
@@ -621,13 +669,14 @@ function refreshHealth() {
                             const avgImprovement = ((startingMin + startingMax) / 2) - ((currentMin + currentMax) / 2);
 
                             if (avgImprovement > 0.1) {
+                                if (window.coverage) window.coverage.logFunction('if', 'health.js');
                                 bodyFatLines.splice(1, 0, `Change: <strong class="text-success">-${avgImprovement.toFixed(1)}%</strong>`);
                                 bodyFatLines.splice(2, 0, `Started: <strong>${startingMin.toFixed(1)}–${startingMax.toFixed(1)}%</strong>`);
                             }
                         }
                     }
                     bodyFatEl.html(bodyFatLines.join('<br>')).removeClass('text-muted');
-                }).fail(function() {
+                }).catch(function() {
                     // If progress fails, still show the current data
                     bodyFatEl.html(bodyFatLines.join('<br>')).removeClass('text-muted');
                 });
@@ -640,11 +689,13 @@ function refreshHealth() {
     // Load enhanced cardiovascular risk (always use API call)
     console.log('🌐 Making API call for cardiovascular risk');
     if (typeof $ === 'undefined' || typeof $.post !== 'function') {
+        if (window.coverage) window.coverage.logFunction('if', 'health.js');
         console.log('⚠️ jQuery not available for cardiovascular risk, skipping API call');
         $('#cardio-risk-block').text('Cardiovascular risk not available').addClass('text-muted');
         return;
     }
-    $.post('router.php?controller=profile', { action: 'get_cardiovascular_risk' }, function(resp) {
+    postRequest('router.php?controller=profile', { action: 'get_cardiovascular_risk' })
+    .then(resp => {
         const data = parseJson(resp);
         const cardioEl = $('#cardio-risk-block');
 
@@ -655,6 +706,7 @@ function refreshHealth() {
             cardioLines.push(`Current Risk: <strong>${data.current_risk_percentage}%</strong> (${data.current_risk_category})`);
 
             if (data.risk_improvement_percentage > 0) {
+                if (window.coverage) window.coverage.logFunction('if', 'health.js');
                 cardioLines.push(`<small class="text-success">Risk reduced by ${data.risk_improvement_percentage}% from weight loss</small>`);
                 cardioLines.push(`<small class="text-muted">Started at ${data.original_risk_percentage}% (${data.original_risk_category})</small>`);
             }
@@ -662,7 +714,7 @@ function refreshHealth() {
             cardioLines.push(`<small class="text-muted">${data.research_note}</small>`);
             cardioEl.html(cardioLines.join('<br>')).removeClass('text-muted');
         }
-    }).fail(function() {
+    }).catch(function() {
         $('#cardio-risk-block').text('Failed to calculate cardiovascular risk').addClass('text-muted');
     });
 }
@@ -677,11 +729,13 @@ function refreshIdealWeight() {
         $('#ideal-weight-block').text('Set your height to calculate ideal weight range').addClass('text-muted');
         return;
     }
-    $.post('router.php?controller=profile', { action: 'get_ideal_weight' }, function(resp) {
+    postRequest('router.php?controller=profile', { action: 'get_ideal_weight' })
+    .then(resp => {
         const data = parseJson(resp);
         const el = $('#ideal-weight-block');
 
         if (!data.success) {
+            if (window.coverage) window.coverage.logFunction('if', 'health.js');
             el.text(data.message || 'Set your height to calculate ideal weight range').addClass('text-muted');
             return;
         }
@@ -694,6 +748,7 @@ function refreshIdealWeight() {
 
         // Add timeline prediction if available
         if (data.timeline && data.timeline.target_date) {
+            if (window.coverage) window.coverage.logFunction('if', 'health.js');
             const targetMonth = new Date(data.timeline.target_date + '-01').toLocaleDateString('en-GB', {
                 year: 'numeric',
                 month: 'long'
@@ -707,7 +762,7 @@ function refreshIdealWeight() {
         lines.push(`<small class="text-muted">${data.note}</small>`);
 
         el.html(lines.join('<br>')).removeClass('text-muted');
-    }).fail(function() {
+    }).catch(function() {
         $('#ideal-weight-block').text('Failed to calculate ideal weight range').addClass('text-muted');
     });
 }
@@ -726,6 +781,7 @@ function refreshGallbladderHealth() {
     console.log('🔍 gallbladder_health in global data:', window.globalDashboardData?.gallbladder_health);
 
     if (window.globalDashboardData && window.globalDashboardData.gallbladder_health) {
+        if (window.coverage) window.coverage.logFunction('if', 'health.js');
         console.log('📊 Using global data for gallbladder health');
         const data = window.globalDashboardData.gallbladder_health;
         const el = $('#gallbladder-block');
@@ -738,6 +794,7 @@ function refreshGallbladderHealth() {
         const lines = [];
 
         if (data.risk_reduction_percentage > 0) {
+            if (window.coverage) window.coverage.logFunction('if', 'health.js');
             lines.push(`Risk Reduction: <strong class="text-success">${data.risk_reduction_percentage}%</strong>`);
             const unit = getWeightUnitLabel();
             const weightLost = convertFromKg(data.weight_lost_kg);
@@ -751,6 +808,7 @@ function refreshGallbladderHealth() {
         }
 
         if (data.research_notes && data.research_notes.length > 0) {
+            if (window.coverage) window.coverage.logFunction('if', 'health.js');
             lines.push(`<small class="text-muted">${data.research_notes[0]}</small>`);
         }
 
@@ -761,11 +819,13 @@ function refreshGallbladderHealth() {
     // Fallback to API call if global data not available
     console.log('🌐 Making API call for gallbladder health (global data not available)');
     if (typeof $ === 'undefined' || typeof $.post !== 'function') {
+        if (window.coverage) window.coverage.logFunction('if', 'health.js');
         console.log('⚠️ jQuery not available for gallbladder health, skipping API call');
         $('#gallbladder-block').text('Complete profile to assess gallbladder health benefits').addClass('text-muted');
         return;
     }
-    $.post('router.php?controller=profile', { action: 'get_gallbladder_health' }, function(resp) {
+    postRequest('router.php?controller=profile', { action: 'get_gallbladder_health' })
+    .then(resp => {
         const data = parseJson(resp);
         const el = $('#gallbladder-block');
 
@@ -778,6 +838,7 @@ function refreshGallbladderHealth() {
         lines.push(`Status: <strong>${data.gallbladder_status}</strong>`);
 
         if (data.risk_reduction_percentage > 0) {
+            if (window.coverage) window.coverage.logFunction('if', 'health.js');
             lines.push(`Risk Reduction: <strong class="text-success">${data.risk_reduction_percentage}%</strong>`);
             const unit = getWeightUnitLabel();
             const weightLost = convertFromKg(data.weight_lost_kg);
@@ -789,7 +850,7 @@ function refreshGallbladderHealth() {
         lines.push(`<small class="text-muted">${data.research_note}</small>`);
 
         el.html(lines.join('<br>')).removeClass('text-muted');
-    }).fail(function() {
+    }).catch(function() {
         $('#gallbladder-block').text('Failed to assess gallbladder health').addClass('text-muted');
     });
 }

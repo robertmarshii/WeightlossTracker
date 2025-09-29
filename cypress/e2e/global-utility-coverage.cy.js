@@ -1,4 +1,13 @@
 describe('Global Utility Function Coverage Tests', () => {
+    let coverageReporter;
+
+    before(() => {
+        cy.initCoverage();
+        cy.window().then((win) => {
+            coverageReporter = win.coverageReporter;
+        });
+    });
+
     beforeEach(() => {
         cy.visit('http://127.0.0.1:8111');
         cy.enableCoverageTracking();
@@ -115,9 +124,15 @@ describe('Global Utility Function Coverage Tests', () => {
         });
 
         cy.wait(500);
+        cy.flushCoverageBeforeNavigation();
     });
 
     afterEach(() => {
         cy.collectCoverage('Global Utility Tests');
+        cy.flushCoverageBeforeNavigation();
+    });
+
+    after(() => {
+        cy.saveCoverageReport();
     });
 });

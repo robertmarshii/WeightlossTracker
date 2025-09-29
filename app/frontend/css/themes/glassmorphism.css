@@ -256,7 +256,7 @@ body {
 
 /* Theme-aware strong tags and highlights */
 strong {
-    color: #64a6d8 !important;
+    color: #ddd !important;
 }
 
 .health-message-success {

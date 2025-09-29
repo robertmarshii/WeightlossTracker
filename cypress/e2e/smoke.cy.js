@@ -1,7 +1,17 @@
 describe('App smoke tests', () => {
+  let coverageReporter;
+
+  before(() => {
+    cy.initCoverage();
+    cy.window().then((win) => {
+      coverageReporter = win.coverageReporter;
+    });
+  });
+
   beforeEach(() => {
     // Set cypress_testing cookie to disable rate limiting for tests
     cy.setCookie('cypress_testing', 'true');
+    cy.enableCoverageTracking();
 
     // Clear any existing rate limits for test email
     cy.request({
@@ -19,6 +29,7 @@ describe('App smoke tests', () => {
     cy.visit('/');
     cy.title().should('be.a', 'string');
     cy.document().its('contentType').should('include', 'text/html');
+    cy.flushCoverageBeforeNavigation();
   });
 
   it('API get1 returns valid JSON', () => {
@@ -29,6 +40,12 @@ describe('App smoke tests', () => {
       const data = JSON.parse(resp.body);
       expect(data).to.be.an('array');
     });
+    cy.flushCoverageBeforeNavigation();
+  });
+
+  after(() => {
+    cy.collectCoverage('App smoke tests');
+    cy.saveCoverageReport();
   });
 });
 
