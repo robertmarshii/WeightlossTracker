@@ -35,9 +35,9 @@ class AuthManager {
         }
         
         
-        // Check for EMAIL_SANDBOX_MODE environment variable (for development)
-        if (isset($_ENV['EMAIL_SANDBOX_MODE']) && $_ENV['EMAIL_SANDBOX_MODE'] === 'true') {
-            error_log("EMAIL_SANDBOX_MODE enabled - returning success without sending email");
+        // Check for EMAIL_SANDBOX_MODE environment variable (only when cypress testing cookie is set)
+        if ($isCypressTest && isset($_ENV['EMAIL_SANDBOX_MODE']) && $_ENV['EMAIL_SANDBOX_MODE'] === 'true') {
+            error_log("EMAIL_SANDBOX_MODE enabled during cypress testing - returning success without sending email");
             return true;
         }
         

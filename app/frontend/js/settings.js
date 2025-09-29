@@ -20,21 +20,32 @@ function saveSettings() {
         email_time: $('#emailTime').val()
     };
 
-    const formData = new FormData();
+    const params = new URLSearchParams();
     Object.keys(settings).forEach(key => {
         if (typeof settings[key] === 'boolean') {
-            formData.append(key, settings[key] ? 'true' : 'false');
+            params.append(key, settings[key] ? 'true' : 'false');
         } else {
-            formData.append(key, settings[key]);
+            params.append(key, settings[key]);
         }
     });
 
     fetch('router.php?controller=profile', {
         method: 'POST',
-        body: formData,
-        credentials: 'same-origin'
+        body: params,
+        credentials: 'same-origin',
+        redirect: 'follow',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    }).then(response => {
+        // Handle auth redirects
+        if (response.redirected && response.url.includes('login')) {
+            window.location.href = response.url;
+            return Promise.reject('Redirected to login');
+        }
+        return response.text();
     })
-    .then(response => response.text())
     .then(responseText => {
         const data = parseJson(responseText);
         if (data.success) {

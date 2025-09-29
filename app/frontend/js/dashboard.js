@@ -4,15 +4,27 @@ window.globalDashboardData = null;
 
 // Helper function for standardized fetch requests
 function postRequest(url, data) {
-    const formData = new FormData();
+    const params = new URLSearchParams();
     Object.keys(data).forEach(key => {
-        formData.append(key, data[key]);
+        params.append(key, data[key]);
     });
     return fetch(url, {
         method: 'POST',
-        body: formData,
-        credentials: 'same-origin'
-    }).then(response => response.text());
+        body: params,
+        credentials: 'same-origin',
+        redirect: 'follow',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    }).then(response => {
+        // Handle auth redirects
+        if (response.redirected && response.url.includes('login')) {
+            window.location.href = response.url;
+            return Promise.reject('Redirected to login');
+        }
+        return response.text();
+    });
 }
 
 $(function() {
