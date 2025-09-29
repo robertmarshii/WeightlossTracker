@@ -1,133 +1,103 @@
--- WeightLoss Tracker Live Schema Migration
--- NON-DESTRUCTIVE: Only adds/modifies structure, never destroys existing data
--- Safe to run on production - will not drop schemas, tables, or data
+-- Focused migration to add missing items from compare report
+-- This script adds only the specific missing elements identified in the schema comparison
 
--- Create wt_live schema if it doesn't exist
-CREATE SCHEMA IF NOT EXISTS wt_live;
-
--- Create users table if it doesn't exist
-CREATE TABLE IF NOT EXISTS wt_live.users (
-    id SERIAL PRIMARY KEY,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    first_name VARCHAR(50) NOT NULL,
-    last_name VARCHAR(50) NOT NULL,
-    is_verified BOOLEAN DEFAULT false,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Create auth_codes table for passwordless authentication if it doesn't exist
-CREATE TABLE IF NOT EXISTS wt_live.auth_codes (
-    id SERIAL PRIMARY KEY,
-    email VARCHAR(100) NOT NULL,
-    code VARCHAR(6) NOT NULL,
-    code_type VARCHAR(20) NOT NULL, -- 'login' or 'signup'
-    expires_at TIMESTAMP NOT NULL,
-    used_at TIMESTAMP NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Create test_table if it doesn't exist
-CREATE TABLE IF NOT EXISTS wt_live.test_table (
-    id SERIAL PRIMARY KEY,
-    val VARCHAR(50) NOT NULL
-);
-
--- Create weight_entries table if it doesn't exist
-CREATE TABLE IF NOT EXISTS wt_live.weight_entries (
-    id SERIAL PRIMARY KEY,
-    user_id INTEGER,
-    weight_kg DECIMAL(5,2) NOT NULL,
-    entry_date DATE NOT NULL,
-    notes TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Create goals table if it doesn't exist
-CREATE TABLE IF NOT EXISTS wt_live.goals (
-    id SERIAL PRIMARY KEY,
-    user_id INTEGER,
-    target_weight_kg DECIMAL(5,2) NOT NULL,
-    target_date DATE,
-    is_active BOOLEAN DEFAULT true,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Create user_profiles table if it doesn't exist
-CREATE TABLE IF NOT EXISTS wt_live.user_profiles (
-    user_id INTEGER PRIMARY KEY,
-    height_cm INTEGER,
-    body_frame VARCHAR(10),
-    age INTEGER,
-    activity_level VARCHAR(20),
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Add foreign key constraints if they don't exist (safe way)
--- Note: This uses a more complex pattern because PostgreSQL doesn't have 
--- "ADD CONSTRAINT IF NOT EXISTS" until version 9.6+
-
-DO $$ 
+-- Add missing remember token columns to users table
+DO $$
 BEGIN
-    -- Add foreign key for weight_entries.user_id if it doesn't exist
     IF NOT EXISTS (
-        SELECT 1 FROM information_schema.table_constraints 
-        WHERE constraint_name = 'weight_entries_user_id_fkey' 
-        AND table_schema = 'wt_live'
+        SELECT 1 FROM information_schema.columns
+        WHERE table_schema = 'wt_live'
+        AND table_name = 'users'
+        AND column_name = 'remember_token'
     ) THEN
-        ALTER TABLE wt_live.weight_entries 
-        ADD CONSTRAINT weight_entries_user_id_fkey 
-        FOREIGN KEY (user_id) REFERENCES wt_live.users(id) ON DELETE CASCADE;
+        ALTER TABLE wt_live.users ADD COLUMN remember_token VARCHAR(255) NULL;
     END IF;
 
-    -- Add foreign key for goals.user_id if it doesn't exist
     IF NOT EXISTS (
-        SELECT 1 FROM information_schema.table_constraints 
-        WHERE constraint_name = 'goals_user_id_fkey' 
+        SELECT 1 FROM information_schema.columns
+        WHERE table_schema = 'wt_live'
+        AND table_name = 'users'
+        AND column_name = 'remember_token_expires'
+    ) THEN
+        ALTER TABLE wt_live.users ADD COLUMN remember_token_expires TIMESTAMP NULL;
+    END IF;
+END $$;
+
+-- Add missing indexes
+CREATE INDEX IF NOT EXISTS idx_goals_active ON wt_live.goals(is_active);
+CREATE INDEX IF NOT EXISTS idx_goals_user_id ON wt_live.goals(user_id);
+CREATE INDEX IF NOT EXISTS idx_user_profiles_user_id ON wt_live.user_profiles(user_id);
+CREATE INDEX IF NOT EXISTS idx_user_settings_user_id ON wt_live.user_settings(user_id);
+CREATE INDEX IF NOT EXISTS idx_weight_entries_date ON wt_live.weight_entries(entry_date);
+CREATE INDEX IF NOT EXISTS idx_weight_entries_user_id ON wt_live.weight_entries(user_id);
+CREATE INDEX IF NOT EXISTS idx_wt_live_users_remember_token ON wt_live.users(remember_token);
+
+-- Add missing foreign key constraint for user_profiles
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.table_constraints
+        WHERE constraint_name = 'user_profiles_user_id_fkey'
         AND table_schema = 'wt_live'
     ) THEN
-        ALTER TABLE wt_live.goals 
-        ADD CONSTRAINT goals_user_id_fkey 
+        ALTER TABLE wt_live.user_profiles
+        ADD CONSTRAINT user_profiles_user_id_fkey
         FOREIGN KEY (user_id) REFERENCES wt_live.users(id) ON DELETE CASCADE;
     END IF;
 END $$;
 
--- Add indexes if they don't exist (for performance)
-CREATE INDEX IF NOT EXISTS idx_weight_entries_user_id ON wt_live.weight_entries(user_id);
-CREATE INDEX IF NOT EXISTS idx_weight_entries_date ON wt_live.weight_entries(entry_date);
-CREATE INDEX IF NOT EXISTS idx_goals_user_id ON wt_live.goals(user_id);
-CREATE INDEX IF NOT EXISTS idx_goals_active ON wt_live.goals(is_active);
-CREATE INDEX IF NOT EXISTS idx_user_profiles_user_id ON wt_live.user_profiles(user_id);
+-- Ensure user_settings table exists (in case it's still missing)
+CREATE TABLE IF NOT EXISTS wt_live.user_settings (
+    user_id INTEGER PRIMARY KEY,
+    weight_unit VARCHAR(10) DEFAULT 'kg',
+    height_unit VARCHAR(10) DEFAULT 'cm',
+    temperature_unit VARCHAR(5) DEFAULT 'c',
+    date_format VARCHAR(10) DEFAULT 'uk',
+    time_format VARCHAR(5) DEFAULT '24',
+    timezone VARCHAR(50) DEFAULT 'Europe/London',
+    theme VARCHAR(20) DEFAULT 'glassmorphism',
+    language VARCHAR(10) DEFAULT 'en',
+    start_of_week VARCHAR(10) DEFAULT 'monday',
+    share_data BOOLEAN DEFAULT false,
+    email_notifications BOOLEAN DEFAULT false,
+    email_day VARCHAR(10) DEFAULT 'monday',
+    email_time VARCHAR(5) DEFAULT '09:00',
+    weekly_reports BOOLEAN DEFAULT false,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
--- Example of how to safely add new columns (uncomment when needed):
--- DO $$ 
--- BEGIN
---     IF NOT EXISTS (
---         SELECT 1 FROM information_schema.columns 
---         WHERE table_schema = 'wt_live' 
---         AND table_name = 'users' 
---         AND column_name = 'timezone'
---     ) THEN
---         ALTER TABLE wt_live.users ADD COLUMN timezone VARCHAR(50) DEFAULT 'UTC';
---     END IF;
--- END $$;
+-- Add foreign key for user_settings if it doesn't exist
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.table_constraints
+        WHERE constraint_name = 'user_settings_user_id_fkey'
+        AND table_schema = 'wt_live'
+    ) THEN
+        ALTER TABLE wt_live.user_settings
+        ADD CONSTRAINT user_settings_user_id_fkey
+        FOREIGN KEY (user_id) REFERENCES wt_live.users(id) ON DELETE CASCADE;
+    END IF;
+END $$;
 
--- Add minimal seed data ONLY if tables are empty (safe for production)
-INSERT INTO wt_live.test_table (val) 
-SELECT 'live1' WHERE NOT EXISTS (SELECT 1 FROM wt_live.test_table WHERE val = 'live1');
-
-INSERT INTO wt_live.test_table (val) 
-SELECT 'live2' WHERE NOT EXISTS (SELECT 1 FROM wt_live.test_table WHERE val = 'live2');
-
-INSERT INTO wt_live.test_table (val) 
-SELECT 'live3' WHERE NOT EXISTS (SELECT 1 FROM wt_live.test_table WHERE val = 'live3');
-
--- Add Robert Marsh user safely (only if doesn't exist)
-INSERT INTO wt_live.users (email, first_name, last_name, is_verified) 
-SELECT 'robertmarshgb@gmail.com', 'Robert', 'Marsh', true 
-WHERE NOT EXISTS (SELECT 1 FROM wt_live.users WHERE email = 'robertmarshgb@gmail.com');
-
--- Grant permissions (adjust as needed for your setup)
--- GRANT ALL PRIVILEGES ON SCHEMA wt_live TO your_app_user;
--- GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA wt_live TO your_app_user;
--- GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA wt_live TO your_app_user;
+-- Create default user_settings entries for all existing users who don't have settings yet
+INSERT INTO wt_live.user_settings (user_id, weight_unit, height_unit, temperature_unit, date_format, time_format, timezone, theme, language, start_of_week, share_data, email_notifications, email_day, email_time, weekly_reports, updated_at)
+SELECT
+    u.id,
+    'kg',
+    'cm',
+    'c',
+    'uk',
+    '24',
+    'Europe/London',
+    'glassmorphism',
+    'en',
+    'monday',
+    false,
+    false,
+    'monday',
+    '09:00',
+    false,
+    NOW()
+FROM wt_live.users u
+WHERE NOT EXISTS (SELECT 1 FROM wt_live.user_settings WHERE user_id = u.id);

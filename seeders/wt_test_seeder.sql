@@ -77,7 +77,9 @@ CREATE TABLE wt_test.user_settings (
     start_of_week VARCHAR(10) DEFAULT 'monday', -- monday, sunday
     share_data BOOLEAN DEFAULT false,
     email_notifications BOOLEAN DEFAULT false,
-    monthly_reports BOOLEAN DEFAULT false,
+    email_day VARCHAR(10) DEFAULT 'monday', -- monday, tuesday, etc.
+    email_time VARCHAR(5) DEFAULT '09:00', -- HH:MM format
+    weekly_reports BOOLEAN DEFAULT false,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
