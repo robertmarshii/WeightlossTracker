@@ -82,24 +82,30 @@
 
     function ProfileController() {
         COVERAGE_LOG('ProfileController', 'Router', __FILE__, __LINE__);
-        error_log("DEBUG: ProfileController called");
-        require_once ('/var/app/backend/Config.php');
 
-        if (!isset($_SESSION['user_id'])) {
-            error_log("DEBUG: No user_id in session");
-            http_response_code(403);
-            echo json_encode(['success' => false, 'message' => 'Not authenticated']);
+        try {
+            require_once ('/var/app/backend/Config.php');
+
+            if (!isset($_SESSION['user_id'])) {
+                http_response_code(403);
+                echo json_encode(['success' => false, 'message' => 'Not authenticated']);
+                return;
+            }
+
+            $userId = (int)$_SESSION['user_id'];
+            $db = Database::getInstance()->getdbConnection();
+            $schema = Database::getSchema();
+
+            if (!$db) {
+                throw new Exception('Database connection failed');
+            }
+
+        } catch (Exception $e) {
+            error_log("ProfileController ERROR: " . $e->getMessage());
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'Server error: ' . $e->getMessage()]);
             return;
         }
-
-        error_log("DEBUG: User authenticated, user_id: " . $_SESSION['user_id']);
-
-        $userId = (int)$_SESSION['user_id'];
-        error_log("DEBUG: Getting database connection");
-        $db = Database::getInstance()->getdbConnection();
-        error_log("DEBUG: Getting schema");
-        $schema = Database::getSchema();
-        error_log("DEBUG: Using schema: " . $schema);
 
         if (!isset($_POST['action'])) {
             echo json_encode(['success' => false, 'message' => 'No action specified']);
