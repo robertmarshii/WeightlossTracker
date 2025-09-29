@@ -1,9 +1,16 @@
 <?php
+   $router_start = microtime(true);
    session_start();
    require_once '/var/app/backend/CoverageLogger.php';
 
+   error_log("DEBUG: Router.php called - " . $_SERVER['REQUEST_METHOD'] . " " . $_SERVER['REQUEST_URI']);
+   error_log("DEBUG: Controller parameter: " . ($_GET["controller"] ?? 'not set'));
+   error_log("DEBUG: Session ID: " . session_id());
+   error_log("DEBUG: Session user_id: " . (isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 'not set'));
+
     if(isset($_GET["controller"])) {
         $controller = htmlspecialchars($_GET["controller"]);
+        error_log("DEBUG: Routing to controller: {$controller}");
         if($controller === "get1") { Get1(); }
         if($controller === "schema") { SchemaController(); }
         if($controller === "seeder") { SeederController(); }
@@ -11,6 +18,8 @@
         if($controller === "email") { EmailController(); }
         if($controller === "coverage") { CoverageController(); }
         if($controller === "seeder_tester") { SeederTesterController(); }
+    } else {
+        error_log("DEBUG: No controller specified in request");
     }
 
     function Get1() {
@@ -85,12 +94,21 @@
 
         try {
             require_once ('/var/app/backend/Config.php');
+            require_once ('/var/app/backend/AuthManager.php');
 
-            if (!isset($_SESSION['user_id'])) {
+            $auth_start = microtime(true);
+            error_log("DEBUG: ProfileController - Starting authentication check");
+
+            if (!AuthManager::isLoggedIn()) {
+                $auth_elapsed = (microtime(true) - $auth_start) * 1000;
+                error_log("DEBUG: ProfileController - Authentication failed after {$auth_elapsed}ms");
                 http_response_code(403);
                 echo json_encode(['success' => false, 'message' => 'Not authenticated']);
                 return;
             }
+
+            $auth_elapsed = (microtime(true) - $auth_start) * 1000;
+            error_log("DEBUG: ProfileController - Authentication successful after {$auth_elapsed}ms");
 
             $userId = (int)$_SESSION['user_id'];
             $db = Database::getInstance()->getdbConnection();

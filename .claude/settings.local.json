@@ -10,7 +10,8 @@
       "Bash(npm run test:coverage:*)",
       "Bash(npx cypress run:*)",
       "Bash(npm run functions:scan:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "WebSearch"
     ],
     "deny": [],
     "ask": []

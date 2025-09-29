@@ -352,32 +352,56 @@ class AuthManager {
     
     public static function isLoggedIn() {
         COVERAGE_LOG('isLoggedIn', __CLASS__, __FILE__, __LINE__);
+        $start_time = microtime(true);
+        error_log("DEBUG: AuthManager::isLoggedIn() - Starting authentication check");
+
         session_start();
 
         // First check active session
         if (isset($_SESSION['user_id']) && isset($_SESSION['login_time'])) {
+            $session_age = time() - $_SESSION['login_time'];
+            error_log("DEBUG: Active session found for user_id: {$_SESSION['user_id']}, session age: {$session_age} seconds");
+
             // Check if session is older than 24 hours
-            if (time() - $_SESSION['login_time'] > 86400) {
+            if ($session_age > 86400) {
+                error_log("DEBUG: Session expired (older than 24 hours), destroying session and checking remember token");
                 session_destroy();
                 // Don't return false yet, check remember me token
             } else {
+                $elapsed = (microtime(true) - $start_time) * 1000;
+                error_log("DEBUG: Active session valid, returning true (took {$elapsed}ms)");
                 return true;
             }
+        } else {
+            error_log("DEBUG: No active session found - user_id: " . (isset($_SESSION['user_id']) ? 'set' : 'not set') .
+                      ", login_time: " . (isset($_SESSION['login_time']) ? 'set' : 'not set'));
         }
 
         // Check remember me token if no active session
         if (isset($_COOKIE['remember_token']) && isset($_COOKIE['user_id'])) {
+            error_log("DEBUG: Found remember token cookies, attempting token validation");
             try {
                 // Add timeout protection
                 set_time_limit(5); // Max 5 seconds for this operation
+                $db_start = microtime(true);
 
+                error_log("DEBUG: Getting database connection...");
                 $db = Database::getInstance()->getDbConnection();
+                $db_elapsed = (microtime(true) - $db_start) * 1000;
+                error_log("DEBUG: Database connection took {$db_elapsed}ms");
+
                 $schema = Database::getSchema();
+                error_log("DEBUG: Using schema: {$schema}");
+
+                $query_start = microtime(true);
                 $stmt = $db->prepare("SELECT * FROM {$schema}.users WHERE id = ? AND remember_token = ? AND remember_token_expires > NOW()");
                 $stmt->execute([$_COOKIE['user_id'], $_COOKIE['remember_token']]);
                 $user = $stmt->fetch(PDO::FETCH_ASSOC);
+                $query_elapsed = (microtime(true) - $query_start) * 1000;
+                error_log("DEBUG: Remember token query took {$query_elapsed}ms");
 
                 if ($user) {
+                    error_log("DEBUG: Valid remember token found, restoring session for user: {$user['email']}");
                     // Restore session from remember token
                     $_SESSION['user_id'] = $user['id'];
                     $_SESSION['email'] = $user['email'];
@@ -386,44 +410,78 @@ class AuthManager {
                     $_SESSION['login_time'] = time();
 
                     // Extend remember token for another 30 days
+                    $token_start = microtime(true);
                     self::setRememberToken($user['id']);
+                    $token_elapsed = (microtime(true) - $token_start) * 1000;
+                    error_log("DEBUG: Remember token extension took {$token_elapsed}ms");
 
+                    $total_elapsed = (microtime(true) - $start_time) * 1000;
+                    error_log("DEBUG: Session restored from remember token, returning true (total took {$total_elapsed}ms)");
                     return true;
                 } else {
+                    error_log("DEBUG: Invalid or expired remember token, clearing cookies");
                     // Invalid/expired token, clear cookies
                     setcookie('remember_token', '', time() - 3600, '/');
                     setcookie('user_id', '', time() - 3600, '/');
                 }
             } catch (Exception $e) {
-                error_log("AuthManager::isLoggedIn remember token check error: " . $e->getMessage());
+                $elapsed = (microtime(true) - $start_time) * 1000;
+                error_log("DEBUG: AuthManager::isLoggedIn remember token check error after {$elapsed}ms: " . $e->getMessage());
+                error_log("DEBUG: Exception trace: " . $e->getTraceAsString());
                 // Clear cookies on error
                 setcookie('remember_token', '', time() - 3600, '/');
                 setcookie('user_id', '', time() - 3600, '/');
             }
+        } else {
+            error_log("DEBUG: No remember token cookies found - remember_token: " .
+                      (isset($_COOKIE['remember_token']) ? 'set' : 'not set') .
+                      ", user_id: " . (isset($_COOKIE['user_id']) ? 'set' : 'not set'));
         }
 
+        $total_elapsed = (microtime(true) - $start_time) * 1000;
+        error_log("DEBUG: Authentication failed, returning false (total took {$total_elapsed}ms)");
         return false;
     }
 
     private static function setRememberToken($userId) {
         COVERAGE_LOG('setRememberToken', __CLASS__, __FILE__, __LINE__);
+        $start_time = microtime(true);
+        error_log("DEBUG: setRememberToken() - Starting for user_id: {$userId}");
 
         try {
             // Generate secure random token
+            $token_start = microtime(true);
             $token = bin2hex(random_bytes(32));
             $expires = date('Y-m-d H:i:s', time() + (30 * 24 * 60 * 60)); // 30 days
+            $token_elapsed = (microtime(true) - $token_start) * 1000;
+            error_log("DEBUG: Token generation took {$token_elapsed}ms");
 
             // Store token in database
+            $db_start = microtime(true);
             $db = Database::getInstance()->getDbConnection();
             $schema = Database::getSchema();
+            $db_elapsed = (microtime(true) - $db_start) * 1000;
+            error_log("DEBUG: Database connection for token update took {$db_elapsed}ms");
+
+            $update_start = microtime(true);
             $stmt = $db->prepare("UPDATE {$schema}.users SET remember_token = ?, remember_token_expires = ? WHERE id = ?");
             $stmt->execute([$token, $expires, $userId]);
+            $update_elapsed = (microtime(true) - $update_start) * 1000;
+            error_log("DEBUG: Token database update took {$update_elapsed}ms");
 
             // Set cookies (30 days)
+            $cookie_start = microtime(true);
             setcookie('remember_token', $token, time() + (30 * 24 * 60 * 60), '/', '', false, true); // httpOnly=true for security
             setcookie('user_id', $userId, time() + (30 * 24 * 60 * 60), '/', '', false, false);
+            $cookie_elapsed = (microtime(true) - $cookie_start) * 1000;
+            error_log("DEBUG: Cookie setting took {$cookie_elapsed}ms");
+
+            $total_elapsed = (microtime(true) - $start_time) * 1000;
+            error_log("DEBUG: setRememberToken() completed successfully (total took {$total_elapsed}ms)");
         } catch (Exception $e) {
-            error_log("AuthManager::setRememberToken error: " . $e->getMessage());
+            $elapsed = (microtime(true) - $start_time) * 1000;
+            error_log("DEBUG: AuthManager::setRememberToken error after {$elapsed}ms: " . $e->getMessage());
+            error_log("DEBUG: Exception trace: " . $e->getTraceAsString());
             // Don't fail the login if remember token fails, just log the error
         }
     }
