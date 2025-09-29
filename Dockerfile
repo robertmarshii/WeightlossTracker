@@ -42,6 +42,13 @@ COPY /php-fpm/php.ini /usr/local/etc/php/conf.d/custom.ini
 RUN chown -R www-data:www-data /var/www /var/app/backend && \
     chmod -R 755 /var/www /var/app/backend
 
+# Set PHP configurations
+RUN echo "pm.max_children = 50" >> /usr/local/etc/php-fpm.d/www.conf && \
+    echo "pm.start_servers = 10" >> /usr/local/etc/php-fpm.d/www.conf && \
+    echo "pm.min_spare_servers = 5" >> /usr/local/etc/php-fpm.d/www.conf && \
+    echo "pm.max_spare_servers = 15" >> /usr/local/etc/php-fpm.d/www.conf
+RUN echo "max_input_vars = 11000" > /usr/local/etc/php/conf.d/custom-php.ini
+
 # Expose port 80
 EXPOSE 80
 
