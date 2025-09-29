@@ -368,6 +368,9 @@ class AuthManager {
         // Check remember me token if no active session
         if (isset($_COOKIE['remember_token']) && isset($_COOKIE['user_id'])) {
             try {
+                // Add timeout protection
+                set_time_limit(5); // Max 5 seconds for this operation
+
                 $db = Database::getInstance()->getDbConnection();
                 $schema = Database::getSchema();
                 $stmt = $db->prepare("SELECT * FROM {$schema}.users WHERE id = ? AND remember_token = ? AND remember_token_expires > NOW()");
