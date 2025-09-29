@@ -827,12 +827,12 @@ function loadSettings() {
 
     // Fallback to API call if global data not available
     console.log('🌐 Making API call for settings (global data not available)');
-    const formData = new FormData();
-    formData.append('action', 'get_settings');
+    const params = new URLSearchParams();
+    params.append('action', 'get_settings');
 
     fetch('router.php?controller=profile', {
         method: 'POST',
-        body: formData,
+        body: params,
         credentials: 'same-origin'
     })
     .then(response => response.text())

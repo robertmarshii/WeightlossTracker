@@ -12,6 +12,8 @@ CREATE TABLE wt_test.users (
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
     is_verified BOOLEAN DEFAULT false,
+    remember_token VARCHAR(64) NULL,
+    remember_token_expires TIMESTAMP NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
