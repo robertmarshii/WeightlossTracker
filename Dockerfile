@@ -1,14 +1,15 @@
 # Start from an official PHP image with FPM (Alpine)
 FROM php:8.2-fpm-alpine
 
-# Install nginx + supervisord + PostgreSQL runtime libs + curl for composer
+# Install nginx + supervisord + PostgreSQL runtime libs + curl for composer + dcron
 RUN set -eux; \
     apk add --no-cache \
         nginx \
         supervisor \
         postgresql-libs \
         curl \
-        unzip; \
+        unzip \
+        dcron; \
     apk add --no-cache --virtual .build-deps \
         $PHPIZE_DEPS \
         postgresql-dev; \
@@ -37,6 +38,11 @@ COPY supervisord.conf /etc/supervisord.conf
 
 # Custom PHP config
 COPY /php-fpm/php.ini /usr/local/etc/php/conf.d/custom.ini
+
+# Set up cron for notification scheduler
+RUN mkdir -p /var/app/logs && chmod 777 /var/app/logs
+COPY php-fpm/notification-cron /etc/cron.d/notification-cron
+RUN chmod 0644 /etc/cron.d/notification-cron
 
 # Set proper permissions
 RUN chown -R www-data:www-data /var/www /var/app/backend && \
