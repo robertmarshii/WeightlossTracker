@@ -1,10 +1,10 @@
 <?php
 /**
  * Notification Scheduler
- * Sends weekly email reminders to users based on their notification preferences
+ * Sends weekly email reminders and monthly reports to users
  *
  * Usage: php NotificationScheduler.php
- * Cron: Every 15 minutes - cd /var/app/backend && php NotificationScheduler.php
+ * Cron: Every 5 minutes - cd /var/app/backend && php NotificationScheduler.php
  */
 
 require_once __DIR__ . '/Config.php';
