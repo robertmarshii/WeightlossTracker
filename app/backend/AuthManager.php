@@ -14,66 +14,78 @@ class AuthManager {
         return str_pad(mt_rand(0, 999999), 6, '0', STR_PAD_LEFT);
     }
     
-    private static function sendEmail($to, $subject, $message) {
+    public static function sendEmail($to, $subject, $message, $htmlContent = null) {
         COVERAGE_LOG('sendEmail', __CLASS__, __FILE__, __LINE__);
-        
+
         // Check if cypress_testing cookie is set (for tests)
         $isCypressTest = isset($_COOKIE['cypress_testing']) && $_COOKIE['cypress_testing'] === 'true';
-        
+
         error_log("DEBUG: Cypress testing cookie: " . ($isCypressTest ? 'true' : 'false'));
-        
+
         // If cypress_testing is enabled, always return true (for test compatibility)
         if ($isCypressTest) {
             error_log("Cypress testing mode enabled - returning success without sending email");
             return true;
         }
-        
+
         // Also return true for test@dev.com to support production mode tests
         if ($to === 'test@dev.com') {
             error_log("Test email test@dev.com - returning success without sending email");
             return true;
         }
-        
-        
+
+
         // Check for EMAIL_SANDBOX_MODE environment variable (only when cypress testing cookie is set)
         if ($isCypressTest && isset($_ENV['EMAIL_SANDBOX_MODE']) && $_ENV['EMAIL_SANDBOX_MODE'] === 'true') {
             error_log("EMAIL_SANDBOX_MODE enabled during cypress testing - returning success without sending email");
             return true;
         }
-        
+
         // Check for force_email_success cookie (only for rate limiting tests when cypress_testing is disabled)
         if (!$isCypressTest && isset($_COOKIE['force_email_success']) && $_COOKIE['force_email_success'] === 'true') {
             error_log("Force email success cookie set - returning success without sending email (rate limit testing)");
             return true;
         }
-        
+
         try {
             // Prepare email data
             $fromEmail = $_ENV['SPARKPOST_FROM_EMAIL'] ?? 'noreply@weightlosstracker.com';
             $fromName = $_ENV['SPARKPOST_FROM_NAME'] ?? 'Weightloss Tracker';
             $apiKey = $_ENV['SPARKPOST_API_KEY'] ?? '';
             $host = $_ENV['SPARKPOST_HOST'] ?? 'api.sparkpost.com';
-            
+
             // Use cURL directly to avoid SDK compatibility issues
             $url = "https://" . $host . "/api/v1/transmissions";
-            
+
+            // Build content - if HTML is provided, use both HTML and text, otherwise just text
+            $content = [
+                'from' => [
+                    'email' => $fromEmail,
+                    'name' => $fromName
+                ],
+                'subject' => $subject,
+                'text' => $message
+            ];
+
+            // Add HTML content if provided
+            if ($htmlContent !== null) {
+                $content['html'] = $htmlContent;
+            }
+
             $payload = [
                 'recipients' => [
                     ['address' => ['email' => $to]]
                 ],
-                'content' => [
-                    'from' => [
-                        'email' => $fromEmail,
-                        'name' => $fromName
-                    ],
-                    'subject' => $subject,
-                    'text' => $message
+                'content' => $content,
+                'options' => [
+                    'click_tracking' => false,  // Disable link tracking/wrapping
+                    'open_tracking' => false    // Disable open tracking
                 ]
             ];
-            
+
             // Add sandbox mode if cypress_testing cookie is set (for tests)
             if ($isCypressTest) {
-                $payload['options'] = ['sandbox' => true];
+                $payload['options']['sandbox'] = true;
                 error_log("Cypress testing mode enabled - email will be sent to SparkPost sandbox (not delivered) for: $to");
             }
             
@@ -220,11 +232,30 @@ class AuthManager {
             $stmt = $db->prepare("INSERT INTO {$schema}.auth_codes (email, code, code_type, expires_at, created_at) VALUES (?, ?, 'login', ?, NOW())");
             $stmt->execute([$email, $code, $expiresAt]);
             
-            // Send email with code in subject
+            // Send email with code
             $subject = "Your Weightloss Tracker Login Code: $code";
+
+            $htmlContent = "
+            <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;'>
+                <h2 style='color: #4A5568;'>Your Login Code</h2>
+
+                <div style='background: #F7FAFC; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: center;'>
+                    <p style='font-size: 16px; color: #4A5568; margin-bottom: 15px;'>Your login code is:</p>
+                    <div style='background: #4299E1; color: white; padding: 20px; border-radius: 6px; font-size: 32px; font-weight: bold; letter-spacing: 8px;'>
+                        $code
+                    </div>
+                    <p style='font-size: 14px; color: #718096; margin-top: 15px;'>This code will expire in 15 minutes.</p>
+                </div>
+
+                <div style='margin-top: 30px; padding-top: 20px; border-top: 1px solid #E2E8F0; color: #718096; font-size: 14px;'>
+                    <p>If you didn't request this code, please ignore this email.</p>
+                </div>
+            </div>
+            ";
+
             $message = "Your login code is: $code\n\nThis code will expire in 15 minutes.\n\nIf you didn't request this code, please ignore this email.";
-            
-            if (self::sendEmail($email, $subject, $message)) {
+
+            if (self::sendEmail($email, $subject, $message, $htmlContent)) {
                 return ['success' => true, 'message' => 'Login code sent successfully'];
             } else {
                 return ['success' => false, 'message' => 'Failed to send email'];
@@ -276,9 +307,28 @@ class AuthManager {
             
             // Send welcome email with verification code
             $subject = "Welcome to Weightloss Tracker - Verify Your Account: $code";
+
+            $htmlContent = "
+            <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;'>
+                <h2 style='color: #4A5568;'>Welcome to Weightloss Tracker! 🎉</h2>
+
+                <div style='background: #F7FAFC; padding: 20px; border-radius: 8px; margin: 20px 0;'>
+                    <p style='font-size: 16px; color: #4A5568; margin-bottom: 15px;'>Thank you for signing up! To complete your account setup, please enter this verification code:</p>
+                    <div style='background: #48BB78; color: white; padding: 20px; border-radius: 6px; font-size: 32px; font-weight: bold; letter-spacing: 8px; text-align: center;'>
+                        $code
+                    </div>
+                    <p style='font-size: 14px; color: #718096; margin-top: 15px; text-align: center;'>This code will expire in 15 minutes.</p>
+                </div>
+
+                <div style='margin-top: 30px; padding-top: 20px; border-top: 1px solid #E2E8F0; color: #718096; font-size: 14px;'>
+                    <p>If you didn't create this account, please ignore this email.</p>
+                </div>
+            </div>
+            ";
+
             $message = "Welcome to Weightloss Tracker!\n\nYour verification code is: $code\n\nThis code will expire in 15 minutes.\n\nPlease enter this code to complete your account setup.";
-            
-            if (self::sendEmail($email, $subject, $message)) {
+
+            if (self::sendEmail($email, $subject, $message, $htmlContent)) {
                 return ['success' => true, 'message' => 'Account created successfully. Check your email for verification code.'];
             } else {
                 return ['success' => false, 'message' => 'Account created but failed to send verification email'];

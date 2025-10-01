@@ -1,0 +1,3 @@
+# Run notification scheduler every 5 minutes
+*/5 * * * * root cd /var/app/backend && /usr/local/bin/php NotificationScheduler.php >> /var/app/logs/cron.log 2>&1
+

@@ -7,6 +7,18 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
+#btn-save-profile {
+    min-width:120px !important;
+}
+
+#btn-add-entry {
+    min-width:120px !important;
+}
+
+#btn-logout {
+    min-width:120px !important;
+}
+
 /* Glass Morphism Components */
 .glass-card {
     background: rgba(30, 58, 95, 0.4);

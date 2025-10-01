@@ -195,147 +195,109 @@ function getHealthImprovementMessage(healthScoreImprovement) {
     if (window.coverage) window.coverage.logFunction('getHealthImprovementMessage', 'health.js');
     if (healthScoreImprovement >= 70) {
         if (window.coverage) window.coverage.logFunction('if', 'health.js');
-        return `<strong style="color: #27ae60;">Incredible transformation! You've achieved extraordinary health improvements!</strong><br>
+        return `<strong style="color: #27ae60;">${t("Incredible transformation! You've achieved extraordinary health improvements!")}</strong><br>
         <small class="text-muted" style="line-height: 1.4;">
-            You've achieved a complete health metamorphosis. Your body functions at an optimal level with dramatically reduced disease risks across all categories.
-            You likely feel like a completely different person - boundless energy, perfect sleep, pain-free movement, razor-sharp mental focus,
-            and physical capabilities you may not have had in decades. This is transformational health optimization.
+            ${t("You've achieved a complete health metamorphosis. Your body functions at an optimal level with dramatically reduced disease risks across all categories. You likely feel like a completely different person - boundless energy, perfect sleep, pain-free movement, razor-sharp mental focus, and physical capabilities you may not have had in decades. This is transformational health optimization.")}
         </small>`;
     } else if (healthScoreImprovement >= 65) {
-        return `<strong style="color: #27ae60;">Phenomenal progress! Your health transformation is truly inspiring!</strong><br>
+        return `<strong style="color: #27ae60;">${t("Phenomenal progress! Your health transformation is truly inspiring!")}</strong><br>
         <small class="text-muted" style="line-height: 1.4;">
-            Your health transformation is nothing short of remarkable. Your cardiovascular system operates like a well-tuned machine,
-            metabolic function is optimized, and physical performance has reached new heights. You probably feel more energetic and capable
-            than you have in years, with disease risks reduced to minimal levels across the board.
+            ${t("Your health transformation is nothing short of remarkable. Your cardiovascular system operates like a well-tuned machine, metabolic function is optimized, and physical performance has reached new heights. You probably feel more energetic and capable than you have in years, with disease risks reduced to minimal levels across the board.")}
         </small>`;
     } else if (healthScoreImprovement >= 60) {
-        return `<strong style="color: #27ae60;">Amazing achievement! You've made life-changing health improvements!</strong><br>
+        return `<strong style="color: #27ae60;">${t("Amazing achievement! You've made life-changing health improvements!")}</strong><br>
         <small class="text-muted" style="line-height: 1.4;">
-            You've achieved life-altering health improvements. Your body operates with exceptional efficiency - sleep is consistently restorative,
-            energy levels remain high throughout the day, and physical activities feel effortless. Mental clarity is sharp,
-            emotional well-being stable, and your risk for chronic diseases has dropped to very low levels.
+            ${t("You've achieved life-altering health improvements. Your body operates with exceptional efficiency - sleep is consistently restorative, energy levels remain high throughout the day, and physical activities feel effortless. Mental clarity is sharp, emotional well-being stable, and your risk for chronic diseases has dropped to very low levels.")}
         </small>`;
     } else if (healthScoreImprovement >= 55) {
-        return `<strong style="color: #27ae60;">Outstanding transformation! Your dedication is paying off tremendously!</strong><br>
+        return `<strong style="color: #27ae60;">${t("Outstanding transformation! Your dedication is paying off tremendously!")}</strong><br>
         <small class="text-muted" style="line-height: 1.4;">
-            Your dedication has yielded extraordinary results. You've likely regained physical capabilities from your younger years,
-            with sustained high energy, excellent sleep quality, and minimal physical discomfort. Your immune system is robust,
-            recovery times fast, and you handle physical and mental challenges with remarkable resilience.
+            ${t("Your dedication has yielded extraordinary results. You've likely regained physical capabilities from your younger years, with sustained high energy, excellent sleep quality, and minimal physical discomfort. Your immune system is robust, recovery times fast, and you handle physical and mental challenges with remarkable resilience.")}
         </small>`;
     } else if (healthScoreImprovement >= 50) {
-        return `<strong style="color: #27ae60;">Exceptional progress! You've reached a major health milestone!</strong><br>
+        return `<strong style="color: #27ae60;">${t("Exceptional progress! You've reached a major health milestone!")}</strong><br>
         <small class="text-muted" style="line-height: 1.4;">
-            You've reached a major health milestone that represents years of life extension potential. Your cardiovascular system functions optimally,
-            joints move freely without pain, and you sleep deeply every night. Physical activities that once seemed impossible
-            are now routine, and your overall quality of life has improved dramatically.
+            ${t("You've reached a major health milestone that represents years of life extension potential. Your cardiovascular system functions optimally, joints move freely without pain, and you sleep deeply every night. Physical activities that once seemed impossible are now routine, and your overall quality of life has improved dramatically.")}
         </small>`;
     } else if (healthScoreImprovement >= 45) {
-        return `<strong style="color: #27ae60;">Remarkable achievement! Your health journey is truly impressive!</strong><br>
+        return `<strong style="color: #27ae60;">${t("Remarkable achievement! Your health journey is truly impressive!")}</strong><br>
         <small class="text-muted" style="line-height: 1.4;">
-            Your commitment has produced remarkable results. You likely wake up feeling refreshed and maintain steady energy all day.
-            Physical tasks feel easier, your mood is more stable and positive, and you handle stress better than before.
-            Your body has become significantly more resilient and efficient in every way.
+            ${t("Your commitment has produced remarkable results. You likely wake up feeling refreshed and maintain steady energy all day. Physical tasks feel easier, your mood is more stable and positive, and you handle stress better than before. Your body has become significantly more resilient and efficient in every way.")}
         </small>`;
     } else if (healthScoreImprovement >= 40) {
-        return `<strong style="color: #27ae60;">Fantastic transformation! You've made incredible health strides!</strong><br>
+        return `<strong style="color: #27ae60;">${t("Fantastic transformation! You've made incredible health strides!")}</strong><br>
         <small class="text-muted" style="line-height: 1.4;">
-            You've achieved fantastic health improvements that impact every aspect of your life. Sleep comes easily and leaves you fully restored,
-            energy levels stay consistent without afternoon crashes, and physical activities bring joy rather than discomfort.
-            Your mind feels sharper and your outlook more positive than it has in years.
+            ${t("You've achieved fantastic health improvements that impact every aspect of your life. Sleep comes easily and leaves you fully restored, energy levels stay consistent without afternoon crashes, and physical activities bring joy rather than discomfort. Your mind feels sharper and your outlook more positive than it has in years.")}
         </small>`;
     } else if (healthScoreImprovement >= 35) {
-        return `<strong style="color: #27ae60;">Excellent transformation! Your progress is remarkable!</strong><br>
+        return `<strong style="color: #27ae60;">${t("Excellent transformation! Your progress is remarkable!")}</strong><br>
         <small class="text-muted" style="line-height: 1.4;">
-            You've made excellent health strides that are clearly noticeable in daily life. Your energy feels abundant and natural,
-            sleep is consistently good, and you move through your day with comfort and confidence.
-            Friends and family probably comment on how much healthier and more vibrant you appear.
+            ${t("You've made excellent health strides that are clearly noticeable in daily life. Your energy feels abundant and natural, sleep is consistently good, and you move through your day with comfort and confidence. Friends and family probably comment on how much healthier and more vibrant you appear.")}
         </small>`;
     } else if (healthScoreImprovement >= 30) {
-        return `<strong style="color: #27ae60;">Superb progress! Your health transformation is outstanding!</strong><br>
+        return `<strong style="color: #27ae60;">${t("Superb progress! Your health transformation is outstanding!")}</strong><br>
         <small class="text-muted" style="line-height: 1.4;">
-            You've achieved superb health improvements that represent a major lifestyle upgrade. Energy flows naturally throughout your day,
-            sleep is reliably restorative, and physical movement feels smooth and pain-free. Your mood is more stable,
-            stress affects you less, and you feel genuinely excited about maintaining this healthier version of yourself.
+            ${t("You've achieved superb health improvements that represent a major lifestyle upgrade. Energy flows naturally throughout your day, sleep is reliably restorative, and physical movement feels smooth and pain-free. Your mood is more stable, stress affects you less, and you feel genuinely excited about maintaining this healthier version of yourself.")}
         </small>`;
     } else if (healthScoreImprovement >= 25) {
-        return `<strong style="color: #27ae60;">Wonderful achievement! You're experiencing major health benefits!</strong><br>
+        return `<strong style="color: #27ae60;">${t("Wonderful achievement! You're experiencing major health benefits!")}</strong><br>
         <small class="text-muted" style="line-height: 1.4;">
-            You've achieved exceptional health improvements. Your body should feel remarkably different - lighter, stronger, more agile.
-            Chronic aches and pains may have diminished significantly, breathing is easier, and you likely feel decades younger.
-            Your immune system is stronger, recovery from physical exertion faster, and overall vitality dramatically enhanced.
+            ${t("You've achieved exceptional health improvements. Your body should feel remarkably different - lighter, stronger, more agile. Chronic aches and pains may have diminished significantly, breathing is easier, and you likely feel decades younger. Your immune system is stronger, recovery from physical exertion faster, and overall vitality dramatically enhanced.")}
         </small>`;
     } else if (healthScoreImprovement >= 20) {
-        return `<strong style="color: #27ae60;">Outstanding progress! Your health transformation is remarkable!</strong><br>
+        return `<strong style="color: #27ae60;">${t("Outstanding progress! Your health transformation is remarkable!")}</strong><br>
         <small class="text-muted" style="line-height: 1.4;">
-            You've achieved transformative health improvements. Physical activities that once felt challenging should now feel manageable,
-            sleep is likely deep and restorative, and you probably wake feeling refreshed. Mental clarity, mood stability,
-            and physical stamina have all improved dramatically. Your risk profile has shifted significantly toward optimal health.
+            ${t("You've achieved transformative health improvements. Physical activities that once felt challenging should now feel manageable, sleep is likely deep and restorative, and you probably wake feeling refreshed. Mental clarity, mood stability, and physical stamina have all improved dramatically. Your risk profile has shifted significantly toward optimal health.")}
         </small>`;
     } else if (healthScoreImprovement >= 15) {
-        return `<strong style="color: #27ae60;">Excellent health improvements! You're making fantastic progress!</strong><br>
+        return `<strong style="color: #27ae60;">${t("Excellent health improvements! You're making fantastic progress!")}</strong><br>
         <small class="text-muted" style="line-height: 1.4;">
-            You're experiencing major health transformations. Movement should feel significantly easier, sleep quality markedly improved,
-            and energy levels substantially higher throughout the day. Inflammation is reducing, breathing may be easier,
-            and your cardiovascular system is becoming noticeably stronger. These gains compound daily.
+            ${t("You're experiencing major health transformations. Movement should feel significantly easier, sleep quality markedly improved, and energy levels substantially higher throughout the day. Inflammation is reducing, breathing may be easier, and your cardiovascular system is becoming noticeably stronger. These gains compound daily.")}
         </small>`;
     } else if (healthScoreImprovement >= 10) {
-        return `<strong style="color: #27ae60;">Great progress! You should be feeling healthier!</strong><br>
+        return `<strong style="color: #27ae60;">${t('Great progress! You should be feeling healthier!')}</strong><br>
         <small class="text-muted" style="line-height: 1.4;">
-            You're experiencing substantial health improvements. Blood pressure is likely lowering, joint pain reducing,
-            sleep becoming more restful, and energy levels increasing. Your mood may be more stable, and daily tasks
-            should feel easier. These improvements create momentum for continued positive health changes.
+            ${t("You're experiencing substantial health improvements. Blood pressure is likely lowering, joint pain reducing, sleep becoming more restful, and energy levels increasing. Your mood may be more stable, and daily tasks should feel easier. These improvements create momentum for continued positive health changes.")}
         </small>`;
     } else if (healthScoreImprovement >= 5) {
-        return `<strong style="color: #27ae60;">Good progress! Your health is improving!</strong><br>
+        return `<strong style="color: #27ae60;">${t("Good progress! Your health is improving!")}</strong><br>
         <small class="text-muted" style="line-height: 1.4;">
-            You're experiencing noticeable health improvements. Your cardiovascular system is getting stronger, joint stress is reducing,
-            sleep quality may be improving, and you should feel increased energy during daily activities.
-            These positive changes are building a foundation for even greater health gains ahead.
+            ${t("You're experiencing noticeable health improvements. Your cardiovascular system is getting stronger, joint stress is reducing, sleep quality may be improving, and you should feel increased energy during daily activities. These positive changes are building a foundation for even greater health gains ahead.")}
         </small>`;
     } else if (healthScoreImprovement >= 1) {
-        return `<strong style="color: #27ae60;">Every step forward matters!</strong><br>
+        return `<strong style="color: #27ae60;">${t("Every step forward matters!")}</strong><br>
         <small class="text-muted" style="line-height: 1.4;">
-            You're beginning to see small but meaningful health improvements. Your body is starting to respond positively,
-            with early benefits like slightly better sleep, reduced strain on joints, and improved cardiovascular function.
-            Continue with your healthy habits - these small changes build momentum for bigger improvements ahead.
+            ${t("You're beginning to see small but meaningful health improvements. Your body is starting to respond positively, with early benefits like slightly better sleep, reduced strain on joints, and improved cardiovascular function. Continue with your healthy habits - these small changes build momentum for bigger improvements ahead.")}
         </small>`;
     } else if (healthScoreImprovement >= -4) {
-        return `<strong style="color: #f39c12;">Time to refocus! Small changes can get you back on track.</strong><br>
+        return `<strong style="color: #f39c12;">${t("Time to refocus! Small changes can get you back on track.")}</strong><br>
         <small class="text-muted" style="line-height: 1.4;">
-            Your health score has declined slightly, but this is temporary and fixable. Small adjustments to your habits can quickly
-            turn this around. Focus on consistent healthy choices - even modest improvements will start moving your score upward again.
+            ${t("Your health score has declined slightly, but this is temporary and fixable. Small adjustments to your habits can quickly turn this around. Focus on consistent healthy choices - even modest improvements will start moving your score upward again.")}
         </small>`;
     } else if (healthScoreImprovement >= -9) {
-        return `<strong style="color: #f39c12;">Let's reverse this trend! You have the power to improve.</strong><br>
+        return `<strong style="color: #f39c12;">${t("Let's reverse this trend! You have the power to improve.")}</strong><br>
         <small class="text-muted" style="line-height: 1.4;">
-            Your health score has decreased by ${Math.abs(healthScoreImprovement)} points, but you can turn this around. Focus on getting back to
-            healthy eating habits, regular activity, and good sleep. Even small consistent changes will start improving your health metrics.
+            ${t("Your health score has decreased by")} ${Math.abs(healthScoreImprovement)} ${t("points, but you can turn this around. Focus on getting back to healthy eating habits, regular activity, and good sleep. Even small consistent changes will start improving your health metrics.")}
         </small>`;
     } else if (healthScoreImprovement >= -14) {
-        return `<strong style="color: #e67e22;">Important reminder: Your health needs attention.</strong><br>
+        return `<strong style="color: #e67e22;">${t("Important reminder: Your health needs attention.")}</strong><br>
         <small class="text-muted" style="line-height: 1.4;">
-            With a ${Math.abs(healthScoreImprovement)}-point decline, it's time to prioritize your health. Consider returning to previous healthy habits
-            that worked for you. Small, consistent steps can help you regain lost ground and start moving in a positive direction again.
+            ${t("With a")} ${Math.abs(healthScoreImprovement)}-${t("point decline, it's time to prioritize your health. Consider returning to previous healthy habits that worked for you. Small, consistent steps can help you regain lost ground and start moving in a positive direction again.")}
         </small>`;
     } else if (healthScoreImprovement >= -19) {
-        return `<strong style="color: #e67e22;">Health alert: Time for action to reverse this decline.</strong><br>
+        return `<strong style="color: #e67e22;">${t("Health alert: Time for action to reverse this decline.")}</strong><br>
         <small class="text-muted" style="line-height: 1.4;">
-            Your ${Math.abs(healthScoreImprovement)}-point decrease indicates your health risks are increasing. This is a good time to recommit to
-            healthy habits. Focus on sustainable changes in diet and activity - your body responds quickly to positive choices.
+            ${t("Your")} ${Math.abs(healthScoreImprovement)}-${t("point decrease indicates your health risks are increasing. This is a good time to recommit to healthy habits. Focus on sustainable changes in diet and activity - your body responds quickly to positive choices.")}
         </small>`;
     } else if (healthScoreImprovement >= -24) {
-        return `<strong style="color: #e74c3c;">Significant concern: Your health metrics need immediate attention.</strong><br>
+        return `<strong style="color: #e74c3c;">${t("Significant concern: Your health metrics need immediate attention.")}</strong><br>
         <small class="text-muted" style="line-height: 1.4;">
-            A ${Math.abs(healthScoreImprovement)}-point decline is substantial and indicates increasing health risks across multiple categories.
-            Consider consulting with a healthcare provider and developing a structured plan to address weight and health management.
-            It's not too late to reverse this trend.
+            ${t("A")} ${Math.abs(healthScoreImprovement)}-${t("point decline is substantial and indicates increasing health risks across multiple categories. Consider consulting with a healthcare provider and developing a structured plan to address weight and health management. It's not too late to reverse this trend.")}
         </small>`;
     } else {
-        return `<strong style="color: #e74c3c;">Serious health alert: Immediate action needed.</strong><br>
+        return `<strong style="color: #e74c3c;">${t("Serious health alert: Immediate action needed.")}</strong><br>
         <small class="text-muted" style="line-height: 1.4;">
-            Your health score has declined by ${Math.abs(healthScoreImprovement)} points, indicating significantly increased health risks.
-            Please consider seeking professional medical guidance to develop a comprehensive plan for improving your health.
-            Remember, positive changes can start improving your health immediately.
+            ${t("Your health score has declined by")} ${Math.abs(healthScoreImprovement)} ${t("points, indicating significantly increased health risks. Please consider seeking professional medical guidance to develop a comprehensive plan for improving your health. Remember, positive changes can start improving your health immediately.")}
         </small>`;
     }
 }
@@ -369,47 +331,47 @@ function updateHealthBenefitCards() {
                 const originalRisk = getBMIRisk(startBMI);
                 const currentRisk = getBMIRisk(currentBMI);
                 const riskReduction = originalRisk - currentRisk;
-                $('#diabetes-block').html(`Current Risk: <strong>${currentRisk}%</strong><br>Started at: <strong>${originalRisk}%</strong> (${startBMI.toFixed(1)} BMI)<br>Risk reduced by <strong class="text-success">${riskReduction} percentage points</strong><br><small class="text-muted">Weight loss significantly reduces diabetes incidence and HbA1c levels (American Diabetes Association, 2023)</small>`).removeClass('text-muted');
+                $('#diabetes-block').html(`Current Risk: <strong>${currentRisk}%</strong><br>${t('Started at')}: <strong>${originalRisk}%</strong> (${startBMI.toFixed(1)} ${t('BMI')})<br>${t('Risk reduced by')} <strong class="text-success">${riskReduction} ${t('percentage points')}</strong><br><small class="text-muted">${t('Weight loss significantly reduces diabetes incidence and HbA1c levels (American Diabetes Association, 2023)')}</small>`).removeClass('text-muted');
 
                 // Update sleep apnea card with risk percentages
                 const originalSleepRisk = getSleepApneaRisk(startBMI);
                 const currentSleepRisk = getSleepApneaRisk(currentBMI);
                 const sleepRiskReduction = originalSleepRisk - currentSleepRisk;
-                $('#sleep-apnea-block').html(`Current Risk: <strong>${currentSleepRisk}%</strong><br>Started at: <strong>${originalSleepRisk}%</strong> (${startBMI.toFixed(1)} BMI)<br>Risk reduced by <strong class="text-success">${sleepRiskReduction} percentage points</strong><br><small class="text-muted">Weight loss significantly reduces sleep apnea severity and improves sleep quality (Peppard et al., 2013, Am J Respir Crit Care Med)</small>`).removeClass('text-muted');
+                $('#sleep-apnea-block').html(`Current Risk: <strong>${currentSleepRisk}%</strong><br>${t('Started at')}: <strong>${originalSleepRisk}%</strong> (${startBMI.toFixed(1)} ${t('BMI')})<br>${t('Risk reduced by')} <strong class="text-success">${sleepRiskReduction} ${t('percentage points')}</strong><br><small class="text-muted">${t('Weight loss significantly reduces sleep apnea severity and improves sleep quality (Peppard et al., 2013, Am J Respir Crit Care Med)')}</small>`).removeClass('text-muted');
 
                 // Update hypertension card with risk percentages
                 const originalHypertensionRisk = getHypertensionRisk(startBMI);
                 const currentHypertensionRisk = getHypertensionRisk(currentBMI);
                 const hypertensionRiskReduction = originalHypertensionRisk - currentHypertensionRisk;
-                $('#hypertension-block').html(`Current Risk: <strong>${currentHypertensionRisk}%</strong><br>Started at: <strong>${originalHypertensionRisk}%</strong> (${startBMI.toFixed(1)} BMI)<br>Risk reduced by <strong class="text-success">${hypertensionRiskReduction} percentage points</strong><br><small class="text-muted">Blood pressure typically drops 5-10 mmHg systolic/diastolic with weight loss (Whelton et al., 2018, JAMA)</small>`).removeClass('text-muted');
+                $('#hypertension-block').html(`${t('Current Risk:')} <strong>${currentHypertensionRisk}%</strong><br>${t('Started at')}: <strong>${originalHypertensionRisk}%</strong> (${startBMI.toFixed(1)} ${t('BMI')})<br>${t('Risk reduced by')} <strong class="text-success">${hypertensionRiskReduction} ${t('percentage points')}</strong><br><small class="text-muted">${t('Blood pressure typically drops 5-10 mmHg systolic/diastolic with weight loss (Whelton et al., 2018, JAMA)')}</small>`).removeClass('text-muted');
 
                 // Update fatty liver card with risk percentages
                 const originalFattyLiverRisk = getFattyLiverRisk(startBMI);
                 const currentFattyLiverRisk = getFattyLiverRisk(currentBMI);
                 const fattyLiverRiskReduction = originalFattyLiverRisk - currentFattyLiverRisk;
-                $('#fatty-liver-block').html(`Current Risk: <strong>${currentFattyLiverRisk}%</strong><br>Started at: <strong>${originalFattyLiverRisk}%</strong> (${startBMI.toFixed(1)} BMI)<br>Risk reduced by <strong class="text-success">${fattyLiverRiskReduction} percentage points</strong><br><small class="text-muted">Early-stage NAFLD can often be reversed with weight loss (Chalasani et al., 2018, Hepatology)</small>`).removeClass('text-muted');
+                $('#fatty-liver-block').html(`${t('Current Risk:')} <strong>${currentFattyLiverRisk}%</strong><br>${t('Started at')}: <strong>${originalFattyLiverRisk}%</strong> (${startBMI.toFixed(1)} ${t('BMI')})<br>${t('Risk reduced by')} <strong class="text-success">${fattyLiverRiskReduction} ${t('percentage points')}</strong><br><small class="text-muted">${t('Early-stage NAFLD can often be reversed with weight loss (Chalasani et al., 2018, Hepatology)')}</small>`).removeClass('text-muted');
 
                 // Update heart disease card with risk percentages
                 const originalHeartRisk = getHeartDiseaseRisk(startBMI);
                 const currentHeartRisk = getHeartDiseaseRisk(currentBMI);
                 const heartRiskReduction = originalHeartRisk - currentHeartRisk;
-                $('#heart-disease-block').html(`Current Risk: <strong>${currentHeartRisk}%</strong><br>Started at: <strong>${originalHeartRisk}%</strong> (${startBMI.toFixed(1)} BMI)<br>Risk reduced by <strong class="text-success">${heartRiskReduction} percentage points</strong><br><small class="text-muted">Stronger cardiovascular protection with central obesity reduction (Lavie et al., 2021, Circulation)</small>`).removeClass('text-muted');
+                $('#heart-disease-block').html(`Current Risk: <strong>${currentHeartRisk}%</strong><br>${t('Started at')}: <strong>${originalHeartRisk}%</strong> (${startBMI.toFixed(1)} ${t('BMI')})<br>${t('Risk reduced by')} <strong class="text-success">${heartRiskReduction} ${t('percentage points')}</strong><br><small class="text-muted">${t('Stronger cardiovascular protection with central obesity reduction (Lavie et al., 2021, Circulation)')}</small>`).removeClass('text-muted');
 
                 // Update mental health card with risk percentages
                 const originalMentalRisk = getMentalHealthRisk(startBMI);
                 const currentMentalRisk = getMentalHealthRisk(currentBMI);
                 const mentalRiskReduction = originalMentalRisk - currentMentalRisk;
-                $('#mental-health-block').html(`Current Risk: <strong>${currentMentalRisk}%</strong><br>Started at: <strong>${originalMentalRisk}%</strong> (${startBMI.toFixed(1)} BMI)<br>Risk reduced by <strong class="text-success">${mentalRiskReduction} percentage points</strong><br><small class="text-muted">Weight loss improves mood, self-esteem and reduces inflammation (Luppino et al., 2010, Arch Gen Psychiatry)</small>`).removeClass('text-muted');
+                $('#mental-health-block').html(`Current Risk: <strong>${currentMentalRisk}%</strong><br>${t('Started at')}: <strong>${originalMentalRisk}%</strong> (${startBMI.toFixed(1)} ${t('BMI')})<br>${t('Risk reduced by')} <strong class="text-success">${mentalRiskReduction} ${t('percentage points')}</strong><br><small class="text-muted">${t('Weight loss improves mood, self-esteem and reduces inflammation (Luppino et al., 2010, Arch Gen Psychiatry')}</small>`).removeClass('text-muted');
 
                 // Update joint health card with risk percentages
                 const originalJointRisk = getJointHealthRisk(startBMI);
                 const currentJointRisk = getJointHealthRisk(currentBMI);
                 const jointRiskReduction = originalJointRisk - currentJointRisk;
-                $('#joint-health-block').html(`Current Risk: <strong>${currentJointRisk}%</strong><br>Started at: <strong>${originalJointRisk}%</strong> (${startBMI.toFixed(1)} BMI)<br>Risk reduced by <strong class="text-success">${jointRiskReduction} percentage points</strong><br><small class="text-muted">Reduced joint load leads to slower progression of knee and hip osteoarthritis (Messier et al., 2013, Arthritis Rheumatol)</small>`).removeClass('text-muted');
+                $('#joint-health-block').html(`Current Risk: <strong>${currentJointRisk}%</strong><br>${t('Started at')}: <strong>${originalJointRisk}%</strong> (${startBMI.toFixed(1)} ${t('BMI')})<br>${t('Risk reduced by')} <strong class="text-success">${jointRiskReduction} ${t('percentage points')}</strong><br><small class="text-muted">${t('Reduced joint load leads to slower progression of knee and hip osteoarthritis (Messier et al., 2013, Arthritis Rheumatol)')}</small>`).removeClass('text-muted');
 
                 // Update life expectancy card
                 const lifeIncrease = Math.min(5, (bmiReduction / 5.0) * 3.5);
-                $('#life-expectancy-block').html(`Life Expectancy Increase: <strong>${lifeIncrease.toFixed(1)} years</strong><br>Started at: <strong>${startBMI.toFixed(1)} BMI</strong><br>Improvement from <strong class="text-success">${bmiReduction.toFixed(1)} BMI reduction</strong><br><small class="text-muted">Stronger benefits when weight loss occurs earlier in life (Flegal et al., 2013, JAMA)</small>`).removeClass('text-muted');
+                $('#life-expectancy-block').html(`${t('Life Expectancy Increase:')} <strong>${lifeIncrease.toFixed(1)} ${t('years')}</strong><br>${t('Started at')}: <strong>${startBMI.toFixed(1)} ${t('BMI')}</strong><br>${t('Improvement from')} <strong class="text-success">${bmiReduction.toFixed(1)} ${t('BMI reduction')}</strong><br><small class="text-muted">${t('Stronger benefits when weight loss occurs earlier in life (Flegal et al., 2013, JAMA)')}</small>`).removeClass('text-muted');
 
                 // Calculate comprehensive health score
                 const startingHealthScore = calculateHealthScore(startBMI);
@@ -424,10 +386,10 @@ function updateHealthBenefitCards() {
                 calculatorDiv.html(`
                     <!-- Health Score Title and Score Display -->
                     <div class="d-flex justify-content-between align-items-start health-score-margin health-score-header">
-                        <h5 class="card-title mb-0">📊 Health Score</h5>
+                        <h5 class="card-title mb-0" data-eng="📊 Health Score" data-spa="📊 Puntuación de Salud" data-fre="📊 Score de Santé" data-ger="📊 Gesundheitspunktzahl">${t("📊 Health Score")}</h5>
                         <div class="health-score-display-stacked">
                             <div class="health-score-number">${currentHealthScore}/100</div>
-                            <div class="health-score-improvement-below text-success">+${healthScoreImprovement} points</div>
+                            <div class="health-score-improvement-below text-success" data-eng="+${healthScoreImprovement} points" data-spa="+${healthScoreImprovement} puntos" data-fre="+${healthScoreImprovement} points" data-ger="+${healthScoreImprovement} Punkte">+${healthScoreImprovement} ${t("points")}</div>
                         </div>
                     </div>
 
@@ -435,9 +397,9 @@ function updateHealthBenefitCards() {
                         <!-- Left Column: Progress Summary -->
                         <div class="col-md-3">
                             <div class="progress-summary">
-                                <strong>Progress Summary</strong><br>
-                                Started at: <strong>${startingHealthScore}/100</strong><br>
-                                <small class="text-muted">Based on ${convertFromKg(weightLoss)} ${getWeightUnitLabel()} weight loss across all 14 health categories on this page</small>
+                                <strong data-eng="Progress Summary" data-spa="Resumen de Progreso" data-fre="Résumé des Progrès" data-ger="Fortschritts-Zusammenfassung">${t("Progress Summary")}</strong><br>
+                                <span data-eng="Started at: " data-spa="Comenzó en: " data-fre="Commencé à: " data-ger="Begonnen bei: ">${t("Started at:")} </span><strong>${startingHealthScore}/100</strong><br>
+                                <small class="text-muted" data-eng="Based on ${convertFromKg(weightLoss)} ${getWeightUnitLabel()} weight loss across all 14 health categories on this page" data-spa="Basado en ${convertFromKg(weightLoss)} ${getWeightUnitLabel()} de pérdida de peso en las 14 categorías de salud de esta página" data-fre="Basé sur ${convertFromKg(weightLoss)} ${getWeightUnitLabel()} de perte de poids dans les 14 catégories de santé de cette page" data-ger="Basierend auf ${convertFromKg(weightLoss)} ${getWeightUnitLabel()} Gewichtsverlust über alle 14 Gesundheitskategorien auf dieser Seite">${t("Based on")} ${convertFromKg(weightLoss)} ${getWeightUnitLabel()} ${t("weight loss across all 14 health categories on this page")}</small>
                             </div>
                         </div>
 
@@ -449,17 +411,17 @@ function updateHealthBenefitCards() {
 
                                 <!-- Score markers -->
                                 <div class="health-marker start" style="left: ${startPosition}%;"></div>
-                                <div class="health-marker-label start" style="left: ${startPosition}%;">START</div>
+                                <div class="health-marker-label start" style="left: ${startPosition}%;" data-eng="START" data-spa="INICIO" data-fre="DÉBUT" data-ger="START">${t("START")}</div>
 
                                 <div class="health-marker current" style="left: ${currentPosition}%;"></div>
-                                <div class="health-marker-label current" style="left: ${currentPosition}%;">NOW</div>
+                                <div class="health-marker-label current" style="left: ${currentPosition}%;" data-eng="NOW" data-spa="AHORA" data-fre="MAINTENANT" data-ger="JETZT">${t("NOW")}</div>
 
                                 <!-- Score labels -->
-                                <div class="health-scale-label poor">Poor<br>0</div>
-                                <div class="health-scale-label fair">Fair<br>25</div>
-                                <div class="health-scale-label good">Good<br>50</div>
-                                <div class="health-scale-label very-good">Very Good<br>75</div>
-                                <div class="health-scale-label excellent">Excellent<br>100</div>
+                                <div class="health-scale-label poor" data-eng="Poor" data-spa="Pobre" data-fre="Faible" data-ger="Schlecht">${t("Poor")}<br>0</div>
+                                <div class="health-scale-label fair" data-eng="Fair" data-spa="Regular" data-fre="Passable" data-ger="Mäßig">${t("Fair")}<br>25</div>
+                                <div class="health-scale-label good" data-eng="Good" data-spa="Bueno" data-fre="Bon" data-ger="Gut">${t("Good")}<br>50</div>
+                                <div class="health-scale-label very-good" data-eng="Very Good" data-spa="Muy Bueno" data-fre="Très Bon" data-ger="Sehr Gut">${t("Very Good")}<br>75</div>
+                                <div class="health-scale-label excellent" data-eng="Excellent" data-spa="Excelente" data-fre="Excellent" data-ger="Ausgezeichnet">${t("Excellent")}<br>100</div>
                             </div>
 
                             <div class="health-improvement-message">
@@ -514,8 +476,8 @@ function refreshBMI() {
                 const improvement = startingBmi - data.bmi;
                 if (improvement > 0.1) {
                     if (window.coverage) window.coverage.logFunction('if', 'health.js');
-                    lines.push(`<small class="text-success">BMI decreased by ${improvement.toFixed(1)} points since starting!</small>`);
-                    lines.push(`<small class="text-muted">Started at ${startingBmi.toFixed(1)} BMI</small>`);
+                    lines.push(`<small class="text-success">${t('BMI decreased by')} ${improvement.toFixed(1)} ${t('points since starting!')}</small>`);
+                    lines.push(`<small class="text-muted">${t('Started at')} ${startingBmi.toFixed(1)} ${t('BMI')}</small>`);
                 }
             }
         }
@@ -624,7 +586,7 @@ function refreshHealth() {
             }
 
             // Show research notes
-            bodyFatLines.push(`<small class="text-muted">Body fat estimated via Deurenberg formula (BMI + age). Each 1% body fat reduction can improve metabolic health (Jackson et al., 2002)</small>`);
+            bodyFatLines.push(`<small class="text-muted">${t('Body fat estimated via Deurenberg formula (BMI + age). Each 1% body fat reduction can improve metabolic health (Jackson et al., 2002)')}</small>`);
 
             bodyFatEl.html(bodyFatLines.join('<br>')).removeClass('text-muted');
         } else {
@@ -720,11 +682,11 @@ function refreshHealth() {
 
             if (data.risk_improvement_percentage > 0) {
                 if (window.coverage) window.coverage.logFunction('if', 'health.js');
-                cardioLines.push(`<small class="text-success">Risk reduced by ${data.risk_improvement_percentage}% from weight loss</small>`);
-                cardioLines.push(`<small class="text-muted">Started at ${data.original_risk_percentage}% (${data.original_risk_category})</small>`);
+                cardioLines.push(`<small class="text-success">${t('Risk reduced by')} ${data.risk_improvement_percentage}% ${t('from weight loss')}</small>`);
+                cardioLines.push(`<small class="text-muted">${t('Started at')} ${data.original_risk_percentage}% (${data.original_risk_category})</small>`);
             }
 
-            cardioLines.push(`<small class="text-muted">${data.research_note}</small>`);
+            cardioLines.push(`<small class="text-muted">${t(data.research_note)}</small>`);
             cardioEl.html(cardioLines.join('<br>')).removeClass('text-muted');
         }
     }).catch(function() {
@@ -766,13 +728,13 @@ function refreshIdealWeight() {
                 year: 'numeric',
                 month: 'long'
             });
-            lines.push(`<small class="text-success">Projected to reach upper limit by ${targetMonth}</small>`);
+            lines.push(`<small class="text-success">${t('Projected to reach upper limit by')} ${targetMonth}</small>`);
             const unit = getWeightUnitLabel();
             const weeklyRate = convertFromKg(data.timeline.current_rate_kg_per_week);
-            lines.push(`<small class="text-muted">Based on current rate of ${weeklyRate} ${unit}/week</small>`);
+            lines.push(`<small class="text-muted">${t('Based on current rate of')} ${weeklyRate} ${t('kg/week')}</small>`);
         }
 
-        lines.push(`<small class="text-muted">${data.note}</small>`);
+        lines.push(`<small class="text-muted">${t(data.note)}</small>`);
 
         el.html(lines.join('<br>')).removeClass('text-muted');
     }).catch(function() {
@@ -808,10 +770,10 @@ function refreshGallbladderHealth() {
 
         if (data.risk_reduction_percentage > 0) {
             if (window.coverage) window.coverage.logFunction('if', 'health.js');
-            lines.push(`Risk Reduction: <strong class="text-success">${data.risk_reduction_percentage}%</strong>`);
+            lines.push(`${t('Gallstone risk reduction from weight loss is around')}: <strong class="text-success">${data.risk_reduction_percentage}%</strong>`);
             const unit = getWeightUnitLabel();
             const weightLost = convertFromKg(data.weight_lost_kg);
-            lines.push(`<small class="text-muted">Based on ${weightLost}${unit} lost, BMI ${data.current_bmi}</small>`);
+            lines.push(`<small class="text-muted">${t('Based on')} ${weightLost}${unit} ${t('lost')}, ${t('BMI')} ${data.current_bmi}</small>`);
         } else {
             lines.push(`<small class="text-muted">Continue weight loss for gallbladder benefits</small>`);
         }
@@ -822,7 +784,7 @@ function refreshGallbladderHealth() {
 
         if (data.research_notes && data.research_notes.length > 0) {
             if (window.coverage) window.coverage.logFunction('if', 'health.js');
-            lines.push(`<small class="text-muted">${data.research_notes[0]}</small>`);
+            lines.push(`<small class="text-muted">${t(data.research_notes[0])}</small>`);
         }
 
         el.html(lines.join('<br>')).removeClass('text-muted');
@@ -860,7 +822,7 @@ function refreshGallbladderHealth() {
             lines.push(`<small class="text-muted">Continue weight loss for gallbladder benefits</small>`);
         }
 
-        lines.push(`<small class="text-muted">${data.research_note}</small>`);
+        lines.push(`<small class="text-muted">${t(data.research_note)}</small>`);
 
         el.html(lines.join('<br>')).removeClass('text-muted');
     }).catch(function() {

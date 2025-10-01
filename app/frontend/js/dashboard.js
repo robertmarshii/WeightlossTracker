@@ -321,6 +321,8 @@ $(function() {
         toggleEmailSchedule();
     });
 
+    // Language dropdown - no immediate action, only save on button click
+
     $(document).on('click', '#btn-save-settings', function() {
         console.log('🔵 Save Settings button clicked!');
         saveSettings();
@@ -461,7 +463,7 @@ function refreshLatestWeight() {
         const formattedDate = formatDate(latestWeight.entry_date);
         const displayWeight = convertFromKg(latestWeight.weight_kg);
         const unit = getWeightUnitLabel();
-        $('#latest-weight').text(`Latest: ${displayWeight} ${unit} on ${formattedDate}`);
+        $('#latest-weight').text(`${t('Latest:')} ${displayWeight} ${unit} ${t('on')} ${formattedDate}`);
         refreshHistoricalWeights();
         return;
     }
@@ -476,7 +478,7 @@ function refreshLatestWeight() {
             const formattedDate = formatDate(data.latest.entry_date);
             const displayWeight = convertFromKg(data.latest.weight_kg);
             const unit = getWeightUnitLabel();
-            $('#latest-weight').text(`Latest: ${displayWeight} ${unit} on ${formattedDate}`);
+            $('#latest-weight').text(`${t('Latest:')} ${displayWeight} ${unit} ${t('on')} ${formattedDate}`);
             refreshHistoricalWeights();
         } else {
             $('#latest-weight').text('No weight entries yet');
@@ -566,18 +568,18 @@ function findAndDisplayHistoricalWeights(weightHistory, oneWeekAgo, oneMonthAgo)
         if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
         const displayWeight = convertFromKg(lastWeekWeight.weight_kg);
         const formattedDate = formatDate(lastWeekWeight.entry_date);
-        $('#last-week-weight').text(`Last Week: ${displayWeight} ${unit} on ${formattedDate}`);
+        $('#last-week-weight').text(`${t('Last Week:')} ${displayWeight} ${unit} ${t('on')} ${formattedDate}`);
     } else {
-        $('#last-week-weight').text('Last Week: -');
+        $('#last-week-weight').text(`${t('Last Week:')} -`);
     }
 
     // Display last month weight
     if (lastMonthWeight && minMonthDiff <= 45 * 24 * 60 * 60 * 1000) { // Within 45 days
         const displayWeight = convertFromKg(lastMonthWeight.weight_kg);
         const formattedDate = formatDate(lastMonthWeight.entry_date);
-        $('#last-month-weight').text(`Last Month: ${displayWeight} ${unit} on ${formattedDate}`);
+        $('#last-month-weight').text(`${t('Last Month:')} ${displayWeight} ${unit} ${t('on')} ${formattedDate}`);
     } else {
-        $('#last-month-weight').text('Last Month: -');
+        $('#last-month-weight').text(`${t('Last Month:')} -`);
     }
 }
 
@@ -595,7 +597,7 @@ function refreshGoal() {
         const formattedDate = goal.target_date ? formatDateBySettings(goal.target_date) : 'n/a';
         const displayWeight = convertFromKg(goal.target_weight_kg);
         const unit = getWeightUnitLabel();
-        $('#current-goal').text(`Current goal: ${displayWeight} ${unit} by ${formattedDate}`);
+        $('#current-goal').text(`${t('Current goal:')} ${displayWeight} ${unit} ${t('by')} ${formattedDate}`);
         return;
     }
 
@@ -621,7 +623,7 @@ function refreshGoal() {
             const formattedDate = data.goal.target_date ? formatDateBySettings(data.goal.target_date) : 'n/a';
             const displayWeight = convertFromKg(data.goal.target_weight_kg);
             const unit = getWeightUnitLabel();
-            $('#current-goal').text(`Current goal: ${displayWeight} ${unit} by ${formattedDate}`);
+            $('#current-goal').text(`${t('Current goal:')} ${displayWeight} ${unit} ${t('by')} ${formattedDate}`);
         } else {
             $('#current-goal').text('No active goal set');
         }
@@ -704,16 +706,16 @@ function refreshWeightProgress() {
         const lines = [];
         const unit = getWeightUnitLabel();
         const displayTotalLost = convertFromKg(data.total_weight_lost_kg);
-        lines.push(`Total Weight Lost: <strong>${displayTotalLost} ${unit}</strong>`);
+        lines.push(`${t('Total Weight Lost:')} <strong>${displayTotalLost} ${unit}</strong>`);
         if (data.estimated_fat_loss_kg) {
             const fatLoss = convertFromKg(data.estimated_fat_loss_kg);
-            lines.push(`Estimated Fat Loss: <strong class="text-success">${fatLoss} ${unit}</strong> (${data.fat_loss_percentage}%)`);
+            lines.push(`${t('Estimated Fat Loss:')} <strong class="text-success">${fatLoss} ${unit} (${data.fat_loss_percentage}%)</strong>`);
         }
         const avgWeeklyRate = convertFromKg(data.avg_weekly_rate_kg || data.average_weekly_loss_kg);
-        lines.push(`<small class="text-muted">Over ${data.weeks_elapsed || data.weeks_tracked} weeks (${avgWeeklyRate} ${unit}/week average)</small>`);
+        lines.push(`<small class="text-muted">${t('Over')} ${data.weeks_elapsed || data.weeks_tracked} ${t('weeks')} (${avgWeeklyRate} ${t('kg/week average')})</small>`);
         if (data.research_note) {
             if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
-            lines.push(`<small class="text-muted">${data.research_note}</small>`);
+            lines.push(`<small class="text-muted">${t('Research suggests ~78% of weight loss is fat when combined with exercise')}</small>`);
         }
 
         el.html(lines.join('<br>')).removeClass('text-muted');
@@ -740,12 +742,12 @@ function refreshWeightProgress() {
         const lines = [];
         const unit = getWeightUnitLabel();
         const displayTotalLost = convertFromKg(data.total_weight_lost_kg);
-        lines.push(`Total Weight Lost: <strong>${displayTotalLost} ${unit}</strong>`);
+        lines.push(`${t('Total Weight Lost:')} <strong>${displayTotalLost} ${unit}</strong>`);
         const fatLoss = convertFromKg(data.estimated_fat_loss_kg);
-        lines.push(`Estimated Fat Loss: <strong class="text-success">${fatLoss} ${unit}</strong> (${data.fat_loss_percentage}%)`);
+        lines.push(`${t('Estimated Fat Loss:')} <strong class="text-success">${fatLoss} ${unit}</strong> (${data.fat_loss_percentage}%)`);
         const avgWeeklyRate = convertFromKg(data.avg_weekly_rate_kg);
-        lines.push(`<small class="text-muted">Over ${data.weeks_elapsed} weeks (${avgWeeklyRate} ${unit}/week average)</small>`);
-        lines.push(`<small class="text-muted">${data.research_note}</small>`);
+        lines.push(`<small class="text-muted">${t('Over')} ${data.weeks_elapsed} ${t('weeks')} (${avgWeeklyRate} ${t('kg/week average')})</small>`);
+        lines.push(`<small class="text-muted">${t('Research suggests ~78% of weight loss is fat when combined with exercise')}</small>`);
 
         el.html(lines.join('<br>')).removeClass('text-muted');
     })
@@ -831,9 +833,16 @@ function loadSettings() {
         $('#weeklyReports').prop('checked', s.weekly_reports === true);
         $('#emailDay').val(s.email_day || 'monday');
         $('#emailTime').val(s.email_time || '09:00');
+        $('#timezone').val(s.timezone || 'Europe/London');
         updateDateExample();
         updateThemeOptions(s.theme || 'glassmorphism');
         toggleEmailSchedule();
+
+        // Apply language without triggering save
+        const lang = s.language || 'en';
+        if (lang !== 'en' && typeof window.settingsSwitchLanguage === 'function') {
+            window.settingsSwitchLanguage(lang);
+        }
         return;
     }
 
@@ -862,9 +871,16 @@ function loadSettings() {
             $('#weeklyReports').prop('checked', s.weekly_reports === true);
             $('#emailDay').val(s.email_day || 'monday');
             $('#emailTime').val(s.email_time || '09:00');
+            $('#timezone').val(s.timezone || 'Europe/London');
             updateDateExample();
             updateThemeOptions(s.theme || 'glassmorphism');
             toggleEmailSchedule();
+
+            // Apply language without triggering save
+            const lang = s.language || 'en';
+            if (lang !== 'en' && typeof window.settingsSwitchLanguage === 'function') {
+                window.settingsSwitchLanguage(lang);
+            }
         }
     })
     .catch(error => {

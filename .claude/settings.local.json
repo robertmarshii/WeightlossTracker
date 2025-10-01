@@ -11,7 +11,19 @@
       "Bash(npx cypress run:*)",
       "Bash(npm run functions:scan:*)",
       "Bash(find:*)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(docker compose:*)",
+      "Bash(npm run cypress:coverage:*)",
+      "Bash(npm run test:e2e:*)",
+      "Bash(docker exec:*)",
+      "Bash(docker ps:*)",
+      "Bash(docker logs:*)",
+      "Bash(grep:*)",
+      "Bash(for pid in 7 8 9 10 16)",
+      "Bash(do echo:*)",
+      "Bash(done)",
+      "Bash(psql:*)",
+      "Bash(docker run:*)"
     ],
     "deny": [],
     "ask": []

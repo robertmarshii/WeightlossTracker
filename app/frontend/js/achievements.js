@@ -14,8 +14,8 @@ function updateAchievementCards(weightData) {
     const unit = getWeightUnitLabel();
     const displayTotalLoss = convertFromKg(Math.abs(totalLoss));
     const progressHtml = totalLoss > 0
-        ? `<strong class="text-success">${displayTotalLoss} ${unit} lost</strong><br><small>Over ${sortedData.length} entries</small>`
-        : `<strong class="text-info">${displayTotalLoss} ${unit} gained</strong><br><small>Over ${sortedData.length} entries</small>`;
+        ? `<strong class="text-success">${displayTotalLoss} ${unit} ${t('lost')}</strong><br><small>${t('Over')} ${sortedData.length} ${t('entries')}</small>`
+        : `<strong class="text-info">${displayTotalLoss} ${unit} ${t('gained')}</strong><br><small>${t('Over')} ${sortedData.length} ${t('entries')}</small>`;
     $('#total-progress').html(progressHtml);
 
     // Calculate streak (consecutive days with entries)
@@ -43,12 +43,12 @@ function updateAchievementCards(weightData) {
     }
 
     const streakHtml = streak > 0
-        ? `<strong class="text-success">${streak} day${streak > 1 ? 's' : ''}</strong><br><small>Current logging streak</small>`
-        : `<span class="text-muted">No current streak</span><br><small>Log weight to start</small>`;
+        ? `<strong class="text-success">${streak} ${streak > 1 ? t('days') : t('day')}</strong><br><small>${t('Current logging streak')}</small>`
+        : `<span class="text-muted">${t('No current streak')}</span><br><small>${t('Log weight to start')}</small>`;
     $('#streak-counter').html(streakHtml);
 
     // Simple goal achievement (placeholder)
-    $('#goals-achieved').html('<span class="text-info">🎯 Goal tracking</span><br><small>Set goals in Data tab</small>');
+    $('#goals-achieved').html(`<span class="text-info">🎯 ${t('Goal tracking')}</span><br><small>${t('Set goals in Data tab')}</small>`);
 }
 
 // Additional achievement-related functions can be added here

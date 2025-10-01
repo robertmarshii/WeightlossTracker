@@ -1,0 +1,46 @@
+{
+  "sessionId": 1759272267802,
+  "totalFunctions": 3,
+  "functions": {
+    "test1.js:testFunc1": {
+      "functionName": "testFunc1",
+      "fileName": "test1.js",
+      "lineNumber": null,
+      "callCount": 1,
+      "firstCalled": 1759272269813,
+      "lastCalled": 1759272269813,
+      "testMode": true,
+      "context": {},
+      "stackTrace": "",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cypress/13.17.0 Chrome/118.0.5993.159 Electron/27.3.10 Safari/537.36",
+      "timestamp": "2025-09-30T22:44:29.814Z"
+    },
+    "test2.js:testFunc2": {
+      "functionName": "testFunc2",
+      "fileName": "test2.js",
+      "lineNumber": null,
+      "callCount": 1,
+      "firstCalled": 1759272269814,
+      "lastCalled": 1759272269814,
+      "testMode": true,
+      "context": {},
+      "stackTrace": "",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cypress/13.17.0 Chrome/118.0.5993.159 Electron/27.3.10 Safari/537.36",
+      "timestamp": "2025-09-30T22:44:29.814Z"
+    },
+    "test3.js:testFunc3": {
+      "functionName": "testFunc3",
+      "fileName": "test3.js",
+      "lineNumber": null,
+      "callCount": 1,
+      "firstCalled": 1759272269814,
+      "lastCalled": 1759272269814,
+      "testMode": true,
+      "context": {},
+      "stackTrace": "",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cypress/13.17.0 Chrome/118.0.5993.159 Electron/27.3.10 Safari/537.36",
+      "timestamp": "2025-09-30T22:44:29.814Z"
+    }
+  },
+  "generatedAt": "2025-09-30T22:44:29.816Z"
+}

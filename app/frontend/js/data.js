@@ -39,7 +39,7 @@ function loadWeightHistory() {
 
         if (!history || history.length === 0) {
             if (window.coverage) window.coverage.logFunction('if', 'data.js');
-            tbody.html('<tr><td colspan="4" class="no-data">No weight entries found. Add your first entry above!</td></tr>');
+            tbody.html(`<tr><td colspan="4" class="no-data">${t('No weight entries found. Add your first entry above!')}</td></tr>`);
             return;
         }
 
@@ -102,7 +102,7 @@ function loadWeightHistory() {
 
         if (!data.success || !data.history || data.history.length === 0) {
             if (window.coverage) window.coverage.logFunction('if', 'data.js');
-            tbody.html('<tr><td colspan="4" class="no-data">No weight entries found. Add your first entry above!</td></tr>');
+            tbody.html(`<tr><td colspan="4" class="no-data">${t('No weight entries found. Add your first entry above!')}</td></tr>`);
             return;
         }
 
@@ -158,7 +158,7 @@ function loadWeightHistory() {
 
         tbody.html(html);
     }).catch(function() {
-        $('#weight-history-body').html('<tr><td colspan="4" class="no-data text-danger">Failed to load weight history</td></tr>');
+        $('#weight-history-body').html(`<tr><td colspan="4" class="no-data text-danger">${t('Failed to load weight history')}</td></tr>`);
     });
 }
 
@@ -196,12 +196,12 @@ function editWeight(id, weight, date) {
     $('#newWeight').focus();
 
     // TODO: Implement proper edit functionality with update instead of add
-    showToast('Edit mode: Modify values and save (creates new entry for now)');
+    showToast(t('Edit mode: Modify values and save (creates new entry for now)'));
 }
 
 function deleteWeight(id) {
     if (window.coverage) window.coverage.logFunction('deleteWeight', 'data.js');
-    if (!confirm('Are you sure you want to delete this weight entry?')) {
+    if (!confirm(t('Are you sure you want to delete this weight entry?'))) {
         return;
     }
 
@@ -212,7 +212,7 @@ function deleteWeight(id) {
         const data = parseJson(resp);
         if (data.success) {
             if (window.coverage) window.coverage.logFunction('if', 'data.js');
-            showToast('Weight entry deleted');
+            showToast(t('Weight entry deleted'));
             loadWeightHistory();
             refreshLatestWeight();
             if (typeof window.healthRefreshBMI === 'function') {
@@ -226,10 +226,10 @@ function deleteWeight(id) {
                 window.healthRefreshIdealWeight();
             }
         } else {
-            showToast('Failed to delete weight entry');
+            showToast(t('Failed to delete weight entry'));
         }
     }).catch(function() {
-        showToast('Network error');
+        showToast(t('Network error'));
     });
 }
 

@@ -755,7 +755,7 @@
                 // Weight loss reduces gallstone risk significantly
                 if ($weightLost >= 5) {
                     $riskReduction += 10; // 5-10kg loss reduces risk by ~10%
-                    $benefits[] = "Gallstone risk reduction from weight loss";
+                    $benefits[] = "Gallstone risk reduction from weight loss is around";
                 }
                 if ($weightLost >= 10) {
                     $riskReduction += 8; // Additional benefit for substantial loss
