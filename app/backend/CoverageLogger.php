@@ -25,8 +25,10 @@ class CoverageLogger {
         $this->sessionId = time() . '_' . uniqid();
         $this->logFile = '/var/app/backend/coverage.log';
         
-        error_log("CoverageLogger initialized. Enabled: " . ($this->enabled ? 'true' : 'false') . 
-                 ". Host: " . ($_SERVER['HTTP_HOST'] ?? 'unknown'));
+        // Only log in test environment when coverage is enabled
+        if ($isTestEnvironment && $this->enabled) {
+            error_log("CoverageLogger initialized. Enabled: true. Host: " . ($_SERVER['HTTP_HOST'] ?? 'unknown'));
+        }
         
         // Load existing coverage data from file
         $this->loadCoverageData();
@@ -60,11 +62,14 @@ class CoverageLogger {
         $this->recursionGuard[$guardKey] = true;
         
         try {
-            error_log("logFunction called: {$className}::{$functionName}. Enabled: " . ($this->enabled ? 'true' : 'false'));
-            
             if (!$this->enabled) {
-                error_log("Coverage logging disabled");
                 return;
+            }
+
+            // Only log debug messages in test environment when enabled
+            $isTestEnvironment = ($_SERVER['HTTP_HOST'] ?? '') === '127.0.0.1:8111';
+            if ($isTestEnvironment && $this->enabled) {
+                error_log("logFunction called: {$className}::{$functionName}. Enabled: true");
             }
 
             $fileName = $fileName ?? $this->getCallerFile();
