@@ -430,7 +430,7 @@ class NotificationScheduler {
     }
 
     /**
-     * Check if today is the 1st day of the month at 5am UTC (within cron window)
+     * Check if today is the 1st day of the month at 11pm UTC (within cron window)
      */
     private function isFirstDayOfMonthAt5am() {
         $now = new DateTime('now', new DateTimeZone('UTC'));
@@ -440,12 +440,12 @@ class NotificationScheduler {
             return false;
         }
 
-        // Check if it's close to 5am (within 5-minute cron window)
+        // Check if it's close to 11pm (within 5-minute cron window)
         $hour = (int)$now->format('H');
         $minute = (int)$now->format('i');
 
-        // 5am = 05:00, allow 05:00-05:04
-        if ($hour !== 5 || $minute > 4) {
+        // 11pm = 23:00, allow 23:00-23:04
+        if ($hour !== 23 || $minute > 4) {
             return false;
         }
 
@@ -503,15 +503,15 @@ class NotificationScheduler {
     }
 
     /**
-     * Process monthly progress reports (1st day of month at 5am UTC)
+     * Process monthly progress reports (1st day of month at 11pm UTC)
      */
     public function processMonthlyReports() {
-        // Only run on 1st day of month at 5am UTC
+        // Only run on 1st day of month at 11pm UTC
         if (!$this->isFirstDayOfMonthAt5am()) {
             return 0;
         }
 
-        $this->log("Processing monthly progress reports (1st of month at 5am UTC)...");
+        $this->log("Processing monthly progress reports (1st of month at 11pm UTC)...");
 
         $users = $this->query(
             "SELECT u.id as user_id, u.email,
