@@ -62,7 +62,7 @@ if (isset($_SESSION['login_time'])) {
                                         stroke-linecap="round" class="progress-ring-circle"/>
                             </svg>
                         </div>
-                        <div class="logo-text" data-eng="Weightloss Tracker" data-spa="Rastreador de Pérdida de Peso" data-fre="Suivi de Perte de Poids" data-ger="Gewichtsverlust-Tracker">Weightloss<br>Tracker</div>
+                        <div class="logo-text" data-eng="Weightloss<br>Tracker" data-spa="Weightloss<br>Tracker" data-fre="Weightloss<br>Tracker" data-ger="Weightloss<br>Tracker">Weightloss<br>Tracker</div>
                     </div>
 
                     <div class="welcome-content flex-grow-1 mx-4">
@@ -77,7 +77,7 @@ if (isset($_SESSION['login_time'])) {
                         <div class="user-info text-left">
                             <div class="mb-1"><?php echo $email; ?></div>
                             <?php if ($loginTime): ?>
-                                <div class="text-muted small" data-eng="Login: " data-spa="Inicio de sesión: " data-fre="Connexion: " data-ger="Anmeldung: ">Login: <?php echo $loginTime; ?></div>
+                                <div class="text-muted small"><span data-eng="Login: " data-spa="Inicio de sesión: " data-fre="Connexion: " data-ger="Anmeldung: ">Login: </span><?php echo $loginTime; ?></div>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -576,39 +576,32 @@ if (isset($_SESSION['login_time'])) {
                                 </div>
                             </div>
                             
-                            <!-- Date Settings -->
+                            <!-- App Preferences -->
                             <div class="col-md-6">
                                 <div class="glass-card-small">
-                                    <h5 class="card-title" data-eng="📅 Date Settings" data-spa="📅 Configuración de Fecha" data-fre="📅 Paramètres de Date" data-ger="📅 Datumseinstellungen">📅 Date Settings</h5>
+                                    <h5 class="card-title" data-eng="🎨 App Preferences" data-spa="🎨 Preferencias de la Aplicación" data-fre="🎨 Préférences de l'Application" data-ger="🎨 App-Einstellungen">🎨 App Preferences</h5>
 
                                     <div class="form-group mb-3">
-                                        <label for="dateFormat" class="form-label" data-eng="Date Format" data-spa="Formato de Fecha" data-fre="Format de Date" data-ger="Datumsformat">Date Format</label>
-                                        <select id="dateFormat" class="form-control glass-input">
-                                            <option value="uk" data-eng="UK Format (DD/MM/YYYY)" data-spa="Formato Reino Unido (DD/MM/AAAA)" data-fre="Format Royaume-Uni (JJ/MM/AAAA)" data-ger="UK-Format (TT/MM/JJJJ)">UK Format (DD/MM/YYYY)</option>
-                                            <option value="us" data-eng="US Format (MM/DD/YYYY)" data-spa="Formato EE.UU. (MM/DD/AAAA)" data-fre="Format États-Unis (MM/JJ/AAAA)" data-ger="US-Format (MM/TT/JJJJ)">US Format (MM/DD/YYYY)</option>
-                                            <option value="iso" data-eng="ISO Format (YYYY-MM-DD)" data-spa="Formato ISO (AAAA-MM-DD)" data-fre="Format ISO (AAAA-MM-JJ)" data-ger="ISO-Format (JJJJ-MM-TT)">ISO Format (YYYY-MM-DD)</option>
-                                            <option value="euro" data-eng="European (DD.MM.YYYY)" data-spa="Europeo (DD.MM.AAAA)" data-fre="Européen (JJ.MM.AAAA)" data-ger="Europäisch (TT.MM.JJJJ)">European (DD.MM.YYYY)</option>
-                                        </select>
-                                        <small class="text-muted" data-eng="Example: " data-spa="Ejemplo: " data-fre="Exemple: " data-ger="Beispiel: ">Example: <span id="dateExample">11/09/2025</span></small>
-                                    </div>
-
-                                    <div class="form-group mb-3">
-                                        <label for="timezone" class="form-label" data-eng="Timezone" data-spa="Zona horaria" data-fre="Fuseau horaire" data-ger="Zeitzone">Timezone</label>
-                                        <select id="timezone" class="form-control glass-input">
-                                            <option value="Europe/London">London (GMT/BST)</option>
-                                            <option value="Europe/Paris">Paris (CET/CEST)</option>
-                                            <option value="Europe/Berlin">Berlin (CET/CEST)</option>
-                                            <option value="America/New_York">New York (EST/EDT)</option>
-                                            <option value="America/Chicago">Chicago (CST/CDT)</option>
-                                            <option value="America/Los_Angeles">Los Angeles (PST/PDT)</option>
-                                            <option value="America/Toronto">Toronto (EST/EDT)</option>
-                                            <option value="Australia/Sydney">Sydney (AEDT/AEST)</option>
-                                            <option value="Asia/Tokyo">Tokyo (JST)</option>
-                                            <option value="Asia/Dubai">Dubai (GST)</option>
-                                            <option value="UTC">UTC</option>
+                                        <label for="theme" class="form-label" data-eng="Theme" data-spa="Tema" data-fre="Thème" data-ger="Design">Theme</label>
+                                        <select id="theme" class="form-control glass-input">
+                                            <option value="glassmorphism" data-eng="Glassmorphism" data-spa="Glassmorfismo" data-fre="Glassmorphisme" data-ger="Glasmorphismus">Glassmorphism</option>
+                                            <option value="neumorphism" data-eng="Neumorphism" data-spa="Neumorfismo" data-fre="Neumorphisme" data-ger="Neumorphismus">Neumorphism</option>
+                                            <option value="skeuomorphism" data-eng="Skeuomorphism" data-spa="Esqueumorfismo" data-fre="Skeuomorphisme" data-ger="Skeuomorphismus">Skeuomorphism</option>
+                                            <option value="minimalism" data-eng="Minimalism" data-spa="Minimalismo" data-fre="Minimalisme" data-ger="Minimalismus">Minimalism</option>
+                                            <option value="retro" data-eng="Retro" data-spa="Retro" data-fre="Rétro" data-ger="Retro">Retro</option>
+                                            <option value="material" data-eng="Material Design" data-spa="Diseño Material" data-fre="Material Design" data-ger="Material Design">Material Design</option>
                                         </select>
                                     </div>
 
+                                    <div class="form-group mb-3">
+                                        <label for="language" class="form-label" data-eng="Language" data-spa="Idioma" data-fre="Langue" data-ger="Sprache">Language</label>
+                                        <select id="language" class="form-control glass-input">
+                                            <option value="en" data-eng="English" data-spa="Inglés" data-fre="Anglais" data-ger="Englisch">English</option>
+                                            <option value="es" data-eng="Español" data-spa="Español" data-fre="Espagnol" data-ger="Spanisch">Español</option>
+                                            <option value="fr" data-eng="Français" data-spa="Francés" data-fre="Français" data-ger="Französisch">Français</option>
+                                            <option value="de" data-eng="Deutsch" data-spa="Alemán" data-fre="Allemand" data-ger="Deutsch">Deutsch</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -661,40 +654,49 @@ if (isset($_SESSION['login_time'])) {
                                         <label class="form-check-label" for="weeklyReports" data-eng="Recieve monthly progress report emails" data-spa="Recibir correos de informe de progreso mensual" data-fre="Recevoir des e-mails de rapport de progrès mensuel" data-ger="Monatliche Fortschrittsberichts-E-Mails erhalten">
                                             Recieve monthly progress report emails
                                         </label>
+                                        <br>
+                                        <small class="text-muted" data-eng="Sent on the 1st of each month with a summary of the previous month's progress" data-spa="Enviado el día 1 de cada mes con un resumen del progreso del mes anterior" data-fre="Envoyé le 1er de chaque mois avec un résumé des progrès du mois précédent" data-ger="Wird am 1. jedes Monats mit einer Zusammenfassung des Fortschritts des Vormonats gesendet">Sent on the 1st of each month with a summary of the previous month's progress</small>
                                     </div>
                                 </div>
                             </div>
-                            
-                            <!-- App Preferences -->
+
+                            <!-- Date Settings -->
                             <div class="col-md-6">
                                 <div class="glass-card-small">
-                                    <h5 class="card-title" data-eng="🎨 App Preferences" data-spa="🎨 Preferencias de la Aplicación" data-fre="🎨 Préférences de l'Application" data-ger="🎨 App-Einstellungen">🎨 App Preferences</h5>
+                                    <h5 class="card-title" data-eng="📅 Date Settings" data-spa="📅 Configuración de Fecha" data-fre="📅 Paramètres de Date" data-ger="📅 Datumseinstellungen">📅 Date Settings</h5>
 
                                     <div class="form-group mb-3">
-                                        <label for="theme" class="form-label" data-eng="Theme" data-spa="Tema" data-fre="Thème" data-ger="Design">Theme</label>
-                                        <select id="theme" class="form-control glass-input">
-                                            <option value="glassmorphism" data-eng="Glassmorphism" data-spa="Glassmorfismo" data-fre="Glassmorphisme" data-ger="Glasmorphismus">Glassmorphism</option>
-                                            <option value="neumorphism" data-eng="Neumorphism" data-spa="Neumorfismo" data-fre="Neumorphisme" data-ger="Neumorphismus">Neumorphism</option>
-                                            <option value="skeuomorphism" data-eng="Skeuomorphism" data-spa="Esqueumorfismo" data-fre="Skeuomorphisme" data-ger="Skeuomorphismus">Skeuomorphism</option>
-                                            <option value="minimalism" data-eng="Minimalism" data-spa="Minimalismo" data-fre="Minimalisme" data-ger="Minimalismus">Minimalism</option>
-                                            <option value="retro" data-eng="Retro" data-spa="Retro" data-fre="Rétro" data-ger="Retro">Retro</option>
-                                            <option value="material" data-eng="Material Design" data-spa="Diseño Material" data-fre="Material Design" data-ger="Material Design">Material Design</option>
+                                        <label for="dateFormat" class="form-label" data-eng="Date Format" data-spa="Formato de Fecha" data-fre="Format de Date" data-ger="Datumsformat">Date Format</label>
+                                        <select id="dateFormat" class="form-control glass-input">
+                                            <option value="uk" data-eng="UK Format (DD/MM/YYYY)" data-spa="Formato Reino Unido (DD/MM/AAAA)" data-fre="Format Royaume-Uni (JJ/MM/AAAA)" data-ger="UK-Format (TT/MM/JJJJ)">UK Format (DD/MM/YYYY)</option>
+                                            <option value="us" data-eng="US Format (MM/DD/YYYY)" data-spa="Formato EE.UU. (MM/DD/AAAA)" data-fre="Format États-Unis (MM/JJ/AAAA)" data-ger="US-Format (MM/TT/JJJJ)">US Format (MM/DD/YYYY)</option>
+                                            <option value="iso" data-eng="ISO Format (YYYY-MM-DD)" data-spa="Formato ISO (AAAA-MM-DD)" data-fre="Format ISO (AAAA-MM-JJ)" data-ger="ISO-Format (JJJJ-MM-TT)">ISO Format (YYYY-MM-DD)</option>
+                                            <option value="euro" data-eng="European (DD.MM.YYYY)" data-spa="Europeo (DD.MM.AAAA)" data-fre="Européen (JJ.MM.AAAA)" data-ger="Europäisch (TT.MM.JJJJ)">European (DD.MM.YYYY)</option>
                                         </select>
+                                        <small class="text-muted" data-eng="Example: " data-spa="Ejemplo: " data-fre="Exemple: " data-ger="Beispiel: ">Example: <span id="dateExample">11/09/2025</span></small>
                                     </div>
 
                                     <div class="form-group mb-3">
-                                        <label for="language" class="form-label" data-eng="Language" data-spa="Idioma" data-fre="Langue" data-ger="Sprache">Language</label>
-                                        <select id="language" class="form-control glass-input">
-                                            <option value="en" data-eng="English" data-spa="Inglés" data-fre="Anglais" data-ger="Englisch">English</option>
-                                            <option value="es" data-eng="Español" data-spa="Español" data-fre="Espagnol" data-ger="Spanisch">Español</option>
-                                            <option value="fr" data-eng="Français" data-spa="Francés" data-fre="Français" data-ger="Französisch">Français</option>
-                                            <option value="de" data-eng="Deutsch" data-spa="Alemán" data-fre="Allemand" data-ger="Deutsch">Deutsch</option>
+                                        <label for="timezone" class="form-label" data-eng="Timezone" data-spa="Zona horaria" data-fre="Fuseau horaire" data-ger="Zeitzone">Timezone</label>
+                                        <select id="timezone" class="form-control glass-input">
+                                            <option value="Europe/London">London (GMT/BST)</option>
+                                            <option value="Europe/Paris">Paris (CET/CEST)</option>
+                                            <option value="Europe/Berlin">Berlin (CET/CEST)</option>
+                                            <option value="America/New_York">New York (EST/EDT)</option>
+                                            <option value="America/Chicago">Chicago (CST/CDT)</option>
+                                            <option value="America/Los_Angeles">Los Angeles (PST/PDT)</option>
+                                            <option value="America/Toronto">Toronto (EST/EDT)</option>
+                                            <option value="Australia/Sydney">Sydney (AEDT/AEST)</option>
+                                            <option value="Asia/Tokyo">Tokyo (JST)</option>
+                                            <option value="Asia/Dubai">Dubai (GST)</option>
+                                            <option value="UTC">UTC</option>
                                         </select>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
-                        
+
                         <!-- Save Settings -->
                         <div class="text-center mt-4">
                             <button id="btn-save-settings" class="btn primary-btn mr-2" style="height: 34px;" data-eng="✓ Save Settings" data-spa="✓ Guardar Config." data-fre="✓ Enreg. config." data-ger="✓ Einstellungen speichern">✓ Save Settings</button>
