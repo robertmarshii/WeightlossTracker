@@ -8,6 +8,14 @@ This file provides guidance to Claude Code when working with this repository. It
 **Pattern**: Simple MVC with dual routing system
 **Access**: http://localhost:8111 (web) | localhost:3308 (postgres: root/pass)
 
+### 🐳 Docker Configuration
+**CRITICAL**: Two separate Dockerfiles for different environments:
+- **`php-fpm/Dockerfile`** - Local development (docker-compose.yml) - Uses Debian base (`cron` package), runs via docker-compose
+- **`Dockerfile`** (root) - Production/Cloud deployment - Uses Alpine base (`dcron` package), includes nginx+supervisord
+- **`supervisord.conf`** - Production only: manages nginx, php-fpm, and crond processes
+- **Changes to cron, dependencies, or system setup MUST be made to BOTH Dockerfiles**
+- **Cron differences**: Debian uses `/usr/sbin/cron -f` | Alpine uses `/usr/sbin/crond -f`
+
 ### 🔀 Dual Router System
 - **`login_router.php`** - Public routes (authentication, registration) - No session required
 - **`router.php`** - Protected routes (user profile, weight data) - Requires authenticated session

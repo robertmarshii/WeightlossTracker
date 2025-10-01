@@ -54,12 +54,12 @@ body {
 /* Time input styling */
 input[type="time"] {
     color: white !important;
-    color-scheme: dark;
 }
 
-/* Hide the time picker icon */
+/* Time picker icon */
 input[type="time"]::-webkit-calendar-picker-indicator {
-    display: none;
+    filter: invert(1);
+    cursor: pointer;
 }
 
 input[type="time"]::-webkit-datetime-edit-text {
@@ -385,7 +385,7 @@ input[type="time"]::-webkit-datetime-edit-minute-field {
     }
 
     .glass-input {
-        padding: 6px 10px;
+        padding: 6px 10px!important;
         font-size: 16px;
         min-height: 36px;
         border-radius: 6px;

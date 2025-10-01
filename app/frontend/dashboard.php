@@ -62,7 +62,7 @@ if (isset($_SESSION['login_time'])) {
                                         stroke-linecap="round" class="progress-ring-circle"/>
                             </svg>
                         </div>
-                        <div class="logo-text" data-eng="Weightloss<br>Tracker" data-spa="Weightloss<br>Tracker" data-fre="Weightloss<br>Tracker" data-ger="Weightloss<br>Tracker">Weightloss<br>Tracker</div>
+                        <div class="logo-text" data-eng="Weightloss Tracker" data-spa="Rastreador de Pérdida de Peso" data-fre="Suivi de Perte de Poids" data-ger="Gewichtsverlust-Tracker">Weightloss<br>Tracker</div>
                     </div>
 
                     <div class="welcome-content flex-grow-1 mx-4">
@@ -642,9 +642,9 @@ if (isset($_SESSION['login_time'])) {
                                                     <option value="sunday" data-eng="Sunday" data-spa="Domingo" data-fre="Dimanche" data-ger="Sonntag">Sunday</option>
                                                 </select>
                                             </div>
-                                            <div class="col-md-5">
+                                            <div class="col-md-5" style="padding-left:0px;">
                                                 <label for="emailTime" class="form-label" data-eng="Time" data-spa="Hora" data-fre="Heure" data-ger="Zeit">Time</label>
-                                                <input type="time" id="emailTime" class="form-control glass-input" value="09:00">
+                                                <input type="time" id="emailTime" class="form-control glass-input" value="09:00" style="min-width: 100px;">
                                             </div>
                                         </div>
                                     </div>
