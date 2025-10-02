@@ -11,7 +11,9 @@ describe('Comprehensive Function Coverage Tests', () => {
                 // Test global utility functions
                 if (typeof win.convertToKg === 'function') {
                     expect(win.convertToKg('75')).to.be.a('number');
-                    expect(win.convertFromKg(75)).to.be.a('number');
+                    // convertFromKg returns a string, need to parse it
+                    const converted = parseFloat(win.convertFromKg(75));
+                    expect(converted).to.be.a('number');
                     expect(win.getWeightUnitLabel()).to.be.a('string');
                 }
 
@@ -32,7 +34,10 @@ describe('Comprehensive Function Coverage Tests', () => {
                 // Test height functions
                 if (typeof win.convertToCm === 'function') {
                     expect(win.convertToCm('180')).to.be.a('number');
-                    expect(win.convertFromCm(180)).to.be.a('number');
+                    // convertFromCm returns a string for ft (or number for cm), parse it
+                    const converted = win.convertFromCm(180);
+                    const parsed = typeof converted === 'string' ? parseFloat(converted) : converted;
+                    expect(parsed).to.be.a('number');
                     expect(win.getHeightUnitLabel()).to.be.a('string');
                 }
 

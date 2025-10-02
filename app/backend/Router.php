@@ -1352,7 +1352,27 @@
                 ]);
                 return;
             }
-            
+
+            if ($action === 'test_notifications') {
+                // TEST ONLY: Trigger notification scheduler with time override
+                require_once '/var/app/backend/NotificationScheduler.php';
+
+                $currentDay = $request['current_day'] ?? null;
+                $currentTime = $request['current_time'] ?? null;
+                $userId = $request['user_id'] ?? null;
+
+                // Use test mode to suppress console output
+                $scheduler = new NotificationScheduler(true, null);
+                $result = $scheduler->processNotifications($currentDay, $currentTime, $userId);
+
+                echo json_encode([
+                    'success' => true,
+                    'message' => 'Notification processing completed',
+                    'result' => $result
+                ]);
+                return;
+            }
+
             echo json_encode(['success' => false, 'message' => 'Invalid action']);
         } catch (Exception $e) {
             echo json_encode(['success' => false, 'message' => 'Server error: ' . $e->getMessage()]);

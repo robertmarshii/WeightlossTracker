@@ -15,10 +15,10 @@ describe('Fix jQuery Issue', () => {
         cy.window().then((win) => {
             console.log('🔍 jQuery Diagnostic:');
             console.log('typeof $:', typeof win.$);
-            console.log('jQuery version:', win.$ ? win.$.fn.jquery : 'N/A');
-            console.log('typeof $.post:', typeof win.$.post);
-            console.log('typeof $.get:', typeof win.$.get);
-            console.log('typeof $.ajax:', typeof win.$.ajax);
+            console.log('jQuery version:', win.$ && win.$.fn ? win.$.fn.jquery : 'N/A');
+            console.log('typeof $.post:', win.$ ? typeof win.$.post : 'N/A');
+            console.log('typeof $.get:', win.$ ? typeof win.$.get : 'N/A');
+            console.log('typeof $.ajax:', win.$ ? typeof win.$.ajax : 'N/A');
 
             // Check if jQuery is there but missing methods
             if (win.$ && typeof win.$.post === 'undefined') {

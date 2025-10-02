@@ -49,10 +49,10 @@ describe('Unit Conversion Functions', () => {
                     const kgUnit = win.getWeightUnit();
                     expect(kgUnit).to.equal('kg');
 
-                    // Test setting to stone
-                    win.setWeightUnit('stone');
+                    // Test setting to stone (st)
+                    win.setWeightUnit('st');
                     const stoneUnit = win.getWeightUnit();
-                    expect(stoneUnit).to.equal('stone');
+                    expect(stoneUnit).to.equal('st');
                 }
             });
         });
@@ -60,23 +60,23 @@ describe('Unit Conversion Functions', () => {
         it('should test convertFromKg function with various weights', () => {
             cy.window().then((win) => {
                 if (typeof win.convertFromKg === 'function') {
-                    // Test kg to lbs conversion
-                    const kgToLbs = win.convertFromKg(70, 'lbs');
+                    // Test kg to lbs conversion (returns string)
+                    const kgToLbs = parseFloat(win.convertFromKg(70, 'lbs'));
                     expect(kgToLbs).to.be.closeTo(154.32, 0.1);
 
-                    // Test kg to stone conversion
-                    const kgToStone = win.convertFromKg(70, 'stone');
+                    // Test kg to stone conversion (use 'st' not 'stone')
+                    const kgToStone = parseFloat(win.convertFromKg(70, 'st'));
                     expect(kgToStone).to.be.closeTo(11.02, 0.1);
 
-                    // Test kg to kg (should return same value)
-                    const kgToKg = win.convertFromKg(70, 'kg');
+                    // Test kg to kg (returns string)
+                    const kgToKg = parseFloat(win.convertFromKg(70, 'kg'));
                     expect(kgToKg).to.equal(70);
 
                     // Test edge cases
-                    const zeroKg = win.convertFromKg(0, 'lbs');
+                    const zeroKg = parseFloat(win.convertFromKg(0, 'lbs'));
                     expect(zeroKg).to.equal(0);
 
-                    const smallWeight = win.convertFromKg(0.5, 'lbs');
+                    const smallWeight = parseFloat(win.convertFromKg(0.5, 'lbs'));
                     expect(smallWeight).to.be.closeTo(1.1, 0.1);
                 }
             });
@@ -89,8 +89,8 @@ describe('Unit Conversion Functions', () => {
                     const lbsToKg = win.convertToKg(154.32, 'lbs');
                     expect(lbsToKg).to.be.closeTo(70, 0.1);
 
-                    // Test stone to kg conversion
-                    const stoneToKg = win.convertToKg(11, 'stone');
+                    // Test stone to kg conversion (use 'st' not 'stone')
+                    const stoneToKg = win.convertToKg(11, 'st');
                     expect(stoneToKg).to.be.closeTo(69.85, 0.1);
 
                     // Test kg to kg (should return same value)
@@ -112,7 +112,7 @@ describe('Unit Conversion Functions', () => {
                 if (typeof win.getWeightUnitLabel === 'function') {
                     expect(win.getWeightUnitLabel('kg')).to.equal('kg');
                     expect(win.getWeightUnitLabel('lbs')).to.equal('lbs');
-                    expect(win.getWeightUnitLabel('stone')).to.equal('st');
+                    expect(win.getWeightUnitLabel('st')).to.equal('st');
 
                     // Test with null (should use current unit)
                     win.setWeightUnit('lbs');
@@ -151,19 +151,19 @@ describe('Unit Conversion Functions', () => {
         it('should test convertFromCm function with various heights', () => {
             cy.window().then((win) => {
                 if (typeof win.convertFromCm === 'function') {
-                    // Test cm to ft conversion
-                    const cmToFt = win.convertFromCm(175, 'ft');
+                    // Test cm to ft conversion (returns decimal string like "5.74")
+                    const cmToFt = parseFloat(win.convertFromCm(175, 'ft'));
                     expect(cmToFt).to.be.closeTo(5.74, 0.1);
 
-                    // Test cm to cm (should return same value)
-                    const cmToCm = win.convertFromCm(175, 'cm');
+                    // Test cm to cm (returns string)
+                    const cmToCm = parseFloat(win.convertFromCm(175, 'cm'));
                     expect(cmToCm).to.equal(175);
 
                     // Test edge cases
-                    const zeroCm = win.convertFromCm(0, 'ft');
+                    const zeroCm = parseFloat(win.convertFromCm(0, 'ft'));
                     expect(zeroCm).to.equal(0);
 
-                    const smallHeight = win.convertFromCm(30, 'ft');
+                    const smallHeight = parseFloat(win.convertFromCm(30, 'ft'));
                     expect(smallHeight).to.be.closeTo(0.98, 0.1);
                 }
             });
@@ -194,11 +194,11 @@ describe('Unit Conversion Functions', () => {
             cy.window().then((win) => {
                 if (typeof win.getHeightUnitLabel === 'function') {
                     expect(win.getHeightUnitLabel('cm')).to.equal('cm');
-                    expect(win.getHeightUnitLabel('ft')).to.equal('ft');
+                    expect(win.getHeightUnitLabel('ft')).to.equal('ft/in'); // Actual label is 'ft/in'
 
                     // Test with null (should use current unit)
                     win.setHeightUnit('ft');
-                    expect(win.getHeightUnitLabel(null)).to.equal('ft');
+                    expect(win.getHeightUnitLabel(null)).to.equal('ft/in');
                 }
             });
         });
@@ -208,13 +208,13 @@ describe('Unit Conversion Functions', () => {
         it('should handle invalid inputs gracefully', () => {
             cy.window().then((win) => {
                 if (typeof win.convertFromKg === 'function') {
-                    // Test with negative weights
+                    // Test with negative weights (returns string)
                     const negativeWeight = win.convertFromKg(-10, 'lbs');
-                    expect(negativeWeight).to.be.a('number');
+                    expect(negativeWeight).to.be.a('string');
 
-                    // Test with very large weights
+                    // Test with very large weights (returns string)
                     const largeWeight = win.convertFromKg(1000, 'lbs');
-                    expect(largeWeight).to.be.a('number');
+                    expect(largeWeight).to.be.a('string');
                 }
 
                 if (typeof win.setWeightUnit === 'function') {
@@ -222,8 +222,8 @@ describe('Unit Conversion Functions', () => {
                     const originalUnit = win.getWeightUnit();
                     win.setWeightUnit('invalid');
                     const afterInvalid = win.getWeightUnit();
-                    // Should either keep original or default to a valid unit
-                    expect(afterInvalid).to.be.oneOf(['kg', 'lbs', 'stone', originalUnit]);
+                    // Should either keep original or default to a valid unit (use 'st' not 'stone')
+                    expect(afterInvalid).to.be.oneOf(['kg', 'lbs', 'st', originalUnit]);
                 }
             });
         });

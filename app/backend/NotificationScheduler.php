@@ -51,7 +51,11 @@ class NotificationScheduler {
         $timestamp = date('Y-m-d H:i:s');
         $logMessage = "[{$timestamp}] {$message}\n";
         file_put_contents($this->logFile, $logMessage, FILE_APPEND);
-        echo $logMessage; // Also output to console for cron logging
+
+        // Only echo to console if not in test mode (to avoid polluting API responses)
+        if (!$this->testMode) {
+            echo $logMessage; // Output to console for cron logging
+        }
     }
 
     /**
@@ -79,15 +83,19 @@ class NotificationScheduler {
     /**
      * Check if user should receive notification now
      */
-    private function shouldSendNotification($user) {
+    private function shouldSendNotification($user, $overrideDay = null, $overrideTime = null) {
         // Check if notifications are enabled
         if (!$user['email_notifications']) {
             return false;
         }
 
-        // Get current day and time in user's timezone
-        $timezone = $user['timezone'] ?? 'Europe/London';
-        $current = $this->getCurrentDayAndTime($timezone);
+        // Get current day and time in user's timezone (or use override for testing)
+        if ($overrideDay && $overrideTime) {
+            $current = ['day' => $overrideDay, 'time' => $overrideTime];
+        } else {
+            $timezone = $user['timezone'] ?? 'Europe/London';
+            $current = $this->getCurrentDayAndTime($timezone);
+        }
 
         // Check if current day matches user's preferred day
         if (strcasecmp($current['day'], $user['email_day']) !== 0) {
@@ -455,18 +463,24 @@ class NotificationScheduler {
     /**
      * Process weekly reminder notifications (user-scheduled)
      */
-    public function processWeeklyReminders() {
+    public function processWeeklyReminders($overrideDay = null, $overrideTime = null, $specificUserId = null) {
         $this->log("Processing weekly reminders...");
 
-        $users = $this->query(
-            "SELECT u.id as user_id, u.email,
+        $sql = "SELECT u.id as user_id, u.email,
                     s.email_notifications, s.email_day, s.email_time,
                     s.timezone, s.weight_unit
              FROM users u
              LEFT JOIN user_settings s ON u.id = s.user_id
              WHERE u.email IS NOT NULL
-               AND s.email_notifications = true"
-        );
+               AND s.email_notifications = true";
+
+        $params = [];
+        if ($specificUserId) {
+            $sql .= " AND u.id = ?";
+            $params[] = $specificUserId;
+        }
+
+        $users = $this->query($sql, $params);
 
         if (!$users || count($users) === 0) {
             $this->log("No users with enabled weekly reminders");
@@ -483,7 +497,7 @@ class NotificationScheduler {
             $email = $user['email'];
 
             // Check if notification should be sent
-            if (!$this->shouldSendNotification($user)) {
+            if (!$this->shouldSendNotification($user, $overrideDay, $overrideTime)) {
                 $this->log("⏭️  Skipped {$email} - not scheduled for now");
                 $skippedCount++;
                 continue;
@@ -505,22 +519,28 @@ class NotificationScheduler {
     /**
      * Process monthly progress reports (1st day of month at 11pm UTC)
      */
-    public function processMonthlyReports() {
-        // Only run on 1st day of month at 11pm UTC
-        if (!$this->isFirstDayOfMonthAt5am()) {
+    public function processMonthlyReports($forceRun = false, $specificUserId = null) {
+        // Only run on 1st day of month at 11pm UTC (unless forced for testing)
+        if (!$forceRun && !$this->isFirstDayOfMonthAt5am()) {
             return 0;
         }
 
         $this->log("Processing monthly progress reports (1st of month at 11pm UTC)...");
 
-        $users = $this->query(
-            "SELECT u.id as user_id, u.email,
+        $sql = "SELECT u.id as user_id, u.email,
                     s.weekly_reports, s.weight_unit, s.timezone
              FROM users u
              LEFT JOIN user_settings s ON u.id = s.user_id
              WHERE u.email IS NOT NULL
-               AND s.weekly_reports = true"
-        );
+               AND s.weekly_reports = true";
+
+        $params = [];
+        if ($specificUserId) {
+            $sql .= " AND u.id = ?";
+            $params[] = $specificUserId;
+        }
+
+        $users = $this->query($sql, $params);
 
         if (!$users || count($users) === 0) {
             $this->log("No users with enabled monthly reports");
@@ -551,16 +571,22 @@ class NotificationScheduler {
     /**
      * Process all notifications (main entry point)
      */
-    public function processNotifications() {
+    public function processNotifications($overrideDay = null, $overrideTime = null, $specificUserId = null) {
         $this->log("========================================");
         $this->log("Starting notification scheduler");
 
-        $weeklyCount = $this->processWeeklyReminders();
-        $monthlyCount = $this->processMonthlyReports();
+        $weeklyCount = $this->processWeeklyReminders($overrideDay, $overrideTime, $specificUserId);
+        $monthlyCount = $this->processMonthlyReports(false, $specificUserId);
 
         $this->log("Notification scheduler completed");
         $this->log("Total sent: " . ($weeklyCount + $monthlyCount) . " (Weekly: {$weeklyCount}, Monthly: {$monthlyCount})");
         $this->log("========================================");
+
+        return [
+            'weekly_sent' => $weeklyCount,
+            'monthly_sent' => $monthlyCount,
+            'total_sent' => $weeklyCount + $monthlyCount
+        ];
     }
 }
 

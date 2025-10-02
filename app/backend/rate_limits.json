@@ -1,20 +1,14 @@
 {
     "test@example.com:login_code": {
         "attempts": [
-            1759273275,
-            1759273282
+            1759411846,
+            1759411851
         ],
         "blocked_until": 0
     },
     "test@dev.com:login_code": {
         "attempts": [
-            1759273241
-        ],
-        "blocked_until": 0
-    },
-    "robertmarshgb@gmail.com:login_code": {
-        "attempts": [
-            1759278848
+            1759411815
         ],
         "blocked_until": 0
     }

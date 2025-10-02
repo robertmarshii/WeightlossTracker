@@ -1,7 +1,31 @@
 describe('Health Calculations Function Coverage', () => {
+
+    const setupDashboard = () => {
+        const email = 'test@dev.com';
+        const base = 'http://127.0.0.1:8111';
+
+        cy.clearCookies();
+        cy.clearLocalStorage();
+        cy.setCookie('cypress_testing', 'true');
+
+        cy.request({
+            method: 'POST',
+            url: `${base}/login_router.php?controller=auth`,
+            body: { action: 'send_login_code', email: email }
+        });
+
+        cy.visit('/?coverage=1');
+        cy.get('#loginEmail').type(email);
+        cy.get('#loginForm').submit();
+        cy.wait(1000);
+        cy.get('#loginCode', { timeout: 10000 }).should('be.visible').type('111111');
+        cy.get('#verifyLoginForm button[type="submit"]').click();
+        cy.url({ timeout: 8000 }).should('include', 'dashboard.php');
+        cy.wait(1500);
+    };
+
     beforeEach(() => {
-        cy.visit('http://127.0.0.1:8111/dashboard.php?coverage=1');
-        cy.wait(2000);
+        setupDashboard();
     });
 
     describe('Health Risk Assessment Functions', () => {
