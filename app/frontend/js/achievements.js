@@ -47,8 +47,8 @@ function updateAchievementCards(weightData) {
         : `<span class="text-muted">${t('No current streak')}</span><br><small>${t('Log weight to start')}</small>`;
     $('#streak-counter').html(streakHtml);
 
-    // Simple goal achievement (placeholder)
-    $('#goals-achieved').html(`<span class="text-info">🎯 ${t('Goal tracking')}</span><br><small>${t('Set goals in Data tab')}</small>`);
+    // Goals Achieved is now handled by Phase 2 enhancements in dashboard.js
+    // Do not modify #goals-achieved here - it has its own enhanced HTML
 }
 
 // Additional achievement-related functions can be added here

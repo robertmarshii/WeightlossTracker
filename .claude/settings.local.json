@@ -23,7 +23,11 @@
       "Bash(do echo:*)",
       "Bash(done)",
       "Bash(psql:*)",
-      "Bash(docker run:*)"
+      "Bash(docker run:*)",
+      "Bash(php:*)",
+      "Bash(powershell:*)",
+      "Bash(ls \"C:\\GitKraken\\WeightlossTracker\\app\\frontend\\js\"\" | grep -E \"health)",
+      "Bash(data \")"
     ],
     "deny": [],
     "ask": []

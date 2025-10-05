@@ -25,7 +25,7 @@ describe('Debug Dashboard Functions', () => {
 
         // Test if dashboard functions are available and working
         cy.window().then((win) => {
-            console.log('🔍 Checking dashboard function availability...');
+            debugLog('🔍 Checking dashboard function availability...');
 
             // Check if coverage object exists
             expect(win.coverage).to.exist;
@@ -44,7 +44,7 @@ describe('Debug Dashboard Functions', () => {
             let availableFunctions = 0;
             dashboardFunctions.forEach(funcName => {
                 if (typeof win[funcName] === 'function') {
-                    console.log(`✅ ${funcName} is available`);
+                    debugLog(`✅ ${funcName} is available`);
                     availableFunctions++;
 
                     // Try to call the function to trigger coverage
@@ -55,19 +55,19 @@ describe('Debug Dashboard Functions', () => {
                             win[funcName]();
                         }
                     } catch (e) {
-                        console.log(`⚠️ ${funcName} threw error: ${e.message}`);
+                        debugLog(`⚠️ ${funcName} threw error: ${e.message}`);
                     }
                 } else {
-                    console.log(`❌ ${funcName} is NOT available (type: ${typeof win[funcName]})`);
+                    debugLog(`❌ ${funcName} is NOT available (type: ${typeof win[funcName]})`);
                 }
             });
 
-            console.log(`📊 Found ${availableFunctions}/${dashboardFunctions.length} dashboard functions`);
+            debugLog(`📊 Found ${availableFunctions}/${dashboardFunctions.length} dashboard functions`);
 
             // Force some basic coverage logging
             if (win.coverage) {
                 win.coverage.logFunction('debug-test', 'debug-dashboard-functions.cy.js');
-                console.log('✅ Manual coverage logging works');
+                debugLog('✅ Manual coverage logging works');
             }
         });
 
@@ -81,14 +81,14 @@ describe('Debug Dashboard Functions', () => {
         cy.window().then((win) => {
             // Check what scripts are loaded
             const scripts = win.document.querySelectorAll('script[src]');
-            console.log('📄 Loaded JavaScript files:');
+            debugLog('📄 Loaded JavaScript files:');
             scripts.forEach((script, i) => {
-                console.log(`${i+1}. ${script.src}`);
+                debugLog(`${i+1}. ${script.src}`);
             });
 
             // Check if jQuery is available
-            console.log(`jQuery available: ${typeof win.$ !== 'undefined'}`);
-            console.log(`jQuery.post available: ${typeof win.$.post !== 'undefined'}`);
+            debugLog(`jQuery available: ${typeof win.$ !== 'undefined'}`);
+            debugLog(`jQuery.post available: ${typeof win.$.post !== 'undefined'}`);
 
             // Check for dashboard.js specific functions
             const win_keys = Object.keys(win).filter(key =>
@@ -97,7 +97,7 @@ describe('Debug Dashboard Functions', () => {
                 key.includes('load') ||
                 key.includes('test')
             );
-            console.log('🔍 Window functions with dashboard keywords:', win_keys);
+            debugLog('🔍 Window functions with dashboard keywords:', win_keys);
         });
 
         cy.flushCoverageBeforeNavigation();

@@ -196,6 +196,20 @@
                 return;
             }
 
+            if ($action === 'get_quick_look_metrics') {
+                COVERAGE_LOG('get_quick_look_metrics', 'ProfileController', __FILE__, __LINE__);
+                $metrics = calculateQuickLookMetrics($userId, $db, $schema);
+                echo json_encode(['success' => true, 'metrics' => $metrics]);
+                return;
+            }
+
+            if ($action === 'get_goal_progress_enhanced') {
+                COVERAGE_LOG('get_goal_progress_enhanced', 'ProfileController', __FILE__, __LINE__);
+                $progress = calculateGoalProgressEnhanced($userId, $db, $schema);
+                echo json_encode(['success' => true, 'progress' => $progress]);
+                return;
+            }
+
             if ($action === 'get_bmi') {
                 // Fetch profile
                 $stmt = $db->prepare("SELECT height_cm, body_frame, age FROM {$schema}.user_profiles WHERE user_id = ?");
@@ -1227,6 +1241,12 @@
                     ];
                 }
 
+                // Add Quick Look metrics (Phase 1)
+                $allData['quick_look_metrics'] = calculateQuickLookMetrics($userId, $db, $schema);
+
+                // Add Goal Progress Enhanced (Phase 2)
+                $allData['goal_progress_enhanced'] = calculateGoalProgressEnhanced($userId, $db, $schema);
+
                 echo json_encode([
                     'success' => true,
                     'data' => $allData,
@@ -1240,6 +1260,343 @@
             echo json_encode(['success' => false, 'message' => 'Server error']);
         }
     }
+
+    // ==================== Quick Look Helper Functions (Phase 1) ====================
+
+    /**
+     * Calculate Quick Look metrics for dashboard
+     * @param int $userId - User ID
+     * @param PDO $db - Database connection
+     * @param string $schema - Schema name
+     * @return array Metrics array
+     */
+    function calculateQuickLookMetrics($userId, $db, $schema) {
+        COVERAGE_LOG('calculateQuickLookMetrics', 'ProfileController', __FILE__, __LINE__);
+
+        try {
+            // Get user's weight history (last 90 days for frequency calculation)
+            $stmt = $db->prepare("
+                SELECT entry_date, weight_kg
+                FROM {$schema}.weight_entries
+                WHERE user_id = ?
+                AND entry_date >= CURRENT_DATE - INTERVAL '90 days'
+                ORDER BY entry_date DESC
+            ");
+            $stmt->execute([$userId]);
+            $weights = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            // Get user's goal
+            $stmt = $db->prepare("
+                SELECT target_weight_kg, target_date
+                FROM {$schema}.goals
+                WHERE user_id = ?
+                AND is_active = true
+                ORDER BY created_at DESC
+                LIMIT 1
+            ");
+            $stmt->execute([$userId]);
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            // Calculate metrics
+            $loggingFrequency = calculateLoggingFrequency($weights);
+            $goalProgress = calculateGoalProgress($weights, $user);
+            $consistencyScore = ($loggingFrequency * 0.5) + ($goalProgress * 0.5);
+
+            $nextCheckin = predictNextCheckin($weights);
+
+            return [
+                'consistency_score' => round($consistencyScore, 1),
+                'logging_frequency' => $loggingFrequency,
+                'goal_progress' => $goalProgress,
+                'next_checkin_date' => $nextCheckin['date'],
+                'days_until_checkin' => $nextCheckin['days_until'],
+                'average_logging_interval' => $nextCheckin['avg_interval']
+            ];
+
+        } catch (Exception $e) {
+            error_log("Quick look metrics error: " . $e->getMessage());
+            return [
+                'consistency_score' => null,
+                'logging_frequency' => 0,
+                'goal_progress' => 0,
+                'next_checkin_date' => null,
+                'days_until_checkin' => null,
+                'average_logging_interval' => null
+            ];
+        }
+    }
+
+    /**
+     * Calculate logging frequency score (0-100)
+     * @param array $weights - Weight entries
+     * @return float Score
+     */
+    function calculateLoggingFrequency($weights) {
+        if (count($weights) < 2) {
+            return 0;
+        }
+
+        // Calculate average interval between logs
+        $intervals = [];
+        for ($i = 0; $i < count($weights) - 1; $i++) {
+            $date1 = new DateTime($weights[$i]['entry_date']);
+            $date2 = new DateTime($weights[$i + 1]['entry_date']);
+            $diff = $date1->diff($date2)->days;
+            $intervals[] = $diff;
+        }
+
+        $avgInterval = array_sum($intervals) / count($intervals);
+
+        // Score calculation (weekly logging = 100%, monthly = 50%, etc.)
+        if ($avgInterval <= 7) {
+            return 100; // Weekly or more frequent
+        } elseif ($avgInterval <= 14) {
+            return 80; // Bi-weekly
+        } elseif ($avgInterval <= 30) {
+            return 60; // Monthly
+        } else {
+            return 40; // Less frequent
+        }
+    }
+
+    /**
+     * Calculate goal progress score (0-100)
+     * @param array $weights - Weight entries
+     * @param array $user - User data with goal
+     * @return float Score
+     */
+    function calculateGoalProgress($weights, $user) {
+        if (empty($weights) || !isset($user['target_weight_kg']) || $user['target_weight_kg'] === null) {
+            return 0;
+        }
+
+        // Get starting weight and current weight
+        $currentWeight = floatval($weights[0]['weight_kg']);
+        $startWeight = floatval($weights[count($weights) - 1]['weight_kg']);
+        $targetWeight = floatval($user['target_weight_kg']);
+
+        // Assuming weight loss goal (most common)
+        $totalToLose = $startWeight - $targetWeight;
+        if ($totalToLose <= 0) {
+            return 100; // Already at or below target
+        }
+
+        $lostSoFar = $startWeight - $currentWeight;
+        $progressPercent = ($lostSoFar / $totalToLose) * 100;
+
+        return max(0, min(100, $progressPercent)); // Clamp 0-100
+    }
+
+    /**
+     * Predict next check-in date based on logging pattern
+     * @param array $weights - Weight entries
+     * @return array ['date' => 'YYYY-MM-DD', 'days_until' => int, 'avg_interval' => float]
+     */
+    function predictNextCheckin($weights) {
+        if (count($weights) < 2) {
+            return ['date' => null, 'days_until' => null, 'avg_interval' => null];
+        }
+
+        // Calculate average interval
+        $intervals = [];
+        for ($i = 0; $i < min(5, count($weights) - 1); $i++) { // Use last 5 intervals
+            $date1 = new DateTime($weights[$i]['entry_date']);
+            $date2 = new DateTime($weights[$i + 1]['entry_date']);
+            $diff = $date1->diff($date2)->days;
+            $intervals[] = $diff;
+        }
+
+        $avgInterval = round(array_sum($intervals) / count($intervals));
+
+        // Predict next date
+        $lastDate = new DateTime($weights[0]['entry_date']);
+        $nextDate = clone $lastDate;
+        $nextDate->add(new DateInterval("P{$avgInterval}D"));
+
+        // Days until
+        $today = new DateTime();
+        $daysUntil = $today->diff($nextDate)->days;
+        if ($nextDate < $today) {
+            $daysUntil = -$daysUntil; // Overdue (negative)
+        }
+
+        return [
+            'date' => $nextDate->format('Y-m-d'),
+            'days_until' => $daysUntil,
+            'avg_interval' => $avgInterval
+        ];
+    }
+
+    // ==================== End Quick Look Helper Functions ====================
+
+    // ==================== Goals Achieved Helper Functions (Phase 2) ====================
+
+    /**
+     * Calculate enhanced goal progress metrics
+     * @param int $userId - User ID
+     * @param PDO $db - Database connection
+     * @param string $schema - Schema name
+     * @return array|null Progress data or null if no goal set
+     */
+    function calculateGoalProgressEnhanced($userId, $db, $schema) {
+        COVERAGE_LOG('calculateGoalProgressEnhanced', 'ProfileController', __FILE__, __LINE__);
+
+        try {
+            // Get user's goal
+            $stmt = $db->prepare("
+                SELECT target_weight_kg, target_date
+                FROM {$schema}.goals
+                WHERE user_id = ?
+                AND is_active = true
+                ORDER BY created_at DESC
+                LIMIT 1
+            ");
+            $stmt->execute([$userId]);
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$user || $user['target_weight_kg'] === null) {
+                return null; // No goal set
+            }
+
+            // Get weight history
+            $stmt = $db->prepare("
+                SELECT entry_date, weight_kg
+                FROM {$schema}.weight_entries
+                WHERE user_id = ?
+                ORDER BY entry_date DESC
+            ");
+            $stmt->execute([$userId]);
+            $weights = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            if (empty($weights)) {
+                return null; // No weight data
+            }
+
+            $currentWeight = floatval($weights[0]['weight_kg']);
+            $startWeight = floatval($weights[count($weights) - 1]['weight_kg']);
+            $targetWeight = floatval($user['target_weight_kg']);
+
+            // Calculate progress percentage
+            $totalToLose = $startWeight - $targetWeight;
+            $lostSoFar = $startWeight - $currentWeight;
+            $progressPercent = ($totalToLose > 0) ? ($lostSoFar / $totalToLose * 100) : 0;
+
+            // Calculate weekly/monthly progress toward goal
+            $weeklyProgress = calculateRecentProgressRate($weights, 7, $startWeight, $targetWeight);
+            $monthlyProgress = calculateRecentProgressRate($weights, 30, $startWeight, $targetWeight);
+
+            // Calculate ETA
+            $eta = calculateGoalETA($weights, $currentWeight, $targetWeight);
+
+            return [
+                'current_weight' => $currentWeight,
+                'start_weight' => $startWeight,
+                'target_weight' => $targetWeight,
+                'progress_percent' => round($progressPercent, 1),
+                'weight_lost' => round($lostSoFar, 2),
+                'weekly_progress' => $weeklyProgress,
+                'monthly_progress' => $monthlyProgress,
+                'eta_date' => $eta['date'],
+                'weekly_loss_rate' => $eta['weekly_rate']
+            ];
+
+        } catch (Exception $e) {
+            error_log("Goal progress calculation error: " . $e->getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Calculate progress rate over recent period toward goal
+     * @param array $weights - Weight entries array
+     * @param int $days - Period in days
+     * @param float $startWeight - Starting weight (first entry)
+     * @param float $targetWeight - Target goal weight
+     * @return float Progress percentage toward goal
+     */
+    function calculateRecentProgressRate($weights, $days, $startWeight, $targetWeight) {
+        COVERAGE_LOG('calculateRecentProgressRate', 'ProfileController', __FILE__, __LINE__);
+
+        $cutoffDate = date('Y-m-d', strtotime("-{$days} days"));
+
+        $recentWeights = array_filter($weights, function($w) use ($cutoffDate) {
+            return $w['entry_date'] >= $cutoffDate;
+        });
+
+        if (count($recentWeights) < 2) {
+            return 0;
+        }
+
+        $recentWeights = array_values($recentWeights);
+        $periodStartWeight = floatval($recentWeights[count($recentWeights) - 1]['weight_kg']);
+        $periodEndWeight = floatval($recentWeights[0]['weight_kg']);
+
+        $lostInPeriod = $periodStartWeight - $periodEndWeight;
+
+        // Calculate as percentage of total goal (not percentage of body weight)
+        $totalToLose = $startWeight - $targetWeight;
+        $percentTowardGoal = ($totalToLose > 0) ? ($lostInPeriod / $totalToLose * 100) : 0;
+
+        return round($percentTowardGoal, 2);
+    }
+
+    /**
+     * Calculate estimated goal achievement date
+     * @param array $weights - Weight entries array
+     * @param float $currentWeight - Current weight in kg
+     * @param float $targetWeight - Target weight in kg
+     * @return array ['date' => 'YYYY-MM-DD', 'weekly_rate' => float]
+     */
+    function calculateGoalETA($weights, $currentWeight, $targetWeight) {
+        COVERAGE_LOG('calculateGoalETA', 'ProfileController', __FILE__, __LINE__);
+
+        if (count($weights) < 3) {
+            return ['date' => null, 'weekly_rate' => 0];
+        }
+
+        // Calculate average weekly loss over last 8 weeks
+        $eightWeeksAgo = date('Y-m-d', strtotime('-56 days'));
+        $recentWeights = array_filter($weights, function($w) use ($eightWeeksAgo) {
+            return $w['entry_date'] >= $eightWeeksAgo;
+        });
+
+        if (count($recentWeights) < 2) {
+            return ['date' => null, 'weekly_rate' => 0];
+        }
+
+        $recentWeights = array_values($recentWeights);
+        $oldestRecent = floatval($recentWeights[count($recentWeights) - 1]['weight_kg']);
+        $newestRecent = floatval($recentWeights[0]['weight_kg']);
+
+        $oldestDate = new DateTime($recentWeights[count($recentWeights) - 1]['entry_date']);
+        $newestDate = new DateTime($recentWeights[0]['entry_date']);
+        $weeksPassed = $oldestDate->diff($newestDate)->days / 7;
+
+        if ($weeksPassed == 0) {
+            return ['date' => null, 'weekly_rate' => 0];
+        }
+
+        $totalLoss = $oldestRecent - $newestRecent;
+        $weeklyLossRate = $totalLoss / $weeksPassed;
+
+        if ($weeklyLossRate <= 0) {
+            return ['date' => null, 'weekly_rate' => 0];
+        }
+
+        // Calculate weeks to goal
+        $remainingToLose = $currentWeight - $targetWeight;
+        $weeksToGoal = $remainingToLose / $weeklyLossRate;
+
+        $etaDate = new DateTime();
+        $etaDate->add(new DateInterval('P' . ceil($weeksToGoal * 7) . 'D'));
+
+        return [
+            'date' => $etaDate->format('Y-m-d'),
+            'weekly_rate' => round($weeklyLossRate, 2)
+        ];
+    }
+
+    // ==================== End Goals Achieved Helper Functions ====================
 
     function EmailController() {
         COVERAGE_LOG('EmailController', 'Router', __FILE__, __LINE__);

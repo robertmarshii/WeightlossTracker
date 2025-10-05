@@ -1169,4 +1169,264 @@ select.form-control.glass-input {
     flex-wrap: wrap;
 }
 
+/* Quick Look Section Styles (Phase 1) */
+.encouragement-quote {
+    font-size: 1.1rem;
+    font-weight: 500;
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.6;
+    padding: 1rem 0.5rem;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.consistency-score-display {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #64a6d8;
+    line-height: 1;
+    margin: 0.5rem 0;
+}
+
+.consistency-score-label {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-top: 0.5rem;
+}
+
+.checkin-date {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #64a6d8;
+    margin: 0.5rem 0;
+}
+
+.checkin-countdown {
+    font-size: 2rem;
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0.5rem 0;
+}
+
+/* Mobile responsive adjustments for Quick Look */
+@media (max-width: 775px) {
+    .encouragement-quote {
+        font-size: 0.9rem;
+        padding: 0.5rem;
+        min-height: 60px;
+    }
+
+    .consistency-score-display {
+        font-size: 2rem;
+    }
+
+    .checkin-countdown {
+        font-size: 1.5rem;
+    }
+}
+
+/* ===== GOALS ACHIEVED ENHANCEMENTS (Phase 2) ===== */
+
+/* Progress Bar */
+.goal-progress-bar-container {
+    width: 100%;
+    margin: 1rem 0;
+}
+
+.goal-progress-bar {
+    position: relative;
+    width: 100%;
+    height: 30px;
+    background: rgba(20, 40, 60, 0.6);
+    border-radius: 15px;
+    border: 1px solid rgba(100, 150, 200, 0.3);
+    overflow: hidden;
+}
+
+.goal-progress-bar-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    background: linear-gradient(90deg, #64a6d8 0%, #5294c4 100%);
+    border-radius: 15px;
+    transition: width 0.5s ease-in-out;
+}
+
+.goal-progress-bar-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-weight: bold;
+    font-size: 0.9rem;
+    z-index: 10;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.goal-progress-label {
+    text-align: center;
+    font-size: 0.8rem;
+}
+
+/* Motivational Streak */
+.goal-streak {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    background: rgba(100, 166, 216, 0.1);
+    border-radius: 8px;
+}
+
+.goal-streak-icon {
+    font-size: 1.5rem;
+}
+
+.goal-streak-text {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+}
+
+/* ETA Display */
+.goal-eta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    background: rgba(123, 201, 111, 0.1);
+    border-radius: 8px;
+}
+
+.goal-eta-icon {
+    font-size: 1.5rem;
+}
+
+.goal-eta-text {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+}
+
+/* Milestone Badges */
+.goal-badges {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(100, 150, 200, 0.2);
+}
+
+.goal-badges-title {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.goal-badges-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+.goal-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.5rem;
+    background: rgba(30, 58, 95, 0.4);
+    border-radius: 10px;
+    border: 2px solid rgba(100, 150, 200, 0.3);
+    min-width: 60px;
+    transition: all 0.3s ease;
+}
+
+.goal-badge.achieved {
+    background: rgba(100, 166, 216, 0.3);
+    border-color: rgba(100, 166, 216, 0.6);
+    box-shadow: 0 4px 15px rgba(100, 166, 216, 0.3);
+}
+
+.goal-badge.locked {
+    opacity: 0.4;
+    filter: grayscale(100%);
+}
+
+.goal-badge-icon {
+    font-size: 1.8rem;
+    margin-bottom: 0.25rem;
+}
+
+.goal-badge-label {
+    font-size: 0.65rem;
+    color: rgba(255, 255, 255, 0.8);
+    text-align: center;
+    font-weight: 500;
+}
+
+.goal-badge.achieved .goal-badge-label {
+    color: white;
+    font-weight: 600;
+}
+
+/* Hover effects (desktop only) */
+@media (min-width: 776px) {
+    .goal-badge:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(100, 150, 200, 0.3);
+    }
+
+    .goal-badge.locked:hover {
+        transform: none;
+        box-shadow: none;
+    }
+}
+
+/* Mobile Responsive for Goals */
+@media (max-width: 775px) {
+    .goal-progress-bar {
+        height: 25px;
+    }
+
+    .goal-progress-bar-text {
+        font-size: 0.75rem;
+    }
+
+    .goal-streak,
+    .goal-eta {
+        flex-direction: column;
+        gap: 0.25rem;
+        padding: 0.4rem;
+    }
+
+    .goal-streak-icon,
+    .goal-eta-icon {
+        font-size: 1.2rem;
+    }
+
+    .goal-streak-text,
+    .goal-eta-text {
+        font-size: 0.75rem;
+    }
+
+    .goal-badge {
+        min-width: 50px;
+        padding: 0.4rem;
+    }
+
+    .goal-badge-icon {
+        font-size: 1.4rem;
+    }
+
+    .goal-badge-label {
+        font-size: 0.6rem;
+    }
+}
+
 

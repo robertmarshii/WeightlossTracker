@@ -305,12 +305,12 @@ function getHealthImprovementMessage(healthScoreImprovement) {
 // Update health benefit cards with current data
 function updateHealthBenefitCards() {
     if (window.coverage) window.coverage.logFunction('updateHealthBenefitCards', 'health.js');
-    console.log('Health benefits - checking for data to update cards...');
+    debugLog('Health benefits - checking for data to update cards...');
 
     postRequest('router.php?controller=profile', { action: 'get_weight_progress' })
     .then(resp => {
         const data = parseJson(resp);
-        console.log('Health benefits - weight progress data:', data);
+        debugLog('Health benefits - weight progress data:', data);
 
         if (data.success && (data.start_weight_kg || data.start_weight) && (data.current_weight_kg || data.current_weight) && data.height_cm) {
             const startWeight = parseFloat(data.start_weight_kg || data.start_weight);
@@ -433,10 +433,10 @@ function updateHealthBenefitCards() {
 
             } else {
                 // Reset to default messages if no progress yet
-                console.log('Health benefits - no meaningful progress yet, BMI reduction:', bmiReduction);
+                debugLog('Health benefits - no meaningful progress yet, BMI reduction:', bmiReduction);
             }
         } else {
-            console.log('Health benefits - missing data:', data);
+            debugLog('Health benefits - missing data:', data);
         }
     });
 }
@@ -451,11 +451,11 @@ function refreshBMI() {
     if (window.coverage) window.coverage.logFunction('refreshBMI', 'health.js');
 
     // Check if we have global data first
-    console.log('🔍 refreshBMI - checking global data:', window.globalDashboardData);
-    console.log('🔍 health_stats in global data:', window.globalDashboardData?.health_stats);
+    debugLog('🔍 refreshBMI - checking global data:', window.globalDashboardData);
+    debugLog('🔍 health_stats in global data:', window.globalDashboardData?.health_stats);
 
     if (window.globalDashboardData && window.globalDashboardData.health_stats) {
-        console.log('📊 Using global data for BMI');
+        debugLog('📊 Using global data for BMI');
         const data = window.globalDashboardData.health_stats;
         const el = $('#bmi-block');
 
@@ -487,7 +487,7 @@ function refreshBMI() {
     }
 
     // Fallback to API call if global data not available
-    console.log('🌐 Making API call for BMI (global data not available)');
+    debugLog('🌐 Making API call for BMI (global data not available)');
     postRequest('router.php?controller=profile', { action: 'get_bmi' })
     .then(resp => {
         const data = parseJson(resp);
@@ -506,7 +506,7 @@ function refreshBMI() {
         // Get before/after comparison
         if (typeof $ === 'undefined' || typeof $.post !== 'function') {
             if (window.coverage) window.coverage.logFunction('if', 'health.js');
-            console.log('⚠️ jQuery not available for BMI progress, showing basic BMI');
+            debugLog('⚠️ jQuery not available for BMI progress, showing basic BMI');
             lines.push(`<small class="text-muted">BMI correlates with health risks. BMI reduction significantly lowers disease risk (Prospective Studies Collaboration, 2009)</small>`);
             el.html(lines.join('<br>')).removeClass('text-muted');
             return;
@@ -544,13 +544,13 @@ function refreshHealth() {
     if (window.coverage) window.coverage.logFunction('refreshHealth', 'health.js');
 
     // Check if we have global data first
-    console.log('🔍 refreshHealth - checking global data:', window.globalDashboardData);
-    console.log('🔍 health_stats in global data:', window.globalDashboardData?.health_stats);
+    debugLog('🔍 refreshHealth - checking global data:', window.globalDashboardData);
+    debugLog('🔍 health_stats in global data:', window.globalDashboardData?.health_stats);
 
     // Handle body fat data
     if (window.globalDashboardData && window.globalDashboardData.health_stats) {
         if (window.coverage) window.coverage.logFunction('if', 'health.js');
-        console.log('📊 Using global data for health stats (body fat)');
+        debugLog('📊 Using global data for health stats (body fat)');
         const data = window.globalDashboardData.health_stats;
 
         // Body Fat Block with before/after
@@ -594,10 +594,10 @@ function refreshHealth() {
         }
     } else {
         // Fallback to API call for body fat data
-        console.log('🌐 Making API call for health stats (global data not available)');
+        debugLog('🌐 Making API call for health stats (global data not available)');
         if (typeof $ === 'undefined' || typeof $.post !== 'function') {
             if (window.coverage) window.coverage.logFunction('if', 'health.js');
-            console.log('⚠️ jQuery not available for health stats, skipping API call');
+            debugLog('⚠️ jQuery not available for health stats, skipping API call');
             $('#body-fat-block').text('Body fat estimation not available').addClass('text-muted');
             return;
         }
@@ -662,10 +662,10 @@ function refreshHealth() {
     }
 
     // Load enhanced cardiovascular risk (always use API call)
-    console.log('🌐 Making API call for cardiovascular risk');
+    debugLog('🌐 Making API call for cardiovascular risk');
     if (typeof $ === 'undefined' || typeof $.post !== 'function') {
         if (window.coverage) window.coverage.logFunction('if', 'health.js');
-        console.log('⚠️ jQuery not available for cardiovascular risk, skipping API call');
+        debugLog('⚠️ jQuery not available for cardiovascular risk, skipping API call');
         $('#cardio-risk-block').text('Cardiovascular risk not available').addClass('text-muted');
         return;
     }
@@ -698,9 +698,9 @@ function refreshIdealWeight() {
     if (window.coverage) window.coverage.logFunction('refreshIdealWeight', 'health.js');
 
     // Always use API call for ideal weight
-    console.log('🌐 Making API call for ideal weight');
+    debugLog('🌐 Making API call for ideal weight');
     if (typeof $ === 'undefined' || typeof $.post !== 'function') {
-        console.log('⚠️ jQuery not available for ideal weight, skipping API call');
+        debugLog('⚠️ jQuery not available for ideal weight, skipping API call');
         $('#ideal-weight-block').text('Set your height to calculate ideal weight range').addClass('text-muted');
         return;
     }
@@ -752,12 +752,12 @@ function refreshGallbladderHealth() {
     if (window.coverage) window.coverage.logFunction('refreshGallbladderHealth', 'health.js');
 
     // Check if we have global data first
-    console.log('🔍 refreshGallbladderHealth - checking global data:', window.globalDashboardData);
-    console.log('🔍 gallbladder_health in global data:', window.globalDashboardData?.gallbladder_health);
+    debugLog('🔍 refreshGallbladderHealth - checking global data:', window.globalDashboardData);
+    debugLog('🔍 gallbladder_health in global data:', window.globalDashboardData?.gallbladder_health);
 
     if (window.globalDashboardData && window.globalDashboardData.gallbladder_health) {
         if (window.coverage) window.coverage.logFunction('if', 'health.js');
-        console.log('📊 Using global data for gallbladder health');
+        debugLog('📊 Using global data for gallbladder health');
         const data = window.globalDashboardData.gallbladder_health;
         const el = $('#gallbladder-block');
 
@@ -792,10 +792,10 @@ function refreshGallbladderHealth() {
     }
 
     // Fallback to API call if global data not available
-    console.log('🌐 Making API call for gallbladder health (global data not available)');
+    debugLog('🌐 Making API call for gallbladder health (global data not available)');
     if (typeof $ === 'undefined' || typeof $.post !== 'function') {
         if (window.coverage) window.coverage.logFunction('if', 'health.js');
-        console.log('⚠️ jQuery not available for gallbladder health, skipping API call');
+        debugLog('⚠️ jQuery not available for gallbladder health, skipping API call');
         $('#gallbladder-block').text('Complete profile to assess gallbladder health benefits').addClass('text-muted');
         return;
     }

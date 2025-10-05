@@ -164,12 +164,12 @@ describe('Rapid Coverage Boost - Direct Function Testing', () => {
                             testedCount++;
                         } catch (e) {
                             // Some functions might require specific conditions, just continue
-                            console.log(`Function ${funcName} skipped due to error:`, e.message);
+                            debugLog(`Function ${funcName} skipped due to error:`, e.message);
                         }
                     }
                 });
 
-                console.log(`Successfully tested ${testedCount} functions`);
+                debugLog(`Successfully tested ${testedCount} functions`);
                 expect(testedCount).to.be.greaterThan(20);
             });
 

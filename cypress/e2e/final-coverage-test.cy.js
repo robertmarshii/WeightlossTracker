@@ -39,22 +39,22 @@ describe('Final Coverage Test', () => {
 
     it('should force frontend function coverage logging', () => {
         cy.window().then((win) => {
-            console.log('=== FORCING FRONTEND FUNCTION COVERAGE ===');
+            debugLog('=== FORCING FRONTEND FUNCTION COVERAGE ===');
 
             // Ensure coverage is enabled
-            console.log('Coverage object:', win.coverage);
-            console.log('Coverage enabled:', win.coverage?.enabled);
+            debugLog('Coverage object:', win.coverage);
+            debugLog('Coverage enabled:', win.coverage?.enabled);
 
             // If coverage doesn't exist, create it
             if (!win.coverage && win.CoverageLogger) {
                 win.coverage = new win.CoverageLogger();
-                console.log('Created coverage object manually');
+                debugLog('Created coverage object manually');
             }
 
             // Force enable coverage
             if (win.coverage) {
                 win.coverage.enabled = true;
-                console.log('Force enabled coverage');
+                debugLog('Force enabled coverage');
             }
 
             // Test each settings function individually with forced logging
@@ -69,27 +69,27 @@ describe('Final Coverage Test', () => {
             ];
 
             settingsFunctions.forEach(funcName => {
-                console.log(`Testing function: ${funcName}`);
+                debugLog(`Testing function: ${funcName}`);
 
                 // Check if function exists
                 if (typeof win[funcName] === 'function') {
-                    console.log(`  Function ${funcName} exists`);
+                    debugLog(`  Function ${funcName} exists`);
 
                     // Manually log before calling
                     if (win.coverage && typeof win.coverage.logFunction === 'function') {
                         win.coverage.logFunction(funcName, 'settings.js', 1);
-                        console.log(`  Manually logged ${funcName}`);
+                        debugLog(`  Manually logged ${funcName}`);
                     }
 
                     // Try to call the function
                     try {
                         const result = win[funcName]();
-                        console.log(`  Called ${funcName}, result:`, result);
+                        debugLog(`  Called ${funcName}, result:`, result);
                     } catch (error) {
-                        console.log(`  Error calling ${funcName}:`, error.message);
+                        debugLog(`  Error calling ${funcName}:`, error.message);
                     }
                 } else {
-                    console.log(`  Function ${funcName} NOT FOUND`);
+                    debugLog(`  Function ${funcName} NOT FOUND`);
                 }
             });
 
@@ -112,7 +112,7 @@ describe('Final Coverage Test', () => {
 
             globalFunctions.forEach(funcName => {
                 if (typeof win[funcName] === 'function') {
-                    console.log(`Testing global function: ${funcName}`);
+                    debugLog(`Testing global function: ${funcName}`);
 
                     // Manually log
                     if (win.coverage) {
@@ -144,9 +144,9 @@ describe('Final Coverage Test', () => {
                             default:
                                 result = win[funcName]();
                         }
-                        console.log(`  Called ${funcName}:`, result);
+                        debugLog(`  Called ${funcName}:`, result);
                     } catch (error) {
-                        console.log(`  Error with ${funcName}:`, error.message);
+                        debugLog(`  Error with ${funcName}:`, error.message);
                     }
                 }
             });
@@ -155,7 +155,7 @@ describe('Final Coverage Test', () => {
             cy.wait(1000).then(() => {
                 if (win.coverage) {
                     const finalReport = win.coverage.getReport();
-                    console.log('FINAL COVERAGE REPORT:', finalReport);
+                    debugLog('FINAL COVERAGE REPORT:', finalReport);
 
                     // Count functions by file
                     const functionsByFile = {};
@@ -167,8 +167,8 @@ describe('Final Coverage Test', () => {
                         });
                     }
 
-                    console.log('Functions by file:', functionsByFile);
-                    console.log('Total frontend functions logged:',
+                    debugLog('Functions by file:', functionsByFile);
+                    debugLog('Total frontend functions logged:',
                         Object.keys(finalReport.functions || {}).filter(f =>
                             f.includes('settings.js') || f.includes('global.js') || f.includes('window')
                         ).length
@@ -181,7 +181,7 @@ describe('Final Coverage Test', () => {
     it('should test achievement function if available', () => {
         cy.window().then((win) => {
             if (typeof win.updateAchievementCards === 'function') {
-                console.log('Testing updateAchievementCards...');
+                debugLog('Testing updateAchievementCards...');
 
                 // Force coverage log
                 if (win.coverage) {
@@ -201,9 +201,9 @@ describe('Final Coverage Test', () => {
 
                 try {
                     win.updateAchievementCards(testAchievements);
-                    console.log('updateAchievementCards called successfully');
+                    debugLog('updateAchievementCards called successfully');
                 } catch (error) {
-                    console.log('Error calling updateAchievementCards:', error.message);
+                    debugLog('Error calling updateAchievementCards:', error.message);
                 }
             }
         });

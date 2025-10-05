@@ -1,5 +1,22 @@
 /* Global JavaScript - Shared across all pages */
 
+// Debug logging system - collects logs and outputs at end
+window.debugLogs = [];
+window.debugLog = function(message, data) {
+    window.debugLogs.push({ message, data, time: Date.now() });
+};
+window.flushDebugLogs = function() {
+    if (window.debugLogs.length > 0) {
+        console.log('📋 Debug Log Summary:', window.debugLogs);
+        window.debugLogs = []; // Clear after output
+    }
+};
+
+// Auto-flush every 10 seconds if new logs exist
+setInterval(() => {
+    window.flushDebugLogs();
+}, 10000);
+
 // Global variables
 let currentAlertTimeout = null;
 

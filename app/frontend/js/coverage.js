@@ -20,7 +20,7 @@
                         dataType: dataType
                     });
                 };
-                console.log('🔧 Coverage: Patched $.post method');
+                debugLog('🔧 Coverage: Patched $.post method');
             }
 
             if (typeof window.$.get === 'undefined' && typeof window.$.ajax === 'function') {
@@ -33,7 +33,7 @@
                         dataType: dataType
                     });
                 };
-                console.log('🔧 Coverage: Patched $.get method');
+                debugLog('🔧 Coverage: Patched $.get method');
             }
         } else {
             // jQuery not ready yet, wait a bit more
@@ -66,9 +66,9 @@ class CoverageLogger {
         if (cypressDetected) {
             this.testMode = true;
             this.enabled = true; // Force enable for Cypress
-            console.log('🧪 Coverage logging: CYPRESS auto-detected and enabled');
+            debugLog('🧪 Coverage logging: CYPRESS auto-detected and enabled');
         } else if (this.enabled) {
-            console.log('🧪 Coverage logging: ENABLED via', {
+            debugLog('🧪 Coverage logging: ENABLED via', {
                 url: urlCoverage,
                 cookie: cookieCoverage,
                 environment: isTestEnvironment
@@ -145,9 +145,9 @@ class CoverageLogger {
         // Real-time logging for debugging
         if (this.testMode && console.groupCollapsed) {
             console.groupCollapsed(`🔧 ${functionName} called (${callInfo.callCount}x)`);
-            console.log('File:', fileName);
-            console.log('Context:', context);
-            console.log('Stack:', callInfo.stackTrace);
+            debugLog('File:', fileName);
+            debugLog('Context:', context);
+            debugLog('Stack:', callInfo.stackTrace);
             console.groupEnd();
         }
 
@@ -204,7 +204,7 @@ class CoverageLogger {
     setTestMode(isTestMode) {
         this.testMode = isTestMode;
         if (isTestMode) {
-            console.log('🧪 Coverage logging: TEST MODE enabled');
+            debugLog('🧪 Coverage logging: TEST MODE enabled');
         }
     }
 
@@ -228,9 +228,9 @@ class CoverageLogger {
      */
     showReport() {
         console.group('📊 Code Coverage Report');
-        console.log(`Session ID: ${this.sessionId}`);
-        console.log(`Total functions called: ${this.functionCalls.size}`);
-        console.log(`Test mode: ${this.testMode ? 'ON' : 'OFF'}`);
+        debugLog(`Session ID: ${this.sessionId}`);
+        debugLog(`Total functions called: ${this.functionCalls.size}`);
+        debugLog(`Test mode: ${this.testMode ? 'ON' : 'OFF'}`);
 
         const byFile = {};
         const stats = {
@@ -253,7 +253,7 @@ class CoverageLogger {
             }
         });
 
-        console.log(`📈 Stats:`, stats);
+        debugLog(`📈 Stats:`, stats);
 
         Object.entries(byFile).forEach(([file, functions]) => {
             const testFunctions = functions.filter(f => f.testMode);
@@ -264,9 +264,9 @@ class CoverageLogger {
             if (testFunctions.length > 0) {
                 console.group('🧪 Test Mode Functions');
                 testFunctions.forEach(func => {
-                    console.log(`${func.functionName} (${func.callCount} calls) - ${func.timestamp}`);
+                    debugLog(`${func.functionName} (${func.callCount} calls) - ${func.timestamp}`);
                     if (func.context && Object.keys(func.context).length > 0) {
-                        console.log('  Context:', func.context);
+                        debugLog('  Context:', func.context);
                     }
                 });
                 console.groupEnd();
@@ -275,7 +275,7 @@ class CoverageLogger {
             if (userFunctions.length > 0) {
                 console.group('👤 User Mode Functions');
                 userFunctions.forEach(func => {
-                    console.log(`${func.functionName} (${func.callCount} calls) - ${func.timestamp}`);
+                    debugLog(`${func.functionName} (${func.callCount} calls) - ${func.timestamp}`);
                 });
                 console.groupEnd();
             }
@@ -313,7 +313,7 @@ class CoverageLogger {
 
         if (untested.length > 0) {
             console.group('⚠️ Potentially Untested Functions');
-            untested.forEach(func => console.log(`❌ ${func}`));
+            untested.forEach(func => debugLog(`❌ ${func}`));
             console.groupEnd();
         }
     }
@@ -377,7 +377,7 @@ class CoverageLogger {
         this._pendingBatch = {};
         this._batchTimer = null;
 
-        console.log(`📤 Sent coverage batch: ${batchData.totalFunctions} functions`);
+        debugLog(`📤 Sent coverage batch: ${batchData.totalFunctions} functions`);
     }
 
     shouldLogToServer() {
@@ -452,7 +452,7 @@ function autoInstrumentGlobalFunctions() {
 
         // Skip ALL instrumentation during early page load to prevent triggering fallback API calls
         if (typeof $ === 'undefined' || typeof $.post !== 'function') {
-            console.log(`⏳ Skipping all instrumentation - jQuery not ready yet`);
+            debugLog(`⏳ Skipping all instrumentation - jQuery not ready yet`);
             return;
         }
 
@@ -475,7 +475,7 @@ function autoInstrumentGlobalFunctions() {
                 return originalFunction.apply(this, args);
             };
             instrumentedFunctions.add(fullPath);
-            console.log(`🔧 Instrumented: ${fullPath}`);
+            debugLog(`🔧 Instrumented: ${fullPath}`);
         }
     }
 
@@ -521,7 +521,7 @@ function autoInstrumentGlobalFunctions() {
         };
     }
 
-    console.log(`🎯 Auto-instrumented ${instrumentedFunctions.size} functions`);
+    debugLog(`🎯 Auto-instrumented ${instrumentedFunctions.size} functions`);
 }
 
 /**
@@ -572,7 +572,7 @@ function enhancedInstrumentation() {
     // Functions are caught by the initial run + delayed run
 
     // IMMEDIATE instrumentation - don't wait for page completion
-    console.log('🎯 Starting IMMEDIATE instrumentation (no delays)...');
+    debugLog('🎯 Starting IMMEDIATE instrumentation (no delays)...');
 
     // Instrument functions that already exist
     autoInstrumentGlobalFunctions();
@@ -596,7 +596,7 @@ function enhancedInstrumentation() {
     // Also instrument when jQuery becomes available
     const checkForJQuery = () => {
         if (typeof $ !== 'undefined' && typeof $.post === 'function') {
-            console.log('🎯 jQuery detected, running additional instrumentation...');
+            debugLog('🎯 jQuery detected, running additional instrumentation...');
             autoInstrumentGlobalFunctions();
             instrumentEventHandlers();
         } else {
@@ -613,7 +613,7 @@ if (window.coverage.enabled) {
     window.instrumentGlobals = autoInstrumentGlobalFunctions;
 
     // Force immediate instrumentation
-    console.log('🎯 Coverage logging enabled. Starting deferred instrumentation...');
+    debugLog('🎯 Coverage logging enabled. Starting deferred instrumentation...');
 
     // Wait for page to be fully loaded before instrumenting
     if (document.readyState === 'loading') {
@@ -624,7 +624,7 @@ if (window.coverage.enabled) {
     }
 
     // Log that we're ready
-    console.log('🎯 Coverage logging ready. Use showCoverage(), exportCoverage(), or instrumentGlobals() in console.');
+    debugLog('🎯 Coverage logging ready. Use showCoverage(), exportCoverage(), or instrumentGlobals() in console.');
 
     // Persist coverage data less frequently to reduce overhead
     if (window.coverage.testMode) {

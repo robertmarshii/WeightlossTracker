@@ -1,5 +1,5 @@
 // Translation helper for dynamically generated content
-console.log('🌐 Translate.js loaded');
+debugLog('🌐 Translate.js loaded');
 
 // Translation dictionary for dynamically generated text
 const translations = {

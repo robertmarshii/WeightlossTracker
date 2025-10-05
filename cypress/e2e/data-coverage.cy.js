@@ -268,17 +268,17 @@ describe('Data Module Coverage Tests', () => {
                 cy.stub(win, 'confirm').returns(true);
 
                 // Call the function and debug the execution
-                console.log('About to call deleteWeight(123)');
+                debugLog('About to call deleteWeight(123)');
 
                 // Override the AJAX success callback to see what happens
                 const originalPost = win.$.post;
                 win.$.post = function(url, data, successCallback) {
-                    console.log('AJAX call made:', url, data);
+                    debugLog('AJAX call made:', url, data);
                     // Simulate the successful response
                     successCallback({ success: true });
                     return {
                         fail: function(failCallback) {
-                            console.log('AJAX fail handler attached');
+                            debugLog('AJAX fail handler attached');
                             return this;
                         }
                     };

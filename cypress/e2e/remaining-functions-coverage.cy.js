@@ -292,13 +292,13 @@ describe('Remaining Functions Comprehensive Coverage', () => {
                 }
 
                 if (typeof win.debounce === 'function') {
-                    const testFunction = () => console.log('debounced');
+                    const testFunction = () => debugLog('debounced');
                     const debouncedFn = win.debounce(testFunction, 300);
                     debouncedFn();
                 }
 
                 if (typeof win.throttle === 'function') {
-                    const testFunction = () => console.log('throttled');
+                    const testFunction = () => debugLog('throttled');
                     const throttledFn = win.throttle(testFunction, 300);
                     throttledFn();
                 }

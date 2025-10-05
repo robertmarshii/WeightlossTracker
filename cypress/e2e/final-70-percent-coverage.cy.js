@@ -165,13 +165,13 @@ describe('Final Push to 70% Coverage', () => {
             cy.window().then((win) => {
                 // Test remaining global functions
                 if (typeof win.debounce === 'function') {
-                    const testFn = () => console.log('debounced');
+                    const testFn = () => debugLog('debounced');
                     const debouncedFn = win.debounce(testFn, 300);
                     debouncedFn();
                 }
 
                 if (typeof win.throttle === 'function') {
-                    const testFn = () => console.log('throttled');
+                    const testFn = () => debugLog('throttled');
                     const throttledFn = win.throttle(testFn, 300);
                     throttledFn();
                 }

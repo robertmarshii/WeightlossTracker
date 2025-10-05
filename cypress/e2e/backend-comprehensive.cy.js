@@ -155,7 +155,7 @@ describe('Backend Comprehensive Test Suite', () => {
                 },
                 failOnStatusCode: false
             }).then((response) => {
-                console.log('Login API response:', response.status, response.body);
+                debugLog('Login API response:', response.status, response.body);
 
                 // Just check we got some response
                 expect(response.status).to.be.at.least(200);
@@ -561,7 +561,7 @@ describe('Backend Comprehensive Test Suite', () => {
                 body: { action: 'get' },
                 failOnStatusCode: false
             }).then((response) => {
-                console.log('Schema API response:', response.status, response.body);
+                debugLog('Schema API response:', response.status, response.body);
                 expect(response.status).to.be.oneOf([200, 403]);
             });
         });
@@ -952,13 +952,13 @@ describe('Backend Comprehensive Test Suite', () => {
                 body: { action: 'get_report' },
                 failOnStatusCode: false
             }).then((response) => {
-                console.log('Coverage API response:', response.status, response.body);
+                debugLog('Coverage API response:', response.status, response.body);
 
                 if (response.status === 200) {
                     expect(response.body).to.have.property('success');
                     if (response.body.success) {
                         expect(response.body).to.have.property('coverage');
-                        console.log('Coverage data:', response.body.coverage);
+                        debugLog('Coverage data:', response.body.coverage);
                     }
                 }
             });

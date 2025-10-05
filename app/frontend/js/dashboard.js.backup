@@ -2,6 +2,16 @@
 // Global variable to store consolidated dashboard data
 window.globalDashboardData = null;
 
+// Debug logging system - collects logs and outputs at end
+window.debugLogs = [];
+window.debugLog = function(message, data) {
+    window.debugLogs.push({ message, data, time: Date.now() });
+};
+window.flushDebugLogs = function() {
+    debugLog('📋 Debug Log Summary:', window.debugLogs);
+    return window.debugLogs;
+};
+
 // Helper function for standardized fetch requests
 function postRequest(url, data) {
     const params = new URLSearchParams();
@@ -108,10 +118,10 @@ $(function() {
         refreshGoalsAchieved(); // Phase 2: Goals Achieved enhancements
         setTimeout(() => {
             loadSettings();
-            // Flush debug logs after ALL page initialization completes (5 seconds should be enough)
+            // Flush debug logs after page fully loaded
             setTimeout(() => {
                 window.flushDebugLogs();
-            }, 5000);
+            }, 500);
         }, 1000);
     });
     
@@ -453,10 +463,8 @@ function refreshLatestWeight() {
     if (window.coverage) window.coverage.logFunction('refreshLatestWeight', 'dashboard.js');
 
     // Check if we have global data first
-    debugLog('refreshLatestWeight', { hasGlobalData: !!window.globalDashboardData });
     if (window.globalDashboardData && window.globalDashboardData.latest_weight) {
         if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
-        debugLog('Using global data for latest weight');
         const latestWeight = window.globalDashboardData.latest_weight;
         const formattedDate = formatDate(latestWeight.entry_date);
         const displayWeight = convertFromKg(latestWeight.weight_kg);
@@ -2400,12 +2408,6 @@ function renderGoalProgress(goalData) {
     $('#goal-progress-fill').css('width', `${progressPercent}%`);
     $('#goal-progress-text').text(`${Math.round(progressPercent)}%`);
 
-    // Update weight progress text
-    const weightLost = convertFromKg(goalData.weight_lost || 0);
-    const totalToLose = convertFromKg((goalData.start_weight || 0) - (goalData.target_weight || 0));
-    const unit = getWeightUnitLabel();
-    $('#goal-weight-progress').text(`${weightLost} ${unit} of ${totalToLose} ${unit}`);
-
     // Goal achieved celebration
     if (progressPercent >= 100) {
         $('#goal-progress-fill').css('background', 'linear-gradient(90deg, #7bc96f 0%, #5ba84d 100%)');
@@ -2417,9 +2419,6 @@ function renderGoalProgress(goalData) {
     displayGoalStreak(goalData.weekly_progress, goalData.monthly_progress);
     displayGoalETA(goalData);
     renderMilestoneBadges(goalData.weight_lost || 0);
-
-    // Update ideal weight progress (right column)
-    renderIdealWeightProgress(goalData);
 }
 
 /**
@@ -2447,7 +2446,7 @@ function displayGoalStreak(weeklyPercent, monthlyPercent) {
         html = `<span data-eng="Progressed ${percent}% this week" data-spa="Progresó ${percent}% esta semana" data-fre="Progrès de ${percent}% cette semaine" data-ger="${percent}% Fortschritt diese Woche">Progressed ${percent}% this week</span>`;
     } else if (monthlyPercent > 0) {
         const percent = monthlyPercent.toFixed(1);
-        html = `<span data-eng="Progressed ${percent}% last month" data-spa="Progresó ${percent}% el mes pasado" data-fre="Progrès de ${percent}% le mois dernier" data-ger="${percent}% Fortschritt letzten Monat">Progressed ${percent}% last month</span>`;
+        html = `<span data-eng="Progressed ${percent}% this month" data-spa="Progresó ${percent}% este mes" data-fre="Progrès de ${percent}% ce mois-ci" data-ger="${percent}% Fortschritt diesen Monat">Progressed ${percent}% this month</span>`;
     } else {
         html = `<span data-eng="No recent progress - keep logging!" data-spa="Sin progreso reciente - ¡sigue registrando!" data-fre="Pas de progrès récent - continuez à enregistrer!" data-ger="Kein aktueller Fortschritt - weiter protokollieren!">No recent progress - keep logging!</span>`;
     }
@@ -2490,217 +2489,30 @@ function displayGoalETA(goalData) {
 function renderMilestoneBadges(weightLost) {
     if (window.coverage) window.coverage.logFunction('renderMilestoneBadges', 'dashboard.js');
 
-    const unit = getWeightUnit();
-    let milestones = [];
+    const milestones = [
+        { kg: 1, icon: '🥉' },
+        { kg: 3, icon: '🥈' },
+        { kg: 5, icon: '🥇' },
+        { kg: 10, icon: '🏆' },
+        { kg: 15, icon: '💎' },
+        { kg: 20, icon: '👑' }
+    ];
 
-    // Define milestones based on weight unit
-    if (unit === 'kg') {
-        milestones = [
-            { value: 1, icon: '🥉' },
-            { value: 3, icon: '🥈' },
-            { value: 5, icon: '🥇' },
-            { value: 10, icon: '🏆' },
-            { value: 15, icon: '💎' },
-            { value: 20, icon: '👑' },
-            { value: 30, icon: '🌟' },
-            { value: 40, icon: '✨' },
-            { value: 50, icon: '🎖️' }
-        ];
-    } else if (unit === 'lbs') {
-        milestones = [
-            { value: 5, icon: '🥉' },   // ~2.3 kg
-            { value: 10, icon: '🥈' },  // ~4.5 kg
-            { value: 15, icon: '🥇' },  // ~6.8 kg
-            { value: 25, icon: '🏆' },  // ~11.3 kg
-            { value: 35, icon: '💎' },  // ~15.9 kg
-            { value: 50, icon: '👑' },  // ~22.7 kg
-            { value: 75, icon: '🌟' },  // ~34 kg
-            { value: 100, icon: '✨' }, // ~45.4 kg
-            { value: 125, icon: '🎖️' } // ~56.7 kg
-        ];
-    } else if (unit === 'st') {
-        milestones = [
-            { value: 0.5, icon: '🥉' }, // ~3.2 kg
-            { value: 1, icon: '🥈' },   // ~6.4 kg
-            { value: 1.5, icon: '🥇' }, // ~9.5 kg
-            { value: 2, icon: '🏆' },   // ~12.7 kg
-            { value: 2.5, icon: '💎' }, // ~15.9 kg
-            { value: 3, icon: '👑' },   // ~19 kg
-            { value: 4, icon: '🌟' },   // ~25.4 kg
-            { value: 5, icon: '✨' },   // ~31.8 kg
-            { value: 6, icon: '🎖️' }   // ~38.1 kg
-        ];
-    }
-
-    const weightLostInUserUnit = parseFloat(convertFromKg(weightLost));
-    const unitLabel = getWeightUnitLabel();
     let badgesHTML = '';
 
     milestones.forEach(milestone => {
-        const achieved = weightLostInUserUnit >= milestone.value;
+        const achieved = weightLost >= milestone.kg;
         const statusClass = achieved ? 'achieved' : 'locked';
 
         badgesHTML += `
             <div class="goal-badge ${statusClass}">
                 <div class="goal-badge-icon">${milestone.icon}</div>
-                <div class="goal-badge-label">${milestone.value} ${unitLabel}</div>
+                <div class="goal-badge-label">${milestone.kg} kg</div>
             </div>
         `;
     });
 
     $('#goal-badges-container').html(badgesHTML);
-}
-
-/**
- * Render ideal weight progress (right column)
- * Uses ideal weight upper limit as target instead of custom goal
- * @param {Object} goalData - Goal progress data
- */
-function renderIdealWeightProgress(goalData) {
-    if (window.coverage) window.coverage.logFunction('renderIdealWeightProgress', 'dashboard.js');
-
-    // Get ideal weight data from global dashboard data
-    const idealWeightData = window.globalDashboardData?.ideal_weight;
-
-    if (!idealWeightData || !idealWeightData.max_weight_kg) {
-        debugLog('⚠️ No ideal weight data available');
-        return;
-    }
-
-    const currentWeight = goalData.current_weight;
-    const startWeight = goalData.start_weight;
-    const idealTargetWeight = parseFloat(idealWeightData.max_weight_kg); // Upper limit of ideal range
-
-    // Calculate progress percentage toward ideal weight
-    const totalToLose = startWeight - idealTargetWeight;
-    const lostSoFar = startWeight - currentWeight;
-    const progressPercent = (totalToLose > 0) ? Math.min(100, Math.max(0, (lostSoFar / totalToLose * 100))) : 0;
-
-    // Update progress bar
-    $('#ideal-progress-fill').css('width', `${progressPercent}%`);
-    $('#ideal-progress-text').text(`${Math.round(progressPercent)}%`);
-
-    // Update weight progress text
-    const weightLost = convertFromKg(lostSoFar);
-    const totalToLoseConverted = convertFromKg(totalToLose);
-    const unit = getWeightUnitLabel();
-    $('#ideal-weight-progress').text(`${weightLost} ${unit} of ${totalToLoseConverted} ${unit}`);
-
-    // Goal achieved celebration
-    if (progressPercent >= 100) {
-        $('#ideal-progress-fill').css('background', 'linear-gradient(90deg, #7bc96f 0%, #5ba84d 100%)');
-    } else {
-        $('#ideal-progress-fill').css('background', 'linear-gradient(90deg, #64a6d8 0%, #5294c4 100%)');
-    }
-
-    // Calculate streak and ETA using ideal weight as target
-    const idealWeeklyProgress = calculateIdealWeightProgress(7, startWeight, idealTargetWeight);
-    const idealMonthlyProgress = calculateIdealWeightProgress(30, startWeight, idealTargetWeight);
-
-    displayIdealWeightStreak(idealWeeklyProgress, idealMonthlyProgress);
-    displayIdealWeightETA(currentWeight, idealTargetWeight, goalData.weekly_loss_rate);
-}
-
-/**
- * Calculate progress toward ideal weight for a given period
- * @param {number} days - Number of days to look back
- * @param {float} startWeight - Starting weight
- * @param {float} idealTargetWeight - Ideal weight target
- * @returns {float} Progress percentage toward ideal weight
- */
-function calculateIdealWeightProgress(days, startWeight, idealTargetWeight) {
-    if (window.coverage) window.coverage.logFunction('calculateIdealWeightProgress', 'dashboard.js');
-
-    const weightHistory = window.globalDashboardData?.weight_history;
-    if (!weightHistory || weightHistory.length < 2) {
-        return 0;
-    }
-
-    const cutoffDate = new Date();
-    cutoffDate.setDate(cutoffDate.getDate() - days);
-
-    const recentWeights = weightHistory.filter(entry => {
-        const entryDate = new Date(entry.entry_date);
-        return entryDate >= cutoffDate;
-    });
-
-    if (recentWeights.length < 2) {
-        return 0;
-    }
-
-    // Sort by date descending (newest first)
-    recentWeights.sort((a, b) => new Date(b.entry_date) - new Date(a.entry_date));
-
-    const periodStartWeight = parseFloat(recentWeights[recentWeights.length - 1].weight_kg);
-    const periodEndWeight = parseFloat(recentWeights[0].weight_kg);
-    const lostInPeriod = periodStartWeight - periodEndWeight;
-
-    // Calculate as percentage of total goal to ideal weight
-    const totalToLose = startWeight - idealTargetWeight;
-    const percentTowardGoal = (totalToLose > 0) ? (lostInPeriod / totalToLose * 100) : 0;
-
-    return Math.round(percentTowardGoal * 100) / 100; // Round to 2 decimals
-}
-
-/**
- * Display ideal weight streak (same logic as goal streak)
- */
-function displayIdealWeightStreak(weeklyPercent, monthlyPercent) {
-    if (window.coverage) window.coverage.logFunction('displayIdealWeightStreak', 'dashboard.js');
-
-    const container = $('#ideal-streak-text');
-
-    if (!weeklyPercent && !monthlyPercent) {
-        weeklyPercent = 0;
-        monthlyPercent = 0;
-    }
-
-    let html = '';
-
-    if (weeklyPercent > 5) {
-        html = `<span data-eng="Great progress this week!" data-spa="¡Gran progreso esta semana!" data-fre="Excellent progrès cette semaine!" data-ger="Großartiger Fortschritt diese Woche!">Great progress this week!</span>`;
-    } else if (weeklyPercent > 0) {
-        const percent = weeklyPercent.toFixed(1);
-        html = `<span data-eng="Progressed ${percent}% this week" data-spa="Progresó ${percent}% esta semana" data-fre="Progrès de ${percent}% cette semaine" data-ger="${percent}% Fortschritt diese Woche">Progressed ${percent}% this week</span>`;
-    } else if (monthlyPercent > 0) {
-        const percent = monthlyPercent.toFixed(1);
-        html = `<span data-eng="Progressed ${percent}% last month" data-spa="Progresó ${percent}% el mes pasado" data-fre="Progrès de ${percent}% le mois dernier" data-ger="${percent}% Fortschritt letzten Monat">Progressed ${percent}% last month</span>`;
-    } else {
-        html = `<span data-eng="No recent progress - keep logging!" data-spa="Sin progreso reciente - ¡sigue registrando!" data-fre="Pas de progrès récent - continuez à enregistrer!" data-ger="Kein aktueller Fortschritt - weiter protokollieren!">No recent progress - keep logging!</span>`;
-    }
-
-    container.html(html);
-}
-
-/**
- * Display ideal weight ETA
- */
-function displayIdealWeightETA(currentWeight, idealTargetWeight, weeklyLossRate) {
-    if (window.coverage) window.coverage.logFunction('displayIdealWeightETA', 'dashboard.js');
-
-    const container = $('#ideal-eta-text');
-
-    if (currentWeight <= idealTargetWeight) {
-        const html = `<span data-eng="You've reached your ideal weight!" data-spa="¡Has alcanzado tu peso ideal!" data-fre="Vous avez atteint votre poids idéal!" data-ger="Sie haben Ihr Idealgewicht erreicht!">You've reached your ideal weight!</span>`;
-        container.html(html);
-        return;
-    }
-
-    if (!weeklyLossRate || weeklyLossRate <= 0) {
-        const html = `<span data-eng="Need more data for prediction" data-spa="Se necesitan más datos para predicción" data-fre="Besoin de plus de données pour la prédiction" data-ger="Mehr Daten für Vorhersage benötigt">Need more data for prediction</span>`;
-        container.html(html);
-        return;
-    }
-
-    const remainingToLose = currentWeight - idealTargetWeight;
-    const weeksToGoal = remainingToLose / weeklyLossRate;
-    const etaDate = new Date();
-    etaDate.setDate(etaDate.getDate() + (weeksToGoal * 7));
-
-    const formattedDate = formatDate(etaDate.toISOString().split('T')[0]);
-    const html = `<span data-eng="On track to reach BMI by ${formattedDate}" data-spa="En camino de alcanzar IMC para ${formattedDate}" data-fre="En bonne voie pour atteindre l'IMC d'ici ${formattedDate}" data-ger="Auf dem Weg, den BMI bis ${formattedDate}">On track to reach BMI by ${formattedDate}</span>`;
-
-    container.html(html);
 }
 
 /**

@@ -408,7 +408,7 @@ describe('Achievements Functionality', () => {
                     const endTime = Date.now();
 
                     const processingTime = endTime - startTime;
-                    console.log(`Large dataset processing time: ${processingTime}ms`);
+                    debugLog(`Large dataset processing time: ${processingTime}ms`);
 
                     // Should process large dataset efficiently
                     expect(processingTime).to.be.lessThan(1000);
@@ -441,7 +441,7 @@ describe('Achievements Functionality', () => {
                         const finalMemory = performance.memory ? performance.memory.usedJSHeapSize : 0;
                         const memoryIncrease = finalMemory - initialMemory;
 
-                        console.log(`Achievement memory increase: ${memoryIncrease} bytes`);
+                        debugLog(`Achievement memory increase: ${memoryIncrease} bytes`);
 
                         // Should not cause excessive memory usage
                         expect(memoryIncrease).to.be.lessThan(5000000); // 5MB limit

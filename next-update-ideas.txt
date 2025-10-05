@@ -1,0 +1,56 @@
+
+New section at top of page: Quick Look
+
+"Consistency Score" (blend of logging frequency + % towards goal completion).
+
+"Encouragement Card" → Rotate small motivational quotes ("Small steps, big results").
+
+"Next Check-In Reminder" → "Next weigh-in is on the 6th of October in 2 days"
+
+
+Goals Achieved
+
+Add:
+
+Mini progress bar showing how close you are to your target.
+
+Motivational streak → e.g. "Progressed X% towards your goal this week/month"
+
+Estimated date you will achieve your current goal
+
+Badges for milestones (1 kg, 3 kg, 5 kg, 10 kg lost etc)
+
+
+
+🔥 Streak Counter
+
+Add:
+
+Longest streak ever → "Longest streak: 12 weeks."
+
+Current active streak → "Current streak: 6 weeks."
+
+Missed streaks summary → "You missed 1 week this month."
+
+Visual timeline (tiny dots per day/week that light up when logged).
+
+Motivational quote or message when streaks break or continue.
+
+
+
+📊 Total Progress
+
+Add:
+
+Average weekly loss chart
+
+Body fat % chart.
+
+Projected weight goal chart for the next 6 months
+
+Comparison stat → "That’s like losing the weight of a bowling ball 🎳."
+
+Pie chart showing proportion of goal completed (e.g. 9.2 kg out of 20 kg).
+
+Pie chart showing proportion of weightloss completed towards Ideal Weight Range (e.g. 19.2 kg out of 40 kg).
+

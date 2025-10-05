@@ -25,13 +25,13 @@ function addCoverageAnnotation(testName, expectedFunctions = [], actualFunctions
     
     // Log to console
     console.group(`📝 Coverage Annotation: ${testName}`);
-    console.log('📋 Expected functions:', expectedFunctions);
+    debugLog('📋 Expected functions:', expectedFunctions);
     if (actualFunctions.length > 0) {
-        console.log('✅ Actually covered:', actualFunctions);
+        debugLog('✅ Actually covered:', actualFunctions);
         const missing = expectedFunctions.filter(f => !actualFunctions.includes(f));
         const unexpected = actualFunctions.filter(f => !expectedFunctions.includes(f));
-        if (missing.length > 0) console.log('❌ Missing coverage:', missing);
-        if (unexpected.length > 0) console.log('➕ Unexpected coverage:', unexpected);
+        if (missing.length > 0) debugLog('❌ Missing coverage:', missing);
+        if (unexpected.length > 0) debugLog('➕ Unexpected coverage:', unexpected);
     }
     console.groupEnd();
 }
@@ -109,7 +109,7 @@ Cypress.Commands.add('generateCoverageDoc', () => {
         if (win.coverageAnnotations && win.coverageAnnotations.length > 0) {
             const doc = generateTestFileCoverageDoc(win.coverageAnnotations);
             cy.log('📄 Coverage Documentation Generated');
-            console.log(doc);
+            debugLog(doc);
             return cy.wrap(doc);
         }
     });

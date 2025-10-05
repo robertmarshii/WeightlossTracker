@@ -9,7 +9,7 @@ $( document ).ready(function() {
         if (window.coverage) window.coverage.logFunction('getData', 'test/call.js');
 
         let result = await getFromDB(); 
-        console.log(result);
+        debugLog(result);
         $(document.body).append(JSON.stringify(result));
 
     }

@@ -59,7 +59,7 @@ describe('Dashboard Initialization Functions', () => {
 
                     win.testConsolidatedDashboardData(function() {
                         callbackExecuted = true;
-                        console.log('Consolidated data callback executed');
+                        debugLog('Consolidated data callback executed');
                     });
 
                     // Wait for async operation and check callback
@@ -95,7 +95,7 @@ describe('Dashboard Initialization Functions', () => {
                     };
 
                     win.testConsolidatedDashboardData(function() {
-                        console.log(`API calls made: ${apiCallCount}`);
+                        debugLog(`API calls made: ${apiCallCount}`);
                         // Consolidated data should make fewer calls than individual loads
                         expect(apiCallCount).to.be.lessThan(5);
 
@@ -300,7 +300,7 @@ describe('Dashboard Initialization Functions', () => {
 
                     // Execute consolidated data load
                     win.testConsolidatedDashboardData(function() {
-                        console.log('Load order:', loadOrder);
+                        debugLog('Load order:', loadOrder);
                         expect(loadOrder.length).to.be.greaterThan(0);
                     });
 
@@ -351,7 +351,7 @@ describe('Dashboard Initialization Functions', () => {
                     };
 
                     win.testConsolidatedDashboardData(function() {
-                        console.log('Handled missing data');
+                        debugLog('Handled missing data');
                     });
 
                     cy.wait(1000).then(() => {
@@ -370,7 +370,7 @@ describe('Dashboard Initialization Functions', () => {
 
                     win.testConsolidatedDashboardData(function() {
                         const loadTime = Date.now() - startTime;
-                        console.log(`Dashboard load time: ${loadTime}ms`);
+                        debugLog(`Dashboard load time: ${loadTime}ms`);
 
                         // Should load within reasonable time
                         expect(loadTime).to.be.lessThan(5000);
@@ -404,7 +404,7 @@ describe('Dashboard Initialization Functions', () => {
                     const finalMemory = performance.memory ? performance.memory.usedJSHeapSize : 0;
                     const memoryIncrease = finalMemory - initialMemory;
 
-                    console.log(`Memory increase: ${memoryIncrease} bytes`);
+                    debugLog(`Memory increase: ${memoryIncrease} bytes`);
 
                     // Should not cause excessive memory usage
                     expect(memoryIncrease).to.be.lessThan(10000000); // 10MB limit

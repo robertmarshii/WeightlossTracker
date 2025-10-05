@@ -315,12 +315,12 @@ describe('Dashboard Missing Functions - Coverage Boost', () => {
                 }
 
                 if (typeof win.debounceInput === 'function') {
-                    const testFn = () => console.log('debounced');
+                    const testFn = () => debugLog('debounced');
                     win.debounceInput(testFn, 300);
                 }
 
                 if (typeof win.throttleResize === 'function') {
-                    const testFn = () => console.log('throttled');
+                    const testFn = () => debugLog('throttled');
                     win.throttleResize(testFn, 100);
                 }
 

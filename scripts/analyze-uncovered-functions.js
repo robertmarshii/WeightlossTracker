@@ -4,8 +4,8 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
-console.log('📊 UNCOVERED FUNCTIONS ANALYSIS');
-console.log('================================================================================');
+debugLog('📊 UNCOVERED FUNCTIONS ANALYSIS');
+debugLog('================================================================================');
 
 // Get backend coverage data
 let backendCoverage = {};
@@ -16,12 +16,12 @@ try {
         backendCoverage = coverageData.coverage.functions || {};
     }
 } catch (e) {
-    console.log('⚠️  Could not fetch backend coverage data');
+    debugLog('⚠️  Could not fetch backend coverage data');
 }
 
 // Analyze backend functions
-console.log('\n🔧 BACKEND UNCOVERED FUNCTIONS:');
-console.log('--------------------------------------------------');
+debugLog('\n🔧 BACKEND UNCOVERED FUNCTIONS:');
+debugLog('--------------------------------------------------');
 
 const backendFunctions = [
     // SchemaManager.php
@@ -105,16 +105,16 @@ uncoveredBackend.forEach(func => {
 });
 
 Object.entries(uncoveredByFile).forEach(([file, functions]) => {
-    console.log(`\n📄 ${file} (${functions.length} uncovered functions)`);
+    debugLog(`\n📄 ${file} (${functions.length} uncovered functions)`);
     functions.forEach(func => {
         const name = func.class ? `${func.class}::${func.function}` : func.function;
         const priority = func.type.includes('public') ? '🔴 HIGH' : '🟡 MEDIUM';
-        console.log(`   ${priority} ${name} (${func.type})`);
+        debugLog(`   ${priority} ${name} (${func.type})`);
     });
 });
 
-console.log('\n🔧 FRONTEND UNCOVERED FUNCTIONS:');
-console.log('--------------------------------------------------');
+debugLog('\n🔧 FRONTEND UNCOVERED FUNCTIONS:');
+debugLog('--------------------------------------------------');
 
 // Frontend functions (from grep results)
 const frontendFunctions = [
@@ -180,7 +180,7 @@ frontendFunctions.forEach(func => {
 ['HIGH', 'MEDIUM', 'LOW'].forEach(priority => {
     if (frontendByPriority[priority].length > 0) {
         const icon = priority === 'HIGH' ? '🔴' : priority === 'MEDIUM' ? '🟡' : '🟢';
-        console.log(`\n${icon} ${priority} PRIORITY (${frontendByPriority[priority].length} functions):`);
+        debugLog(`\n${icon} ${priority} PRIORITY (${frontendByPriority[priority].length} functions):`);
         
         const byFile = {};
         frontendByPriority[priority].forEach(func => {
@@ -189,36 +189,36 @@ frontendFunctions.forEach(func => {
         });
         
         Object.entries(byFile).forEach(([file, functions]) => {
-            console.log(`   📄 ${file}: ${functions.map(f => f.function).join(', ')}`);
+            debugLog(`   📄 ${file}: ${functions.map(f => f.function).join(', ')}`);
         });
     }
 });
 
-console.log('\n📊 SUMMARY:');
-console.log('--------------------------------------------------');
-console.log(`🔧 Backend Functions: ${coveredBackend.length} covered, ${uncoveredBackend.length} uncovered (${backendFunctions.length} total)`);
-console.log(`🎨 Frontend Functions: 0 covered, ${frontendFunctions.length} uncovered (${frontendFunctions.length} total)`);
+debugLog('\n📊 SUMMARY:');
+debugLog('--------------------------------------------------');
+debugLog(`🔧 Backend Functions: ${coveredBackend.length} covered, ${uncoveredBackend.length} uncovered (${backendFunctions.length} total)`);
+debugLog(`🎨 Frontend Functions: 0 covered, ${frontendFunctions.length} uncovered (${frontendFunctions.length} total)`);
 
 const backendCoverage = ((coveredBackend.length / backendFunctions.length) * 100).toFixed(1);
-console.log(`📈 Backend Coverage: ${backendCoverage}%`);
-console.log(`📈 Frontend Coverage: 0.0%`);
+debugLog(`📈 Backend Coverage: ${backendCoverage}%`);
+debugLog(`📈 Frontend Coverage: 0.0%`);
 
-console.log('\n💡 RECOMMENDED TEST PRIORITIES:');
-console.log('--------------------------------------------------');
-console.log('🔴 HIGH PRIORITY BACKEND:');
-console.log('   - AuthManager::createAccount (user registration)');
-console.log('   - AuthManager::verifyLoginCode (login verification)');  
-console.log('   - AuthManager::logout (session management)');
-console.log('   - AuthManager::isLoggedIn (session validation)');
-console.log('   - SchemaController (database schema operations)');
-console.log('   - ProfileController (user profile management)');
+debugLog('\n💡 RECOMMENDED TEST PRIORITIES:');
+debugLog('--------------------------------------------------');
+debugLog('🔴 HIGH PRIORITY BACKEND:');
+debugLog('   - AuthManager::createAccount (user registration)');
+debugLog('   - AuthManager::verifyLoginCode (login verification)');  
+debugLog('   - AuthManager::logout (session management)');
+debugLog('   - AuthManager::isLoggedIn (session validation)');
+debugLog('   - SchemaController (database schema operations)');
+debugLog('   - ProfileController (user profile management)');
 
-console.log('\n🔴 HIGH PRIORITY FRONTEND:');
-console.log('   - Authentication functions (sendLoginCode, createAccount, verifyLoginCode)');
-console.log('   - Weight tracking (refreshLatestWeight, loadWeightHistory, editWeight, deleteWeight)');
-console.log('   - Profile management (loadProfile, loadSettings, saveSettings)');
-console.log('   - Chart initialization (initWeightChart, updateWeightChart)');
-console.log('   - Health calculations (refreshBMI, refreshHealth, refreshIdealWeight)');
+debugLog('\n🔴 HIGH PRIORITY FRONTEND:');
+debugLog('   - Authentication functions (sendLoginCode, createAccount, verifyLoginCode)');
+debugLog('   - Weight tracking (refreshLatestWeight, loadWeightHistory, editWeight, deleteWeight)');
+debugLog('   - Profile management (loadProfile, loadSettings, saveSettings)');
+debugLog('   - Chart initialization (initWeightChart, updateWeightChart)');
+debugLog('   - Health calculations (refreshBMI, refreshHealth, refreshIdealWeight)');
 
-console.log('\n================================================================================');
-console.log(`🎯 Generated: ${new Date().toISOString()}`);
+debugLog('\n================================================================================');
+debugLog(`🎯 Generated: ${new Date().toISOString()}`);

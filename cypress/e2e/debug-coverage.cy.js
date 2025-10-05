@@ -37,33 +37,33 @@ describe('Debug Coverage System', () => {
     it('should check if coverage object exists and functions are instrumented', () => {
         cy.window().then((win) => {
             // Check if coverage object exists
-            console.log('Coverage object:', win.coverage);
-            console.log('CoverageLogger class:', win.CoverageLogger);
+            debugLog('Coverage object:', win.coverage);
+            debugLog('CoverageLogger class:', win.CoverageLogger);
 
             // Check if settings functions exist
-            console.log('loadSettings function:', win.loadSettings);
-            console.log('saveSettings function:', win.saveSettings);
+            debugLog('loadSettings function:', win.loadSettings);
+            debugLog('saveSettings function:', win.saveSettings);
 
             // Check URL parameters
-            console.log('Current URL:', win.location.href);
-            console.log('URL params:', new URLSearchParams(win.location.search));
+            debugLog('Current URL:', win.location.href);
+            debugLog('URL params:', new URLSearchParams(win.location.search));
 
             // Try to call a settings function and see if it logs
             if (typeof win.loadSettings === 'function') {
-                console.log('Calling loadSettings...');
+                debugLog('Calling loadSettings...');
                 win.loadSettings();
 
                 // Check if coverage was logged
                 if (win.coverage) {
                     const report = win.coverage.getReport();
-                    console.log('Coverage report after loadSettings:', report);
+                    debugLog('Coverage report after loadSettings:', report);
                 }
             } else {
-                console.log('loadSettings function not found!');
+                debugLog('loadSettings function not found!');
             }
 
             // Check if other functions exist
-            console.log('Available functions on window:', Object.getOwnPropertyNames(win).filter(name => typeof win[name] === 'function'));
+            debugLog('Available functions on window:', Object.getOwnPropertyNames(win).filter(name => typeof win[name] === 'function'));
         });
     });
 
@@ -71,18 +71,18 @@ describe('Debug Coverage System', () => {
         cy.window().then((win) => {
             // Manually create coverage logger if needed
             if (!win.coverage && win.CoverageLogger) {
-                console.log('Creating coverage logger manually...');
+                debugLog('Creating coverage logger manually...');
                 win.coverage = new win.CoverageLogger();
-                console.log('Created coverage logger:', win.coverage);
+                debugLog('Created coverage logger:', win.coverage);
             }
 
             // Test manual logging
             if (win.coverage && typeof win.coverage.logFunction === 'function') {
-                console.log('Testing manual coverage logging...');
+                debugLog('Testing manual coverage logging...');
                 win.coverage.logFunction('test_function', 'debug.js', 1);
 
                 const report = win.coverage.getReport();
-                console.log('Coverage report after manual log:', report);
+                debugLog('Coverage report after manual log:', report);
             }
         });
     });

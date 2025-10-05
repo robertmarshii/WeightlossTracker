@@ -40,7 +40,7 @@ describe('Navigation Coverage Test', () => {
             // Call some index.js functions to generate coverage data
             if (typeof win.isValidEmail === 'function') {
                 win.isValidEmail('test@example.com');
-                console.log('Called isValidEmail on index page');
+                debugLog('Called isValidEmail on index page');
             }
         });
 
@@ -55,12 +55,12 @@ describe('Navigation Coverage Test', () => {
             // Call some dashboard functions
             if (typeof win.loadSettings === 'function') {
                 win.loadSettings();
-                console.log('Called loadSettings on dashboard page');
+                debugLog('Called loadSettings on dashboard page');
             }
 
             if (typeof win.getWeightUnit === 'function') {
                 const unit = win.getWeightUnit();
-                console.log('Called getWeightUnit, result:', unit);
+                debugLog('Called getWeightUnit, result:', unit);
             }
         });
 
@@ -80,7 +80,7 @@ describe('Navigation Coverage Test', () => {
         cy.window().then((win) => {
             if (typeof win.sendLoginCode === 'function') {
                 // Don't actually call this as it makes real requests
-                console.log('sendLoginCode function exists on index page');
+                debugLog('sendLoginCode function exists on index page');
             }
         });
 
@@ -93,12 +93,12 @@ describe('Navigation Coverage Test', () => {
         cy.window().then((win) => {
             if (typeof win.showAlert === 'function') {
                 win.showAlert('Test message', 'info');
-                console.log('Called showAlert on dashboard');
+                debugLog('Called showAlert on dashboard');
             }
 
             if (typeof win.parseJson === 'function') {
                 const result = win.parseJson('{"test": true}');
-                console.log('Called parseJson, result:', result);
+                debugLog('Called parseJson, result:', result);
             }
         });
 

@@ -104,7 +104,7 @@ if (isset($_SESSION['login_time'])) {
                     </li>
                     <li class="nav-item flex-fill" role="presentation">
                         <a class="nav-link text-center menu-text" id="achievements-tab" data-toggle="tab" href="#achievements" role="tab">
-                            <span class="tab-icon">🏆</span><span data-eng="Achievements" data-spa="Logros" data-fre="Réalisations" data-ger="Erfolge">Achievements</span>
+                            <span class="tab-icon">🎯</span><span data-eng="Goals" data-spa="Metas" data-fre="Objectifs" data-ger="Ziele">Goals</span>
                         </a>
                     </li>
                     <li class="nav-item flex-fill" role="presentation">
@@ -492,10 +492,69 @@ if (isset($_SESSION['login_time'])) {
 
                     <!-- Achievements Tab -->
                     <div class="tab-pane fade" id="achievements" role="tabpanel">
+                        <!-- Quick Look Section (Phase 1) -->
+                        <div class="row mb-3">
+                            <!-- Consistency Score Card -->
+                            <div class="col-md-4">
+                                <div class="glass-card-small text-center">
+                                    <h6 class="card-title"
+                                        data-eng="🎯 Consistency Score"
+                                        data-spa="🎯 Puntuación de Consistencia"
+                                        data-fre="🎯 Score de Cohérence"
+                                        data-ger="🎯 Konsistenz-Score">
+                                        🎯 Consistency Score
+                                    </h6>
+                                    <div id="consistency-score" class="text-muted small"
+                                        data-eng="Loading consistency data..."
+                                        data-spa="Cargando datos de consistencia..."
+                                        data-fre="Chargement des données de cohérence..."
+                                        data-ger="Konsistenzdaten werden geladen...">
+                                        Loading consistency data...
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Encouragement Card -->
+                            <div class="col-md-4">
+                                <div class="glass-card-small text-center">
+                                    <h6 class="card-title"
+                                        data-eng="💪 Encouragement"
+                                        data-spa="💪 Ánimo"
+                                        data-fre="💪 Encouragement"
+                                        data-ger="💪 Ermutigung">
+                                        💪 Encouragement
+                                    </h6>
+                                    <div id="encouragement-card" class="encouragement-quote">
+                                        <!-- Quote will be inserted here by JS -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Next Check-In Reminder -->
+                            <div class="col-md-4">
+                                <div class="glass-card-small text-center">
+                                    <h6 class="card-title"
+                                        data-eng="📅 Next Check-In"
+                                        data-spa="📅 Próximo Control"
+                                        data-fre="📅 Prochain Contrôle"
+                                        data-ger="📅 Nächster Check">
+                                        📅 Next Check-In
+                                    </h6>
+                                    <div id="next-checkin" class="text-muted small"
+                                        data-eng="Calculating next weigh-in..."
+                                        data-spa="Calculando próximo pesaje..."
+                                        data-fre="Calcul du prochain pesage..."
+                                        data-ger="Berechne nächste Wiegung...">
+                                        Calculating next weigh-in...
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Weight Loss Chart -->
                         <div class="glass-card">
                             <div class="mb-3">
-                                <h5 class="card-title mb-2" data-eng="📈 Weightloss Chart" data-spa="📈 Gráfico de Pérdida de Peso" data-fre="📈 Graphique de Perte de Poids" data-ger="📈 Gewichtsverlust-Diagramm">📈 Weightloss Chart</h5>
+                                <h5 class="card-title mb-2" data-eng="📈 Weightloss Charts" data-spa="📈 Gráficos de Pérdida de Peso" data-fre="📈 Graphiques de Perte de Poids" data-ger="📈 Gewichtsverlust-Diagramme">📈 Weightloss Charts</h5>
                                 <div class="btn-group btn-group-sm chart-period-buttons" role="group">
                                     <button type="button" class="btn secondary-btn" id="chart-weekly" data-eng="Weekly" data-spa="Semanal" data-fre="Hebdomadaire" data-ger="Wöchentlich">Weekly</button>
                                     <button type="button" class="btn secondary-btn" id="chart-30days" data-eng="30 Days" data-spa="30 Días" data-fre="30 Jours" data-ger="30 Tage">30 Days</button>
@@ -526,19 +585,125 @@ if (isset($_SESSION['login_time'])) {
                         
                         <!-- Achievement Cards -->
                         <div class="row mt-3">
-                            <div class="col-md-4">
-                                <div class="glass-card-small text-center">
-                                    <h6 class="card-title" data-eng="🎯 Goals Achieved" data-spa="🎯 Metas Alcanzadas" data-fre="🎯 Objectifs Atteints" data-ger="🎯 Erreichte Ziele">🎯 Goals Achieved</h6>
-                                    <div id="goals-achieved" class="text-muted small" data-eng="Connect your goals to track achievements" data-spa="Conecta tus metas para rastrear logros" data-fre="Connectez vos objectifs pour suivre les réalisations" data-ger="Verbinden Sie Ihre Ziele, um Erfolge zu verfolgen">Connect your goals to track achievements</div>
+                            <div class="col-md-12">
+                                <div class="glass-card-small">
+                                    <h6 class="card-title text-center"
+                                        data-eng="🎯 Goals Achieved"
+                                        data-spa="🎯 Metas Alcanzadas"
+                                        data-fre="🎯 Objectifs Atteints"
+                                        data-ger="🎯 Erreichte Ziele">
+                                        🎯 Goals Achieved
+                                    </h6>
+
+                                    <!-- Main Goal Progress Container -->
+                                    <div id="goals-achieved">
+                                        <!-- Placeholder shown when no goal set -->
+                                        <div id="no-goal-placeholder" class="text-muted small text-center"
+                                            data-eng="Set a goal in the Data tab to track progress"
+                                            data-spa="Establece una meta en la pestaña Datos para rastrear progreso"
+                                            data-fre="Définissez un objectif dans l'onglet Données pour suivre les progrès"
+                                            data-ger="Setzen Sie ein Ziel auf der Registerkarte Daten, um den Fortschritt zu verfolgen">
+                                            Set a goal in the Data tab to track progress
+                                        </div>
+
+                                        <!-- Goal Progress Content (hidden until goal exists) -->
+                                        <div id="goal-progress-content" style="display: none;">
+                                            <div class="row">
+                                                <!-- Left Column: Progress Bar, Streak, and ETA -->
+                                                <div class="col-md-6">
+                                                    <!-- Mini Progress Bar -->
+                                                    <div class="goal-progress-bar-container mb-3">
+                                                        <div class="goal-progress-bar">
+                                                            <div class="goal-progress-bar-fill" id="goal-progress-fill" style="width: 0%;"></div>
+                                                            <div class="goal-progress-bar-text" id="goal-progress-text">0%</div>
+                                                        </div>
+                                                        <div class="goal-progress-label text-muted small mt-1" id="goal-progress-label">
+                                                            <span data-eng="Progress: " data-spa="Progreso: " data-fre="Progrès: " data-ger="Fortschritt: ">Progress: </span>
+                                                            <span id="goal-weight-progress">0 kg of 0 kg</span>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Motivational Streak -->
+                                                    <div class="goal-streak mb-2">
+                                                        <div class="goal-streak-icon">📈</div>
+                                                        <div class="goal-streak-text" id="goal-streak-text">
+                                                            <span data-eng="Loading progress..." data-spa="Cargando progreso..." data-fre="Chargement des progrès..." data-ger="Fortschritt wird geladen...">Loading progress...</span>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Estimated Achievement Date -->
+                                                    <div class="goal-eta mb-3">
+                                                        <div class="goal-eta-icon">🎯</div>
+                                                        <div class="goal-eta-text" id="goal-eta-text">
+                                                            <span data-eng="Calculating ETA..." data-spa="Calculando ETA..." data-fre="Calcul de l'ETA..." data-ger="ETA wird berechnet...">Calculating ETA...</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Right Column: Ideal Weight Progress -->
+                                                <div class="col-md-6">
+                                                    <!-- Mini Progress Bar - Ideal Weight -->
+                                                    <div class="goal-progress-bar-container mb-3">
+                                                        <div class="goal-progress-bar">
+                                                            <div class="goal-progress-bar-fill" id="ideal-progress-fill" style="width: 0%;"></div>
+                                                            <div class="goal-progress-bar-text" id="ideal-progress-text">0%</div>
+                                                        </div>
+                                                        <div class="goal-progress-label text-muted small mt-1">
+                                                            <span data-eng="Ideal Weight Progress: " data-spa="Progreso de Peso Ideal: " data-fre="Progrès de Poids Idéal: " data-ger="Idealer Gewichtsfortschritt: ">Ideal Weight Progress: </span>
+                                                            <span id="ideal-weight-progress">0 kg of 0 kg</span>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Ideal Weight Streak -->
+                                                    <div class="goal-streak mb-2">
+                                                        <div class="goal-streak-icon">📈</div>
+                                                        <div class="goal-streak-text" id="ideal-streak-text">
+                                                            <span data-eng="Loading progress..." data-spa="Cargando progreso..." data-fre="Chargement des progrès..." data-ger="Fortschritt wird geladen...">Loading progress...</span>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Ideal Weight ETA -->
+                                                    <div class="goal-eta mb-3">
+                                                        <div class="goal-eta-icon">🎯</div>
+                                                        <div class="goal-eta-text" id="ideal-eta-text">
+                                                            <span data-eng="Calculating ETA..." data-spa="Calculando ETA..." data-fre="Calcul de l'ETA..." data-ger="ETA wird berechnet...">Calculating ETA...</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Milestone Badges - Full Width Row -->
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="goal-badges">
+                                                        <div class="goal-badges-title text-muted small mb-2"
+                                                            data-eng="Milestones"
+                                                            data-spa="Hitos"
+                                                            data-fre="Jalons"
+                                                            data-ger="Meilensteine">
+                                                            Milestones
+                                                        </div>
+                                                        <div class="goal-badges-container" id="goal-badges-container">
+                                                            <!-- Badges inserted dynamically by JS -->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                        </div>
+
+                        <!-- Other Achievement Cards -->
+                        <div class="row mt-3">
+                            <div class="col-md-6">
                                 <div class="glass-card-small text-center">
                                     <h6 class="card-title" data-eng="🔥 Streak Counter" data-spa="🔥 Contador de Rachas" data-fre="🔥 Compteur de Séries" data-ger="🔥 Serien-Zähler">🔥 Streak Counter</h6>
                                     <div id="streak-counter" class="text-muted small" data-eng="Track daily logging streaks" data-spa="Rastrea rachas de registro diario" data-fre="Suivez les séries d'enregistrement quotidien" data-ger="Verfolgen Sie tägliche Erfassungsserien">Track daily logging streaks</div>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="glass-card-small text-center">
                                     <h6 class="card-title" data-eng="📊 Total Progress" data-spa="📊 Progreso Total" data-fre="📊 Progrès Total" data-ger="📊 Gesamtfortschritt">📊 Total Progress</h6>
                                     <div id="total-progress" class="text-muted small" data-eng="Loading progress stats..." data-spa="Cargando estadísticas de progreso..." data-fre="Chargement des statistiques de progrès..." data-ger="Fortschrittsstatistiken werden geladen...">Loading progress stats...</div>
@@ -712,12 +877,12 @@ if (isset($_SESSION['login_time'])) {
     </div>
 </div>
 
+<!-- Global Scripts - Must load FIRST -->
+<script src="js/global.js?v=<?php echo time(); ?>"></script>
 <!-- Coverage Logging (Development only) -->
 <script src="js/coverage.js?v=<?php echo time(); ?>"></script>
 <!-- Translation Helper -->
 <script src="js/translate.js?v=<?php echo time(); ?>"></script>
-<!-- Global Scripts -->
-<script src="js/global.js?v=<?php echo time(); ?>"></script>
 <!-- Modular JS files -->
 <script src="js/health.js?v=<?php echo time(); ?>"></script>
 <script src="js/data.js?v=<?php echo time(); ?>"></script>

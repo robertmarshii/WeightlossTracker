@@ -347,7 +347,7 @@ describe('Failing Tests', () => {
                     const now = new Date();
                     let formatted;
 
-                    console.log('updateDateExample called with format:', dateFormat);
+                    debugLog('updateDateExample called with format:', dateFormat);
 
                     switch (dateFormat) {
                         case 'us':
@@ -363,7 +363,7 @@ describe('Failing Tests', () => {
                             formatted = String(now.getDate()).padStart(2, '0') + '/' + String(now.getMonth() + 1).padStart(2, '0') + '/' + now.getFullYear();
                     }
 
-                    console.log('Setting date example to:', formatted);
+                    debugLog('Setting date example to:', formatted);
                     win.$('#dateExample').text(formatted);
                 };
 
@@ -651,9 +651,9 @@ describe('Failing Tests', () => {
             // Check if coverage logger exists
             cy.window().then((win) => {
                 // Log what we find
-                console.log('Window coverage object:', win.coverage);
-                console.log('Coverage enabled:', win.coverage?.enabled);
-                console.log('Hostname:', win.location.hostname);
+                debugLog('Window coverage object:', win.coverage);
+                debugLog('Coverage enabled:', win.coverage?.enabled);
+                debugLog('Hostname:', win.location.hostname);
 
                 // Verify coverage object exists
                 expect(win.coverage).to.exist;
@@ -669,7 +669,7 @@ describe('Failing Tests', () => {
 
                 // Check if it was logged
                 const report = coverage && typeof coverage.getReport === 'function' ? coverage.getReport() : {};
-                console.log('Coverage report:', report);
+                debugLog('Coverage report:', report);
 
                 // Should have at least one function logged (or be an object)
                 const functions = report.functions || [];
@@ -686,7 +686,7 @@ describe('Failing Tests', () => {
 
             cy.window().its('coverage').then((coverage) => {
                 const report = coverage && typeof coverage.getReport === 'function' ? coverage.getReport() : {};
-                console.log('Final coverage report:', report);
+                debugLog('Final coverage report:', report);
 
                 // Should have some functions logged now (or at least be an object)
                 const functions = report.functions || [];
@@ -694,7 +694,7 @@ describe('Failing Tests', () => {
 
                 // Check if showAlert was logged
                 const showAlertCalls = Array.isArray(functions) ? functions.filter(f => f && f.functionName === 'showAlert') : [];
-                console.log('ShowAlert calls:', showAlertCalls);
+                debugLog('ShowAlert calls:', showAlertCalls);
             });
         });
 
@@ -714,12 +714,12 @@ describe('Failing Tests', () => {
                 try {
                     if (win.coverage && typeof win.coverage.verifyCoverage === 'function') {
                         cy.verifyCoverage(['showAlert'], 'Debug Coverage Test');
-                        console.log('Coverage verification passed');
+                        debugLog('Coverage verification passed');
                     } else {
-                        console.log('Coverage verification not available');
+                        debugLog('Coverage verification not available');
                     }
                 } catch (error) {
-                    console.log('Coverage verification error:', error.message);
+                    debugLog('Coverage verification error:', error.message);
                 }
             });
 
@@ -727,9 +727,9 @@ describe('Failing Tests', () => {
             cy.window().then((win) => {
                 if (win.coverage && typeof win.coverage.getStats === 'function') {
                     const stats = win.coverage.getStats();
-                    console.log('Coverage stats:', stats);
+                    debugLog('Coverage stats:', stats);
                 } else {
-                    console.log('Coverage stats not available');
+                    debugLog('Coverage stats not available');
                 }
             });
         });
@@ -863,10 +863,10 @@ describe('Failing Tests', () => {
                     }
                 });
 
-                console.log('Functions that exist:', existingFunctions);
-                console.log('Functions that are missing:', missingFunctions);
-                console.log('Total expected:', expectedFunctions.length);
-                console.log('Total existing:', existingFunctions.length);
+                debugLog('Functions that exist:', existingFunctions);
+                debugLog('Functions that are missing:', missingFunctions);
+                debugLog('Total expected:', expectedFunctions.length);
+                debugLog('Total existing:', existingFunctions.length);
 
                 // This should pass if all functions are loaded
                 expect(missingFunctions.length, `Missing functions: ${missingFunctions.join(', ')}`).to.equal(0);
@@ -975,7 +975,7 @@ describe('Failing Tests', () => {
                             }
                         };
                         script.onerror = () => {
-                            console.log('Failed to load:', src);
+                            debugLog('Failed to load:', src);
                             loadedCount++;
                             if (loadedCount === scripts.length) {
                                 resolve();
@@ -1014,25 +1014,25 @@ describe('Failing Tests', () => {
                 expectedFunctions.forEach(funcName => {
                     if (typeof win[funcName] === 'function') {
                         existingFunctions.push(funcName);
-                        console.log(`✓ Found: ${funcName}`);
+                        debugLog(`✓ Found: ${funcName}`);
                     } else {
-                        console.log(`✗ Missing: ${funcName}`);
+                        debugLog(`✗ Missing: ${funcName}`);
                     }
                 });
 
-                console.log(`Functions found: ${existingFunctions.length}/${expectedFunctions.length}`);
+                debugLog(`Functions found: ${existingFunctions.length}/${expectedFunctions.length}`);
 
                 // Test at least one function if available
                 if (existingFunctions.length > 0) {
-                    console.log('Testing first available function...');
+                    debugLog('Testing first available function...');
                     try {
                         if (win.dataFormatDate) {
                             const result = win.dataFormatDate('2024-01-15');
-                            console.log('dataFormatDate test result:', result);
+                            debugLog('dataFormatDate test result:', result);
                             expect(result).to.match(/\d{2}\/\d{2}\/\d{4}/);
                         }
                     } catch (e) {
-                        console.log('Function test error:', e.message);
+                        debugLog('Function test error:', e.message);
                     }
                 }
 

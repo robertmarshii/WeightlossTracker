@@ -171,16 +171,16 @@ describe('Coverage System Testing', () => {
 
             // Check basic window properties
             cy.window().then((win) => {
-                console.log('Hostname:', win.location.hostname);
-                console.log('Port:', win.location.port);
-                console.log('Protocol:', win.location.protocol);
-                console.log('Coverage object exists:', !!win.coverage);
+                debugLog('Hostname:', win.location.hostname);
+                debugLog('Port:', win.location.port);
+                debugLog('Protocol:', win.location.protocol);
+                debugLog('Coverage object exists:', !!win.coverage);
 
                 if (win.coverage) {
-                    console.log('Coverage enabled:', win.coverage.enabled);
-                    console.log('Function calls map size:', win.coverage.functionCalls.size);
-                    console.log('Session ID:', win.coverage.sessionId);
-                    console.log('Test mode:', win.coverage.testMode);
+                    debugLog('Coverage enabled:', win.coverage.enabled);
+                    debugLog('Function calls map size:', win.coverage.functionCalls.size);
+                    debugLog('Session ID:', win.coverage.sessionId);
+                    debugLog('Test mode:', win.coverage.testMode);
                 }
 
                 // This should not fail the test
@@ -190,19 +190,19 @@ describe('Coverage System Testing', () => {
             // Now try to call showAlert manually and check if it logs
             cy.window().then((win) => {
                 if (win.coverage) {
-                    console.log('Before showAlert - function calls:', win.coverage.functionCalls.size);
+                    debugLog('Before showAlert - function calls:', win.coverage.functionCalls.size);
 
                     // Call showAlert manually
                     win.showAlert('Test message', 'info');
 
-                    console.log('After showAlert - function calls:', win.coverage.functionCalls.size);
+                    debugLog('After showAlert - function calls:', win.coverage.functionCalls.size);
 
                     // Get the report
                     const report = win.coverage.getReport();
-                    console.log('Coverage report:', report);
-                    console.log('Functions in report:', Object.keys(report.functions || {}));
+                    debugLog('Coverage report:', report);
+                    debugLog('Functions in report:', Object.keys(report.functions || {}));
                 } else {
-                    console.log('❌ Coverage object does not exist!');
+                    debugLog('❌ Coverage object does not exist!');
                 }
             });
         });
@@ -212,15 +212,15 @@ describe('Coverage System Testing', () => {
 
             cy.window().then((win) => {
                 // Check if global functions exist
-                console.log('showAlert function exists:', typeof win.showAlert);
-                console.log('parseJson function exists:', typeof win.parseJson);
-                console.log('openModal function exists:', typeof win.openModal);
+                debugLog('showAlert function exists:', typeof win.showAlert);
+                debugLog('parseJson function exists:', typeof win.parseJson);
+                debugLog('openModal function exists:', typeof win.openModal);
 
                 // Check their source code for coverage instrumentation
                 if (win.showAlert) {
                     const showAlertSource = win.showAlert.toString();
                     const hasCoverage = showAlertSource.includes('coverage.logFunction');
-                    console.log('showAlert has coverage instrumentation:', hasCoverage);
+                    debugLog('showAlert has coverage instrumentation:', hasCoverage);
                 }
             });
         });
@@ -289,7 +289,7 @@ describe('Coverage System Testing', () => {
                 },
                 failOnStatusCode: false
             }).then((response) => {
-                console.log('API Call Response:', {
+                debugLog('API Call Response:', {
                     status: response.status,
                     body: response.body
                 });
@@ -303,7 +303,7 @@ describe('Coverage System Testing', () => {
                     body: { action: 'get_report' },
                     failOnStatusCode: false
                 }).then((coverageResponse) => {
-                    console.log('Coverage Response:', {
+                    debugLog('Coverage Response:', {
                         status: coverageResponse.status,
                         body: coverageResponse.body
                     });
@@ -313,11 +313,11 @@ describe('Coverage System Testing', () => {
                     expect(coverageResponse.body).to.have.property('coverage');
 
                     const coverage = coverageResponse.body.coverage;
-                    console.log('Coverage Details:', coverage);
+                    debugLog('Coverage Details:', coverage);
 
                     // Check if we have function data
                     if (coverage.functions && Object.keys(coverage.functions).length > 0) {
-                        console.log('Functions covered:', Object.keys(coverage.functions));
+                        debugLog('Functions covered:', Object.keys(coverage.functions));
 
                         // Look for our instrumented functions
                         const functionKeys = Object.keys(coverage.functions);
@@ -327,20 +327,20 @@ describe('Coverage System Testing', () => {
                             key.includes('generateCode')
                         );
 
-                        console.log('Auth functions found:', authFunctions);
+                        debugLog('Auth functions found:', authFunctions);
 
                         if (authFunctions.length > 0) {
-                            console.log('✅ Backend coverage is working!');
+                            debugLog('✅ Backend coverage is working!');
                             authFunctions.forEach(func => {
                                 const data = coverage.functions[func];
-                                console.log(`Function: ${func}`, data);
+                                debugLog(`Function: ${func}`, data);
                             });
                         } else {
-                            console.log('❌ No auth functions found in coverage');
+                            debugLog('❌ No auth functions found in coverage');
                         }
                     } else {
-                        console.log('❌ No functions found in coverage data');
-                        console.log('Coverage object structure:', Object.keys(coverage));
+                        debugLog('❌ No functions found in coverage data');
+                        debugLog('Coverage object structure:', Object.keys(coverage));
                     }
                 });
             });
@@ -371,7 +371,7 @@ describe('Coverage System Testing', () => {
                     body: call.body,
                     failOnStatusCode: false
                 }).then((response) => {
-                    console.log(`API Call ${index + 1} (${call.body.action}):`, response.status);
+                    debugLog(`API Call ${index + 1} (${call.body.action}):`, response.status);
                 });
             });
 
@@ -388,12 +388,12 @@ describe('Coverage System Testing', () => {
                 const coverage = response.body.coverage;
                 const functionCount = coverage.functions ? Object.keys(coverage.functions).length : 0;
 
-                console.log(`Final coverage check: ${functionCount} functions tracked`);
+                debugLog(`Final coverage check: ${functionCount} functions tracked`);
 
                 if (functionCount > 0) {
-                    console.log('✅ Backend coverage collection is working!');
+                    debugLog('✅ Backend coverage collection is working!');
                     Object.entries(coverage.functions).forEach(([key, data]) => {
-                        console.log(`${key}: ${data.callCount} calls`);
+                        debugLog(`${key}: ${data.callCount} calls`);
                     });
                 }
 
@@ -429,11 +429,11 @@ describe('Function Testing & Debugging', () => {
 
             // Check what page we're actually on
             cy.url().then((url) => {
-                console.log('Current URL:', url);
+                debugLog('Current URL:', url);
             });
 
             cy.get('title').should('exist').then(($title) => {
-                console.log('Page title:', $title.text());
+                debugLog('Page title:', $title.text());
             });
 
             cy.window().then((win) => {
@@ -456,31 +456,31 @@ describe('Function Testing & Debugging', () => {
 
                 // Use expect to show the values in test output
                 expect(achievementFunctions.length).to.be.at.least(0);
-                console.log('Achievement functions:', achievementFunctions);
+                debugLog('Achievement functions:', achievementFunctions);
 
                 expect(dataFunctions.length).to.be.at.least(0);
-                console.log('Data functions:', dataFunctions);
+                debugLog('Data functions:', dataFunctions);
 
                 expect(healthFunctions.length).to.be.at.least(0);
-                console.log('Health functions:', healthFunctions);
+                debugLog('Health functions:', healthFunctions);
 
                 expect(settingsFunctions.length).to.be.at.least(0);
-                console.log('Settings functions:', settingsFunctions);
+                debugLog('Settings functions:', settingsFunctions);
 
-                console.log('Total functions:', allFunctions.length);
+                debugLog('Total functions:', allFunctions.length);
 
                 // Check specific functions we're looking for
-                console.log('achievementsUpdateAchievementCards exists:', typeof win.achievementsUpdateAchievementCards);
-                console.log('dataLoadWeightHistory exists:', typeof win.dataLoadWeightHistory);
-                console.log('healthRefreshBMI exists:', typeof win.healthRefreshBMI);
-                console.log('settingsLoadSettings exists:', typeof win.settingsLoadSettings);
+                debugLog('achievementsUpdateAchievementCards exists:', typeof win.achievementsUpdateAchievementCards);
+                debugLog('dataLoadWeightHistory exists:', typeof win.dataLoadWeightHistory);
+                debugLog('healthRefreshBMI exists:', typeof win.healthRefreshBMI);
+                debugLog('settingsLoadSettings exists:', typeof win.settingsLoadSettings);
 
                 // Don't fail the test, just check if they exist
-                console.log('Functions exist check:');
-                console.log('- achievementsUpdateAchievementCards:', typeof win.achievementsUpdateAchievementCards === 'function');
-                console.log('- dataLoadWeightHistory:', typeof win.dataLoadWeightHistory === 'function');
-                console.log('- healthRefreshBMI:', typeof win.healthRefreshBMI === 'function');
-                console.log('- settingsLoadSettings:', typeof win.settingsLoadSettings === 'function');
+                debugLog('Functions exist check:');
+                debugLog('- achievementsUpdateAchievementCards:', typeof win.achievementsUpdateAchievementCards === 'function');
+                debugLog('- dataLoadWeightHistory:', typeof win.dataLoadWeightHistory === 'function');
+                debugLog('- healthRefreshBMI:', typeof win.healthRefreshBMI === 'function');
+                debugLog('- settingsLoadSettings:', typeof win.settingsLoadSettings === 'function');
 
                 // Check if script tags are present
                 const scripts = win.document.querySelectorAll('script[src]');
@@ -540,12 +540,12 @@ describe('Function Testing & Debugging', () => {
                 }
 
                 // Test the functions
-                console.log('Testing dataFormatDate...');
+                debugLog('Testing dataFormatDate...');
                 const dateResult = win.dataFormatDate('2024-01-15');
-                console.log('Date format result:', dateResult);
+                debugLog('Date format result:', dateResult);
                 expect(dateResult).to.equal('15/01/2024');
 
-                console.log('Testing achievementsUpdateAchievementCards...');
+                debugLog('Testing achievementsUpdateAchievementCards...');
 
                 // Add mock elements
                 if (win.$) {
@@ -560,11 +560,11 @@ describe('Function Testing & Debugging', () => {
 
                     // Verify the function worked
                     const progressContent = win.$('#total-progress').html();
-                    console.log('Progress content:', progressContent);
+                    debugLog('Progress content:', progressContent);
                     expect(progressContent).to.contain('1.5 kg lost');
                 }
 
-                console.log('✅ Basic function tests completed successfully');
+                debugLog('✅ Basic function tests completed successfully');
             });
         });
     });

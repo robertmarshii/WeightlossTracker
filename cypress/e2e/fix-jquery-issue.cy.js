@@ -13,16 +13,16 @@ describe('Fix jQuery Issue', () => {
         cy.wait(2000); // Give time for scripts to load
 
         cy.window().then((win) => {
-            console.log('🔍 jQuery Diagnostic:');
-            console.log('typeof $:', typeof win.$);
-            console.log('jQuery version:', win.$ && win.$.fn ? win.$.fn.jquery : 'N/A');
-            console.log('typeof $.post:', win.$ ? typeof win.$.post : 'N/A');
-            console.log('typeof $.get:', win.$ ? typeof win.$.get : 'N/A');
-            console.log('typeof $.ajax:', win.$ ? typeof win.$.ajax : 'N/A');
+            debugLog('🔍 jQuery Diagnostic:');
+            debugLog('typeof $:', typeof win.$);
+            debugLog('jQuery version:', win.$ && win.$.fn ? win.$.fn.jquery : 'N/A');
+            debugLog('typeof $.post:', win.$ ? typeof win.$.post : 'N/A');
+            debugLog('typeof $.get:', win.$ ? typeof win.$.get : 'N/A');
+            debugLog('typeof $.ajax:', win.$ ? typeof win.$.ajax : 'N/A');
 
             // Check if jQuery is there but missing methods
             if (win.$ && typeof win.$.post === 'undefined') {
-                console.log('❌ jQuery loaded but $.post missing - fixing...');
+                debugLog('❌ jQuery loaded but $.post missing - fixing...');
 
                 // Add $.post method if missing
                 if (typeof win.$.ajax === 'function') {
@@ -35,12 +35,12 @@ describe('Fix jQuery Issue', () => {
                             dataType: dataType
                         });
                     };
-                    console.log('✅ $.post method added successfully');
+                    debugLog('✅ $.post method added successfully');
                 }
             }
 
             // Verify fix worked
-            console.log('After fix - typeof $.post:', typeof win.$.post);
+            debugLog('After fix - typeof $.post:', typeof win.$.post);
         });
 
         // Now test the login functionality
@@ -49,14 +49,14 @@ describe('Fix jQuery Issue', () => {
         // Test the sendLoginCode function directly
         cy.window().then((win) => {
             if (typeof win.sendLoginCode === 'function') {
-                console.log('✅ sendLoginCode function exists');
+                debugLog('✅ sendLoginCode function exists');
 
                 // Try calling it directly to see if $.post works now
                 try {
                     win.sendLoginCode();
-                    console.log('✅ sendLoginCode executed without errors');
+                    debugLog('✅ sendLoginCode executed without errors');
                 } catch (e) {
-                    console.log('❌ sendLoginCode error:', e.message);
+                    debugLog('❌ sendLoginCode error:', e.message);
                 }
             }
         });
@@ -92,12 +92,12 @@ describe('Fix jQuery Issue', () => {
                     });
                 };
 
-                console.log('✅ jQuery patched with missing methods');
+                debugLog('✅ jQuery patched with missing methods');
             }
 
             // Test that it works
             expect(win.$.post).to.be.a('function');
-            console.log('✅ $.post is now available');
+            debugLog('✅ $.post is now available');
         });
 
         cy.flushCoverageBeforeNavigation();

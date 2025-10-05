@@ -47,7 +47,7 @@ describe('Data Management Coverage Tests', () => {
                 testDates.forEach(date => {
                     const formatted = win.formatDate(date);
                     expect(formatted).to.be.a('string');
-                    console.log(`Formatted date ${date}: ${formatted}`);
+                    debugLog(`Formatted date ${date}: ${formatted}`);
                 });
             }
         });
@@ -69,7 +69,7 @@ describe('Data Management Coverage Tests', () => {
                 try {
                     win.editWeight(1, 76.0, '2025-01-15'); // Edit first entry
                 } catch (e) {
-                    console.log('editWeight function called (may need valid ID)');
+                    debugLog('editWeight function called (may need valid ID)');
                 }
             }
 
@@ -93,7 +93,7 @@ describe('Data Management Coverage Tests', () => {
                 try {
                     win.deleteWeight(1); // Try to delete entry with ID 1
                 } catch (e) {
-                    console.log('deleteWeight function called (may need valid ID)');
+                    debugLog('deleteWeight function called (may need valid ID)');
                 }
             }
 

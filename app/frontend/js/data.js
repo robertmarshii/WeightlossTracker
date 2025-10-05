@@ -29,11 +29,11 @@ function loadWeightHistory() {
     if (window.coverage) window.coverage.logFunction('loadWeightHistory', 'data.js');
 
     // Check if we have global data first
-    console.log('🔍 loadWeightHistory - checking global data:', window.globalDashboardData);
-    console.log('🔍 weight_history in global data:', window.globalDashboardData?.weight_history);
+    debugLog('🔍 loadWeightHistory - checking global data:', window.globalDashboardData);
+    debugLog('🔍 weight_history in global data:', window.globalDashboardData?.weight_history);
 
     if (window.globalDashboardData && window.globalDashboardData.weight_history) {
-        console.log('📊 Using global data for weight history');
+        debugLog('📊 Using global data for weight history');
         const tbody = $('#weight-history-body');
         const history = window.globalDashboardData.weight_history;
 
@@ -94,7 +94,7 @@ function loadWeightHistory() {
     }
 
     // Fallback to API call if global data not available
-    console.log('🌐 Making API call for weight history (global data not available)');
+    debugLog('🌐 Making API call for weight history (global data not available)');
     postRequest('router.php?controller=profile', { action: 'get_weight_history' })
     .then(resp => {
         const data = parseJson(resp);

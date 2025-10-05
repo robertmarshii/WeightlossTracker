@@ -428,7 +428,7 @@ describe('Settings Functionality', () => {
 
                     cy.wait(1000).then(() => {
                         const saveTime = Date.now() - startTime;
-                        console.log(`Settings save time: ${saveTime}ms`);
+                        debugLog(`Settings save time: ${saveTime}ms`);
 
                         // Should save within reasonable time
                         expect(saveTime).to.be.lessThan(3000);
@@ -450,7 +450,7 @@ describe('Settings Functionality', () => {
                         totalTime += loadTime;
                     });
 
-                    console.log(`Total theme loading time: ${totalTime}ms`);
+                    debugLog(`Total theme loading time: ${totalTime}ms`);
 
                     // Should load themes efficiently
                     expect(totalTime).to.be.lessThan(1000);
