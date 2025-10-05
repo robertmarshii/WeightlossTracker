@@ -193,6 +193,16 @@ body {
     min-height: 220px;
 }
 
+.glass-card-smaller {
+    background: #ffffff;
+    border-radius: 2px;
+    border: 1px solid #dee2e6;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: #212529;
+}
+
 /* Glass Table */
 .glass-table {
     background: #ffffff;

@@ -134,6 +134,26 @@ The global data system (commit f382580) is PRODUCTION-CRITICAL and FRAGILE:
 
 **Changing these breaks ALL Cypress tests**. Only modify selectors if explicitly requested and update ALL affected test files simultaneously.
 
+### **⚠️ ACHIEVEMENT CARD DIV OWNERSHIP - CRITICAL WARNING**
+**DO NOT write to these divs from chart update functions - they have dedicated owners**:
+
+**`#streak-counter` - EXCLUSIVE to Phase 3 Streak Counter**:
+- Owner: `renderStreakCounter()` in dashboard.js (lines 2750-3030)
+- Displays: Weekly streak data (current streak, longest streak, 28-day timeline)
+- **DISABLED in**: `updateAchievementCards()` achievements.js:45-49, `updateMonthlyAchievementCards()` dashboard.js:1619-1625, `updateWeeklyAchievementCards()` dashboard.js:1829-1835, `updateYearlyAchievementCards()` dashboard.js:1991-1997
+- Bug symptoms: Shows "No current streak / Log weight to start" instead of actual data
+
+**`#total-progress` - EXCLUSIVE to achievements.js**:
+- Owner: `updateAchievementCards()` in achievements.js:13-19
+- Displays: Total weight lost/gained over all entries
+- **DISABLED in**: `updateWeeklyAchievementCards()` dashboard.js:1798-1803, `updateYearlyAchievementCards()` dashboard.js:1962-1967
+- Bug symptoms: Shows year/week-specific data instead of total progress
+
+**When debugging achievement card issues**:
+1. Check `grep -rn "div-id" app/frontend/js --include="*.js" | grep "html("` FIRST
+2. Verify only the legitimate owner is writing to the div
+3. Comment out any chart update functions that overwrite achievement cards
+
 ## 📂 Claude File Organization Rules
 
 **IMPORTANT**: All Claude-generated files, scripts, logs, and documentation (except CLAUDE.md) should be created in the `.claude/` folder:

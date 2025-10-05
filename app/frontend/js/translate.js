@@ -16,18 +16,6 @@ const translations = {
         "fr": "Définir des objectifs dans l'onglet Données",
         "de": "Ziele im Daten-Tab festlegen"
     },
-    "No current streak": {
-        "en": "No current streak",
-        "es": "Sin racha actual",
-        "fr": "Aucune série actuelle",
-        "de": "Keine aktuelle Serie"
-    },
-    "Log weight to start": {
-        "en": "Log weight to start",
-        "es": "Registra peso para comenzar",
-        "fr": "Enregistrer le poids pour commencer",
-        "de": "Gewicht erfassen zum Starten"
-    },
     "kg lost": {
         "en": "kg lost",
         "es": "kg perdidos",

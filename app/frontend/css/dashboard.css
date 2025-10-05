@@ -31,6 +31,17 @@
     min-height: 220px;
 }
 
+.glass-card-smaller {
+    background: rgba(30, 58, 95, 0.4);
+    backdrop-filter: blur(15px);
+    border-radius: 15px;
+    border: 1px solid rgba(100, 150, 200, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: white;
+}
+
 .header-left {
     flex: 1;
 }
@@ -387,7 +398,7 @@ select.form-control.glass-input {
     .glass-card-small {
         padding: 1.25rem;
         margin-bottom: 1.25rem;
-        min-height: 180px;
+        min-height: auto;
     }
 
     .welcome-title {
@@ -410,7 +421,7 @@ select.form-control.glass-input {
 @media (max-width: 775px) {
 
     .menu-text{
-        font-size:13px !important;  
+        font-size:13px !important;
     }
 
     #profile-card{
@@ -445,7 +456,7 @@ select.form-control.glass-input {
     .glass-card-small {
         padding: 1rem;
         margin-bottom: 0.5rem;
-        min-height: 100px;
+        min-height: auto;
         border-radius: 8px;
     }
 
@@ -493,9 +504,11 @@ select.form-control.glass-input {
         margin-bottom: 0.5rem !important; /* Smaller margin for 775px and below */
     }
 
-    /* Keep header buttons side by side on mobile - from utility classes */
+    /* Stack header buttons vertically on mobile */
     .header-buttons {
+        flex-direction: column;
         gap: 0.3rem;
+        align-items: flex-start;
     }
 
     .header-buttons .btn {
@@ -875,7 +888,7 @@ select.form-control.glass-input {
     .glass-card-small {
         padding: 0.6rem;
         margin-bottom: 0.4rem;
-        min-height: 100px;
+        min-height: auto;
     }
 
     .welcome-title {
@@ -1176,8 +1189,8 @@ select.form-control.glass-input {
     font-style: italic;
     color: rgba(255, 255, 255, 0.9);
     line-height: 1.6;
-    padding: 1rem 0.5rem;
-    min-height: 80px;
+    padding: 0.5rem 0;
+    min-height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1429,4 +1442,216 @@ select.form-control.glass-input {
     }
 }
 
+/* ===== PHASE 3: STREAK COUNTER ENHANCEMENTS ===== */
 
+/* Streak Stats Rows */
+.streak-stat-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 0.5rem;
+    background: rgba(30, 58, 95, 0.3);
+    border-radius: 10px;
+}
+
+.streak-stat-icon {
+    font-size: 2rem;
+    flex-shrink: 0;
+}
+
+.streak-stat-content {
+    text-align: left;
+    flex-grow: 1;
+}
+
+.streak-stat-value {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #64a6d8;
+    line-height: 1;
+}
+
+.streak-stat-label {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.7);
+    letter-spacing: 0.5px;
+    margin-top: 0.25rem;
+}
+
+/* Visual Timeline */
+.streak-timeline {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(100, 150, 200, 0.2);
+}
+
+.streak-timeline-title {
+    font-size: 0.7rem;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+.streak-timeline-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.4rem;
+    margin-bottom: 0.75rem;
+}
+
+/* Individual Timeline Dots */
+.streak-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid rgba(100, 150, 200, 0.3);
+    background: rgba(20, 40, 60, 0.6);
+    transition: all 0.2s ease;
+    cursor: pointer;
+    position: relative;
+}
+
+.streak-dot.logged {
+    background: linear-gradient(135deg, #7bc96f 0%, #5ba84d 100%);
+    border-color: #7bc96f;
+    box-shadow: 0 0 8px rgba(123, 201, 111, 0.4);
+}
+
+.streak-dot.missed {
+    background: rgba(80, 80, 80, 0.4);
+    border-color: rgba(100, 100, 100, 0.3);
+}
+
+.streak-dot.today {
+    border-color: #64a6d8;
+    border-width: 3px;
+    box-shadow: 0 0 12px rgba(100, 166, 216, 0.6);
+}
+
+/* Hover tooltip on desktop */
+@media (min-width: 776px) {
+    .streak-dot:hover {
+        transform: scale(1.3);
+        z-index: 10;
+    }
+
+    .streak-dot:hover::after {
+        content: attr(data-date);
+        position: absolute;
+        bottom: 120%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(30, 58, 95, 0.95);
+        color: white;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.65rem;
+        white-space: nowrap;
+        pointer-events: none;
+        border: 1px solid rgba(100, 150, 200, 0.3);
+        z-index: 100;
+    }
+}
+
+/* Timeline Legend */
+.streak-timeline-legend {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.streak-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.streak-legend-item .streak-dot {
+    width: 12px;
+    height: 12px;
+    cursor: default;
+}
+
+.streak-legend-label {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Motivational Message */
+.streak-motivation {
+    padding: 0.75rem;
+    background: rgba(100, 166, 216, 0.1);
+    border-radius: 8px;
+    border-left: 3px solid #64a6d8;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+    font-style: italic;
+    text-align: center;
+}
+
+.streak-motivation.celebration {
+    border-left-color: #7bc96f;
+    background: rgba(123, 201, 111, 0.1);
+}
+
+.streak-motivation.warning {
+    border-left-color: #f39c12;
+    background: rgba(243, 156, 18, 0.1);
+}
+
+/* Mobile Responsive for Streak Counter */
+@media (max-width: 775px) {
+    .streak-stat-row {
+        gap: 0.5rem;
+        padding: 0.4rem;
+    }
+
+    .streak-stat-icon {
+        font-size: 1.5rem;
+    }
+
+    .streak-stat-value {
+        font-size: 1.4rem;
+    }
+
+    .streak-stat-label {
+        font-size: 0.65rem;
+    }
+
+    .streak-timeline-grid {
+        gap: 0.25rem;
+    }
+
+    .streak-dot {
+        width: 12px;
+        height: 12px;
+    }
+
+    .streak-timeline-legend {
+        gap: 0.75rem;
+    }
+
+    .streak-legend-item .streak-dot {
+        width: 10px;
+        height: 10px;
+    }
+
+    .streak-legend-label {
+        font-size: 0.65rem;
+    }
+
+    .streak-motivation {
+        padding: 0.5rem;
+        font-size: 0.75rem;
+    }
+}
+
+/* Extra small screens */
+@media (max-width: 400px) {
+    .streak-dot {
+        width: 10px;
+        height: 10px;
+    }
+}

@@ -106,8 +106,13 @@ $(function() {
         loadWeightHistory();
         loadQuickLookMetrics(); // Phase 1: Quick Look section
         refreshGoalsAchieved(); // Phase 2: Goals Achieved enhancements
+        // Phase 3: Streak Counter - render AFTER loadSettings completes
         setTimeout(() => {
             loadSettings();
+            // Render Phase 3 after settings/language loaded
+            setTimeout(() => {
+                refreshStreakCounter();
+            }, 100);
             // Flush debug logs after ALL page initialization completes (5 seconds should be enough)
             setTimeout(() => {
                 window.flushDebugLogs();
@@ -150,6 +155,7 @@ $(function() {
                     loadWeightHistory();
                     loadQuickLookMetrics(); // Phase 1: Quick Look section
                     refreshGoalsAchieved(); // Phase 2: Goals Achieved enhancements
+                    refreshStreakCounter(); // Phase 3: Streak Counter enhancements
 
                     // Functions using individual API calls
                     refreshIdealWeight(); // always uses individual API call
@@ -222,6 +228,7 @@ $(function() {
                     loadWeightHistory();
                     loadQuickLookMetrics(); // Phase 1: Quick Look section
                     refreshGoalsAchieved(); // Phase 2: Goals Achieved enhancements
+                    refreshStreakCounter(); // Phase 3: Streak Counter enhancements
 
                     // Functions using individual API calls
                     refreshIdealWeight(); // always uses individual API call
@@ -1609,12 +1616,13 @@ function updateMonthlyAchievementCards(monthsWithData) {
         }
     });
     
-    if (mostConsistentMonth) {
-        const streakHtml = `<strong class="text-success" style="color: ${mostConsistentMonth.color} !important;">🔥 ${mostConsistentMonth.name}</strong><br><small>Most consistent: ${highestEntryCount} entries</small>`;
-        $('#streak-counter').html(streakHtml);
-    } else {
-        $('#streak-counter').html('<span class="text-muted">No data available</span>');
-    }
+    // DISABLED: Phase 3 Streak Counter now uses dedicated streak data
+    // if (mostConsistentMonth) {
+    //     const streakHtml = `<strong class="text-success" style="color: ${mostConsistentMonth.color} !important;">🔥 ${mostConsistentMonth.name}</strong><br><small>Most consistent: ${highestEntryCount} entries</small>`;
+    //     $('#streak-counter').html(streakHtml);
+    // } else {
+    //     $('#streak-counter').html('<span class="text-muted">No data available</span>');
+    // }
 }
 
 function updateWeeklyChart(sortedData) {
@@ -1787,11 +1795,12 @@ function updateWeeklyAchievementCards(weeklyData, currentYear) {
         }
     });
     
-    // Update Total Progress card
-    const progressHtml = totalLoss > 0 
-        ? `<strong class="text-success">${totalLoss.toFixed(1)} kg lost</strong><br><small>Over ${weeksWithData} weeks in ${currentYear} (${totalEntries} entries)</small>`
-        : `<strong class="text-info">${Math.abs(totalLoss).toFixed(1)} kg gained</strong><br><small>Over ${weeksWithData} weeks in ${currentYear} (${totalEntries} entries)</small>`;
-    $('#total-progress').html(progressHtml);
+    // DISABLED: Total Progress is managed by achievements.js updateAchievementCards()
+    // // Update Total Progress card
+    // const progressHtml = totalLoss > 0
+    //     ? `<strong class="text-success">${totalLoss.toFixed(1)} kg lost</strong><br><small>Over ${weeksWithData} weeks in ${currentYear} (${totalEntries} entries)</small>`
+    //     : `<strong class="text-info">${Math.abs(totalLoss).toFixed(1)} kg gained</strong><br><small>Over ${weeksWithData} weeks in ${currentYear} (${totalEntries} entries)</small>`;
+    // $('#total-progress').html(progressHtml);
     
     // Update Goals Achieved with best week
     // DISABLED: Replaced by Phase 2 Goals Achieved enhancements
@@ -1818,12 +1827,13 @@ function updateWeeklyAchievementCards(weeklyData, currentYear) {
         }
     });
     
-    if (mostActiveWeek && highestEntryCount > 0) {
-        const streakHtml = `<strong class="text-success">🔥 ${mostActiveWeek.weekLabel}</strong><br><small>Most active: ${highestEntryCount} entries</small>`;
-        $('#streak-counter').html(streakHtml);
-    } else {
-        $('#streak-counter').html('<span class="text-muted">No weekly data</span>');
-    }
+    // DISABLED: Phase 3 Streak Counter now uses dedicated streak data
+    // if (mostActiveWeek && highestEntryCount > 0) {
+    //     const streakHtml = `<strong class="text-success">🔥 ${mostActiveWeek.weekLabel}</strong><br><small>Most active: ${highestEntryCount} entries</small>`;
+    //     $('#streak-counter').html(streakHtml);
+    // } else {
+    //     $('#streak-counter').html('<span class="text-muted">No weekly data</span>');
+    // }
 }
 
 function updateYearlyChart(sortedData) {
@@ -1949,11 +1959,12 @@ function updateYearlyAchievementCards(yearlyData, currentYear) {
         }
     });
     
-    // Update Total Progress card
-    const progressHtml = totalLoss > 0 
-        ? `<strong class="text-success">${totalLoss.toFixed(1)} kg lost</strong><br><small>In ${currentYear} (${monthsWithData} months, ${totalEntries} entries)</small>`
-        : `<strong class="text-info">${Math.abs(totalLoss).toFixed(1)} kg gained</strong><br><small>In ${currentYear} (${monthsWithData} months, ${totalEntries} entries)</small>`;
-    $('#total-progress').html(progressHtml);
+    // DISABLED: Total Progress is managed by achievements.js updateAchievementCards()
+    // // Update Total Progress card
+    // const progressHtml = totalLoss > 0
+    //     ? `<strong class="text-success">${totalLoss.toFixed(1)} kg lost</strong><br><small>In ${currentYear} (${monthsWithData} months, ${totalEntries} entries)</small>`
+    //     : `<strong class="text-info">${Math.abs(totalLoss).toFixed(1)} kg gained</strong><br><small>In ${currentYear} (${monthsWithData} months, ${totalEntries} entries)</small>`;
+    // $('#total-progress').html(progressHtml);
     
     // Update Goals Achieved with best month
     // DISABLED: Replaced by Phase 2 Goals Achieved enhancements
@@ -1979,12 +1990,13 @@ function updateYearlyAchievementCards(yearlyData, currentYear) {
         }
     });
     
-    if (mostActiveMonth && highestEntryCount > 0) {
-        const streakHtml = `<strong class="text-success">🔥 ${mostActiveMonth.month}</strong><br><small>Most active: ${highestEntryCount} entries</small>`;
-        $('#streak-counter').html(streakHtml);
-    } else {
-        $('#streak-counter').html('<span class="text-muted">No data available</span>');
-    }
+    // DISABLED: Phase 3 Streak Counter now uses dedicated streak data
+    // if (mostActiveMonth && highestEntryCount > 0) {
+    //     const streakHtml = `<strong class="text-success">🔥 ${mostActiveMonth.month}</strong><br><small>Most active: ${highestEntryCount} entries</small>`;
+    //     $('#streak-counter').html(streakHtml);
+    // } else {
+    //     $('#streak-counter').html('<span class="text-muted">No data available</span>');
+    // }
 }
 
 function updateAchievementCards(weightData) {
@@ -2235,7 +2247,22 @@ function displayRandomEncouragement() {
         'One step at a time',
         'Your health is worth it',
         'Keep pushing forward',
-        "You've got this"
+        "You've got this",
+        'Stay positive and work hard',
+        'Embrace the journey',
+        'Celebrate small victories',
+        'Focus on progress, not setbacks',
+        'Make every day count',
+        'You are capable of amazing things',
+        'Stay committed to your goals',
+        'Transform your habits, transform your life',
+        'Your future self will thank you',
+        'Health is wealth',
+        'Strive for progress, not perfection',
+        'Believe you can and you\'re halfway there',
+        'The only bad workout is the one that didn\'t happen',
+        'Push yourself, because no one else is going to do it for you',
+        'Success is the sum of small efforts repeated day in and day out'
     ];
 
     // Pick random quote index
@@ -2253,7 +2280,22 @@ function displayRandomEncouragement() {
         'Un paso a la vez',
         'Tu salud vale la pena',
         'Sigue avanzando',
-        'Tú puedes'
+        'Tú puedes',
+        'Mantente positivo y trabaja duro',
+        'Abraza el viaje',
+        'Celebra pequeñas victorias',
+        'Concéntrate en el progreso, no en los contratiempos',
+        'Haz que cada día cuente',
+        'Eres capaz de cosas increíbles',
+        'Mantente comprometido con tus objetivos',
+        'Transforma tus hábitos, transforma tu vida',
+        'Tu yo futuro te lo agradecerá',
+        'La salud es riqueza',
+        'Esfuérzate por el progreso, no por la perfección',
+        'Cree que puedes y estarás a mitad de camino',
+        'El único mal entrenamiento es el que no sucedió',
+        'Empújate, porque nadie más lo hará por ti',
+        'El éxito es la suma de pequeños esfuerzos repetidos día tras día'
     ];
 
     // French translations
@@ -2267,7 +2309,22 @@ function displayRandomEncouragement() {
         'Un pas à la fois',
         'Votre santé en vaut la peine',
         'Continuez à avancer',
-        'Vous pouvez le faire'
+        'Vous pouvez le faire',
+        'Restez positif et travaillez dur',
+        'Embrassez le voyage',
+        'Célébrez les petites victoires',
+        'Concentrez-vous sur les progrès, pas sur les revers',
+        'Faites compter chaque jour',
+        'Vous êtes capable de choses incroyables',
+        'Restez engagé envers vos objectifs',
+        'Transformez vos habitudes, transformez votre vie',
+        'Votre futur vous remerciera',
+        'La santé est la richesse',
+        'Visez le progrès, pas la perfection',
+        'Croyez que vous pouvez et vous êtes à mi-chemin',
+        'Le seul mauvais entraînement est celui qui n\'a pas eu lieu',
+        'Poussez-vous, car personne d\'autre ne le fera pour vous',
+        'Le succès est la somme de petits efforts répétés jour après jour'
     ];
 
     // German translations
@@ -2281,7 +2338,22 @@ function displayRandomEncouragement() {
         'Ein Schritt nach dem anderen',
         'Deine Gesundheit ist es wert',
         'Weiter vorwärts',
-        'Du schaffst das'
+        'Du schaffst das',
+        'Bleib positiv und arbeite hart',
+        'Umarme die Reise',
+        'Feiere kleine Siege',
+        'Konzentriere dich auf Fortschritt, nicht auf Rückschläge',
+        'Mach jeden Tag wertvoll',
+        'Du bist zu erstaunlichen Dingen fähig',
+        'Bleib deinen Zielen verpflichtet',
+        'Verändere deine Gewohnheiten, verändere dein Leben',
+        'Dein zukünftiges Ich wird dir danken',
+        'Gesundheit ist Reichtum',
+        'Strebe nach Fortschritt, nicht nach Perfektion',
+        'Glaube, dass du es kannst, und du bist schon halb da',
+        'Das einzige schlechte Training ist das, das nicht stattfand',
+        'Fordere dich selbst heraus, denn niemand sonst wird es für dich tun',
+        'Erfolg ist die Summe kleiner Anstrengungen, die Tag für Tag wiederholt werden'
     ];
 
     $('#encouragement-card').html(`
@@ -2730,6 +2802,291 @@ function formatDate(isoDate) {
         default:
             return `${day}/${month}/${year}`;
     }
+}
+
+// ==================== PHASE 3: STREAK COUNTER ENHANCEMENTS ====================
+
+/**
+ * Refresh Streak Counter card with enhanced metrics
+ * Called on init and after weight updates
+ */
+function refreshStreakCounter() {
+    if (window.coverage) window.coverage.logFunction('refreshStreakCounter', 'dashboard.js');
+
+    debugLog('refreshStreakCounter called');
+    debugLog('window.globalDashboardData:', window.globalDashboardData);
+    debugLog('streak_data:', window.globalDashboardData?.streak_data);
+
+    // Check if data already exists in global dashboard data
+    if (window.globalDashboardData && window.globalDashboardData.streak_data) {
+        debugLog('Using cached streak data from global dashboard data');
+        renderStreakCounter(window.globalDashboardData.streak_data);
+        return;
+    }
+
+    // Fallback: Make individual API call
+    debugLog('Global data not available, making individual API call');
+
+    $.post('router.php?controller=profile', { action: 'get_streak_data' })
+        .done(function(response) {
+            if (response.success && response.data) {
+                debugLog('✅ Streak data fetched successfully', response.data);
+                renderStreakCounter(response.data);
+            } else {
+                debugLog('❌ Error fetching streak data:', response.message);
+                showNoStreakData();
+            }
+        })
+        .fail(function(xhr, status, error) {
+            debugLog('❌ AJAX error fetching streak data:', error);
+            showNoStreakData();
+        });
+}
+
+/**
+ * Render streak counter UI with data
+ * @param {Object} data - Streak data from backend
+ */
+function renderStreakCounter(data) {
+    if (window.coverage) window.coverage.logFunction('renderStreakCounter', 'dashboard.js');
+
+    debugLog('renderStreakCounter called with data:', data);
+
+    const container = $('#streak-counter');
+    debugLog('Container found:', container.length);
+
+    // Show/hide appropriate containers
+    if (!data || data.current_streak === null) {
+        debugLog('No data or null current_streak, showing placeholder');
+        showNoStreakData();
+        return;
+    }
+
+    debugLog('Data is valid, generating HTML...');
+
+    // Generate complete HTML with translation attributes embedded
+    const timelineHtml = generateStreakTimelineHtml(data.timeline || []);
+    const motivationHtml = generateStreakMotivationHtml(data);
+
+    const html = `
+        <!-- Placeholder shown when insufficient data -->
+        <div id="no-streak-data" class="text-muted small" style="display: none;"
+            data-eng="Log weights regularly to build streaks"
+            data-spa="Registra pesos regularmente para construir rachas"
+            data-fre="Enregistrez régulièrement les poids pour créer des séries"
+            data-ger="Protokollieren Sie regelmäßig Gewichte, um Serien aufzubauen">
+            Log weights regularly to build streaks
+        </div>
+
+        <div id="streak-content">
+            <!-- Current Streak Display -->
+            <div class="streak-stat-row mb-2">
+                <div class="streak-stat-icon">🔥</div>
+                <div class="streak-stat-content">
+                    <div class="streak-stat-value">${data.current_streak || 0}</div>
+                    <div class="streak-stat-label"
+                        data-eng="Current Streak"
+                        data-spa="Racha Actual"
+                        data-fre="Série Actuelle"
+                        data-ger="Aktuelle Serie">
+                        Current Streak
+                    </div>
+                </div>
+            </div>
+
+            <!-- Longest Streak Display -->
+            <div class="streak-stat-row mb-2">
+                <div class="streak-stat-icon">🏆</div>
+                <div class="streak-stat-content">
+                    <div class="streak-stat-value">${data.longest_streak || 0}</div>
+                    <div class="streak-stat-label"
+                        data-eng="Personal Best"
+                        data-spa="Mejor Personal"
+                        data-fre="Meilleur Personnel"
+                        data-ger="Persönliche Bestleistung">
+                        Personal Best
+                    </div>
+                </div>
+            </div>
+
+            <!-- Missed Entries -->
+            <div class="streak-stat-row mb-3">
+                <div class="streak-stat-icon">📊</div>
+                <div class="streak-stat-content">
+                    <div class="streak-stat-value">${data.missed_weeks_this_month || 0}</div>
+                    <div class="streak-stat-label"
+                        data-eng="Missed Entries"
+                        data-spa="Entradas Perdidas"
+                        data-fre="Entrées Manquées"
+                        data-ger="Verpasste Einträge">
+                        Missed Entries
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visual Timeline -->
+            <div class="streak-timeline">
+                <div class="streak-timeline-title text-muted small mb-2"
+                    data-eng="Last 28 Days"
+                    data-spa="Últimos 28 Días"
+                    data-fre="28 Derniers Jours"
+                    data-ger="Letzte 28 Tage">
+                    Last 28 Days
+                </div>
+                <div class="streak-timeline-grid">
+                    ${timelineHtml}
+                </div>
+                <div class="streak-timeline-legend">
+                    <div class="streak-legend-item">
+                        <span class="streak-dot logged"></span>
+                        <span class="streak-legend-label"
+                            data-eng="Logged"
+                            data-spa="Registrado"
+                            data-fre="Enregistré"
+                            data-ger="Protokolliert">
+                            Logged
+                        </span>
+                    </div>
+                    <div class="streak-legend-item">
+                        <span class="streak-dot missed"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Motivational Message -->
+            <div class="streak-motivation mt-3">
+                ${motivationHtml}
+            </div>
+        </div>
+    `;
+
+    container.html(html);
+    debugLog('HTML inserted into container');
+
+    // Apply current language to newly generated content
+    const currentLanguage = localStorage.getItem('language') || 'en';
+    debugLog('Current language:', currentLanguage);
+
+    if (currentLanguage !== 'en') {
+        const langMap = { 'en': 'eng', 'es': 'spa', 'fr': 'fre', 'de': 'ger' };
+        const dataAttr = langMap[currentLanguage];
+        if (dataAttr) {
+            debugLog('Translating to:', dataAttr);
+            container.find(`[data-${dataAttr}]`).each(function() {
+                const $element = $(this);
+                const translatedText = $element.attr(`data-${dataAttr}`);
+                if (translatedText) {
+                    $element.html(translatedText);
+                }
+            });
+            debugLog('Translation applied');
+        }
+    }
+
+    debugLog('renderStreakCounter complete');
+}
+
+/**
+ * Generate 28-day visual timeline HTML (4 weeks)
+ * @param {Array} timeline - Array of 28 day objects: { date, logged, is_today }
+ * @returns {string} HTML for timeline dots
+ */
+function generateStreakTimelineHtml(timeline) {
+    if (window.coverage) window.coverage.logFunction('generateStreakTimelineHtml', 'dashboard.js');
+
+    if (!timeline || timeline.length === 0) {
+        debugLog('⚠️ No timeline data available');
+        return '';
+    }
+
+    // Generate timeline dots (28 days = 4 weeks)
+    const dotsHtml = timeline.map(day => {
+        const classes = ['streak-dot'];
+
+        if (day.logged) {
+            classes.push('logged');
+        } else {
+            classes.push('missed');
+        }
+
+        if (day.is_today) {
+            classes.push('today');
+        }
+
+        return `<div class="${classes.join(' ')}" data-date="${day.date}" title="${day.date}"></div>`;
+    }).join('');
+
+    debugLog(`✅ Generated HTML for ${timeline.length} timeline dots`);
+    return dotsHtml;
+}
+
+/**
+ * Generate motivational message HTML based on streak performance
+ * @param {Object} data - Contains current_streak, longest_streak
+ * @returns {string} HTML for motivational message
+ */
+function generateStreakMotivationHtml(data) {
+    if (window.coverage) window.coverage.logFunction('generateStreakMotivationHtml', 'dashboard.js');
+
+    const { current_streak, longest_streak } = data;
+    let html = '';
+
+    if (current_streak >= 12) {
+        // Exceptional streak (3 months)
+        html = `<span data-eng="🎉 Amazing! You're on a ${current_streak}-week streak!" data-spa="¡Increíble! ¡Tienes una racha de ${current_streak} semanas!" data-fre="Incroyable ! Vous avez une série de ${current_streak} semaines !" data-ger="Erstaunlich! Sie haben eine ${current_streak}-Wochen-Serie!">🎉 Amazing! You're on a ${current_streak}-week streak!</span>`;
+    } else if (current_streak >= 4) {
+        // Good streak (1 month)
+        html = `<span data-eng="🔥 ${current_streak} weeks strong! Keep it up!" data-spa="¡${current_streak} semanas fuerte! ¡Sigue así!" data-fre="${current_streak} semaines fortes ! Continuez !" data-ger="${current_streak} Wochen stark! Weiter so!">🔥 ${current_streak} weeks strong! Keep it up!</span>`;
+    } else if (current_streak >= 1) {
+        // Building streak
+        html = `<span data-eng="Good start! ${current_streak} week(s) logged" data-spa="¡Buen comienzo! ${current_streak} semana(s) registrada(s)" data-fre="Bon début ! ${current_streak} semaine(s) enregistrée(s)" data-ger="Guter Start! ${current_streak} Woche(n) protokolliert">Good start! ${current_streak} week(s) logged</span>`;
+    } else {
+        // No current streak
+        if (longest_streak > 0) {
+            html = `<span data-eng="Your record is ${longest_streak} weeks. You can beat it!" data-spa="Tu récord es ${longest_streak} semanas. ¡Puedes superarlo!" data-fre="Votre record est de ${longest_streak} semaines. Vous pouvez le battre !" data-ger="Ihr Rekord liegt bei ${longest_streak} Wochen. Sie können ihn schlagen!">Your record is ${longest_streak} weeks. You can beat it!</span>`;
+        } else {
+            html = `<span data-eng="Start building your streak today!" data-spa="¡Comienza a construir tu racha hoy!" data-fre="Commencez à construire votre série aujourd'hui !" data-ger="Beginnen Sie heute mit Ihrer Serie!">Start building your streak today!</span>`;
+        }
+    }
+
+    return html;
+}
+
+/**
+ * Show placeholder when insufficient data exists
+ */
+function showNoStreakData() {
+    if (window.coverage) window.coverage.logFunction('showNoStreakData', 'dashboard.js');
+
+    const container = $('#streak-counter');
+    const html = `
+        <div id="no-streak-data" class="text-muted small"
+            data-eng="Log weights regularly to build streaks"
+            data-spa="Registra pesos regularmente para construir rachas"
+            data-fre="Enregistrez régulièrement les poids pour créer des séries"
+            data-ger="Protokollieren Sie regelmäßig Gewichte, um Serien aufzubauen">
+            Log weights regularly to build streaks
+        </div>
+    `;
+    container.html(html);
+
+    // Apply current language to newly generated content
+    const currentLanguage = localStorage.getItem('language') || 'en';
+    if (currentLanguage !== 'en') {
+        const langMap = { 'en': 'eng', 'es': 'spa', 'fr': 'fre', 'de': 'ger' };
+        const dataAttr = langMap[currentLanguage];
+        if (dataAttr) {
+            container.find(`[data-${dataAttr}]`).each(function() {
+                const $element = $(this);
+                const translatedText = $element.attr(`data-${dataAttr}`);
+                if (translatedText) {
+                    $element.html(translatedText);
+                }
+            });
+        }
+    }
+
+    debugLog('ℹ️ Showing no streak data placeholder');
 }
 
 // ==================== End Quick Look Section ====================

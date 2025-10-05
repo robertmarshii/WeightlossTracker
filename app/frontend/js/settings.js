@@ -83,6 +83,10 @@ function saveSettings() {
                 debugLog('Calling refreshAllWeightDisplays');
                 window.refreshAllWeightDisplays();
             }
+            if (typeof window.refreshGoalsAchieved === 'function') {
+                debugLog('Calling refreshGoalsAchieved to update milestones and progress');
+                window.refreshGoalsAchieved();
+            }
 
             // Update height unit in localStorage and refresh displays
             setHeightUnit(settings.height_unit);
@@ -303,6 +307,12 @@ function reloadDynamicContent() {
     if (typeof window.updateAllAchievements === 'function') {
         debugLog('Reloading achievements...');
         window.updateAllAchievements();
+    }
+
+    // Reload Phase 3: Streak Counter
+    if (typeof window.refreshStreakCounter === 'function') {
+        debugLog('Reloading streak counter...');
+        window.refreshStreakCounter();
     }
 
     // Reload weight displays (Overview tab)

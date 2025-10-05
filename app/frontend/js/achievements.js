@@ -42,10 +42,11 @@ function updateAchievementCards(weightData) {
         }
     }
 
-    const streakHtml = streak > 0
-        ? `<strong class="text-success">${streak} ${streak > 1 ? t('days') : t('day')}</strong><br><small>${t('Current logging streak')}</small>`
-        : `<span class="text-muted">${t('No current streak')}</span><br><small>${t('Log weight to start')}</small>`;
-    $('#streak-counter').html(streakHtml);
+    // DISABLED: Phase 3 Streak Counter now uses dedicated weekly streak data
+    // const streakHtml = streak > 0
+    //     ? `<strong class="text-success">${streak} ${streak > 1 ? t('days') : t('day')}</strong><br><small>${t('Current logging streak')}</small>`
+    //     : `<span class="text-muted">${t('No current streak')}</span><br><small>${t('Log weight to start')}</small>`;
+    // $('#streak-counter').html(streakHtml);
 
     // Goals Achieved is now handled by Phase 2 enhancements in dashboard.js
     // Do not modify #goals-achieved here - it has its own enhanced HTML

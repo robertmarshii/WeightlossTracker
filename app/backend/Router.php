@@ -210,6 +210,13 @@
                 return;
             }
 
+            if ($action === 'get_streak_data') {
+                COVERAGE_LOG('get_streak_data', 'ProfileController', __FILE__, __LINE__);
+                $streakData = calculateStreakData($userId, $db, $schema);
+                echo json_encode(['success' => true, 'data' => $streakData]);
+                return;
+            }
+
             if ($action === 'get_bmi') {
                 // Fetch profile
                 $stmt = $db->prepare("SELECT height_cm, body_frame, age FROM {$schema}.user_profiles WHERE user_id = ?");
@@ -1247,6 +1254,9 @@
                 // Add Goal Progress Enhanced (Phase 2)
                 $allData['goal_progress_enhanced'] = calculateGoalProgressEnhanced($userId, $db, $schema);
 
+                // Add Streak Data (Phase 3)
+                $allData['streak_data'] = calculateStreakData($userId, $db, $schema);
+
                 echo json_encode([
                     'success' => true,
                     'data' => $allData,
@@ -1597,6 +1607,230 @@
     }
 
     // ==================== End Goals Achieved Helper Functions ====================
+
+    // ==================== PHASE 3: STREAK COUNTER HELPER FUNCTIONS ====================
+
+    /**
+     * Calculate comprehensive streak data for dashboard
+     * @param int $userId - User ID
+     * @param PDO $db - Database connection
+     * @param string $schema - Schema name
+     * @return array Streak data including current/longest streak, missed weeks, timeline
+     */
+    function calculateStreakData($userId, $db, $schema) {
+        COVERAGE_LOG('calculateStreakData', 'ProfileController', __FILE__, __LINE__);
+
+        try {
+            // Get weight entries for last 90 days (to calculate streaks)
+            $stmt = $db->prepare("
+                SELECT entry_date
+                FROM {$schema}.weight_entries
+                WHERE user_id = ?
+                AND entry_date >= CURRENT_DATE - INTERVAL '90 days'
+                ORDER BY entry_date DESC
+            ");
+            $stmt->execute([$userId]);
+            $entries = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+            if (count($entries) < 2) {
+                // Not enough data for streak calculation
+                return null;
+            }
+
+            // Calculate streaks
+            $currentStreak = calculateCurrentStreak($entries);
+            $longestStreak = calculateLongestStreak($entries);
+            $missedWeeksThisMonth = calculateMissedWeeksThisMonth($entries);
+
+            // Generate 30-day timeline
+            $timeline = generateStreakTimeline($entries);
+
+            return [
+                'current_streak' => $currentStreak,
+                'longest_streak' => $longestStreak,
+                'missed_weeks_this_month' => $missedWeeksThisMonth,
+                'timeline' => $timeline
+            ];
+
+        } catch (Exception $e) {
+            error_log("Streak data calculation error: " . $e->getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Calculate current weekly logging streak
+     * @param array $entries - Array of entry dates (DESC order)
+     * @return int Current streak in weeks
+     */
+    function calculateCurrentStreak($entries) {
+        COVERAGE_LOG('calculateCurrentStreak', 'ProfileController', __FILE__, __LINE__);
+
+        if (empty($entries)) {
+            return 0;
+        }
+
+        $today = new DateTime();
+        $currentWeekStart = (clone $today)->modify('monday this week');
+        $streak = 0;
+
+        // Group entries by week
+        $weeklyEntries = [];
+        foreach ($entries as $dateStr) {
+            $date = new DateTime($dateStr);
+            $weekStart = (clone $date)->modify('monday this week')->format('Y-m-d');
+            $weeklyEntries[$weekStart] = true;
+        }
+
+        // Count consecutive weeks backwards from current week
+        $checkWeek = clone $currentWeekStart;
+        while (true) {
+            $weekKey = $checkWeek->format('Y-m-d');
+
+            if (isset($weeklyEntries[$weekKey])) {
+                $streak++;
+                $checkWeek->modify('-1 week');
+            } else {
+                break;
+            }
+
+            // Safety: don't go back more than 52 weeks
+            if ($streak >= 52) {
+                break;
+            }
+        }
+
+        return $streak;
+    }
+
+    /**
+     * Calculate longest weekly logging streak ever
+     * @param array $entries - Array of entry dates (DESC order)
+     * @return int Longest streak in weeks
+     */
+    function calculateLongestStreak($entries) {
+        COVERAGE_LOG('calculateLongestStreak', 'ProfileController', __FILE__, __LINE__);
+
+        if (empty($entries)) {
+            return 0;
+        }
+
+        // Group entries by week
+        $weeklyEntries = [];
+        foreach ($entries as $dateStr) {
+            $date = new DateTime($dateStr);
+            $weekStart = (clone $date)->modify('monday this week')->format('Y-m-d');
+            $weeklyEntries[$weekStart] = true;
+        }
+
+        // Sort weeks chronologically
+        $weeks = array_keys($weeklyEntries);
+        sort($weeks);
+
+        $longestStreak = 0;
+        $currentStreak = 1;
+
+        for ($i = 1; $i < count($weeks); $i++) {
+            $prevWeek = new DateTime($weeks[$i - 1]);
+            $thisWeek = new DateTime($weeks[$i]);
+
+            $daysDiff = $prevWeek->diff($thisWeek)->days;
+
+            if ($daysDiff <= 7) {
+                // Consecutive weeks
+                $currentStreak++;
+            } else {
+                // Gap found, reset streak
+                $longestStreak = max($longestStreak, $currentStreak);
+                $currentStreak = 1;
+            }
+        }
+
+        $longestStreak = max($longestStreak, $currentStreak);
+
+        return $longestStreak;
+    }
+
+    /**
+     * Calculate number of weeks missed in last 28 days (4 weeks)
+     * @param array $entries - Array of entry dates (DESC order)
+     * @return int Number of weeks missed in last 28 days
+     */
+    function calculateMissedWeeksThisMonth($entries) {
+        COVERAGE_LOG('calculateMissedWeeksThisMonth', 'ProfileController', __FILE__, __LINE__);
+
+        $today = new DateTime();
+        $twentyEightDaysAgo = (clone $today)->modify('-28 days');
+
+        // Create lookup set for faster checking
+        $entryDates = array_flip($entries);
+
+        // Generate 28 days and group by week
+        $weekGroups = [];
+        for ($i = 27; $i >= 0; $i--) {
+            $date = (clone $today)->modify("-{$i} days");
+
+            // Skip if before 28 days ago
+            if ($date < $twentyEightDaysAgo) continue;
+
+            $dateStr = $date->format('Y-m-d');
+            $weekStart = (clone $date)->modify('monday this week')->format('Y-m-d');
+
+            // Initialize week if not exists
+            if (!isset($weekGroups[$weekStart])) {
+                $weekGroups[$weekStart] = ['has_entry' => false, 'days' => []];
+            }
+
+            // Mark if this day has an entry
+            $hasEntry = isset($entryDates[$dateStr]);
+            if ($hasEntry) {
+                $weekGroups[$weekStart]['has_entry'] = true;
+            }
+
+            $weekGroups[$weekStart]['days'][] = $dateStr;
+        }
+
+        // Count weeks with NO entries at all (completely missed weeks)
+        $missedWeeks = 0;
+        foreach ($weekGroups as $weekData) {
+            if (!$weekData['has_entry']) {
+                $missedWeeks++;
+            }
+        }
+
+        return $missedWeeks;
+    }
+
+    /**
+     * Generate 28-day visual timeline data (4 weeks)
+     * @param array $entries - Array of entry dates (DESC order)
+     * @return array Array of 28 day objects: {date, logged, is_today}
+     */
+    function generateStreakTimeline($entries) {
+        COVERAGE_LOG('generateStreakTimeline', 'ProfileController', __FILE__, __LINE__);
+
+        $timeline = [];
+        $today = new DateTime();
+
+        // Create lookup set for faster checking
+        $entryDates = array_flip($entries);
+
+        // Generate 28 days backwards from today (4 weeks)
+        for ($i = 27; $i >= 0; $i--) {
+            $date = (clone $today)->modify("-{$i} days");
+            $dateStr = $date->format('Y-m-d');
+
+            $timeline[] = [
+                'date' => $dateStr,
+                'logged' => isset($entryDates[$dateStr]),
+                'is_today' => ($i === 0)
+            ];
+        }
+
+        return $timeline;
+    }
+
+    // ==================== End Streak Counter Helper Functions ====================
 
     function EmailController() {
         COVERAGE_LOG('EmailController', 'Router', __FILE__, __LINE__);

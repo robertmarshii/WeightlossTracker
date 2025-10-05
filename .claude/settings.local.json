@@ -1,33 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(for file in cypress/e2e/*.cy.js)",
-      "Bash(head:*)",
+      "Bash(git log:*)",
       "Bash(awk:*)",
-      "Bash(echo:*)",
-      "Bash(curl:*)",
-      "Bash(node:*)",
-      "Bash(npm run test:coverage:*)",
-      "Bash(npx cypress run:*)",
-      "Bash(npm run functions:scan:*)",
-      "Bash(find:*)",
-      "WebSearch",
-      "Bash(docker compose:*)",
-      "Bash(npm run cypress:coverage:*)",
-      "Bash(npm run test:e2e:*)",
-      "Bash(docker exec:*)",
-      "Bash(docker ps:*)",
-      "Bash(docker logs:*)",
-      "Bash(grep:*)",
-      "Bash(for pid in 7 8 9 10 16)",
-      "Bash(do echo:*)",
-      "Bash(done)",
-      "Bash(psql:*)",
-      "Bash(docker run:*)",
-      "Bash(php:*)",
-      "Bash(powershell:*)",
-      "Bash(ls \"C:\\GitKraken\\WeightlossTracker\\app\\frontend\\js\"\" | grep -E \"health)",
-      "Bash(data \")"
+      "Bash(powershell:*)"
     ],
     "deny": [],
     "ask": []
