@@ -218,11 +218,9 @@ function loadThemeCSS(themeName) {
     }
 }
 
-// Language switching function
-function switchLanguage(languageCode) {
-    if (window.coverage) window.coverage.logFunction('switchLanguage', 'settings.js');
-
-    debugLog('Switching language to:', languageCode);
+// Global function to apply translations based on current language
+function applyCurrentLanguageTranslations() {
+    const languageCode = localStorage.getItem('language') || 'en';
 
     // Map language codes to data attribute names
     const langMap = {
@@ -233,12 +231,8 @@ function switchLanguage(languageCode) {
     };
 
     const dataAttr = langMap[languageCode];
-    if (!dataAttr) {
-        console.error('Invalid language code:', languageCode);
-        return;
-    }
+    if (!dataAttr) return;
 
-    // Find all elements with the chosen language attribute and replace their content
     $(`[data-${dataAttr}]`).each(function() {
         const $element = $(this);
         const translatedText = $element.attr(`data-${dataAttr}`);
@@ -274,9 +268,33 @@ function switchLanguage(languageCode) {
             }
         }
     });
+}
 
-    // Store language preference in localStorage
+// Language switching function
+function switchLanguage(languageCode) {
+    if (window.coverage) window.coverage.logFunction('switchLanguage', 'settings.js');
+
+    debugLog('Switching language to:', languageCode);
+
+    // Map language codes to data attribute names
+    const langMap = {
+        'en': 'eng',
+        'es': 'spa',
+        'fr': 'fre',
+        'de': 'ger'
+    };
+
+    const dataAttr = langMap[languageCode];
+    if (!dataAttr) {
+        console.error('Invalid language code:', languageCode);
+        return;
+    }
+
+    // Store language preference in localStorage FIRST
     localStorage.setItem('language', languageCode);
+
+    // Apply translations
+    applyCurrentLanguageTranslations();
 
     debugLog('Language switched to:', languageCode);
 
@@ -309,6 +327,10 @@ function reloadDynamicContent() {
 
         // NOTE: Other sections like Health, Achievements, etc. should be added here
         // once they properly check window.globalDashboardData before making API calls
+
+        // Apply translations to the newly rendered content
+        debugLog('Applying translations to reloaded content...');
+        applyCurrentLanguageTranslations();
     } else {
         debugLog('⚠️ Global dashboard data not available, skipping reload');
     }

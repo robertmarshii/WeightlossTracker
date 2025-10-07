@@ -88,40 +88,37 @@ $(function() {
         });
     });
 
-    // FIRST: Load consolidated data, THEN load individual data
+    // FIRST: Load consolidated data, THEN load settings, THEN render content
     testConsolidatedDashboardData(function() {
         if (window.coverage) window.coverage.logFunction('testConsolidatedDashboardData', 'dashboard.js');
         // This callback runs after consolidated data is loaded
 
-        refreshLatestWeight();
-        refreshGoal();
-        loadProfile();
-        refreshBMI();
-        refreshHealth();
-        refreshIdealWeight();
-        refreshWeightProgress();
-        refreshGallbladderHealth();
-        refreshPersonalHealthBenefits();
-        loadWeightHistory();
-        loadQuickLookMetrics(); // Phase 1: Quick Look section
-        refreshGoalsAchieved(); // Phase 2: Goals Achieved enhancements
-        refreshTotalProgress(); // Phase 4: Total Progress enhancements
+        // STEP 1: Load settings FIRST to establish language preference
+        loadSettings(function() {
+            // STEP 2: Now render all content in the correct language
+            refreshLatestWeight();
+            refreshGoal();
+            loadProfile();
+            refreshBMI();
+            refreshHealth();
+            refreshIdealWeight();
+            refreshWeightProgress();
+            refreshGallbladderHealth();
+            refreshPersonalHealthBenefits();
+            loadWeightHistory();
+            loadQuickLookMetrics(); // Phase 1: Quick Look section
+            refreshGoalsAchieved(); // Phase 2: Goals Achieved enhancements
+            refreshTotalProgress(); // Phase 4: Total Progress enhancements
+            refreshStreakCounter(); // Phase 3: Streak Counter
 
-        // Initialize weight chart now that global data is available
-        initWeightChart();
+            // Initialize weight chart now that global data is available
+            initWeightChart();
 
-        // Phase 3: Streak Counter - render AFTER loadSettings completes
-        setTimeout(() => {
-            loadSettings();
-            // Render Phase 3 after settings/language loaded
-            setTimeout(() => {
-                refreshStreakCounter();
-            }, 100);
-            // Flush debug logs after ALL page initialization completes (5 seconds should be enough)
+            // Flush debug logs after ALL page initialization completes
             setTimeout(() => {
                 window.flushDebugLogs();
             }, 5000);
-        }, 1000);
+        });
     });
     
     // Set today's date as default for new entries
@@ -805,7 +802,7 @@ function deleteWeight(id) {
 }
 
 
-function loadSettings() {
+function loadSettings(callback) {
     if (window.coverage) window.coverage.logFunction('loadSettings', 'dashboard.js');
     debugLog('🔧 loadSettings() called in dashboard.js');
     debugLog('🔍 globalDashboardData:', window.globalDashboardData);
@@ -838,6 +835,11 @@ function loadSettings() {
         const lang = s.language || 'en';
         if (lang !== 'en' && typeof window.settingsSwitchLanguage === 'function') {
             window.settingsSwitchLanguage(lang);
+        }
+
+        // Call callback after settings are loaded and language is applied
+        if (typeof callback === 'function') {
+            callback();
         }
         return;
     }
@@ -877,10 +879,19 @@ function loadSettings() {
             if (lang !== 'en' && typeof window.settingsSwitchLanguage === 'function') {
                 window.settingsSwitchLanguage(lang);
             }
+
+            // Call callback after settings are loaded and language is applied
+            if (typeof callback === 'function') {
+                callback();
+            }
         }
     })
     .catch(error => {
         console.error('Settings load error:', error);
+        // Still call callback even on error
+        if (typeof callback === 'function') {
+            callback();
+        }
     });
 }
 
@@ -2230,11 +2241,15 @@ function updateHeightUnitDisplay() {
  */
 function loadQuickLookMetrics() {
     if (window.coverage) window.coverage.logFunction('loadQuickLookMetrics', 'dashboard.js');
+    debugLog('🔍 loadQuickLookMetrics called');
 
     // Use global dashboard data if available, otherwise fallback to API call
     if (window.globalDashboardData && window.globalDashboardData.quick_look_metrics) {
+        debugLog('📊 Using global data for quick look metrics');
         renderQuickLookMetrics(window.globalDashboardData.quick_look_metrics);
     } else {
+        debugLog('🌐 Making API call for quick look metrics (global data not available)');
+
         // Fallback: individual API call
         postRequest('router.php?controller=profile', { action: 'get_quick_look_metrics' })
             .then(resp => {
