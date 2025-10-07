@@ -28,7 +28,6 @@ function postRequest(url, data) {
 }
 
 $(function() {
-    debugLog('🚀 Dashboard.js loaded and ready');
     // Initialize unit systems first
     initializeWeightUnit();
     initializeHeightUnit();
@@ -107,6 +106,10 @@ $(function() {
         loadQuickLookMetrics(); // Phase 1: Quick Look section
         refreshGoalsAchieved(); // Phase 2: Goals Achieved enhancements
         refreshTotalProgress(); // Phase 4: Total Progress enhancements
+
+        // Initialize weight chart now that global data is available
+        initWeightChart();
+
         // Phase 3: Streak Counter - render AFTER loadSettings completes
         setTimeout(() => {
             loadSettings();
@@ -343,17 +346,9 @@ $(function() {
     // Language dropdown - no immediate action, only save on button click
 
     $(document).on('click', '#btn-save-settings', function() {
-        debugLog('🔵 Save Settings button clicked!');
         saveSettings();
     });
 
-    // Debug: Check if button exists
-    setTimeout(() => {
-        const btn = $('#btn-save-settings');
-        debugLog('🔍 Button exists:', btn.length > 0);
-        debugLog('🔍 Button element:', btn[0]);
-    }, 2000);
-    
     $(document).on('click', '#btn-reset-settings', function() {
         if (confirm('Are you sure you want to reset all settings to defaults?')) {
             resetSettings();
@@ -362,13 +357,13 @@ $(function() {
     
     // Update date example when format changes
     updateDateExample();
-    
+
     // Tab URL hash navigation
     initTabNavigation();
-    
-    // Initialize weight chart
-    initWeightChart();
-    
+
+    // Note: Chart initialization moved to testConsolidatedDashboardData callback
+    // to ensure global data is available before loading chart
+
     // Chart period handlers
     $('#chart-weekly, #chart-30days, #chart-90days, #chart-monthly, #chart-yearly, #chart-all').on('click', function() {
         $('#chart-weekly, #chart-30days, #chart-90days, #chart-monthly, #chart-yearly, #chart-all').removeClass('active');
@@ -442,11 +437,18 @@ function testConsolidatedDashboardData(callback) {
             if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
             // Store the data globally so other functions can use it
             window.globalDashboardData = result.data;
+            debugLog('✅ Global dashboard data loaded. Keys:', Object.keys(window.globalDashboardData));
+            debugLog('🔍 health_stats available:', !!window.globalDashboardData.health_stats);
+            debugLog('🔍 weight_progress available:', !!window.globalDashboardData.weight_progress);
+            debugLog('🔍 ideal_weight available:', !!window.globalDashboardData.ideal_weight);
+        } else {
+            console.error('❌ get_all_dashboard_data failed:', result.message);
         }
 
         // Call the callback regardless of success/failure
         if (callback && typeof callback === 'function') {
             if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
+            debugLog('📞 Calling callback. globalDashboardData exists:', !!window.globalDashboardData);
             callback();
         }
     })
@@ -594,8 +596,7 @@ function refreshGoal() {
     if (window.coverage) window.coverage.logFunction('refreshGoal', 'dashboard.js');
 
     // Check if we have global data first
-    debugLog('🔍 refreshGoal - checking global data:', window.globalDashboardData);
-    debugLog('🔍 goal in global data:', window.globalDashboardData?.goal);
+    debugLog('🔍 refreshGoal - has global data:', !!window.globalDashboardData, 'has goal:', !!window.globalDashboardData?.goal);
 
     if (window.globalDashboardData && window.globalDashboardData.goal) {
         if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
@@ -701,8 +702,7 @@ function refreshWeightProgress() {
     if (window.coverage) window.coverage.logFunction('refreshWeightProgress', 'dashboard.js');
 
     // Check if we have global data first
-    debugLog('🔍 refreshWeightProgress - checking global data:', window.globalDashboardData);
-    debugLog('🔍 weight_progress in global data:', window.globalDashboardData?.weight_progress);
+    debugLog('🔍 refreshWeightProgress - has global data:', !!window.globalDashboardData, 'has weight_progress:', !!window.globalDashboardData?.weight_progress);
 
     if (window.globalDashboardData && window.globalDashboardData.weight_progress) {
         if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
@@ -816,11 +816,6 @@ function loadSettings() {
         const s = window.globalDashboardData.settings;
         debugLog('🔧 Settings data:', s);
 
-        // Check if elements exist
-        debugLog('🔍 #shareData exists:', $('#shareData').length);
-        debugLog('🔍 #emailNotifications exists:', $('#emailNotifications').length);
-        debugLog('🔍 #weeklyReports exists:', $('#weeklyReports').length);
-
         $('#weightUnit').val(s.weight_unit || 'kg');
         $('#heightUnit').val(s.height_unit || 'cm');
         setWeightUnit(s.weight_unit || 'kg');
@@ -828,12 +823,6 @@ function loadSettings() {
         $('#dateFormat').val(s.date_format || 'uk');
         $('#theme').val(s.theme || 'glassmorphism');
         $('#language').val(s.language || 'en');
-
-        debugLog('🔧 Setting checkboxes:', {
-            share_data: s.share_data,
-            email_notifications: s.email_notifications,
-            weekly_reports: s.weekly_reports
-        });
 
         $('#shareData').prop('checked', s.share_data === true);
         $('#emailNotifications').prop('checked', s.email_notifications === true);
@@ -1291,11 +1280,108 @@ function initWeightChart() {
 function updateWeightChart(period) {
     if (window.coverage) window.coverage.logFunction('updateWeightChart', 'dashboard.js');
     $('#chart-status').text('Loading chart data...').show();
-    
+
+    // Check if we have global data first
+    if (window.globalDashboardData && window.globalDashboardData.weight_history) {
+        debugLog('📊 Using global data for weight chart');
+        const history = window.globalDashboardData.weight_history;
+
+        if (!history || history.length === 0) {
+            $('#chart-status').text('No weight data available for chart').show();
+            $('#chart-navigation').hide();
+            weightChart.data.labels = [];
+            weightChart.data.datasets[0].data = [];
+            weightChart.update();
+            return;
+        }
+
+        // Sort all data by date (newest first for period calculation)
+        const sortedData = history.sort((a, b) => new Date(b.entry_date) - new Date(a.entry_date));
+
+        // Process chart data (same logic as API response)
+        let filteredData = [];
+        let periodInfo = '';
+
+        if (period === 'weekly') {
+            $('#chart-navigation').hide();
+            updateWeeklyChart(sortedData);
+            return;
+        } else if (period === 'yearly') {
+            $('#chart-navigation').hide();
+            updateYearlyChart(sortedData);
+            return;
+        } else if (period === 'all') {
+            filteredData = sortedData;
+            $('#chart-navigation').hide();
+            periodInfo = 'All Time';
+        } else if (period === 'monthly') {
+            $('#chart-navigation').hide();
+            updateMonthlyChart(sortedData);
+            return;
+        } else {
+            $('#chart-navigation').show();
+
+            const daysInPeriod = period === '30days' ? 30 : 90;
+            const now = new Date();
+
+            const periodStart = new Date(now.getTime() - ((currentPeriodOffset + 1) * daysInPeriod * 24 * 60 * 60 * 1000));
+            const periodEnd = new Date(now.getTime() - (currentPeriodOffset * daysInPeriod * 24 * 60 * 60 * 1000));
+
+            filteredData = sortedData.filter(entry => {
+                const entryDate = new Date(entry.entry_date);
+                return entryDate >= periodStart && entryDate < periodEnd;
+            });
+
+            const startStr = periodStart.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: '2-digit' });
+            const endStr = periodEnd.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: '2-digit' });
+
+            if (currentPeriodOffset === 0) {
+                periodInfo = `Current ${daysInPeriod} days (${startStr} - ${endStr})`;
+            } else {
+                periodInfo = `${currentPeriodOffset * daysInPeriod}-${(currentPeriodOffset + 1) * daysInPeriod} days ago (${startStr} - ${endStr})`;
+            }
+
+            $('#chart-next').prop('disabled', currentPeriodOffset === 0);
+
+            const prevPeriodStart = new Date(now.getTime() - ((currentPeriodOffset + 2) * daysInPeriod * 24 * 60 * 60 * 1000));
+            const prevPeriodEnd = new Date(now.getTime() - ((currentPeriodOffset + 1) * daysInPeriod * 24 * 60 * 60 * 1000));
+            const hasPreviousData = sortedData.some(entry => {
+                const entryDate = new Date(entry.entry_date);
+                return entryDate >= prevPeriodStart && entryDate < prevPeriodEnd;
+            });
+            $('#chart-prev').prop('disabled', !hasPreviousData);
+        }
+
+        $('#chart-period-info').text(periodInfo);
+
+        if (filteredData.length === 0) {
+            $('#chart-status').text(`No weight data available for ${periodInfo.toLowerCase()}`).show();
+            weightChart.data.labels = [];
+            weightChart.data.datasets[0].data = [];
+            weightChart.update();
+            return;
+        }
+
+        $('#chart-status').hide();
+        const unit = getWeightUnitLabel();
+        const reversedData = filteredData.reverse();
+        const labels = reversedData.map(entry => formatDate(entry.entry_date));
+        const dataPoints = reversedData.map(entry => convertFromKg(parseFloat(entry.weight_kg)));
+
+        weightChart.data.labels = labels;
+        weightChart.data.datasets[0].data = dataPoints;
+        weightChart.data.datasets[0].label = `Weight (${unit})`;
+        weightChart.options.scales.y.title.text = `Weight (${unit})`;
+        weightChart.update();
+        return;
+    }
+
+    // Fallback: Make API call if global data not available
+    debugLog('🌐 Making API call for weight chart (global data not available)');
     postRequest('router.php?controller=profile', { action: 'get_weight_history' })
     .then(resp => {
         const data = parseJson(resp);
-        
+
         if (!data.success || !data.history || data.history.length === 0) {
             if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
             $('#chart-status').text('No weight data available for chart').show();
@@ -2027,8 +2113,8 @@ function initializeWeightUnit() {
         setWeightUnit(settingsUnit);
         updateWeightUnitDisplay();
 
-        // Refresh displays to show in correct unit
-        refreshAllWeightDisplays();
+        // Note: refreshAllWeightDisplays() is called by testConsolidatedDashboardData callback
+        // after global data is loaded, so no need to call it here during initialization
     }, 500); // Increased timeout to ensure settings are loaded
 
     // Weight unit change handler - just update display, don't save yet
@@ -2075,7 +2161,6 @@ function refreshAllWeightDisplays() {
 
     // Refresh health calculations
     refreshBMI();
-    refreshIdealWeight();
     refreshWeightProgress();
     refreshPersonalHealthBenefits();
 
@@ -2421,10 +2506,6 @@ function displayNextCheckin(nextDate, daysUntil, avgInterval) {
 function refreshGoalsAchieved() {
     if (window.coverage) window.coverage.logFunction('refreshGoalsAchieved', 'dashboard.js');
 
-    debugLog('🎯 refreshGoalsAchieved called');
-    debugLog('🔍 Global data available', !!window.globalDashboardData);
-    debugLog('🔍 Goal progress enhanced', window.globalDashboardData?.goal_progress_enhanced);
-
     // Use global dashboard data if available
     if (window.globalDashboardData && window.globalDashboardData.goal_progress_enhanced) {
         debugLog('📊 Using global data for goal progress enhanced');
@@ -2521,7 +2602,7 @@ function displayGoalStreak(weeklyPercent, monthlyPercent) {
         html = `<span data-eng="Progressed ${percent}% this week" data-spa="Progresó ${percent}% esta semana" data-fre="Progrès de ${percent}% cette semaine" data-ger="${percent}% Fortschritt diese Woche">Progressed ${percent}% this week</span>`;
     } else if (monthlyPercent > 0) {
         const percent = monthlyPercent.toFixed(1);
-        html = `<span data-eng="Progressed ${percent}% last month" data-spa="Progresó ${percent}% el mes pasado" data-fre="Progrès de ${percent}% le mois dernier" data-ger="${percent}% Fortschritt letzten Monat">Progressed ${percent}% last month</span>`;
+        html = `<span data-eng="Progressed ${percent}% last month" data-spa="Progresó ${percent}% el mes pasado" data-fre="Progrès de ${percent}% le mois dernier" data-ger="Fortschritt von ${percent}% im letzten Monat">Progressed ${percent}% last month</span>`;
     } else {
         html = `<span data-eng="No recent progress - keep logging!" data-spa="Sin progreso reciente - ¡sigue registrando!" data-fre="Pas de progrès récent - continuez à enregistrer!" data-ger="Kein aktueller Fortschritt - weiter protokollieren!">No recent progress - keep logging!</span>`;
     }
@@ -2552,7 +2633,7 @@ function displayGoalETA(goalData) {
     }
 
     const formattedDate = formatDate(eta_date);
-    const html = `<span data-eng="On track to reach goal by ${formattedDate}" data-spa="En camino de alcanzar la meta para ${formattedDate}" data-fre="En bonne voie pour atteindre l'objectif d'ici ${formattedDate}" data-ger="Auf dem Weg, das Ziel bis ${formattedDate}">On track to reach goal by ${formattedDate}</span>`;
+    const html = `<span data-eng="On track to reach goal by ${formattedDate}" data-spa="En camino de alcanzar la meta para ${formattedDate}" data-fre="En bonne voie pour atteindre l'objectif d'ici ${formattedDate}" data-ger="Auf dem Weg, das Ziel bis ${formattedDate} zu erreichen">On track to reach goal by ${formattedDate}</span>`;
 
     container.html(html);
 }
@@ -2658,7 +2739,8 @@ function renderIdealWeightProgress(goalData) {
     const weightLost = convertFromKg(lostSoFar);
     const totalToLoseConverted = convertFromKg(totalToLose);
     const unit = getWeightUnitLabel();
-    $('#ideal-weight-progress').text(`${weightLost} ${unit} of ${totalToLoseConverted} ${unit}`);
+    const ofText = t('of') || 'of';
+    $('#ideal-weight-progress').text(`${weightLost} ${unit} ${ofText} ${totalToLoseConverted} ${unit}`);
 
     // Goal achieved celebration
     if (progressPercent >= 100) {
@@ -2738,7 +2820,7 @@ function displayIdealWeightStreak(weeklyPercent, monthlyPercent) {
         html = `<span data-eng="Progressed ${percent}% this week" data-spa="Progresó ${percent}% esta semana" data-fre="Progrès de ${percent}% cette semaine" data-ger="${percent}% Fortschritt diese Woche">Progressed ${percent}% this week</span>`;
     } else if (monthlyPercent > 0) {
         const percent = monthlyPercent.toFixed(1);
-        html = `<span data-eng="Progressed ${percent}% last month" data-spa="Progresó ${percent}% el mes pasado" data-fre="Progrès de ${percent}% le mois dernier" data-ger="${percent}% Fortschritt letzten Monat">Progressed ${percent}% last month</span>`;
+        html = `<span data-eng="Progressed ${percent}% last month" data-spa="Progresó ${percent}% el mes pasado" data-fre="Progrès de ${percent}% le mois dernier" data-ger="Fortschritt von ${percent}% im letzten Monat">Progressed ${percent}% last month</span>`;
     } else {
         html = `<span data-eng="No recent progress - keep logging!" data-spa="Sin progreso reciente - ¡sigue registrando!" data-fre="Pas de progrès récent - continuez à enregistrer!" data-ger="Kein aktueller Fortschritt - weiter protokollieren!">No recent progress - keep logging!</span>`;
     }
@@ -2772,7 +2854,7 @@ function displayIdealWeightETA(currentWeight, idealTargetWeight, weeklyLossRate)
     etaDate.setDate(etaDate.getDate() + (weeksToGoal * 7));
 
     const formattedDate = formatDate(etaDate.toISOString().split('T')[0]);
-    const html = `<span data-eng="On track to reach BMI by ${formattedDate}" data-spa="En camino de alcanzar IMC para ${formattedDate}" data-fre="En bonne voie pour atteindre l'IMC d'ici ${formattedDate}" data-ger="Auf dem Weg, den BMI bis ${formattedDate}">On track to reach BMI by ${formattedDate}</span>`;
+    const html = `<span data-eng="On track to reach BMI by ${formattedDate}" data-spa="En camino de alcanzar IMC para ${formattedDate}" data-fre="En bonne voie pour atteindre l'IMC d'ici ${formattedDate}" data-ger="Auf dem Weg, den BMI bis ${formattedDate} zu erreichen">On track to reach BMI by ${formattedDate}</span>`;
 
     container.html(html);
 }
@@ -2815,10 +2897,6 @@ function formatDate(isoDate) {
 function refreshStreakCounter() {
     if (window.coverage) window.coverage.logFunction('refreshStreakCounter', 'dashboard.js');
 
-    debugLog('refreshStreakCounter called');
-    debugLog('window.globalDashboardData:', window.globalDashboardData);
-    debugLog('streak_data:', window.globalDashboardData?.streak_data);
-
     // Check if data already exists in global dashboard data
     if (window.globalDashboardData && window.globalDashboardData.streak_data) {
         debugLog('Using cached streak data from global dashboard data');
@@ -2852,19 +2930,13 @@ function refreshStreakCounter() {
 function renderStreakCounter(data) {
     if (window.coverage) window.coverage.logFunction('renderStreakCounter', 'dashboard.js');
 
-    debugLog('renderStreakCounter called with data:', data);
-
     const container = $('#streak-counter');
-    debugLog('Container found:', container.length);
 
     // Show/hide appropriate containers
     if (!data || data.current_streak === null) {
-        debugLog('No data or null current_streak, showing placeholder');
         showNoStreakData();
         return;
     }
-
-    debugLog('Data is valid, generating HTML...');
 
     // Generate complete HTML with translation attributes embedded
     const timelineHtml = generateStreakTimelineHtml(data.timeline || []);
@@ -2977,17 +3049,14 @@ function renderStreakCounter(data) {
     `;
 
     container.html(html);
-    debugLog('HTML inserted into container');
 
     // Apply current language to newly generated content
     const currentLanguage = localStorage.getItem('language') || 'en';
-    debugLog('Current language:', currentLanguage);
 
     if (currentLanguage !== 'en') {
         const langMap = { 'en': 'eng', 'es': 'spa', 'fr': 'fre', 'de': 'ger' };
         const dataAttr = langMap[currentLanguage];
         if (dataAttr) {
-            debugLog('Translating to:', dataAttr);
             container.find(`[data-${dataAttr}]`).each(function() {
                 const $element = $(this);
                 const translatedText = $element.attr(`data-${dataAttr}`);
@@ -2995,11 +3064,8 @@ function renderStreakCounter(data) {
                     $element.html(translatedText);
                 }
             });
-            debugLog('Translation applied');
         }
     }
-
-    debugLog('renderStreakCounter complete');
 }
 
 /**
@@ -3116,10 +3182,6 @@ function showNoStreakData() {
 function refreshTotalProgress() {
     if (window.coverage) window.coverage.logFunction('refreshTotalProgress', 'dashboard.js');
 
-    debugLog('refreshTotalProgress called');
-    debugLog('globalDashboardData:', window.globalDashboardData);
-    debugLog('total_progress exists?', window.globalDashboardData && window.globalDashboardData.total_progress);
-
     // CRITICAL: Use global dashboard data if available (don't break the global data system!)
     if (window.globalDashboardData && window.globalDashboardData.total_progress) {
         debugLog('Using global data for total progress');
@@ -3129,9 +3191,7 @@ function refreshTotalProgress() {
         debugLog('Falling back to individual API call');
         postRequest('router.php?controller=profile', { action: 'get_total_progress' })
             .then(resp => {
-                debugLog('API response:', resp);
                 const data = parseJson(resp);
-                debugLog('Parsed data:', data);
                 if (data.success && data.total_progress) {
                     renderTotalProgress(data.total_progress);
                 } else {
@@ -3358,10 +3418,13 @@ function renderGoalPieChart(goalData) {
 
     const { completed_kg, remaining_kg, total_kg } = goalData;
 
+    const completedLabel = t('Completed') || 'Completed';
+    const remainingLabel = t('Remaining') || 'Remaining';
+
     window.goalPieChartInstance = new Chart(ctx, {
         type: 'doughnut',
         data: {
-            labels: ['Completed', 'Remaining'],
+            labels: [completedLabel, remainingLabel],
             datasets: [{
                 data: [Math.abs(completed_kg), Math.abs(remaining_kg)],
                 backgroundColor: ['#7bc96f', 'rgba(100, 150, 200, 0.3)'],
@@ -3386,7 +3449,8 @@ function renderGoalPieChart(goalData) {
     const unit = getWeightUnitLabel();
     const completedDisplay = parseFloat(convertFromKg(completed_kg) || 0).toFixed(1);
     const totalDisplay = parseFloat(convertFromKg(total_kg) || 0).toFixed(1);
-    const labelText = `${completedDisplay} ${unit} of ${totalDisplay} ${unit}`;
+    const ofText = t('of') || 'of';
+    const labelText = `${completedDisplay} ${unit} ${ofText} ${totalDisplay} ${unit}`;
     $('#goal-pie-label').text(labelText);
 }
 
@@ -3416,10 +3480,13 @@ function renderIdealWeightPieChart(idealWeightData) {
         return;
     }
 
+    const achievedLabel = t('Achieved') || 'Achieved';
+    const remainingLabel = t('Remaining') || 'Remaining';
+
     window.idealWeightPieChartInstance = new Chart(ctx, {
         type: 'doughnut',
         data: {
-            labels: ['Achieved', 'Remaining'],
+            labels: [achievedLabel, remainingLabel],
             datasets: [{
                 data: [achieved_kg, remaining_kg],
                 backgroundColor: ['#7bc96f', 'rgba(100, 150, 200, 0.3)'],
@@ -3558,7 +3625,8 @@ function displayWeightComparison(totalLostKg) {
     const unit = getWeightUnitLabel();
     const displayWeight = parseFloat(convertFromKg(Math.abs(totalLostKg)) || 0).toFixed(1);
     const likeLosing = t("that's like losing") || "that's like losing";
-    $('#weight-comparison').text(`${displayWeight} ${unit}, ${likeLosing} ${closestComparison.text.toUpperCase()} ${closestComparison.icon}`);
+    const translatedComparison = t(closestComparison.text) || closestComparison.text;
+    $('#weight-comparison').text(`${displayWeight} ${unit}, ${likeLosing} ${translatedComparison.toUpperCase()} ${closestComparison.icon}`);
 }
 
 // Body fat is now automatically calculated and stored when weight is logged
@@ -3570,3 +3638,5 @@ function displayWeightComparison(totalLostKg) {
 window.updateWeightUnitDisplay = updateWeightUnitDisplay;
 window.refreshAllWeightDisplays = refreshAllWeightDisplays;
 window.updateHeightUnitDisplay = updateHeightUnitDisplay;
+window.loadQuickLookMetrics = loadQuickLookMetrics;
+window.refreshTotalProgress = refreshTotalProgress;

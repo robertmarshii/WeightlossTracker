@@ -1,5 +1,4 @@
 // Translation helper for dynamically generated content
-debugLog('🌐 Translate.js loaded');
 
 // Translation dictionary for dynamically generated text
 const translations = {
@@ -753,6 +752,108 @@ const translations = {
         "es": "eso es como perder",
         "fr": "c'est comme perdre",
         "de": "das ist wie zu verlieren"
+    },
+    "Completed": {
+        "en": "Completed",
+        "es": "Completado",
+        "fr": "Complété",
+        "de": "Abgeschlossen"
+    },
+    "Remaining": {
+        "en": "Remaining",
+        "es": "Restante",
+        "fr": "Restant",
+        "de": "Verbleibend"
+    },
+    "Achieved": {
+        "en": "Achieved",
+        "es": "Logrado",
+        "fr": "Atteint",
+        "de": "Erreicht"
+    },
+    "10 sticks of butter": {
+        "en": "10 sticks of butter",
+        "es": "10 barras de mantequilla",
+        "fr": "10 bâtonnets de beurre",
+        "de": "10 Butterstücke"
+    },
+    "a pineapple": {
+        "en": "a pineapple",
+        "es": "una piña",
+        "fr": "un ananas",
+        "de": "eine Ananas"
+    },
+    "a newborn baby": {
+        "en": "a newborn baby",
+        "es": "un bebé recién nacido",
+        "fr": "un nouveau-né",
+        "de": "ein neugeborenes Baby"
+    },
+    "a housecat": {
+        "en": "a housecat",
+        "es": "un gato doméstico",
+        "fr": "un chat domestique",
+        "de": "eine Hauskatze"
+    },
+    "a bowling ball": {
+        "en": "a bowling ball",
+        "es": "una bola de boliche",
+        "fr": "une boule de bowling",
+        "de": "eine Bowlingkugel"
+    },
+    "a gallon of paint": {
+        "en": "a gallon of paint",
+        "es": "un galón de pintura",
+        "fr": "un gallon de peinture",
+        "de": "ein Eimer Farbe"
+    },
+    "an air conditioner": {
+        "en": "an air conditioner",
+        "es": "un aire acondicionado",
+        "fr": "un climatiseur",
+        "de": "eine Klimaanlage"
+    },
+    "a medium dog": {
+        "en": "a medium dog",
+        "es": "un perro mediano",
+        "fr": "un chien moyen",
+        "de": "ein mittelgroßer Hund"
+    },
+    "a microwave oven": {
+        "en": "a microwave oven",
+        "es": "un horno microondas",
+        "fr": "un four à micro-ondes",
+        "de": "eine Mikrowelle"
+    },
+    "a full suitcase": {
+        "en": "a full suitcase",
+        "es": "una maleta llena",
+        "fr": "une valise pleine",
+        "de": "ein voller Koffer"
+    },
+    "a small child": {
+        "en": "a small child",
+        "es": "un niño pequeño",
+        "fr": "un petit enfant",
+        "de": "ein kleines Kind"
+    },
+    "a bicycle": {
+        "en": "a bicycle",
+        "es": "una bicicleta",
+        "fr": "un vélo",
+        "de": "ein Fahrrad"
+    },
+    "a large dog": {
+        "en": "a large dog",
+        "es": "un perro grande",
+        "fr": "un grand chien",
+        "de": "ein großer Hund"
+    },
+    "a full-size refrigerator": {
+        "en": "a full-size refrigerator",
+        "es": "un refrigerador de tamaño completo",
+        "fr": "un réfrigérateur pleine grandeur",
+        "de": "ein großer Kühlschrank"
     }
 };
 

@@ -1143,7 +1143,9 @@
                         $baseRisk = 10; // baseline 10%
 
                         // BMI impact
-                        if ($bmi >= 30) $baseRisk += 15;      // Obese: +15%
+                        if ($bmi >= 40) $baseRisk += 20;      // Obese Class III: +20%
+                        elseif ($bmi >= 35) $baseRisk += 17;  // Obese Class II: +17%
+                        elseif ($bmi >= 30) $baseRisk += 15;  // Obese Class I: +15%
                         elseif ($bmi >= 25) $baseRisk += 8;   // Overweight: +8%
                         elseif ($bmi < 18.5) $baseRisk += 5;  // Underweight: +5%
 

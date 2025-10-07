@@ -1,0 +1,1000 @@
+[
+    {
+        "message": "✅ Global dashboard data loaded. Keys:",
+        "data": [
+            "latest_weight",
+            "goal",
+            "profile",
+            "weight_history",
+            "settings",
+            "health_stats",
+            "ideal_weight",
+            "weight_progress",
+            "cardiovascular_risk",
+            "gallbladder_health",
+            "quick_look_metrics",
+            "goal_progress_enhanced",
+            "streak_data",
+            "total_progress"
+        ],
+        "time": 1759870841769
+    },
+    {
+        "message": "🔍 health_stats available:",
+        "data": true,
+        "time": 1759870841769
+    },
+    {
+        "message": "🔍 weight_progress available:",
+        "data": true,
+        "time": 1759870841769
+    },
+    {
+        "message": "🔍 ideal_weight available:",
+        "data": true,
+        "time": 1759870841769
+    },
+    {
+        "message": "📞 Calling callback. globalDashboardData exists:",
+        "data": true,
+        "time": 1759870841769
+    },
+    {
+        "message": "refreshLatestWeight",
+        "data": {
+            "hasGlobalData": true
+        },
+        "time": 1759870841769
+    },
+    {
+        "message": "Using global data for latest weight",
+        "time": 1759870841769
+    },
+    {
+        "message": "🔍 refreshGoal - has global data:",
+        "data": true,
+        "time": 1759870841770
+    },
+    {
+        "message": "📊 Using global data for goal",
+        "time": 1759870841770
+    },
+    {
+        "message": "📊 Using global data for profile",
+        "time": 1759870841770
+    },
+    {
+        "message": "🔍 refreshBMI - has global data:",
+        "data": true,
+        "time": 1759870841770
+    },
+    {
+        "message": "📊 Using global data for BMI",
+        "time": 1759870841770
+    },
+    {
+        "message": "🔍 refreshHealth - has global data:",
+        "data": true,
+        "time": 1759870841770
+    },
+    {
+        "message": "📊 Using global data for health stats (body fat)",
+        "time": 1759870841770
+    },
+    {
+        "message": "📊 Using global data for cardiovascular risk",
+        "time": 1759870841771
+    },
+    {
+        "message": "🔍 cardiovascular_risk data:",
+        "data": {
+            "success": true,
+            "current_risk_percentage": 30,
+            "current_risk_category": "High",
+            "original_risk_percentage": 33,
+            "original_risk_category": "High",
+            "risk_improvement_percentage": 3,
+            "notes": [
+                "Simplified risk model based on BMI, age, and activity level",
+                "For clinical assessment, consult healthcare provider"
+            ]
+        },
+        "time": 1759870841771
+    },
+    {
+        "message": "🔍 Risk improvement:",
+        "data": 3,
+        "time": 1759870841771
+    },
+    {
+        "message": "📊 Using global data for ideal weight",
+        "time": 1759870841771
+    },
+    {
+        "message": "🔍 refreshWeightProgress - has global data:",
+        "data": true,
+        "time": 1759870841771
+    },
+    {
+        "message": "📊 Using global data for weight progress",
+        "time": 1759870841771
+    },
+    {
+        "message": "🔍 refreshGallbladderHealth - has global data:",
+        "data": true,
+        "time": 1759870841771
+    },
+    {
+        "message": "📊 Using global data for gallbladder health",
+        "time": 1759870841771
+    },
+    {
+        "message": "Health benefits - checking for data to update cards...",
+        "time": 1759870841771
+    },
+    {
+        "message": "📊 Using global data for health benefit cards",
+        "time": 1759870841771
+    },
+    {
+        "message": "🔍 weight_progress data:",
+        "data": {
+            "success": true,
+            "total_weight_lost_kg": 10.1,
+            "start_weight_kg": 128,
+            "current_weight_kg": 117.9,
+            "estimated_fat_loss_kg": 7.9,
+            "fat_loss_percentage": 78,
+            "weeks_elapsed": 14,
+            "avg_weekly_rate_kg": 0.72,
+            "research_note": "Research suggests ~78% of weight loss is fat when combined with exercise",
+            "oldest_weight_kg": 128,
+            "newest_weight_kg": 117.9,
+            "start_date": "2025-06-13",
+            "end_date": "2025-09-19",
+            "days_tracked": 98,
+            "weeks_tracked": 14,
+            "average_weekly_loss_kg": 0.72,
+            "bmi_change": 3.2,
+            "total_entries": 15
+        },
+        "time": 1759870841771
+    },
+    {
+        "message": "🔍 loadWeightHistory - has global data:",
+        "data": true,
+        "time": 1759870841772
+    },
+    {
+        "message": "📊 Using global data for weight history",
+        "time": 1759870841772
+    },
+    {
+        "message": "📊 Using global data for goal progress enhanced",
+        "time": 1759870841773
+    },
+    {
+        "message": "📊 renderGoalProgress called with",
+        "data": {
+            "current_weight": 117.9,
+            "start_weight": 128,
+            "target_weight": 115,
+            "progress_percent": 77.7,
+            "weight_lost": 10.1,
+            "weekly_progress": 0,
+            "monthly_progress": 6.15,
+            "eta_date": "2025-11-21",
+            "weekly_loss_rate": 0.46
+        },
+        "time": 1759870841773
+    },
+    {
+        "message": "🔍 hasGoal",
+        "data": true,
+        "time": 1759870841773
+    },
+    {
+        "message": "✅ Hiding placeholder, showing content",
+        "time": 1759870841773
+    },
+    {
+        "message": "Using global data for total progress",
+        "time": 1759870841774
+    },
+    {
+        "message": "Body fat data received:",
+        "data": [
+            {
+                "entry_date": "2025-06-13",
+                "body_fat_percent": 46.9
+            },
+            {
+                "entry_date": "2025-06-20",
+                "body_fat_percent": 46.3
+            },
+            {
+                "entry_date": "2025-06-27",
+                "body_fat_percent": 45.9
+            },
+            {
+                "entry_date": "2025-07-04",
+                "body_fat_percent": 45.8
+            },
+            {
+                "entry_date": "2025-07-11",
+                "body_fat_percent": 45.2
+            },
+            {
+                "entry_date": "2025-07-18",
+                "body_fat_percent": 44.8
+            },
+            {
+                "entry_date": "2025-07-25",
+                "body_fat_percent": 44.7
+            },
+            {
+                "entry_date": "2025-08-01",
+                "body_fat_percent": 44.5
+            },
+            {
+                "entry_date": "2025-08-08",
+                "body_fat_percent": 44.3
+            },
+            {
+                "entry_date": "2025-08-15",
+                "body_fat_percent": 43.9
+            },
+            {
+                "entry_date": "2025-08-22",
+                "body_fat_percent": 43.6
+            },
+            {
+                "entry_date": "2025-08-29",
+                "body_fat_percent": 43.5
+            },
+            {
+                "entry_date": "2025-09-05",
+                "body_fat_percent": 43.5
+            },
+            {
+                "entry_date": "2025-09-12",
+                "body_fat_percent": 43.4
+            },
+            {
+                "entry_date": "2025-09-19",
+                "body_fat_percent": 43.1
+            }
+        ],
+        "time": 1759870841790
+    },
+    {
+        "message": "📊 Using global data for weight chart",
+        "time": 1759870841794
+    },
+    {
+        "message": "Active schema:",
+        "data": "wt_dev",
+        "time": 1759870841799
+    },
+    {
+        "message": "🔧 loadSettings() called in dashboard.js",
+        "time": 1759870842802
+    },
+    {
+        "message": "🔍 globalDashboardData:",
+        "data": {
+            "latest_weight": {
+                "weight_kg": "117.90",
+                "entry_date": "2025-09-19"
+            },
+            "goal": {
+                "target_weight_kg": "115.00",
+                "target_date": "2025-10-15"
+            },
+            "profile": {
+                "user_id": 1,
+                "height_cm": 178,
+                "body_frame": "large",
+                "age": 40,
+                "activity_level": "light"
+            },
+            "weight_history": [
+                {
+                    "id": 15,
+                    "weight_kg": "117.90",
+                    "entry_date": "2025-09-19",
+                    "notes": "Weight entry"
+                },
+                {
+                    "id": 14,
+                    "weight_kg": "118.70",
+                    "entry_date": "2025-09-12",
+                    "notes": "Weight entry"
+                },
+                {
+                    "id": 13,
+                    "weight_kg": "119.00",
+                    "entry_date": "2025-09-05",
+                    "notes": "Weight entry"
+                },
+                {
+                    "id": 12,
+                    "weight_kg": "119.20",
+                    "entry_date": "2025-08-29",
+                    "notes": "Weight entry"
+                },
+                {
+                    "id": 11,
+                    "weight_kg": "119.40",
+                    "entry_date": "2025-08-22",
+                    "notes": "Weight entry"
+                },
+                {
+                    "id": 10,
+                    "weight_kg": "120.20",
+                    "entry_date": "2025-08-15",
+                    "notes": "Weight entry"
+                },
+                {
+                    "id": 9,
+                    "weight_kg": "121.30",
+                    "entry_date": "2025-08-08",
+                    "notes": "Weight entry"
+                },
+                {
+                    "id": 8,
+                    "weight_kg": "121.70",
+                    "entry_date": "2025-08-01",
+                    "notes": "Weight entry"
+                },
+                {
+                    "id": 7,
+                    "weight_kg": "122.20",
+                    "entry_date": "2025-07-25",
+                    "notes": "Weight entry"
+                },
+                {
+                    "id": 6,
+                    "weight_kg": "122.40",
+                    "entry_date": "2025-07-18",
+                    "notes": "Weight entry"
+                },
+                {
+                    "id": 5,
+                    "weight_kg": "123.60",
+                    "entry_date": "2025-07-11",
+                    "notes": "Weight entry"
+                },
+                {
+                    "id": 4,
+                    "weight_kg": "125.20",
+                    "entry_date": "2025-07-04",
+                    "notes": "Weight entry"
+                },
+                {
+                    "id": 3,
+                    "weight_kg": "125.50",
+                    "entry_date": "2025-06-27",
+                    "notes": "Weight entry"
+                },
+                {
+                    "id": 2,
+                    "weight_kg": "126.50",
+                    "entry_date": "2025-06-20",
+                    "notes": "Weight entry"
+                },
+                {
+                    "id": 1,
+                    "weight_kg": "128.00",
+                    "entry_date": "2025-06-13",
+                    "notes": "Weight entry"
+                }
+            ],
+            "settings": {
+                "user_id": 1,
+                "weight_unit": "kg",
+                "height_unit": "cm",
+                "temperature_unit": "c",
+                "date_format": "uk",
+                "time_format": "24",
+                "timezone": "Europe/London",
+                "theme": "glassmorphism",
+                "language": "en",
+                "start_of_week": "monday",
+                "share_data": false,
+                "email_notifications": false,
+                "email_day": "monday",
+                "email_time": "09:00",
+                "weekly_reports": false,
+                "updated_at": "2025-10-07 19:57:08.988753"
+            },
+            "health_stats": {
+                "bmi": 37.2,
+                "category": "obese",
+                "adjusted_bmi": 36.1,
+                "adjusted_category": "obese",
+                "estimated_body_fat_range": [
+                    37.7,
+                    48.5
+                ],
+                "body_fat_notes": [
+                    "Body fat estimated via Deurenberg formula (BMI, age). Range spans male–female."
+                ],
+                "cvd_risk_label": "highly increased",
+                "cvd_risk_notes": [
+                    "This is a general, non-diagnostic impression based on BMI, age and activity.",
+                    "For cardiovascular risk, clinical calculators (e.g., Framingham, ASCVD) require blood pressure and lab values."
+                ],
+                "height_cm": 178,
+                "age": 40
+            },
+            "ideal_weight": {
+                "success": true,
+                "min_weight_kg": 75.5,
+                "max_weight_kg": 82.6,
+                "ideal_weight_kg": 71.9,
+                "body_frame": "large",
+                "timeline": {
+                    "weeks_to_goal": 65,
+                    "target_date": "2026-12",
+                    "current_rate_kg_per_week": 0.54,
+                    "remaining_weight_kg": 35.3
+                },
+                "note": "Ideal weight range calculated using modified Hamwi formula for large frame"
+            },
+            "weight_progress": {
+                "success": true,
+                "total_weight_lost_kg": 10.1,
+                "start_weight_kg": 128,
+                "current_weight_kg": 117.9,
+                "estimated_fat_loss_kg": 7.9,
+                "fat_loss_percentage": 78,
+                "weeks_elapsed": 14,
+                "avg_weekly_rate_kg": 0.72,
+                "research_note": "Research suggests ~78% of weight loss is fat when combined with exercise",
+                "oldest_weight_kg": 128,
+                "newest_weight_kg": 117.9,
+                "start_date": "2025-06-13",
+                "end_date": "2025-09-19",
+                "days_tracked": 98,
+                "weeks_tracked": 14,
+                "average_weekly_loss_kg": 0.72,
+                "bmi_change": 3.2,
+                "total_entries": 15
+            },
+            "cardiovascular_risk": {
+                "success": true,
+                "current_risk_percentage": 30,
+                "current_risk_category": "High",
+                "original_risk_percentage": 33,
+                "original_risk_category": "High",
+                "risk_improvement_percentage": 3,
+                "notes": [
+                    "Simplified risk model based on BMI, age, and activity level",
+                    "For clinical assessment, consult healthcare provider"
+                ]
+            },
+            "gallbladder_health": {
+                "success": true,
+                "risk_reduction_percentage": 15,
+                "current_risk_percentage": 20,
+                "baseline_risk_percentage": 35,
+                "weight_lost_kg": 10.1,
+                "current_bmi": 37.2,
+                "benefits": [
+                    "Gallstone risk reduction from weight loss",
+                    "Notable reduction in cholecystitis risk",
+                    "Continue weight loss for greater gallbladder benefits"
+                ],
+                "research_notes": [
+                    "Weight loss of 5-10% can reduce gallstone risk by 40-50%",
+                    "Maintaining healthy BMI <25 significantly improves gallbladder function"
+                ]
+            },
+            "quick_look_metrics": {
+                "consistency_score": 83.1,
+                "logging_frequency": 100,
+                "goal_progress": 66.27906976744177,
+                "next_checkin_date": "2025-09-26",
+                "days_until_checkin": -11,
+                "average_logging_interval": 7
+            },
+            "goal_progress_enhanced": {
+                "current_weight": 117.9,
+                "start_weight": 128,
+                "target_weight": 115,
+                "progress_percent": 77.7,
+                "weight_lost": 10.1,
+                "weekly_progress": 0,
+                "monthly_progress": 6.15,
+                "eta_date": "2025-11-21",
+                "weekly_loss_rate": 0.46
+            },
+            "streak_data": {
+                "current_streak": 0,
+                "longest_streak": 11,
+                "missed_weeks_this_month": 3,
+                "timeline": [
+                    {
+                        "date": "2025-09-10",
+                        "logged": false,
+                        "is_today": false
+                    },
+                    {
+                        "date": "2025-09-11",
+                        "logged": false,
+                        "is_today": false
+                    },
+                    {
+                        "date": "2025-09-12",
+                        "logged": true,
+                        "is_today": false
+                    },
+                    {
+                        "date": "2025-09-13",
+                        "logged": false,
+                        "is_today": false
+                    },
+                    {
+                        "date": "2025-09-14",
+                        "logged": false,
+                        "is_today": false
+                    },
+                    {
+                        "date": "2025-09-15",
+                        "logged": false,
+                        "is_today": false
+                    },
+                    {
+                        "date": "2025-09-16",
+                        "logged": false,
+                        "is_today": false
+                    },
+                    {
+                        "date": "2025-09-17",
+                        "logged": false,
+                        "is_today": false
+                    },
+                    {
+                        "date": "2025-09-18",
+                        "logged": false,
+                        "is_today": false
+                    },
+                    {
+                        "date": "2025-09-19",
+                        "logged": true,
+                        "is_today": false
+                    },
+                    {
+                        "date": "2025-09-20",
+                        "logged": false,
+                        "is_today": false
+                    },
+                    {
+                        "date": "2025-09-21",
+                        "logged": false,
+                        "is_today": false
+                    },
+                    {
+                        "date": "2025-09-22",
+                        "logged": false,
+                        "is_today": false
+                    },
+                    {
+                        "date": "2025-09-23",
+                        "logged": false,
+                        "is_today": false
+                    },
+                    {
+                        "date": "2025-09-24",
+                        "logged": false,
+                        "is_today": false
+                    },
+                    {
+                        "date": "2025-09-25",
+                        "logged": false,
+                        "is_today": false
+                    },
+                    {
+                        "date": "2025-09-26",
+                        "logged": false,
+                        "is_today": false
+                    },
+                    {
+                        "date": "2025-09-27",
+                        "logged": false,
+                        "is_today": false
+                    },
+                    {
+                        "date": "2025-09-28",
+                        "logged": false,
+                        "is_today": false
+                    },
+                    {
+                        "date": "2025-09-29",
+                        "logged": false,
+                        "is_today": false
+                    },
+                    {
+                        "date": "2025-09-30",
+                        "logged": false,
+                        "is_today": false
+                    },
+                    {
+                        "date": "2025-10-01",
+                        "logged": false,
+                        "is_today": false
+                    },
+                    {
+                        "date": "2025-10-02",
+                        "logged": false,
+                        "is_today": false
+                    },
+                    {
+                        "date": "2025-10-03",
+                        "logged": false,
+                        "is_today": false
+                    },
+                    {
+                        "date": "2025-10-04",
+                        "logged": false,
+                        "is_today": false
+                    },
+                    {
+                        "date": "2025-10-05",
+                        "logged": false,
+                        "is_today": false
+                    },
+                    {
+                        "date": "2025-10-06",
+                        "logged": false,
+                        "is_today": false
+                    },
+                    {
+                        "date": "2025-10-07",
+                        "logged": false,
+                        "is_today": true
+                    }
+                ]
+            },
+            "total_progress": {
+                "weekly_loss_data": [
+                    {
+                        "week": 16,
+                        "year": "2025",
+                        "avg_loss": 0
+                    },
+                    {
+                        "week": 17,
+                        "year": "2025",
+                        "avg_loss": 0
+                    },
+                    {
+                        "week": 18,
+                        "year": "2025",
+                        "avg_loss": 0
+                    },
+                    {
+                        "week": 19,
+                        "year": "2025",
+                        "avg_loss": 0
+                    },
+                    {
+                        "week": 20,
+                        "year": "2025",
+                        "avg_loss": 0
+                    },
+                    {
+                        "week": 21,
+                        "year": "2025",
+                        "avg_loss": 0
+                    },
+                    {
+                        "week": 22,
+                        "year": "2025",
+                        "avg_loss": 0
+                    },
+                    {
+                        "week": 23,
+                        "year": "2025",
+                        "avg_loss": 0
+                    },
+                    {
+                        "week": 24,
+                        "year": "2025",
+                        "avg_loss": 0
+                    },
+                    {
+                        "week": 25,
+                        "year": "2025",
+                        "avg_loss": 1.5
+                    },
+                    {
+                        "week": 26,
+                        "year": "2025",
+                        "avg_loss": 1
+                    },
+                    {
+                        "week": 27,
+                        "year": "2025",
+                        "avg_loss": 0.3
+                    },
+                    {
+                        "week": 28,
+                        "year": "2025",
+                        "avg_loss": 1.6
+                    },
+                    {
+                        "week": 29,
+                        "year": "2025",
+                        "avg_loss": 1.2
+                    },
+                    {
+                        "week": 30,
+                        "year": "2025",
+                        "avg_loss": 0.2
+                    },
+                    {
+                        "week": 31,
+                        "year": "2025",
+                        "avg_loss": 0.5
+                    },
+                    {
+                        "week": 32,
+                        "year": "2025",
+                        "avg_loss": 0.4
+                    },
+                    {
+                        "week": 33,
+                        "year": "2025",
+                        "avg_loss": 1.1
+                    },
+                    {
+                        "week": 34,
+                        "year": "2025",
+                        "avg_loss": 0.8
+                    },
+                    {
+                        "week": 35,
+                        "year": "2025",
+                        "avg_loss": 0.2
+                    },
+                    {
+                        "week": 36,
+                        "year": "2025",
+                        "avg_loss": 0.2
+                    },
+                    {
+                        "week": 37,
+                        "year": "2025",
+                        "avg_loss": 0.3
+                    },
+                    {
+                        "week": 38,
+                        "year": "2025",
+                        "avg_loss": 0.8
+                    },
+                    {
+                        "week": 39,
+                        "year": "2025",
+                        "avg_loss": 0
+                    },
+                    {
+                        "week": 40,
+                        "year": "2025",
+                        "avg_loss": 0
+                    },
+                    {
+                        "week": 41,
+                        "year": "2025",
+                        "avg_loss": 0
+                    }
+                ],
+                "projection_data": {
+                    "historical": {
+                        "labels": [
+                            "Jun 13",
+                            "Jun 20",
+                            "Jun 27",
+                            "Jul 4",
+                            "Jul 11",
+                            "Jul 18",
+                            "Jul 25",
+                            "Aug 1",
+                            "Aug 8",
+                            "Aug 15",
+                            "Aug 22",
+                            "Aug 29",
+                            "Sep 5",
+                            "Sep 12",
+                            "Sep 19"
+                        ],
+                        "data": [
+                            128,
+                            126.5,
+                            125.5,
+                            125.2,
+                            123.6,
+                            122.4,
+                            122.2,
+                            121.7,
+                            121.3,
+                            120.2,
+                            119.4,
+                            119.2,
+                            119,
+                            118.7,
+                            117.9
+                        ]
+                    },
+                    "projected": {
+                        "labels": [
+                            "Sep 26",
+                            "Oct 3",
+                            "Oct 10",
+                            "Oct 17",
+                            "Oct 24",
+                            "Oct 31",
+                            "Nov 7",
+                            "Nov 14",
+                            "Nov 21",
+                            "Nov 28",
+                            "Dec 5",
+                            "Dec 12",
+                            "Dec 19",
+                            "Dec 26",
+                            "Jan 2",
+                            "Jan 9",
+                            "Jan 16",
+                            "Jan 23",
+                            "Jan 30",
+                            "Feb 6",
+                            "Feb 13",
+                            "Feb 20",
+                            "Feb 27",
+                            "Mar 6",
+                            "Mar 13",
+                            "Mar 20"
+                        ],
+                        "data": [
+                            116.6,
+                            115.9,
+                            115.2,
+                            114.5,
+                            113.8,
+                            113.1,
+                            112.5,
+                            111.8,
+                            111.1,
+                            110.4,
+                            109.7,
+                            109,
+                            108.3,
+                            107.7,
+                            107,
+                            106.3,
+                            105.6,
+                            104.9,
+                            104.2,
+                            103.5,
+                            102.9,
+                            102.2,
+                            101.5,
+                            100.8,
+                            100.1,
+                            99.4
+                        ]
+                    }
+                },
+                "goal_data": {
+                    "completed_kg": 10.1,
+                    "remaining_kg": 2.9,
+                    "total_kg": 13
+                },
+                "ideal_weight_data": {
+                    "in_range": false,
+                    "achieved_kg": 10.1,
+                    "remaining_kg": 39
+                },
+                "body_fat_data": [
+                    {
+                        "entry_date": "2025-06-13",
+                        "body_fat_percent": 46.9
+                    },
+                    {
+                        "entry_date": "2025-06-20",
+                        "body_fat_percent": 46.3
+                    },
+                    {
+                        "entry_date": "2025-06-27",
+                        "body_fat_percent": 45.9
+                    },
+                    {
+                        "entry_date": "2025-07-04",
+                        "body_fat_percent": 45.8
+                    },
+                    {
+                        "entry_date": "2025-07-11",
+                        "body_fat_percent": 45.2
+                    },
+                    {
+                        "entry_date": "2025-07-18",
+                        "body_fat_percent": 44.8
+                    },
+                    {
+                        "entry_date": "2025-07-25",
+                        "body_fat_percent": 44.7
+                    },
+                    {
+                        "entry_date": "2025-08-01",
+                        "body_fat_percent": 44.5
+                    },
+                    {
+                        "entry_date": "2025-08-08",
+                        "body_fat_percent": 44.3
+                    },
+                    {
+                        "entry_date": "2025-08-15",
+                        "body_fat_percent": 43.9
+                    },
+                    {
+                        "entry_date": "2025-08-22",
+                        "body_fat_percent": 43.6
+                    },
+                    {
+                        "entry_date": "2025-08-29",
+                        "body_fat_percent": 43.5
+                    },
+                    {
+                        "entry_date": "2025-09-05",
+                        "body_fat_percent": 43.5
+                    },
+                    {
+                        "entry_date": "2025-09-12",
+                        "body_fat_percent": 43.4
+                    },
+                    {
+                        "entry_date": "2025-09-19",
+                        "body_fat_percent": 43.1
+                    }
+                ],
+                "total_lost_kg": 10.099999999999994
+            }
+        },
+        "time": 1759870842802
+    },
+    {
+        "message": "📊 Using global data for settings",
+        "time": 1759870842802
+    },
+    {
+        "message": "🔧 Settings data:",
+        "data": {
+            "user_id": 1,
+            "weight_unit": "kg",
+            "height_unit": "cm",
+            "temperature_unit": "c",
+            "date_format": "uk",
+            "time_format": "24",
+            "timezone": "Europe/London",
+            "theme": "glassmorphism",
+            "language": "en",
+            "start_of_week": "monday",
+            "share_data": false,
+            "email_notifications": false,
+            "email_day": "monday",
+            "email_time": "09:00",
+            "weekly_reports": false,
+            "updated_at": "2025-10-07 19:57:08.988753"
+        },
+        "time": 1759870842802
+    },
+    {
+        "message": "Using cached streak data from global dashboard data",
+        "time": 1759870842918
+    },
+    {
+        "message": "✅ Generated HTML for 28 timeline dots",
+        "time": 1759870842919
+    }
+]

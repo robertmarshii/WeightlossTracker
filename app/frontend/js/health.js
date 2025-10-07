@@ -307,6 +307,146 @@ function updateHealthBenefitCards() {
     if (window.coverage) window.coverage.logFunction('updateHealthBenefitCards', 'health.js');
     debugLog('Health benefits - checking for data to update cards...');
 
+    // Check if we have global data first
+    if (window.globalDashboardData && window.globalDashboardData.weight_progress) {
+        debugLog('📊 Using global data for health benefit cards');
+        const data = window.globalDashboardData.weight_progress;
+        debugLog('🔍 weight_progress data:', data);
+
+        // Get height from profile or health_stats (not in weight_progress)
+        const height_cm = window.globalDashboardData.profile?.height_cm || window.globalDashboardData.health_stats?.height_cm;
+
+        if ((data.start_weight_kg || data.start_weight) && (data.current_weight_kg || data.current_weight) && height_cm) {
+            const startWeight = parseFloat(data.start_weight_kg || data.start_weight);
+            const currentWeight = parseFloat(data.current_weight_kg || data.current_weight);
+            const height = parseFloat(height_cm) / 100.0;
+
+            const startBMI = startWeight / (height * height);
+            const currentBMI = currentWeight / (height * height);
+            const bmiReduction = startBMI - currentBMI;
+            const weightLoss = startWeight - currentWeight;
+
+            if (bmiReduction > 0) { // Show any progress
+                if (window.coverage) window.coverage.logFunction('if', 'health.js');
+                // Calculate actual benefits based on user's BMI reduction
+                const benefitMultiplier = bmiReduction / 5.0;
+
+                // Update diabetes card with risk percentages based on BMI
+                const originalRisk = getBMIRisk(startBMI);
+                const currentRisk = getBMIRisk(currentBMI);
+                const riskReduction = originalRisk - currentRisk;
+                $('#diabetes-block').html(`Current Risk: <strong>${currentRisk}%</strong><br>${t('Started at')}: <strong>${originalRisk}%</strong> (${startBMI.toFixed(1)} ${t('BMI')})<br>${t('Risk reduced by')} <strong class="text-success">${riskReduction} ${t('percentage points')}</strong><br><small class="text-muted">${t('Weight loss significantly reduces diabetes incidence and HbA1c levels (American Diabetes Association, 2023)')}</small>`).removeClass('text-muted');
+
+                // Update sleep apnea card with risk percentages
+                const originalSleepRisk = getSleepApneaRisk(startBMI);
+                const currentSleepRisk = getSleepApneaRisk(currentBMI);
+                const sleepRiskReduction = originalSleepRisk - currentSleepRisk;
+                $('#sleep-apnea-block').html(`Current Risk: <strong>${currentSleepRisk}%</strong><br>${t('Started at')}: <strong>${originalSleepRisk}%</strong> (${startBMI.toFixed(1)} ${t('BMI')})<br>${t('Risk reduced by')} <strong class="text-success">${sleepRiskReduction} ${t('percentage points')}</strong><br><small class="text-muted">${t('Weight loss significantly reduces sleep apnea severity and improves sleep quality (Peppard et al., 2013, Am J Respir Crit Care Med)')}</small>`).removeClass('text-muted');
+
+                // Update hypertension card with risk percentages
+                const originalHypertensionRisk = getHypertensionRisk(startBMI);
+                const currentHypertensionRisk = getHypertensionRisk(currentBMI);
+                const hypertensionRiskReduction = originalHypertensionRisk - currentHypertensionRisk;
+                $('#hypertension-block').html(`${t('Current Risk:')} <strong>${currentHypertensionRisk}%</strong><br>${t('Started at')}: <strong>${originalHypertensionRisk}%</strong> (${startBMI.toFixed(1)} ${t('BMI')})<br>${t('Risk reduced by')} <strong class="text-success">${hypertensionRiskReduction} ${t('percentage points')}</strong><br><small class="text-muted">${t('Blood pressure typically drops 5-10 mmHg systolic/diastolic with weight loss (Whelton et al., 2018, JAMA)')}</small>`).removeClass('text-muted');
+
+                // Update fatty liver card with risk percentages
+                const originalFattyLiverRisk = getFattyLiverRisk(startBMI);
+                const currentFattyLiverRisk = getFattyLiverRisk(currentBMI);
+                const fattyLiverRiskReduction = originalFattyLiverRisk - currentFattyLiverRisk;
+                $('#fatty-liver-block').html(`${t('Current Risk:')} <strong>${currentFattyLiverRisk}%</strong><br>${t('Started at')}: <strong>${originalFattyLiverRisk}%</strong> (${startBMI.toFixed(1)} ${t('BMI')})<br>${t('Risk reduced by')} <strong class="text-success">${fattyLiverRiskReduction} ${t('percentage points')}</strong><br><small class="text-muted">${t('Early-stage NAFLD can often be reversed with weight loss (Chalasani et al., 2018, Hepatology)')}</small>`).removeClass('text-muted');
+
+                // Update heart disease card with risk percentages
+                const originalHeartRisk = getHeartDiseaseRisk(startBMI);
+                const currentHeartRisk = getHeartDiseaseRisk(currentBMI);
+                const heartRiskReduction = originalHeartRisk - currentHeartRisk;
+                $('#heart-disease-block').html(`Current Risk: <strong>${currentHeartRisk}%</strong><br>${t('Started at')}: <strong>${originalHeartRisk}%</strong> (${startBMI.toFixed(1)} ${t('BMI')})<br>${t('Risk reduced by')} <strong class="text-success">${heartRiskReduction} ${t('percentage points')}</strong><br><small class="text-muted">${t('Stronger cardiovascular protection with central obesity reduction (Lavie et al., 2021, Circulation)')}</small>`).removeClass('text-muted');
+
+                // Update mental health card with risk percentages
+                const originalMentalRisk = getMentalHealthRisk(startBMI);
+                const currentMentalRisk = getMentalHealthRisk(currentBMI);
+                const mentalRiskReduction = originalMentalRisk - currentMentalRisk;
+                $('#mental-health-block').html(`Current Risk: <strong>${currentMentalRisk}%</strong><br>${t('Started at')}: <strong>${originalMentalRisk}%</strong> (${startBMI.toFixed(1)} ${t('BMI')})<br>${t('Risk reduced by')} <strong class="text-success">${mentalRiskReduction} ${t('percentage points')}</strong><br><small class="text-muted">${t('Weight loss improves mood, self-esteem and reduces inflammation (Luppino et al., 2010, Arch Gen Psychiatry')}</small>`).removeClass('text-muted');
+
+                // Update joint health card with risk percentages
+                const originalJointRisk = getJointHealthRisk(startBMI);
+                const currentJointRisk = getJointHealthRisk(currentBMI);
+                const jointRiskReduction = originalJointRisk - currentJointRisk;
+                $('#joint-health-block').html(`Current Risk: <strong>${currentJointRisk}%</strong><br>${t('Started at')}: <strong>${originalJointRisk}%</strong> (${startBMI.toFixed(1)} ${t('BMI')})<br>${t('Risk reduced by')} <strong class="text-success">${jointRiskReduction} ${t('percentage points')}</strong><br><small class="text-muted">${t('Reduced joint load leads to slower progression of knee and hip osteoarthritis (Messier et al., 2013, Arthritis Rheumatol)')}</small>`).removeClass('text-muted');
+
+                // Update life expectancy card
+                const lifeIncrease = Math.min(5, (bmiReduction / 5.0) * 3.5);
+                $('#life-expectancy-block').html(`${t('Life Expectancy Increase:')} <strong>${lifeIncrease.toFixed(1)} ${t('years')}</strong><br>${t('Started at')}: <strong>${startBMI.toFixed(1)} ${t('BMI')}</strong><br>${t('Improvement from')} <strong class="text-success">${bmiReduction.toFixed(1)} ${t('BMI reduction')}</strong><br><small class="text-muted">${t('Stronger benefits when weight loss occurs earlier in life (Flegal et al., 2013, JAMA)')}</small>`).removeClass('text-muted');
+
+                // Calculate comprehensive health score
+                const startingHealthScore = calculateHealthScore(startBMI);
+                const currentHealthScore = calculateHealthScore(currentBMI);
+                const healthScoreImprovement = currentHealthScore - startingHealthScore;
+
+                // Update personal benefits calculator with visual health score bar
+                const calculatorDiv = $('#personal-benefits-calculator');
+                const startPosition = startingHealthScore;
+                const currentPosition = currentHealthScore;
+
+                calculatorDiv.html(`
+                    <!-- Health Score Title and Score Display -->
+                    <div class="d-flex justify-content-between align-items-start health-score-margin health-score-header">
+                        <h5 class="card-title mb-0" data-eng="📊 Health Score" data-spa="📊 Puntuación de Salud" data-fre="📊 Score de Santé" data-ger="📊 Gesundheitspunktzahl">${t("📊 Health Score")}</h5>
+                        <div class="health-score-display-stacked">
+                            <div class="health-score-number">${currentHealthScore}/100</div>
+                            <div class="health-score-improvement-below text-success" data-eng="+${healthScoreImprovement} points" data-spa="+${healthScoreImprovement} puntos" data-fre="+${healthScoreImprovement} points" data-ger="+${healthScoreImprovement} Punkte">+${healthScoreImprovement} ${t("points")}</div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- Left Column: Progress Summary -->
+                        <div class="col-md-3">
+                            <div class="progress-summary">
+                                <strong data-eng="Progress Summary" data-spa="Resumen de Progreso" data-fre="Résumé des Progrès" data-ger="Fortschritts-Zusammenfassung">${t("Progress Summary")}</strong><br>
+                                <span data-eng="Started at: " data-spa="Comenzó en: " data-fre="Commencé à: " data-ger="Begonnen bei: ">${t("Started at:")} </span><strong>${startingHealthScore}/100</strong><br>
+                                <small class="text-muted" data-eng="Based on ${convertFromKg(weightLoss)} ${getWeightUnitLabel()} weight loss across all 14 health categories on this page" data-spa="Basado en ${convertFromKg(weightLoss)} ${getWeightUnitLabel()} de pérdida de peso en las 14 categorías de salud de esta página" data-fre="Basé sur ${convertFromKg(weightLoss)} ${getWeightUnitLabel()} de perte de poids dans les 14 catégories de santé de cette page" data-ger="Basierend auf ${convertFromKg(weightLoss)} ${getWeightUnitLabel()} Gewichtsverlust über alle 14 Gesundheitskategorien auf dieser Seite">${t("Based on")} ${convertFromKg(weightLoss)} ${getWeightUnitLabel()} ${t("weight loss across all 14 health categories on this page")}</small>
+                            </div>
+                        </div>
+
+                        <!-- Right Column: Health Bar & Feeling Healthier -->
+                        <div class="col-md-9">
+                            <div class="health-bar-container">
+                                <!-- Health Score Bar -->
+                                <div class="health-score-bar"></div>
+
+                                <!-- Score markers -->
+                                <div class="health-marker start" style="left: ${startPosition}%;"></div>
+                                <div class="health-marker-label start" style="left: ${startPosition}%;" data-eng="START" data-spa="INICIO" data-fre="DÉBUT" data-ger="START">${t("START")}</div>
+
+                                <div class="health-marker current" style="left: ${currentPosition}%;"></div>
+                                <div class="health-marker-label current" style="left: ${currentPosition}%;" data-eng="NOW" data-spa="AHORA" data-fre="MAINTENANT" data-ger="JETZT">${t("NOW")}</div>
+
+                                <!-- Score labels -->
+                                <div class="health-scale-label poor" data-eng="Poor" data-spa="Pobre" data-fre="Faible" data-ger="Schlecht">${t("Poor")}<br>0</div>
+                                <div class="health-scale-label fair" data-eng="Fair" data-spa="Regular" data-fre="Passable" data-ger="Mäßig">${t("Fair")}<br>25</div>
+                                <div class="health-scale-label good" data-eng="Good" data-spa="Bueno" data-fre="Bon" data-ger="Gut">${t("Good")}<br>50</div>
+                                <div class="health-scale-label very-good" data-eng="Very Good" data-spa="Muy Bueno" data-fre="Très Bon" data-ger="Sehr Gut">${t("Very Good")}<br>75</div>
+                                <div class="health-scale-label excellent" data-eng="Excellent" data-spa="Excelente" data-fre="Excellent" data-ger="Ausgezeichnet">${t("Excellent")}<br>100</div>
+                            </div>
+
+                            <div class="health-improvement-message">
+                                ${getHealthImprovementMessage(healthScoreImprovement)}
+                            </div>
+                        </div>
+                    </div>
+                `).removeClass('text-muted');
+
+            } else {
+                // Reset to default messages if no progress yet
+                debugLog('Health benefits - no meaningful progress yet, BMI reduction:', bmiReduction);
+            }
+        } else {
+            debugLog('Health benefits - missing data:', data);
+        }
+        return;
+    }
+
+    // Fallback: Make API call if global data not available
+    debugLog('🌐 Making API call for health benefits (global data not available)');
     postRequest('router.php?controller=profile', { action: 'get_weight_progress' })
     .then(resp => {
         const data = parseJson(resp);
@@ -451,8 +591,7 @@ function refreshBMI() {
     if (window.coverage) window.coverage.logFunction('refreshBMI', 'health.js');
 
     // Check if we have global data first
-    debugLog('🔍 refreshBMI - checking global data:', window.globalDashboardData);
-    debugLog('🔍 health_stats in global data:', window.globalDashboardData?.health_stats);
+    debugLog('🔍 refreshBMI - has global data:', !!window.globalDashboardData, 'has health_stats:', !!window.globalDashboardData?.health_stats);
 
     if (window.globalDashboardData && window.globalDashboardData.health_stats) {
         debugLog('📊 Using global data for BMI');
@@ -544,8 +683,7 @@ function refreshHealth() {
     if (window.coverage) window.coverage.logFunction('refreshHealth', 'health.js');
 
     // Check if we have global data first
-    debugLog('🔍 refreshHealth - checking global data:', window.globalDashboardData);
-    debugLog('🔍 health_stats in global data:', window.globalDashboardData?.health_stats);
+    debugLog('🔍 refreshHealth - has global data:', !!window.globalDashboardData, 'has health_stats:', !!window.globalDashboardData?.health_stats);
 
     // Handle body fat data
     if (window.globalDashboardData && window.globalDashboardData.health_stats) {
@@ -661,7 +799,41 @@ function refreshHealth() {
         });
     }
 
-    // Load enhanced cardiovascular risk (always use API call)
+    // Load enhanced cardiovascular risk
+    if (window.globalDashboardData && window.globalDashboardData.cardiovascular_risk) {
+        if (window.coverage) window.coverage.logFunction('if', 'health.js');
+        debugLog('📊 Using global data for cardiovascular risk');
+        const data = window.globalDashboardData.cardiovascular_risk;
+        debugLog('🔍 cardiovascular_risk data:', data);
+        debugLog('🔍 Risk improvement:', data.risk_improvement_percentage, 'Original:', data.original_risk_percentage, 'Current:', data.current_risk_percentage);
+        const cardioEl = $('#cardio-risk-block');
+
+        if (!data.success) {
+            cardioEl.text(data.message || 'Cardiovascular risk not available').addClass('text-muted');
+        } else {
+            const cardioLines = [];
+            cardioLines.push(`Current Risk: <strong>${data.current_risk_percentage}%</strong> (${data.current_risk_category})`);
+
+            if (data.risk_improvement_percentage > 0) {
+                if (window.coverage) window.coverage.logFunction('if', 'health.js');
+                cardioLines.push(`<small class="text-success">${t('Risk reduced by')} ${data.risk_improvement_percentage}% ${t('from weight loss')}</small>`);
+                cardioLines.push(`<small class="text-muted">${t('Started at')} ${data.original_risk_percentage}% (${data.original_risk_category})</small>`);
+            }
+
+            // Display research note (handle both old string format and new array format)
+            if (data.research_note) {
+                cardioLines.push(`<small class="text-muted">${t(data.research_note)}</small>`);
+            } else if (data.notes && Array.isArray(data.notes) && data.notes.length > 0) {
+                // Join notes with period separator for backward compatibility
+                const notesText = data.notes.join('. ');
+                cardioLines.push(`<small class="text-muted">${notesText}</small>`);
+            }
+            cardioEl.html(cardioLines.join('<br>')).removeClass('text-muted');
+        }
+        return;
+    }
+
+    // Fallback: Make API call if global data not available
     debugLog('🌐 Making API call for cardiovascular risk');
     if (typeof $ === 'undefined' || typeof $.post !== 'function') {
         if (window.coverage) window.coverage.logFunction('if', 'health.js');
@@ -697,7 +869,44 @@ function refreshHealth() {
 function refreshIdealWeight() {
     if (window.coverage) window.coverage.logFunction('refreshIdealWeight', 'health.js');
 
-    // Always use API call for ideal weight
+    // Check if we have global data first
+    if (window.globalDashboardData && window.globalDashboardData.ideal_weight) {
+        if (window.coverage) window.coverage.logFunction('if', 'health.js');
+        debugLog('📊 Using global data for ideal weight');
+        const data = window.globalDashboardData.ideal_weight;
+        const el = $('#ideal-weight-block');
+
+        if (!data.success) {
+            el.text(data.message || 'Set your height to calculate ideal weight range').addClass('text-muted');
+            return;
+        }
+
+        const lines = [];
+        const minWeight = convertFromKg(data.min_weight_kg);
+        const maxWeight = convertFromKg(data.max_weight_kg);
+        const unit = getWeightUnitLabel();
+        lines.push(`<strong>${minWeight} - ${maxWeight} ${unit}</strong>`);
+
+        // Add timeline prediction if available
+        if (data.timeline && data.timeline.target_date) {
+            if (window.coverage) window.coverage.logFunction('if', 'health.js');
+            const targetMonth = new Date(data.timeline.target_date + '-01').toLocaleDateString('en-GB', {
+                year: 'numeric',
+                month: 'long'
+            });
+            lines.push(`<small class="text-success">${t('Projected to reach upper limit by')} ${targetMonth}</small>`);
+            const unit = getWeightUnitLabel();
+            const weeklyRate = convertFromKg(data.timeline.current_rate_kg_per_week);
+            lines.push(`<small class="text-muted">${t('Based on current rate of')} ${weeklyRate} ${t('kg/week')}</small>`);
+        }
+
+        lines.push(`<small class="text-muted">${t(data.note)}</small>`);
+
+        el.html(lines.join('<br>')).removeClass('text-muted');
+        return;
+    }
+
+    // Fallback: Make API call if global data not available
     debugLog('🌐 Making API call for ideal weight');
     if (typeof $ === 'undefined' || typeof $.post !== 'function') {
         debugLog('⚠️ jQuery not available for ideal weight, skipping API call');
@@ -752,8 +961,7 @@ function refreshGallbladderHealth() {
     if (window.coverage) window.coverage.logFunction('refreshGallbladderHealth', 'health.js');
 
     // Check if we have global data first
-    debugLog('🔍 refreshGallbladderHealth - checking global data:', window.globalDashboardData);
-    debugLog('🔍 gallbladder_health in global data:', window.globalDashboardData?.gallbladder_health);
+    debugLog('🔍 refreshGallbladderHealth - has global data:', !!window.globalDashboardData, 'has gallbladder_health:', !!window.globalDashboardData?.gallbladder_health);
 
     if (window.globalDashboardData && window.globalDashboardData.gallbladder_health) {
         if (window.coverage) window.coverage.logFunction('if', 'health.js');

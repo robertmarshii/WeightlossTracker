@@ -29,8 +29,7 @@ function loadWeightHistory() {
     if (window.coverage) window.coverage.logFunction('loadWeightHistory', 'data.js');
 
     // Check if we have global data first
-    debugLog('🔍 loadWeightHistory - checking global data:', window.globalDashboardData);
-    debugLog('🔍 weight_history in global data:', window.globalDashboardData?.weight_history);
+    debugLog('🔍 loadWeightHistory - has global data:', !!window.globalDashboardData, 'has weight_history:', !!window.globalDashboardData?.weight_history);
 
     if (window.globalDashboardData && window.globalDashboardData.weight_history) {
         debugLog('📊 Using global data for weight history');
