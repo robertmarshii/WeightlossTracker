@@ -418,7 +418,7 @@ function updateHealthBenefitCards() {
                                 <div class="health-marker-label start" style="left: ${startPosition}%;" data-eng="START" data-spa="INICIO" data-fre="DÉBUT" data-ger="START">${t("START")}</div>
 
                                 <div class="health-marker current" style="left: ${currentPosition}%;"></div>
-                                <div class="health-marker-label current" style="left: ${currentPosition}%;" data-eng="NOW" data-spa="AHORA" data-fre="MAINTENANT" data-ger="JETZT">${t("NOW")}</div>
+                                <div class="health-marker-label current" style="left: ${currentPosition}%;" data-eng="NOW" data-spa="AHORA" data-fre="MAINT." data-ger="JETZT">${t("NOW")}</div>
 
                                 <!-- Score labels -->
                                 <div class="health-scale-label poor" data-eng="Poor" data-spa="Pobre" data-fre="Faible" data-ger="Schlecht">${t("Poor")}<br>0</div>
@@ -554,7 +554,7 @@ function updateHealthBenefitCards() {
                                 <div class="health-marker-label start" style="left: ${startPosition}%;" data-eng="START" data-spa="INICIO" data-fre="DÉBUT" data-ger="START">${t("START")}</div>
 
                                 <div class="health-marker current" style="left: ${currentPosition}%;"></div>
-                                <div class="health-marker-label current" style="left: ${currentPosition}%;" data-eng="NOW" data-spa="AHORA" data-fre="MAINTENANT" data-ger="JETZT">${t("NOW")}</div>
+                                <div class="health-marker-label current" style="left: ${currentPosition}%;" data-eng="NOW" data-spa="AHORA" data-fre="MAINT." data-ger="JETZT">${t("NOW")}</div>
 
                                 <!-- Score labels -->
                                 <div class="health-scale-label poor" data-eng="Poor" data-spa="Pobre" data-fre="Faible" data-ger="Schlecht">${t("Poor")}<br>0</div>

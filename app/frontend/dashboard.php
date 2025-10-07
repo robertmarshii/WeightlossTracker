@@ -504,13 +504,7 @@ if (isset($_SESSION['login_time'])) {
                                         data-ger="🎯 Konsistenz-Score">
                                         🎯 Consistency Score
                                     </h6>
-                                    <div id="consistency-score" class="text-muted small"
-                                        data-eng="Loading consistency data..."
-                                        data-spa="Cargando datos de consistencia..."
-                                        data-fre="Chargement des données de cohérence..."
-                                        data-ger="Konsistenzdaten werden geladen...">
-                                        Loading consistency data...
-                                    </div>
+                                    <div id="consistency-score" class="text-muted small" data-eng="Loading consistency data..." data-spa="Cargando datos de consistencia..." data-fre="Chargement des données de cohérence..." data-ger="Konsistenzdaten werden geladen...">Loading consistency data...</div>
                                 </div>
                             </div>
 
@@ -540,13 +534,7 @@ if (isset($_SESSION['login_time'])) {
                                         data-ger="📅 Nächster Check">
                                         📅 Next Check-In
                                     </h6>
-                                    <div id="next-checkin" class="text-muted small"
-                                        data-eng="Calculating next weigh-in..."
-                                        data-spa="Calculando próximo pesaje..."
-                                        data-fre="Calcul du prochain pesage..."
-                                        data-ger="Berechne nächste Wiegung...">
-                                        Calculating next weigh-in...
-                                    </div>
+                                    <div id="next-checkin" class="text-muted small" data-eng="Calculating next weigh-in..." data-spa="Calculando próximo pesaje..." data-fre="Calcul du prochain pesage..." data-ger="Berechne nächste Wiegung...">Calculating next weigh-in...</div>
                                 </div>
                             </div>
                         </div>

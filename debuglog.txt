@@ -1,5 +1,10 @@
 [
     {
+        "message": "Active schema:",
+        "data": "wt_dev",
+        "time": 1759875611599
+    },
+    {
         "message": "✅ Global dashboard data loaded. Keys:",
         "data": [
             "latest_weight",
@@ -17,276 +22,31 @@
             "streak_data",
             "total_progress"
         ],
-        "time": 1759871099163
+        "time": 1759875612054
     },
     {
         "message": "🔍 health_stats available:",
         "data": true,
-        "time": 1759871099163
+        "time": 1759875612054
     },
     {
         "message": "🔍 weight_progress available:",
         "data": true,
-        "time": 1759871099163
+        "time": 1759875612054
     },
     {
         "message": "🔍 ideal_weight available:",
         "data": true,
-        "time": 1759871099163
+        "time": 1759875612054
     },
     {
         "message": "📞 Calling callback. globalDashboardData exists:",
         "data": true,
-        "time": 1759871099163
-    },
-    {
-        "message": "refreshLatestWeight",
-        "data": {
-            "hasGlobalData": true
-        },
-        "time": 1759871099163
-    },
-    {
-        "message": "Using global data for latest weight",
-        "time": 1759871099163
-    },
-    {
-        "message": "🔍 refreshGoal - has global data:",
-        "data": true,
-        "time": 1759871099164
-    },
-    {
-        "message": "📊 Using global data for goal",
-        "time": 1759871099164
-    },
-    {
-        "message": "📊 Using global data for profile",
-        "time": 1759871099164
-    },
-    {
-        "message": "🔍 refreshBMI - has global data:",
-        "data": true,
-        "time": 1759871099165
-    },
-    {
-        "message": "📊 Using global data for BMI",
-        "time": 1759871099165
-    },
-    {
-        "message": "🔍 refreshHealth - has global data:",
-        "data": true,
-        "time": 1759871099167
-    },
-    {
-        "message": "📊 Using global data for health stats (body fat)",
-        "time": 1759871099167
-    },
-    {
-        "message": "📊 Using global data for cardiovascular risk",
-        "time": 1759871099167
-    },
-    {
-        "message": "🔍 cardiovascular_risk data:",
-        "data": {
-            "success": true,
-            "current_risk_percentage": 30,
-            "current_risk_category": "High",
-            "original_risk_percentage": 33,
-            "original_risk_category": "High",
-            "risk_improvement_percentage": 3,
-            "notes": [
-                "Simplified risk model based on BMI, age, and activity level",
-                "For clinical assessment, consult healthcare provider"
-            ]
-        },
-        "time": 1759871099167
-    },
-    {
-        "message": "🔍 Risk improvement:",
-        "data": 3,
-        "time": 1759871099167
-    },
-    {
-        "message": "📊 Using global data for ideal weight",
-        "time": 1759871099168
-    },
-    {
-        "message": "🔍 refreshWeightProgress - has global data:",
-        "data": true,
-        "time": 1759871099168
-    },
-    {
-        "message": "📊 Using global data for weight progress",
-        "time": 1759871099168
-    },
-    {
-        "message": "🔍 refreshGallbladderHealth - has global data:",
-        "data": true,
-        "time": 1759871099169
-    },
-    {
-        "message": "📊 Using global data for gallbladder health",
-        "time": 1759871099169
-    },
-    {
-        "message": "Health benefits - checking for data to update cards...",
-        "time": 1759871099169
-    },
-    {
-        "message": "📊 Using global data for health benefit cards",
-        "time": 1759871099169
-    },
-    {
-        "message": "🔍 weight_progress data:",
-        "data": {
-            "success": true,
-            "total_weight_lost_kg": 10.1,
-            "start_weight_kg": 128,
-            "current_weight_kg": 117.9,
-            "estimated_fat_loss_kg": 7.9,
-            "fat_loss_percentage": 78,
-            "weeks_elapsed": 14,
-            "avg_weekly_rate_kg": 0.72,
-            "research_note": "Research suggests ~78% of weight loss is fat when combined with exercise",
-            "oldest_weight_kg": 128,
-            "newest_weight_kg": 117.9,
-            "start_date": "2025-06-13",
-            "end_date": "2025-09-19",
-            "days_tracked": 98,
-            "weeks_tracked": 14,
-            "average_weekly_loss_kg": 0.72,
-            "bmi_change": 3.2,
-            "total_entries": 15
-        },
-        "time": 1759871099169
-    },
-    {
-        "message": "🔍 loadWeightHistory - has global data:",
-        "data": true,
-        "time": 1759871099171
-    },
-    {
-        "message": "📊 Using global data for weight history",
-        "time": 1759871099171
-    },
-    {
-        "message": "🔍 loadQuickLookMetrics called",
-        "time": 1759871099173
-    },
-    {
-        "message": "📊 Using global data for quick look metrics",
-        "time": 1759871099173
-    },
-    {
-        "message": "📊 Using global data for goal progress enhanced",
-        "time": 1759871099174
-    },
-    {
-        "message": "📊 renderGoalProgress called with",
-        "data": {
-            "current_weight": 117.9,
-            "start_weight": 128,
-            "target_weight": 115,
-            "progress_percent": 77.7,
-            "weight_lost": 10.1,
-            "weekly_progress": 0,
-            "monthly_progress": 6.15,
-            "eta_date": "2025-11-21",
-            "weekly_loss_rate": 0.46
-        },
-        "time": 1759871099174
-    },
-    {
-        "message": "🔍 hasGoal",
-        "data": true,
-        "time": 1759871099174
-    },
-    {
-        "message": "✅ Hiding placeholder, showing content",
-        "time": 1759871099174
-    },
-    {
-        "message": "Using global data for total progress",
-        "time": 1759871099177
-    },
-    {
-        "message": "Body fat data received:",
-        "data": [
-            {
-                "entry_date": "2025-06-13",
-                "body_fat_percent": 46.9
-            },
-            {
-                "entry_date": "2025-06-20",
-                "body_fat_percent": 46.3
-            },
-            {
-                "entry_date": "2025-06-27",
-                "body_fat_percent": 45.9
-            },
-            {
-                "entry_date": "2025-07-04",
-                "body_fat_percent": 45.8
-            },
-            {
-                "entry_date": "2025-07-11",
-                "body_fat_percent": 45.2
-            },
-            {
-                "entry_date": "2025-07-18",
-                "body_fat_percent": 44.8
-            },
-            {
-                "entry_date": "2025-07-25",
-                "body_fat_percent": 44.7
-            },
-            {
-                "entry_date": "2025-08-01",
-                "body_fat_percent": 44.5
-            },
-            {
-                "entry_date": "2025-08-08",
-                "body_fat_percent": 44.3
-            },
-            {
-                "entry_date": "2025-08-15",
-                "body_fat_percent": 43.9
-            },
-            {
-                "entry_date": "2025-08-22",
-                "body_fat_percent": 43.6
-            },
-            {
-                "entry_date": "2025-08-29",
-                "body_fat_percent": 43.5
-            },
-            {
-                "entry_date": "2025-09-05",
-                "body_fat_percent": 43.5
-            },
-            {
-                "entry_date": "2025-09-12",
-                "body_fat_percent": 43.4
-            },
-            {
-                "entry_date": "2025-09-19",
-                "body_fat_percent": 43.1
-            }
-        ],
-        "time": 1759871099208
-    },
-    {
-        "message": "📊 Using global data for weight chart",
-        "time": 1759871099213
-    },
-    {
-        "message": "Active schema:",
-        "data": "wt_dev",
-        "time": 1759871099220
+        "time": 1759875612054
     },
     {
         "message": "🔧 loadSettings() called in dashboard.js",
-        "time": 1759871100219
+        "time": 1759875612054
     },
     {
         "message": "🔍 globalDashboardData:",
@@ -414,7 +174,7 @@
                 "email_day": "monday",
                 "email_time": "09:00",
                 "weekly_reports": false,
-                "updated_at": "2025-10-07 21:01:20.505534"
+                "updated_at": "2025-10-07 22:19:28.45397"
             },
             "health_stats": {
                 "bmi": 37.2,
@@ -969,11 +729,11 @@
                 "total_lost_kg": 10.099999999999994
             }
         },
-        "time": 1759871100219
+        "time": 1759875612054
     },
     {
         "message": "📊 Using global data for settings",
-        "time": 1759871100219
+        "time": 1759875612054
     },
     {
         "message": "🔧 Settings data:",
@@ -993,43 +753,178 @@
             "email_day": "monday",
             "email_time": "09:00",
             "weekly_reports": false,
-            "updated_at": "2025-10-07 21:01:20.505534"
+            "updated_at": "2025-10-07 22:19:28.45397"
         },
-        "time": 1759871100219
+        "time": 1759875612054
     },
     {
         "message": "Switching language to:",
         "data": "es",
-        "time": 1759871100220
+        "time": 1759875612059
     },
     {
         "message": "Language switched to:",
         "data": "es",
-        "time": 1759871100222
+        "time": 1759875612070
     },
     {
-        "message": "Reloading dynamic content after language change...",
-        "time": 1759871100222
+        "message": "refreshLatestWeight",
+        "data": {
+            "hasGlobalData": true
+        },
+        "time": 1759875612070
     },
     {
-        "message": "Re-rendering quick look metrics from cache...",
-        "time": 1759871100222
+        "message": "Using global data for latest weight",
+        "time": 1759875612070
+    },
+    {
+        "message": "🔍 refreshGoal - has global data:",
+        "data": true,
+        "time": 1759875612071
+    },
+    {
+        "message": "📊 Using global data for goal",
+        "time": 1759875612071
+    },
+    {
+        "message": "📊 Using global data for profile",
+        "time": 1759875612072
+    },
+    {
+        "message": "🔍 refreshBMI - has global data:",
+        "data": true,
+        "time": 1759875612073
+    },
+    {
+        "message": "📊 Using global data for BMI",
+        "time": 1759875612073
+    },
+    {
+        "message": "🔍 refreshHealth - has global data:",
+        "data": true,
+        "time": 1759875612074
+    },
+    {
+        "message": "📊 Using global data for health stats (body fat)",
+        "time": 1759875612074
+    },
+    {
+        "message": "📊 Using global data for cardiovascular risk",
+        "time": 1759875612074
+    },
+    {
+        "message": "🔍 cardiovascular_risk data:",
+        "data": {
+            "success": true,
+            "current_risk_percentage": 30,
+            "current_risk_category": "High",
+            "original_risk_percentage": 33,
+            "original_risk_category": "High",
+            "risk_improvement_percentage": 3,
+            "notes": [
+                "Simplified risk model based on BMI, age, and activity level",
+                "For clinical assessment, consult healthcare provider"
+            ]
+        },
+        "time": 1759875612074
+    },
+    {
+        "message": "🔍 Risk improvement:",
+        "data": 3,
+        "time": 1759875612074
+    },
+    {
+        "message": "📊 Using global data for ideal weight",
+        "time": 1759875612074
+    },
+    {
+        "message": "🔍 refreshWeightProgress - has global data:",
+        "data": true,
+        "time": 1759875612075
+    },
+    {
+        "message": "📊 Using global data for weight progress",
+        "time": 1759875612075
+    },
+    {
+        "message": "🔍 refreshGallbladderHealth - has global data:",
+        "data": true,
+        "time": 1759875612075
+    },
+    {
+        "message": "📊 Using global data for gallbladder health",
+        "time": 1759875612075
+    },
+    {
+        "message": "Health benefits - checking for data to update cards...",
+        "time": 1759875612075
+    },
+    {
+        "message": "📊 Using global data for health benefit cards",
+        "time": 1759875612075
+    },
+    {
+        "message": "🔍 weight_progress data:",
+        "data": {
+            "success": true,
+            "total_weight_lost_kg": 10.1,
+            "start_weight_kg": 128,
+            "current_weight_kg": 117.9,
+            "estimated_fat_loss_kg": 7.9,
+            "fat_loss_percentage": 78,
+            "weeks_elapsed": 14,
+            "avg_weekly_rate_kg": 0.72,
+            "research_note": "Research suggests ~78% of weight loss is fat when combined with exercise",
+            "oldest_weight_kg": 128,
+            "newest_weight_kg": 117.9,
+            "start_date": "2025-06-13",
+            "end_date": "2025-09-19",
+            "days_tracked": 98,
+            "weeks_tracked": 14,
+            "average_weekly_loss_kg": 0.72,
+            "bmi_change": 3.2,
+            "total_entries": 15
+        },
+        "time": 1759875612075
+    },
+    {
+        "message": "🔍 loadWeightHistory - has global data:",
+        "data": true,
+        "time": 1759875612076
+    },
+    {
+        "message": "📊 Using global data for weight history",
+        "time": 1759875612076
     },
     {
         "message": "🔍 loadQuickLookMetrics called",
-        "time": 1759871100222
+        "time": 1759875612076
     },
     {
         "message": "📊 Using global data for quick look metrics",
-        "time": 1759871100222
+        "time": 1759875612076
     },
     {
-        "message": "Re-rendering goals achieved from cache...",
-        "time": 1759871100222
+        "message": "🎨 renderQuickLookMetrics called with:",
+        "data": {
+            "consistency_score": 83.1,
+            "logging_frequency": 100,
+            "goal_progress": 66.27906976744177,
+            "next_checkin_date": "2025-09-26",
+            "days_until_checkin": -11,
+            "average_logging_interval": 7
+        },
+        "time": 1759875612076
+    },
+    {
+        "message": "📊 displayConsistencyScore called with score:",
+        "data": 83.1,
+        "time": 1759875612076
     },
     {
         "message": "📊 Using global data for goal progress enhanced",
-        "time": 1759871100222
+        "time": 1759875612076
     },
     {
         "message": "📊 renderGoalProgress called with",
@@ -1044,23 +939,101 @@
             "eta_date": "2025-11-21",
             "weekly_loss_rate": 0.46
         },
-        "time": 1759871100222
+        "time": 1759875612076
     },
     {
         "message": "🔍 hasGoal",
         "data": true,
-        "time": 1759871100222
+        "time": 1759875612076
     },
     {
         "message": "✅ Hiding placeholder, showing content",
-        "time": 1759871100222
+        "time": 1759875612076
+    },
+    {
+        "message": "Using global data for total progress",
+        "time": 1759875612078
+    },
+    {
+        "message": "Body fat data received:",
+        "data": [
+            {
+                "entry_date": "2025-06-13",
+                "body_fat_percent": 46.9
+            },
+            {
+                "entry_date": "2025-06-20",
+                "body_fat_percent": 46.3
+            },
+            {
+                "entry_date": "2025-06-27",
+                "body_fat_percent": 45.9
+            },
+            {
+                "entry_date": "2025-07-04",
+                "body_fat_percent": 45.8
+            },
+            {
+                "entry_date": "2025-07-11",
+                "body_fat_percent": 45.2
+            },
+            {
+                "entry_date": "2025-07-18",
+                "body_fat_percent": 44.8
+            },
+            {
+                "entry_date": "2025-07-25",
+                "body_fat_percent": 44.7
+            },
+            {
+                "entry_date": "2025-08-01",
+                "body_fat_percent": 44.5
+            },
+            {
+                "entry_date": "2025-08-08",
+                "body_fat_percent": 44.3
+            },
+            {
+                "entry_date": "2025-08-15",
+                "body_fat_percent": 43.9
+            },
+            {
+                "entry_date": "2025-08-22",
+                "body_fat_percent": 43.6
+            },
+            {
+                "entry_date": "2025-08-29",
+                "body_fat_percent": 43.5
+            },
+            {
+                "entry_date": "2025-09-05",
+                "body_fat_percent": 43.5
+            },
+            {
+                "entry_date": "2025-09-12",
+                "body_fat_percent": 43.4
+            },
+            {
+                "entry_date": "2025-09-19",
+                "body_fat_percent": 43.1
+            }
+        ],
+        "time": 1759875612100
     },
     {
         "message": "Using cached streak data from global dashboard data",
-        "time": 1759871100331
+        "time": 1759875612102
     },
     {
         "message": "✅ Generated HTML for 28 timeline dots",
-        "time": 1759871100331
+        "time": 1759875612102
+    },
+    {
+        "message": "📊 Using global data for weight chart",
+        "time": 1759875612104
+    },
+    {
+        "message": "Applying translations after all content rendered",
+        "time": 1759875612107
     }
 ]

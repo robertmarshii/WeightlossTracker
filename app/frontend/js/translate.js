@@ -492,7 +492,7 @@ const translations = {
     "You've reached a major health milestone that represents years of life extension potential. Your cardiovascular system functions optimally, joints move freely without pain, and you sleep deeply every night. Physical activities that once seemed impossible are now routine, and your overall quality of life has improved dramatically.": {
         "en": "You've reached a major health milestone that represents years of life extension potential. Your cardiovascular system functions optimally, joints move freely without pain, and you sleep deeply every night. Physical activities that once seemed impossible are now routine, and your overall quality of life has improved dramatically.",
         "es": "Has alcanzado un hito de salud importante que representa años de potencial de extensión de vida. Tu sistema cardiovascular funciona óptimamente, las articulaciones se mueven libremente sin dolor y duermes profundamente cada noche. Las actividades físicas que una vez parecían imposibles ahora son rutinarias y tu calidad de vida general ha mejorado dramáticamente.",
-        "fr": "Vous avez atteint un jalon de santé majeur qui représente des années de potentiel d'extension de vie. Votre système cardiovasculaire fonctionne de manière optimale, les articulations bougent librement sans douleur et vous dormez profondément chaque nuit. Les activités physiques qui semblaient autrefois impossibles sont maintenant routinières et votre qualité de vie globale s'est considérablement améliorée.",
+        "fr": "Vous avez atteint un jalon de santé majeur qui représente des années de potentiel d'extension de vie. Votre système cardiovasculaire fonctionne de manière optimale, les articulations bougent librement sans douleur et vous dormez profondément chaque nuit. Les activités physiques qui semblaient autrefois impossibles sont MAINT. routinières et votre qualité de vie globale s'est considérablement améliorée.",
         "de": "Sie haben einen wichtigen Gesundheitsmeilenstein erreicht, der Jahre an Lebensverlängerungspotenzial darstellt. Ihr Herz-Kreislauf-System funktioniert optimal, Gelenke bewegen sich frei ohne Schmerzen und Sie schlafen jede Nacht tief. Körperliche Aktivitäten, die einst unmöglich schienen, sind jetzt Routine und Ihre allgemeine Lebensqualität hat sich dramatisch verbessert."
     },
 
@@ -566,7 +566,7 @@ const translations = {
     "You've achieved transformative health improvements. Physical activities that once felt challenging should now feel manageable, sleep is likely deep and restorative, and you probably wake feeling refreshed. Mental clarity, mood stability, and physical stamina have all improved dramatically. Your risk profile has shifted significantly toward optimal health.": {
         "en": "You've achieved transformative health improvements. Physical activities that once felt challenging should now feel manageable, sleep is likely deep and restorative, and you probably wake feeling refreshed. Mental clarity, mood stability, and physical stamina have all improved dramatically. Your risk profile has shifted significantly toward optimal health.",
         "es": "Has logrado mejoras de salud transformadoras. Las actividades físicas que una vez se sintieron desafiantes ahora deberían sentirse manejables, el sueño es probablemente profundo y reparador, y probablemente te despiertas sintiéndote renovado. La claridad mental, la estabilidad del estado de ánimo y la resistencia física han mejorado dramáticamente. Tu perfil de riesgo ha cambiado significativamente hacia una salud óptima.",
-        "fr": "Vous avez réalisé des améliorations de santé transformatrices. Les activités physiques qui semblaient autrefois difficiles devraient maintenant sembler gérables, le sommeil est probablement profond et réparateur, et vous vous réveillez probablement en vous sentant rafraîchi. La clarté mentale, la stabilité de l'humeur et l'endurance physique se sont toutes considérablement améliorées. Votre profil de risque s'est déplacé de manière significative vers une santé optimale.",
+        "fr": "Vous avez réalisé des améliorations de santé transformatrices. Les activités physiques qui semblaient autrefois difficiles devraient MAINT. sembler gérables, le sommeil est probablement profond et réparateur, et vous vous réveillez probablement en vous sentant rafraîchi. La clarté mentale, la stabilité de l'humeur et l'endurance physique se sont toutes considérablement améliorées. Votre profil de risque s'est déplacé de manière significative vers une santé optimale.",
         "de": "Sie haben transformative gesundheitliche Verbesserungen erreicht. Körperliche Aktivitäten, die einst herausfordernd erschienen, sollten sich jetzt bewältigbar anfühlen, der Schlaf ist wahrscheinlich tief und erholsam, und Sie wachen wahrscheinlich erfrischt auf. Geistige Klarheit, Stimmungsstabilität und körperliche Ausdauer haben sich alle dramatisch verbessert. Ihr Risikoprofil hat sich deutlich in Richtung optimaler Gesundheit verschoben."
     },
     "Excellent health improvements! You're making fantastic progress!": {
@@ -854,6 +854,216 @@ const translations = {
         "es": "un refrigerador de tamaño completo",
         "fr": "un réfrigérateur pleine grandeur",
         "de": "ein großer Kühlschrank"
+    },
+
+    // Quick Look Metrics - Consistency Score
+    "Excellent consistency!": {
+        "en": "Excellent consistency!",
+        "es": "¡Excelente consistencia!",
+        "fr": "Excellente cohérence!",
+        "de": "Ausgezeichnete Konsistenz!"
+    },
+    "Great consistency!": {
+        "en": "Great consistency!",
+        "es": "¡Gran consistencia!",
+        "fr": "Grande cohérence!",
+        "de": "Tolle Konsistenz!"
+    },
+    "Keep up the good work!": {
+        "en": "Keep up the good work!",
+        "es": "¡Sigue así!",
+        "fr": "Continuez comme ça!",
+        "de": "Weiter so!"
+    },
+    "Try to log more regularly": {
+        "en": "Try to log more regularly",
+        "es": "Intenta registrar con más regularidad",
+        "fr": "Essayez de vous connecter plus régulièrement",
+        "de": "Versuchen Sie, regelmäßiger zu protokollieren"
+    },
+    "Based on logging frequency and goal progress": {
+        "en": "Based on logging frequency and goal progress",
+        "es": "Basado en la frecuencia de registro y progreso hacia la meta",
+        "fr": "Basé sur la fréquence de journalisation et les progrès vers l'objectif",
+        "de": "Basierend auf Protokollierungshäufigkeit und Zielfortschritt"
+    },
+
+    // Quick Look Metrics - Next Check-In
+    "Log more weights to see predictions": {
+        "en": "Log more weights to see predictions",
+        "es": "Registra más pesos para ver predicciones",
+        "fr": "Enregistrez plus de poids pour voir les prédictions",
+        "de": "Protokollieren Sie mehr Gewichte, um Vorhersagen zu sehen"
+    },
+    "📍 You're due for a weigh-in today!": {
+        "en": "📍 You're due for a weigh-in today!",
+        "es": "📍 ¡Es hora de pesarte hoy!",
+        "fr": "📍 Vous devez vous peser aujourd'hui!",
+        "de": "📍 Sie sollten sich heute wiegen!"
+    },
+    "Next weigh-in on": {
+        "en": "Next weigh-in on",
+        "es": "Próximo pesaje el",
+        "fr": "Prochain pesage le",
+        "de": "Nächste Wiegung am"
+    },
+    "Based on your average logging frequency": {
+        "en": "Based on your average logging frequency",
+        "es": "Basado en tu frecuencia promedio de registro",
+        "fr": "Basé sur votre fréquence moyenne de journalisation",
+        "de": "Basierend auf Ihrer durchschnittlichen Protokollierungshäufigkeit"
+    },
+
+    // Encouragement quotes
+    "Small steps, big results": {
+        "en": "Small steps, big results",
+        "es": "Pequeños pasos, grandes resultados",
+        "fr": "Petits pas, grands résultats",
+        "de": "Kleine Schritte, große Ergebnisse"
+    },
+    "Progress, not perfection": {
+        "en": "Progress, not perfection",
+        "es": "Progreso, no perfección",
+        "fr": "Progrès, pas perfection",
+        "de": "Fortschritt, nicht Perfektion"
+    },
+    "Every day is a new opportunity": {
+        "en": "Every day is a new opportunity",
+        "es": "Cada día es una nueva oportunidad",
+        "fr": "Chaque jour est une nouvelle opportunité",
+        "de": "Jeder Tag ist eine neue Gelegenheit"
+    },
+    "You're stronger than you think": {
+        "en": "You're stronger than you think",
+        "es": "Eres más fuerte de lo que crees",
+        "fr": "Vous êtes plus fort que vous ne le pensez",
+        "de": "Du bist stärker als du denkst"
+    },
+    "Consistency is key": {
+        "en": "Consistency is key",
+        "es": "La consistencia es clave",
+        "fr": "La cohérence est la clé",
+        "de": "Konsistenz ist der Schlüssel"
+    },
+    "Believe in yourself": {
+        "en": "Believe in yourself",
+        "es": "Cree en ti mismo",
+        "fr": "Croyez en vous",
+        "de": "Glaube an dich selbst"
+    },
+    "One step at a time": {
+        "en": "One step at a time",
+        "es": "Un paso a la vez",
+        "fr": "Un pas à la fois",
+        "de": "Ein Schritt nach dem anderen"
+    },
+    "Your health is worth it": {
+        "en": "Your health is worth it",
+        "es": "Tu salud vale la pena",
+        "fr": "Votre santé en vaut la peine",
+        "de": "Deine Gesundheit ist es wert"
+    },
+    "Keep pushing forward": {
+        "en": "Keep pushing forward",
+        "es": "Sigue avanzando",
+        "fr": "Continuez à avancer",
+        "de": "Weiter vorwärts"
+    },
+    "You've got this": {
+        "en": "You've got this",
+        "es": "Tú puedes",
+        "fr": "Vous pouvez le faire",
+        "de": "Du schaffst das"
+    },
+    "Stay positive and work hard": {
+        "en": "Stay positive and work hard",
+        "es": "Mantente positivo y trabaja duro",
+        "fr": "Restez positif et travaillez dur",
+        "de": "Bleib positiv und arbeite hart"
+    },
+    "Embrace the journey": {
+        "en": "Embrace the journey",
+        "es": "Abraza el viaje",
+        "fr": "Embrassez le voyage",
+        "de": "Umarme die Reise"
+    },
+    "Celebrate small victories": {
+        "en": "Celebrate small victories",
+        "es": "Celebra pequeñas victorias",
+        "fr": "Célébrez les petites victoires",
+        "de": "Feiere kleine Siege"
+    },
+    "Focus on progress, not setbacks": {
+        "en": "Focus on progress, not setbacks",
+        "es": "Concéntrate en el progreso, no en los contratiempos",
+        "fr": "Concentrez-vous sur les progrès, pas sur les revers",
+        "de": "Konzentriere dich auf Fortschritt, nicht auf Rückschläge"
+    },
+    "Make every day count": {
+        "en": "Make every day count",
+        "es": "Haz que cada día cuente",
+        "fr": "Faites en sorte que chaque jour compte",
+        "de": "Mach jeden Tag wertvoll"
+    },
+    "You are capable of amazing things": {
+        "en": "You are capable of amazing things",
+        "es": "Eres capaz de cosas increíbles",
+        "fr": "Vous êtes capable de choses incroyables",
+        "de": "Du bist zu erstaunlichen Dingen fähig"
+    },
+    "Stay committed to your goals": {
+        "en": "Stay committed to your goals",
+        "es": "Mantente comprometido con tus objetivos",
+        "fr": "Restez engagé envers vos objectifs",
+        "de": "Bleib deinen Zielen verpflichtet"
+    },
+    "Transform your habits, transform your life": {
+        "en": "Transform your habits, transform your life",
+        "es": "Transforma tus hábitos, transforma tu vida",
+        "fr": "Transformez vos habitudes, transformez votre vie",
+        "de": "Verändere deine Gewohnheiten, verändere dein Leben"
+    },
+    "Your future self will thank you": {
+        "en": "Your future self will thank you",
+        "es": "Tu yo futuro te lo agradecerá",
+        "fr": "Votre futur vous remerciera",
+        "de": "Dein zukünftiges Ich wird dir danken"
+    },
+    "Health is wealth": {
+        "en": "Health is wealth",
+        "es": "La salud es riqueza",
+        "fr": "La santé c'est la richesse",
+        "de": "Gesundheit ist Reichtum"
+    },
+    "Strive for progress, not perfection": {
+        "en": "Strive for progress, not perfection",
+        "es": "Esfuérzate por el progreso, no por la perfección",
+        "fr": "Efforcez-vous pour le progrès, pas pour la perfection",
+        "de": "Strebe nach Fortschritt, nicht nach Perfektion"
+    },
+    "Believe you can and you're halfway there": {
+        "en": "Believe you can and you're halfway there",
+        "es": "Cree que puedes y estarás a mitad de camino",
+        "fr": "Croyez que vous pouvez et vous êtes à mi-chemin",
+        "de": "Glaube, dass du es kannst, und du bist schon halb da"
+    },
+    "The only bad workout is the one that didn't happen": {
+        "en": "The only bad workout is the one that didn't happen",
+        "es": "El único mal entrenamiento es el que no sucedió",
+        "fr": "Le seul mauvais entraînement est celui qui n'a pas eu lieu",
+        "de": "Das einzige schlechte Training ist das, das nicht stattfand"
+    },
+    "Push yourself, because no one else is going to do it for you": {
+        "en": "Push yourself, because no one else is going to do it for you",
+        "es": "Empújate, porque nadie más lo hará por ti",
+        "fr": "Poussez-vous, car personne d'autre ne le fera pour vous",
+        "de": "Fordere dich selbst heraus, denn niemand sonst wird es für dich tun"
+    },
+    "Success is the sum of small efforts repeated day in and day out": {
+        "en": "Success is the sum of small efforts repeated day in and day out",
+        "es": "El éxito es la suma de pequeños esfuerzos repetidos día tras día",
+        "fr": "Le succès est la somme de petits efforts répétés jour après jour",
+        "de": "Erfolg ist die Summe kleiner Anstrengungen, die Tag für Tag wiederholt werden"
     }
 };
 

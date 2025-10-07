@@ -95,7 +95,7 @@ $(function() {
 
         // STEP 1: Load settings FIRST to establish language preference
         loadSettings(function() {
-            // STEP 2: Now render all content in the correct language
+            // STEP 2: Now render all content
             refreshLatestWeight();
             refreshGoal();
             loadProfile();
@@ -113,6 +113,12 @@ $(function() {
 
             // Initialize weight chart now that global data is available
             initWeightChart();
+
+            // STEP 3: Apply translations to all rendered content
+            if (typeof window.settingsApplyCurrentLanguageTranslations === 'function') {
+                debugLog('Applying translations after all content rendered');
+                window.settingsApplyCurrentLanguageTranslations();
+            }
 
             // Flush debug logs after ALL page initialization completes
             setTimeout(() => {
@@ -832,9 +838,10 @@ function loadSettings(callback) {
         toggleEmailSchedule();
 
         // Apply language without triggering save
+        // Pass skipReload=true because we'll render all content in the callback
         const lang = s.language || 'en';
         if (lang !== 'en' && typeof window.settingsSwitchLanguage === 'function') {
-            window.settingsSwitchLanguage(lang);
+            window.settingsSwitchLanguage(lang, true);
         }
 
         // Call callback after settings are loaded and language is applied
@@ -875,9 +882,10 @@ function loadSettings(callback) {
             toggleEmailSchedule();
 
             // Apply language without triggering save
+            // Pass skipReload=true because we'll render all content in the callback
             const lang = s.language || 'en';
             if (lang !== 'en' && typeof window.settingsSwitchLanguage === 'function') {
-                window.settingsSwitchLanguage(lang);
+                window.settingsSwitchLanguage(lang, true);
             }
 
             // Call callback after settings are loaded and language is applied
@@ -2265,6 +2273,11 @@ function loadQuickLookMetrics() {
 
     // Always refresh encouragement quote (client-side randomization)
     displayRandomEncouragement();
+
+    // CRITICAL: Return here if using global data to prevent async issues
+    if (window.globalDashboardData && window.globalDashboardData.quick_look_metrics) {
+        return;
+    }
 }
 
 /**
@@ -2273,6 +2286,7 @@ function loadQuickLookMetrics() {
  */
 function renderQuickLookMetrics(metrics) {
     if (window.coverage) window.coverage.logFunction('renderQuickLookMetrics', 'dashboard.js');
+    debugLog('🎨 renderQuickLookMetrics called with:', metrics);
 
     // Consistency Score
     displayConsistencyScore(metrics.consistency_score, metrics.logging_frequency, metrics.goal_progress);
@@ -2289,6 +2303,7 @@ function renderQuickLookMetrics(metrics) {
  */
 function displayConsistencyScore(score, loggingFreq, goalProgress) {
     if (window.coverage) window.coverage.logFunction('displayConsistencyScore', 'dashboard.js');
+    debugLog('📊 displayConsistencyScore called with score:', score);
 
     const container = $('#consistency-score');
 
@@ -2325,11 +2340,11 @@ function displayConsistencyScore(score, loggingFreq, goalProgress) {
     }
 
     const html = `
-        <div class="consistency-score-label" data-eng="${Math.round(score)}% - ${messageEng}" data-spa="${Math.round(score)}% - ${messageSpa}" data-fre="${Math.round(score)}% - ${messageFre}" data-ger="${Math.round(score)}% - ${messageGer}">${Math.round(score)}% - ${messageEng}</div>
-        <div class="text-muted small mt-2" data-eng="Based on logging frequency and goal progress" data-spa="Basado en la frecuencia de registro y progreso hacia la meta" data-fre="Basé sur la fréquence de journalisation et les progrès vers l'objectif" data-ger="Basierend auf Protokollierungshäufigkeit und Zielfortschritt">Based on logging frequency and goal progress</div>
+        <div class="consistency-score-label">${Math.round(score)}% - ${t(messageEng)}</div>
+        <div class="text-muted small mt-2">${t('Based on logging frequency and goal progress')}</div>
     `;
 
-    container.html(html);
+    container.html(html).removeClass('text-muted');
 }
 
 /**
@@ -2459,7 +2474,7 @@ function displayRandomEncouragement() {
     ];
 
     $('#encouragement-card').html(`
-        <div class="encouragement-quote" data-eng="${quoteEng}" data-spa="${quotesSpa[index]}" data-fre="${quotesFre[index]}" data-ger="${quotesGer[index]}">"${quoteEng}"</div>
+        <div class="encouragement-quote">"${t(quoteEng)}"</div>
     `);
 }
 
@@ -2476,9 +2491,7 @@ function displayNextCheckin(nextDate, daysUntil, avgInterval) {
 
     if (!nextDate || daysUntil === null) {
         // Not enough data
-        container.html(
-            `<div class="text-muted small" data-eng="Log more weights to see predictions" data-spa="Registra más pesos para ver predicciones" data-fre="Enregistrez plus de poids pour voir les prédictions" data-ger="Protokollieren Sie mehr Gewichte, um Vorhersagen zu sehen">Log more weights to see predictions</div>`
-        );
+        container.html(`<div class="text-muted small">${t('Log more weights to see predictions')}</div>`);
         return;
     }
 
@@ -2489,25 +2502,20 @@ function displayNextCheckin(nextDate, daysUntil, avgInterval) {
 
     if (daysUntil <= 0) {
         // Overdue
-        html = `
-            <div class="checkin-date" data-eng="📍 You're due for a weigh-in today!" data-spa="📍 ¡Es hora de pesarte hoy!" data-fre="📍 Vous devez vous peser aujourd'hui!" data-ger="📍 Sie sollten sich heute wiegen!">📍 You're due for a weigh-in today!</div>
-        `;
+        html = `<div class="checkin-date">${t("📍 You're due for a weigh-in today!")}</div>`;
     } else {
         // Future date
-        const dayLabelEng = daysUntil === 1 ? 'day' : 'days';
-        const dayLabelSpa = daysUntil === 1 ? 'día' : 'días';
-        const dayLabelFre = daysUntil === 1 ? 'jour' : 'jours';
-        const dayLabelGer = daysUntil === 1 ? 'Tag' : 'Tage';
+        const dayLabel = daysUntil === 1 ? t('day') : t('days');
         html = `
             <div class="checkin-countdown">${daysUntil}</div>
-            <div class="checkin-date" data-eng="${dayLabelEng}" data-spa="${dayLabelSpa}" data-fre="${dayLabelFre}" data-ger="${dayLabelGer}">${dayLabelEng}</div>
-            <div class="text-muted small mt-2" data-eng="Next weigh-in on ${formattedDate}" data-spa="Próximo pesaje el ${formattedDate}" data-fre="Prochain pesage le ${formattedDate}" data-ger="Nächste Wiegung am ${formattedDate}">Next weigh-in on ${formattedDate}</div>
+            <div class="checkin-date">${dayLabel}</div>
+            <div class="text-muted small mt-2">${t('Next weigh-in on')} ${formattedDate}</div>
         `;
     }
 
-    html += `<div class="text-muted small mt-1" data-eng="Based on your average logging frequency" data-spa="Basado en tu frecuencia promedio de registro" data-fre="Basé sur votre fréquence moyenne de journalisation" data-ger="Basierend auf Ihrer durchschnittlichen Protokollierungshäufigkeit">Based on your average logging frequency</div>`;
+    html += `<div class="text-muted small mt-1">${t('Based on your average logging frequency')}</div>`;
 
-    container.html(html);
+    container.html(html).removeClass('text-muted');
 }
 
 // ========================================
@@ -2622,7 +2630,7 @@ function displayGoalStreak(weeklyPercent, monthlyPercent) {
         html = `<span data-eng="No recent progress - keep logging!" data-spa="Sin progreso reciente - ¡sigue registrando!" data-fre="Pas de progrès récent - continuez à enregistrer!" data-ger="Kein aktueller Fortschritt - weiter protokollieren!">No recent progress - keep logging!</span>`;
     }
 
-    container.html(html);
+    container.empty().html(html).removeAttr('data-eng data-spa data-fre data-ger');
 }
 
 /**
@@ -2637,20 +2645,20 @@ function displayGoalETA(goalData) {
 
     if (progress_percent >= 100) {
         const html = `<span data-eng="You've already reached your goal!" data-spa="¡Ya has alcanzado tu meta!" data-fre="Vous avez déjà atteint votre objectif!" data-ger="Sie haben Ihr Ziel bereits erreicht!">You've already reached your goal!</span>`;
-        container.html(html);
+        container.empty().html(html).removeAttr('data-eng data-spa data-fre data-ger');
         return;
     }
 
     if (!eta_date || !weekly_loss_rate || weekly_loss_rate <= 0) {
         const html = `<span data-eng="Need more data for prediction" data-spa="Se necesitan más datos para predicción" data-fre="Besoin de plus de données pour la prédiction" data-ger="Mehr Daten für Vorhersage benötigt">Need more data for prediction</span>`;
-        container.html(html);
+        container.empty().html(html).removeAttr('data-eng data-spa data-fre data-ger');
         return;
     }
 
     const formattedDate = formatDate(eta_date);
     const html = `<span data-eng="On track to reach goal by ${formattedDate}" data-spa="En camino de alcanzar la meta para ${formattedDate}" data-fre="En bonne voie pour atteindre l'objectif d'ici ${formattedDate}" data-ger="Auf dem Weg, das Ziel bis ${formattedDate} zu erreichen">On track to reach goal by ${formattedDate}</span>`;
 
-    container.html(html);
+    container.empty().html(html).removeAttr('data-eng data-spa data-fre data-ger');
 }
 
 /**
@@ -2840,7 +2848,7 @@ function displayIdealWeightStreak(weeklyPercent, monthlyPercent) {
         html = `<span data-eng="No recent progress - keep logging!" data-spa="Sin progreso reciente - ¡sigue registrando!" data-fre="Pas de progrès récent - continuez à enregistrer!" data-ger="Kein aktueller Fortschritt - weiter protokollieren!">No recent progress - keep logging!</span>`;
     }
 
-    container.html(html);
+    container.empty().html(html).removeAttr('data-eng data-spa data-fre data-ger');
 }
 
 /**
@@ -2853,13 +2861,13 @@ function displayIdealWeightETA(currentWeight, idealTargetWeight, weeklyLossRate)
 
     if (currentWeight <= idealTargetWeight) {
         const html = `<span data-eng="You've reached your ideal weight!" data-spa="¡Has alcanzado tu peso ideal!" data-fre="Vous avez atteint votre poids idéal!" data-ger="Sie haben Ihr Idealgewicht erreicht!">You've reached your ideal weight!</span>`;
-        container.html(html);
+        container.empty().html(html).removeAttr('data-eng data-spa data-fre data-ger');
         return;
     }
 
     if (!weeklyLossRate || weeklyLossRate <= 0) {
         const html = `<span data-eng="Need more data for prediction" data-spa="Se necesitan más datos para predicción" data-fre="Besoin de plus de données pour la prédiction" data-ger="Mehr Daten für Vorhersage benötigt">Need more data for prediction</span>`;
-        container.html(html);
+        container.empty().html(html).removeAttr('data-eng data-spa data-fre data-ger');
         return;
     }
 
@@ -2871,7 +2879,7 @@ function displayIdealWeightETA(currentWeight, idealTargetWeight, weeklyLossRate)
     const formattedDate = formatDate(etaDate.toISOString().split('T')[0]);
     const html = `<span data-eng="On track to reach BMI by ${formattedDate}" data-spa="En camino de alcanzar IMC para ${formattedDate}" data-fre="En bonne voie pour atteindre l'IMC d'ici ${formattedDate}" data-ger="Auf dem Weg, den BMI bis ${formattedDate} zu erreichen">On track to reach BMI by ${formattedDate}</span>`;
 
-    container.html(html);
+    container.empty().html(html).removeAttr('data-eng data-spa data-fre data-ger');
 }
 
 /**
@@ -3063,7 +3071,7 @@ function renderStreakCounter(data) {
         </div>
     `;
 
-    container.html(html);
+    container.empty().html(html).removeAttr('data-eng data-spa data-fre data-ger');
 
     // Apply current language to newly generated content
     const currentLanguage = localStorage.getItem('language') || 'en';
@@ -3165,7 +3173,7 @@ function showNoStreakData() {
             Log weights regularly to build streaks
         </div>
     `;
-    container.html(html);
+    container.empty().html(html).removeAttr('data-eng data-spa data-fre data-ger');
 
     // Apply current language to newly generated content
     const currentLanguage = localStorage.getItem('language') || 'en';

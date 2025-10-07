@@ -140,7 +140,7 @@
   "Started at: ": "Commencé à: ",
   "Based on ${convertFromKg(weightLoss)} ${getWeightUnitLabel()} weight loss across all 14 health categories on this page": "Basé sur ${convertFromKg(weightLoss)} ${getWeightUnitLabel()} de perte de poids dans les 14 catégories de santé de cette page",
   "START": "DÉBUT",
-  "NOW": "MAINTENANT",
+  "NOW": "MAINT.",
   "Poor": "Faible",
   "Fair": "Passable",
   "Good": "Bon",
