@@ -12,7 +12,7 @@ let coverageReporter = null;
 Cypress.Commands.add('initCoverage', () => {
     if (!coverageReporter) {
         coverageReporter = new CypressCoverageReporter();
-        debugLog('🎯 Coverage reporter initialized');
+        console.log('🎯 Coverage reporter initialized');
     }
 });
 
@@ -22,7 +22,7 @@ Cypress.Commands.add('visitWithCoverage', (url = '/') => {
     const fullUrl = new URL(url, Cypress.config('baseUrl') || 'http://127.0.0.1:8111');
     fullUrl.searchParams.set('coverage', '1');
 
-    debugLog(`🔗 Visiting with coverage enabled: ${fullUrl.toString()}`);
+    console.log(`🔗 Visiting with coverage enabled: ${fullUrl.toString()}`);
     cy.visit(fullUrl.toString());
 });
 
@@ -32,7 +32,7 @@ Cypress.Commands.add('collectCoverage', (testName) => {
         if (win.coverage && coverageReporter) {
             const report = win.coverage.getReport();
             coverageReporter.addTestCoverage(testName || Cypress.currentTest.title, report);
-            debugLog(`📊 Collected coverage for: ${testName || Cypress.currentTest.title}`);
+            console.log(`📊 Collected coverage for: ${testName || Cypress.currentTest.title}`);
         }
     });
 });
@@ -41,9 +41,9 @@ Cypress.Commands.add('collectCoverage', (testName) => {
 Cypress.Commands.add('flushCoverageBeforeNavigation', () => {
     cy.window().then((win) => {
         if (win.coverage && typeof win.coverage.flushBatchToServer === 'function') {
-            debugLog('🔄 Flushing coverage batch before navigation...');
+            console.log('🔄 Flushing coverage batch before navigation...');
             win.coverage.flushBatchToServer();
-            debugLog('✅ Coverage batch flushed');
+            console.log('✅ Coverage batch flushed');
         }
     });
 });
@@ -62,11 +62,11 @@ Cypress.Commands.add('enableCoverageTracking', () => {
             coverage.enabled = true;
             coverage.testMode = true;
             win.coverage = coverage;
-            debugLog('🧪 Coverage tracking force-enabled for test');
+            console.log('🧪 Coverage tracking force-enabled for test');
         } else if (win.coverage) {
             win.coverage.enabled = true;
             win.coverage.setTestMode(true);
-            debugLog('🧪 Coverage tracking enabled for test');
+            console.log('🧪 Coverage tracking enabled for test');
 
             // Force immediate instrumentation
             if (win.autoInstrumentGlobalFunctions) {
@@ -80,22 +80,22 @@ Cypress.Commands.add('enableCoverageTracking', () => {
 
             // Log current function count
             const report = win.coverage.getReport();
-            debugLog(`📊 Coverage tracking: ${report.totalFunctions} functions tracked`);
+            console.log(`📊 Coverage tracking: ${report.totalFunctions} functions tracked`);
         } else {
             console.warn('⚠️ Coverage logger not found on window object');
         }
     });
 });
 
-// Save final coverage report  
+// Save final coverage report
 Cypress.Commands.add('saveCoverageReport', (fileName = null) => {
     if (coverageReporter) {
         const filePath = fileName || `.claude/reports/cypress-coverage-report.txt`;
         const report = coverageReporter.generateReport();
-        
+
         // Use Cypress's writeFile instead of Node's fs
         cy.writeFile(filePath, report).then(() => {
-            debugLog(`📄 Coverage report saved: ${filePath}`);
+            console.log(`📄 Coverage report saved: ${filePath}`);
             return cy.wrap(filePath);
         });
     } else {
@@ -140,13 +140,13 @@ Cypress.Commands.add('collectBackendCoverage', (testName) => {
     }).then((response) => {
         if (response.status === 200 && response.body.success) {
             const backendCoverage = response.body.coverage;
-            
+
             if (coverageReporter && backendCoverage.functions) {
                 // Convert PHP coverage format to our standard format
                 const standardFormat = {
                     functions: {}
                 };
-                
+
                 Object.entries(backendCoverage.functions).forEach(([key, data]) => {
                     standardFormat.functions[key] = {
                         functionName: data.function,
@@ -156,12 +156,12 @@ Cypress.Commands.add('collectBackendCoverage', (testName) => {
                         lastCalled: data.lastCalled
                     };
                 });
-                
+
                 coverageReporter.addTestCoverage(testName || Cypress.currentTest.title, standardFormat);
-                debugLog(`📊 Collected backend coverage: ${Object.keys(standardFormat.functions).length} functions`);
+                console.log(`📊 Collected backend coverage: ${Object.keys(standardFormat.functions).length} functions`);
             }
         } else {
-            debugLog('⚠️ Backend coverage not available:', response.body?.message || 'Unknown error');
+            console.log('⚠️ Backend coverage not available:', response.body?.message || 'Unknown error');
         }
     });
 });
@@ -169,7 +169,7 @@ Cypress.Commands.add('collectBackendCoverage', (testName) => {
 // Force comprehensive function instrumentation
 Cypress.Commands.add('forceInstrumentation', () => {
     cy.window().then((win) => {
-        debugLog('🔧 Forcing comprehensive instrumentation...');
+        console.log('🔧 Forcing comprehensive instrumentation...');
 
         // Check all window functions
         let instrumentedCount = 0;
@@ -191,15 +191,15 @@ Cypress.Commands.add('forceInstrumentation', () => {
             }
         });
 
-        debugLog(`🔧 Forced instrumentation: ${instrumentedCount} functions wrapped`);
+        console.log(`🔧 Forced instrumentation: ${instrumentedCount} functions wrapped`);
 
         // Also check for specific functions we know exist
         const targetFunctions = ['updateSignupButton', 'sendLoginCode', 'createAccount', 'isValidEmail'];
         targetFunctions.forEach(funcName => {
             if (typeof win[funcName] === 'function') {
-                debugLog(`✅ Found target function: ${funcName}`);
+                console.log(`✅ Found target function: ${funcName}`);
             } else {
-                debugLog(`❌ Missing target function: ${funcName}`);
+                console.log(`❌ Missing target function: ${funcName}`);
             }
         });
     });

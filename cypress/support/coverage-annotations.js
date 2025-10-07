@@ -25,13 +25,13 @@ function addCoverageAnnotation(testName, expectedFunctions = [], actualFunctions
     
     // Log to console
     console.group(`📝 Coverage Annotation: ${testName}`);
-    debugLog('📋 Expected functions:', expectedFunctions);
+    console.log('📋 Expected functions:', expectedFunctions);
     if (actualFunctions.length > 0) {
-        debugLog('✅ Actually covered:', actualFunctions);
+        console.log('✅ Actually covered:', actualFunctions);
         const missing = expectedFunctions.filter(f => !actualFunctions.includes(f));
         const unexpected = actualFunctions.filter(f => !expectedFunctions.includes(f));
-        if (missing.length > 0) debugLog('❌ Missing coverage:', missing);
-        if (unexpected.length > 0) debugLog('➕ Unexpected coverage:', unexpected);
+        if (missing.length > 0) console.log('❌ Missing coverage:', missing);
+        if (unexpected.length > 0) console.log('➕ Unexpected coverage:', unexpected);
     }
     console.groupEnd();
 }

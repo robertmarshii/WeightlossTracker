@@ -106,6 +106,7 @@ $(function() {
         loadWeightHistory();
         loadQuickLookMetrics(); // Phase 1: Quick Look section
         refreshGoalsAchieved(); // Phase 2: Goals Achieved enhancements
+        refreshTotalProgress(); // Phase 4: Total Progress enhancements
         // Phase 3: Streak Counter - render AFTER loadSettings completes
         setTimeout(() => {
             loadSettings();
@@ -156,6 +157,7 @@ $(function() {
                     loadQuickLookMetrics(); // Phase 1: Quick Look section
                     refreshGoalsAchieved(); // Phase 2: Goals Achieved enhancements
                     refreshStreakCounter(); // Phase 3: Streak Counter enhancements
+                    refreshTotalProgress(); // Phase 4: Total Progress enhancements
 
                     // Functions using individual API calls
                     refreshIdealWeight(); // always uses individual API call
@@ -229,6 +231,7 @@ $(function() {
                     loadQuickLookMetrics(); // Phase 1: Quick Look section
                     refreshGoalsAchieved(); // Phase 2: Goals Achieved enhancements
                     refreshStreakCounter(); // Phase 3: Streak Counter enhancements
+                    refreshTotalProgress(); // Phase 4: Total Progress enhancements
 
                     // Functions using individual API calls
                     refreshIdealWeight(); // always uses individual API call
@@ -2222,8 +2225,7 @@ function displayConsistencyScore(score, loggingFreq, goalProgress) {
     }
 
     const html = `
-        <div class="consistency-score-display">${Math.round(score)}%</div>
-        <div class="consistency-score-label" data-eng="${messageEng}" data-spa="${messageSpa}" data-fre="${messageFre}" data-ger="${messageGer}">${messageEng}</div>
+        <div class="consistency-score-label" data-eng="${Math.round(score)}% - ${messageEng}" data-spa="${Math.round(score)}% - ${messageSpa}" data-fre="${Math.round(score)}% - ${messageFre}" data-ger="${Math.round(score)}% - ${messageGer}">${Math.round(score)}% - ${messageEng}</div>
         <div class="text-muted small mt-2" data-eng="Based on logging frequency and goal progress" data-spa="Basado en la frecuencia de registro y progreso hacia la meta" data-fre="Basé sur la fréquence de journalisation et les progrès vers l'objectif" data-ger="Basierend auf Protokollierungshäufigkeit und Zielfortschritt">Based on logging frequency and goal progress</div>
     `;
 
@@ -2388,8 +2390,7 @@ function displayNextCheckin(nextDate, daysUntil, avgInterval) {
     if (daysUntil <= 0) {
         // Overdue
         html = `
-            <div class="checkin-countdown">📍</div>
-            <div class="checkin-date" data-eng="You're due for a weigh-in today!" data-spa="¡Es hora de pesarte hoy!" data-fre="Vous devez vous peser aujourd'hui!" data-ger="Sie sollten sich heute wiegen!">You're due for a weigh-in today!</div>
+            <div class="checkin-date" data-eng="📍 You're due for a weigh-in today!" data-spa="📍 ¡Es hora de pesarte hoy!" data-fre="📍 Vous devez vous peser aujourd'hui!" data-ger="📍 Sie sollten sich heute wiegen!">📍 You're due for a weigh-in today!</div>
         `;
     } else {
         // Future date
@@ -2473,10 +2474,11 @@ function renderGoalProgress(goalData) {
     $('#goal-progress-text').text(`${Math.round(progressPercent)}%`);
 
     // Update weight progress text
-    const weightLost = convertFromKg(goalData.weight_lost || 0);
-    const totalToLose = convertFromKg((goalData.start_weight || 0) - (goalData.target_weight || 0));
+    const weightLost = parseFloat(convertFromKg(goalData.weight_lost || 0)).toFixed(1);
+    const totalToLose = parseFloat(convertFromKg((goalData.start_weight || 0) - (goalData.target_weight || 0))).toFixed(1);
     const unit = getWeightUnitLabel();
-    $('#goal-weight-progress').text(`${weightLost} ${unit} of ${totalToLose} ${unit}`);
+    const ofText = t('of') || 'of';
+    $('#goal-weight-progress').text(`${weightLost} ${unit} ${ofText} ${totalToLose} ${unit}`);
 
     // Goal achieved celebration
     if (progressPercent >= 100) {
@@ -2879,83 +2881,97 @@ function renderStreakCounter(data) {
         </div>
 
         <div id="streak-content">
-            <!-- Current Streak Display -->
-            <div class="streak-stat-row mb-2">
-                <div class="streak-stat-icon">🔥</div>
-                <div class="streak-stat-content">
-                    <div class="streak-stat-value">${data.current_streak || 0}</div>
-                    <div class="streak-stat-label"
-                        data-eng="Current Streak"
-                        data-spa="Racha Actual"
-                        data-fre="Série Actuelle"
-                        data-ger="Aktuelle Serie">
-                        Current Streak
+            <div class="row">
+                <!-- Left Column: Stats -->
+                <div class="col-md-6">
+                    <!-- Current Streak Display -->
+                    <div class="streak-stat-row mb-2">
+                        <div class="streak-stat-icon">🔥</div>
+                        <div class="streak-stat-content">
+                            <div class="streak-stat-value">${data.current_streak || 0}</div>
+                            <div class="streak-stat-label"
+                                data-eng="Current Streak"
+                                data-spa="Racha Actual"
+                                data-fre="Série Actuelle"
+                                data-ger="Aktuelle Serie">
+                                Current Streak
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
 
-            <!-- Longest Streak Display -->
-            <div class="streak-stat-row mb-2">
-                <div class="streak-stat-icon">🏆</div>
-                <div class="streak-stat-content">
-                    <div class="streak-stat-value">${data.longest_streak || 0}</div>
-                    <div class="streak-stat-label"
-                        data-eng="Personal Best"
-                        data-spa="Mejor Personal"
-                        data-fre="Meilleur Personnel"
-                        data-ger="Persönliche Bestleistung">
-                        Personal Best
+                    <!-- Longest Streak Display -->
+                    <div class="streak-stat-row mb-2">
+                        <div class="streak-stat-icon">🏆</div>
+                        <div class="streak-stat-content">
+                            <div class="streak-stat-value">${data.longest_streak || 0}</div>
+                            <div class="streak-stat-label"
+                                data-eng="Personal Best"
+                                data-spa="Mejor Personal"
+                                data-fre="Meilleur Personnel"
+                                data-ger="Persönliche Bestleistung">
+                                Personal Best
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
 
-            <!-- Missed Entries -->
-            <div class="streak-stat-row mb-3">
-                <div class="streak-stat-icon">📊</div>
-                <div class="streak-stat-content">
-                    <div class="streak-stat-value">${data.missed_weeks_this_month || 0}</div>
-                    <div class="streak-stat-label"
-                        data-eng="Missed Entries"
-                        data-spa="Entradas Perdidas"
-                        data-fre="Entrées Manquées"
-                        data-ger="Verpasste Einträge">
-                        Missed Entries
+                    <!-- Missed Entries -->
+                    <div class="streak-stat-row mb-3">
+                        <div class="streak-stat-icon">📊</div>
+                        <div class="streak-stat-content">
+                            <div class="streak-stat-value">${data.missed_weeks_this_month || 0}</div>
+                            <div class="streak-stat-label"
+                                data-eng="Missed Entries"
+                                data-spa="Entradas Perdidas"
+                                data-fre="Entrées Manquées"
+                                data-ger="Verpasste Einträge">
+                                Missed Entries
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
 
-            <!-- Visual Timeline -->
-            <div class="streak-timeline">
-                <div class="streak-timeline-title text-muted small mb-2"
-                    data-eng="Last 28 Days"
-                    data-spa="Últimos 28 Días"
-                    data-fre="28 Derniers Jours"
-                    data-ger="Letzte 28 Tage">
-                    Last 28 Days
-                </div>
-                <div class="streak-timeline-grid">
-                    ${timelineHtml}
-                </div>
-                <div class="streak-timeline-legend">
-                    <div class="streak-legend-item">
-                        <span class="streak-dot logged"></span>
-                        <span class="streak-legend-label"
-                            data-eng="Logged"
-                            data-spa="Registrado"
-                            data-fre="Enregistré"
-                            data-ger="Protokolliert">
-                            Logged
-                        </span>
-                    </div>
-                    <div class="streak-legend-item">
-                        <span class="streak-dot missed"></span>
+                    <!-- Motivational Message -->
+                    <div class="streak-motivation">
+                        ${motivationHtml}
                     </div>
                 </div>
-            </div>
 
-            <!-- Motivational Message -->
-            <div class="streak-motivation mt-3">
-                ${motivationHtml}
+                <!-- Right Column: Timeline -->
+                <div class="col-md-6">
+                    <div class="streak-timeline">
+                        <div class="streak-timeline-title text-muted small mb-2"
+                            data-eng="Last 28 Days"
+                            data-spa="Últimos 28 Días"
+                            data-fre="28 Derniers Jours"
+                            data-ger="Letzte 28 Tage">
+                            Last 28 Days
+                        </div>
+                        <div class="streak-timeline-grid">
+                            ${timelineHtml}
+                        </div>
+                        <div class="streak-timeline-legend">
+                            <div class="streak-legend-item">
+                                <span class="streak-dot logged"></span>
+                                <span class="streak-legend-label"
+                                    data-eng="Logged"
+                                    data-spa="Registrado"
+                                    data-fre="Enregistré"
+                                    data-ger="Protokolliert">
+                                    Logged
+                                </span>
+                            </div>
+                            <div class="streak-legend-item">
+                                <span class="streak-dot today"></span>
+                                <span class="streak-legend-label"
+                                    data-eng="Today"
+                                    data-spa="Hoy"
+                                    data-fre="Aujourd'hui"
+                                    data-ger="Heute">
+                                    Today
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     `;
@@ -3090,6 +3106,465 @@ function showNoStreakData() {
 }
 
 // ==================== End Quick Look Section ====================
+
+// ==================== PHASE 4: TOTAL PROGRESS ENHANCEMENTS ====================
+
+/**
+ * Refresh Total Progress card with charts and stats
+ * Called on init and after weight/goal updates
+ */
+function refreshTotalProgress() {
+    if (window.coverage) window.coverage.logFunction('refreshTotalProgress', 'dashboard.js');
+
+    debugLog('refreshTotalProgress called');
+    debugLog('globalDashboardData:', window.globalDashboardData);
+    debugLog('total_progress exists?', window.globalDashboardData && window.globalDashboardData.total_progress);
+
+    // CRITICAL: Use global dashboard data if available (don't break the global data system!)
+    if (window.globalDashboardData && window.globalDashboardData.total_progress) {
+        debugLog('Using global data for total progress');
+        renderTotalProgress(window.globalDashboardData.total_progress);
+    } else {
+        // Fallback: individual API call (only if global data not available)
+        debugLog('Falling back to individual API call');
+        postRequest('router.php?controller=profile', { action: 'get_total_progress' })
+            .then(resp => {
+                debugLog('API response:', resp);
+                const data = parseJson(resp);
+                debugLog('Parsed data:', data);
+                if (data.success && data.total_progress) {
+                    renderTotalProgress(data.total_progress);
+                } else {
+                    console.error('API call succeeded but no total_progress data:', data);
+                    $('#total-progress-loading').html('Error loading progress data');
+                }
+            })
+            .catch(err => {
+                console.error('Failed to load total progress:', err);
+                $('#total-progress-loading').html('Error: ' + err.message);
+            });
+    }
+}
+
+/**
+ * Render total progress data and charts
+ * @param {Object} progressData - Progress data from API
+ */
+function renderTotalProgress(progressData) {
+    if (window.coverage) window.coverage.logFunction('renderTotalProgress', 'dashboard.js');
+
+    $('#total-progress-loading').hide();
+    $('#total-progress-content').show();
+
+    // Initialize tab switching
+    initProgressTabs();
+
+    // Render all charts
+    renderWeeklyLossChart(progressData.weekly_loss_data);
+    renderProjectionChart(progressData.projection_data);
+    renderGoalPieChart(progressData.goal_data);
+    renderIdealWeightPieChart(progressData.ideal_weight_data);
+    renderBodyFatChart(progressData.body_fat_data);
+
+    // Display weight comparison
+    displayWeightComparison(progressData.total_lost_kg);
+}
+
+/**
+ * Initialize tab switching functionality
+ */
+function initProgressTabs() {
+    if (window.coverage) window.coverage.logFunction('initProgressTabs', 'dashboard.js');
+
+    $('.progress-tab-btn').off('click').on('click', function() {
+        const tab = $(this).data('tab');
+
+        // Update buttons
+        $('.progress-tab-btn').removeClass('active');
+        $(this).addClass('active');
+
+        // Update content
+        $('.progress-tab-content').removeClass('active');
+        $(`.progress-tab-content[data-tab="${tab}"]`).addClass('active');
+    });
+}
+
+/**
+ * Render average weekly loss line chart
+ * @param {Array} weeklyData - Array of {week, avg_loss}
+ */
+function renderWeeklyLossChart(weeklyData) {
+    if (window.coverage) window.coverage.logFunction('renderWeeklyLossChart', 'dashboard.js');
+
+    const ctx = document.getElementById('weekly-loss-chart');
+    if (!ctx) return;
+
+    // Destroy existing chart if exists (prevent memory leaks)
+    if (window.weeklyLossChartInstance) {
+        window.weeklyLossChartInstance.destroy();
+    }
+
+    if (!weeklyData || weeklyData.length === 0) {
+        return;
+    }
+
+    const labels = weeklyData.map(d => `Week ${d.week}`);
+    const data = weeklyData.map(d => d.avg_loss);
+
+    window.weeklyLossChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Weight Loss (kg)',
+                data: data,
+                borderColor: '#64a6d8',
+                backgroundColor: 'rgba(100, 166, 216, 0.1)',
+                tension: 0.3,
+                fill: true,
+                pointRadius: 0,
+                pointHoverRadius: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(100, 150, 200, 0.1)'
+                    },
+                    ticks: {
+                        color: 'rgba(255, 255, 255, 0.7)'
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        color: 'rgba(255, 255, 255, 0.7)'
+                    }
+                }
+            }
+        }
+    });
+}
+
+/**
+ * Render 6-month projection chart
+ * @param {Object} projectionData - Contains historical and projected weights
+ */
+function renderProjectionChart(projectionData) {
+    if (window.coverage) window.coverage.logFunction('renderProjectionChart', 'dashboard.js');
+
+    const ctx = document.getElementById('projection-chart');
+    if (!ctx) return;
+
+    // Destroy existing chart
+    if (window.projectionChartInstance) {
+        window.projectionChartInstance.destroy();
+    }
+
+    if (!projectionData || !projectionData.historical || !projectionData.projected) {
+        return;
+    }
+
+    const { historical, projected } = projectionData;
+
+    window.projectionChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [...historical.labels, ...projected.labels],
+            datasets: [
+                {
+                    label: 'Actual',
+                    data: [...historical.data, ...Array(projected.data.length).fill(null)],
+                    borderColor: '#64a6d8',
+                    backgroundColor: 'rgba(100, 166, 216, 0.1)',
+                    tension: 0.3,
+                    pointRadius: 0,
+                    pointHoverRadius: 0
+                },
+                {
+                    label: 'Projected',
+                    data: [...Array(historical.data.length).fill(null), ...projected.data],
+                    borderColor: '#7bc96f',
+                    backgroundColor: 'rgba(123, 201, 111, 0.1)',
+                    borderDash: [5, 5],
+                    tension: 0.3,
+                    pointRadius: 0,
+                    pointHoverRadius: 0
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: 'rgba(255, 255, 255, 0.8)'
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    grid: {
+                        color: 'rgba(100, 150, 200, 0.1)'
+                    },
+                    ticks: {
+                        color: 'rgba(255, 255, 255, 0.7)'
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        color: 'rgba(255, 255, 255, 0.7)'
+                    }
+                }
+            }
+        }
+    });
+}
+
+/**
+ * Render goal completion pie chart
+ * @param {Object} goalData - Contains completed_kg, remaining_kg
+ */
+function renderGoalPieChart(goalData) {
+    if (window.coverage) window.coverage.logFunction('renderGoalPieChart', 'dashboard.js');
+
+    const ctx = document.getElementById('goal-pie-chart');
+    if (!ctx) return;
+
+    // Destroy existing chart
+    if (window.goalPieChartInstance) {
+        window.goalPieChartInstance.destroy();
+    }
+
+    if (!goalData || goalData.completed_kg === undefined || goalData.completed_kg === null) {
+        $('#goal-pie-label').text('No goal set');
+        return;
+    }
+
+    const { completed_kg, remaining_kg, total_kg } = goalData;
+
+    window.goalPieChartInstance = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Completed', 'Remaining'],
+            datasets: [{
+                data: [Math.abs(completed_kg), Math.abs(remaining_kg)],
+                backgroundColor: ['#7bc96f', 'rgba(100, 150, 200, 0.3)'],
+                borderColor: ['#7bc96f', 'rgba(100, 150, 200, 0.5)'],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: 'rgba(255, 255, 255, 0.8)'
+                    }
+                }
+            }
+        }
+    });
+
+    // Update label (ensure we have numbers)
+    const unit = getWeightUnitLabel();
+    const completedDisplay = parseFloat(convertFromKg(completed_kg) || 0).toFixed(1);
+    const totalDisplay = parseFloat(convertFromKg(total_kg) || 0).toFixed(1);
+    const labelText = `${completedDisplay} ${unit} of ${totalDisplay} ${unit}`;
+    $('#goal-pie-label').text(labelText);
+}
+
+/**
+ * Render ideal weight pie chart
+ * @param {Object} idealWeightData - Contains progress toward ideal BMI range
+ */
+function renderIdealWeightPieChart(idealWeightData) {
+    if (window.coverage) window.coverage.logFunction('renderIdealWeightPieChart', 'dashboard.js');
+
+    const ctx = document.getElementById('ideal-weight-pie-chart');
+    if (!ctx) return;
+
+    // Destroy existing chart
+    if (window.idealWeightPieChartInstance) {
+        window.idealWeightPieChartInstance.destroy();
+    }
+
+    if (!idealWeightData) {
+        return;
+    }
+
+    const { achieved_kg, remaining_kg, in_range } = idealWeightData;
+
+    if (in_range) {
+        $('#ideal-weight-label').text("You're in your ideal range!");
+        return;
+    }
+
+    window.idealWeightPieChartInstance = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Achieved', 'Remaining'],
+            datasets: [{
+                data: [achieved_kg, remaining_kg],
+                backgroundColor: ['#7bc96f', 'rgba(100, 150, 200, 0.3)'],
+                borderColor: ['#7bc96f', 'rgba(100, 150, 200, 0.5)'],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: 'rgba(255, 255, 255, 0.8)'
+                    }
+                }
+            }
+        }
+    });
+
+    const unit = getWeightUnitLabel();
+    const remainingDisplay = parseFloat(convertFromKg(remaining_kg) || 0).toFixed(1);
+    const toGoText = t('to go') || 'to go';
+    $('#ideal-weight-label').text(`${remainingDisplay} ${unit} ${toGoText}`);
+}
+
+/**
+ * Render body fat percentage chart
+ * @param {Array} bodyFatData - Array of {date, body_fat_percent}
+ */
+function renderBodyFatChart(bodyFatData) {
+    if (window.coverage) window.coverage.logFunction('renderBodyFatChart', 'dashboard.js');
+
+    debugLog('Body fat data received:', bodyFatData);
+
+    const ctx = document.getElementById('body-fat-chart');
+    if (!ctx) return;
+
+    if (!bodyFatData || bodyFatData.length === 0) {
+        debugLog('No body fat data - showing placeholder');
+        $('#body-fat-chart').hide();
+        $('#body-fat-chart-placeholder').show();
+        return;
+    }
+
+    $('#body-fat-chart').show();
+    $('#body-fat-chart-placeholder').hide();
+
+    // Destroy existing chart
+    if (window.bodyFatChartInstance) {
+        window.bodyFatChartInstance.destroy();
+    }
+
+    const labels = bodyFatData.map(d => formatDate(d.entry_date));
+    const data = bodyFatData.map(d => parseFloat(d.body_fat_percent));
+
+    window.bodyFatChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Body Fat %',
+                data: data,
+                borderColor: '#f39c12',
+                backgroundColor: 'rgba(243, 156, 18, 0.1)',
+                tension: 0.3,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    grid: {
+                        color: 'rgba(100, 150, 200, 0.1)'
+                    },
+                    ticks: {
+                        color: 'rgba(255, 255, 255, 0.7)',
+                        callback: function(value) {
+                            return value + '%';
+                        }
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        color: 'rgba(255, 255, 255, 0.7)'
+                    }
+                }
+            }
+        }
+    });
+}
+
+/**
+ * Display fun weight comparison
+ * @param {number} totalLostKg - Total weight lost in kg
+ */
+function displayWeightComparison(totalLostKg) {
+    if (window.coverage) window.coverage.logFunction('displayWeightComparison', 'dashboard.js');
+
+    const comparisons = [
+        { kg: 1, text: '10 sticks of butter', icon: '🧈' },
+        { kg: 2, text: 'a pineapple', icon: '🍍' },
+        { kg: 3, text: 'a newborn baby', icon: '👶' },
+        { kg: 4, text: 'a housecat', icon: '🐱' },
+        { kg: 5, text: 'a bowling ball', icon: '🎳' },
+        { kg: 7, text: 'a gallon of paint', icon: '🪣' },
+        { kg: 10, text: 'an air conditioner', icon: '❄️' },
+        { kg: 12, text: 'a medium dog', icon: '🐕' },
+        { kg: 15, text: 'a microwave oven', icon: '📺' },
+        { kg: 20, text: 'a full suitcase', icon: '🧳' },
+        { kg: 25, text: 'a small child', icon: '🧒' },
+        { kg: 30, text: 'a bicycle', icon: '🚲' },
+        { kg: 40, text: 'a large dog', icon: '🐶' },
+        { kg: 50, text: 'a full-size refrigerator', icon: '🧊' }
+    ];
+
+    // Find closest comparison
+    let closestComparison = comparisons[0];
+    for (const comp of comparisons) {
+        if (Math.abs(totalLostKg) >= comp.kg) {
+            closestComparison = comp;
+        }
+    }
+
+    const unit = getWeightUnitLabel();
+    const displayWeight = parseFloat(convertFromKg(Math.abs(totalLostKg)) || 0).toFixed(1);
+    const likeLosing = t("that's like losing") || "that's like losing";
+    $('#weight-comparison').text(`${displayWeight} ${unit}, ${likeLosing} ${closestComparison.text.toUpperCase()} ${closestComparison.icon}`);
+}
+
+// Body fat is now automatically calculated and stored when weight is logged
+// No manual input needed - uses Deurenberg formula (BMI + age)
+
+// ==================== End Phase 4: Total Progress ====================
 
 // Make functions globally available for settings
 window.updateWeightUnitDisplay = updateWeightUnitDisplay;

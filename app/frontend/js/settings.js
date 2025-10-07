@@ -68,39 +68,49 @@ function saveSettings() {
                 debugLog('✅ Updated globalDashboardData.settings cache');
             }
 
-            // Update weight unit in localStorage and refresh displays
-            debugLog('Settings saved, updating weight unit to:', settings.weight_unit);
+            // Update units in localStorage FIRST
+            debugLog('Settings saved, updating units');
             setWeightUnit(settings.weight_unit);
-
-            debugLog('Current weight unit after save:', getWeightUnit());
-
-            if (typeof window.updateWeightUnitDisplay === 'function') {
-                if (window.coverage) window.coverage.logFunction('if', 'settings.js');
-                debugLog('Calling updateWeightUnitDisplay');
-                window.updateWeightUnitDisplay();
-            }
-            if (typeof window.refreshAllWeightDisplays === 'function') {
-                debugLog('Calling refreshAllWeightDisplays');
-                window.refreshAllWeightDisplays();
-            }
-            if (typeof window.refreshGoalsAchieved === 'function') {
-                debugLog('Calling refreshGoalsAchieved to update milestones and progress');
-                window.refreshGoalsAchieved();
-            }
-
-            // Update height unit in localStorage and refresh displays
             setHeightUnit(settings.height_unit);
-            if (typeof window.updateHeightUnitDisplay === 'function') {
-                if (window.coverage) window.coverage.logFunction('if', 'settings.js');
-                debugLog('Calling updateHeightUnitDisplay');
-                window.updateHeightUnitDisplay();
-            }
 
-            // Update theme display to show new current theme
+            // Switch language BEFORE reloading data
+            switchLanguage(settings.language);
+
+            // Update theme display
             updateThemeOptions(settings.theme);
 
-            // Switch language after saving
-            switchLanguage(settings.language);
+            // Update unit displays
+            if (typeof window.updateWeightUnitDisplay === 'function') {
+                if (window.coverage) window.coverage.logFunction('if', 'settings.js');
+                window.updateWeightUnitDisplay();
+            }
+            if (typeof window.updateHeightUnitDisplay === 'function') {
+                if (window.coverage) window.coverage.logFunction('if', 'settings.js');
+                window.updateHeightUnitDisplay();
+            }
+            if (typeof window.refreshAllWeightDisplays === 'function') {
+                window.refreshAllWeightDisplays();
+            }
+
+            // Reload all dashboard data AFTER language/units are set
+            if (typeof window.testConsolidatedDashboardData === 'function') {
+                debugLog('Reloading consolidated dashboard data after settings change');
+                window.testConsolidatedDashboardData(function() {
+                    // After data is reloaded, refresh all sections
+                    if (typeof window.refreshGoalsAchieved === 'function') {
+                        window.refreshGoalsAchieved();
+                    }
+                    if (typeof window.refreshTotalProgress === 'function') {
+                        window.refreshTotalProgress();
+                    }
+                    if (typeof window.loadQuickLookMetrics === 'function') {
+                        window.loadQuickLookMetrics();
+                    }
+                    if (typeof window.refreshStreakCounter === 'function') {
+                        window.refreshStreakCounter();
+                    }
+                });
+            }
 
             document.getElementById('settings-status').textContent = 'Settings saved successfully';
             document.getElementById('settings-status').classList.remove('text-danger');

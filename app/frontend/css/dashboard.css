@@ -29,6 +29,7 @@
     margin-bottom: 1.5rem;
     color: white;
     min-height: 220px;
+    text-align: left;
 }
 
 .glass-card-smaller {
@@ -207,6 +208,9 @@ select.form-control.glass-input {
     font-weight: 600;
     font-size: 1.2rem;
     margin-bottom: 1rem;
+    text-align: left;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid rgba(100, 166, 216, 0.3);
 }
 
 /* Card content text should be smaller than titles */
@@ -1188,12 +1192,10 @@ select.form-control.glass-input {
     font-weight: 500;
     font-style: italic;
     color: rgba(255, 255, 255, 0.9);
-    line-height: 1.6;
-    padding: 0.5rem 0;
-    min-height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    line-height: 1.4;
+    padding: 0;
+    min-height: auto;
+    text-align: left;
 }
 
 .consistency-score-display {
@@ -1228,8 +1230,8 @@ select.form-control.glass-input {
 @media (max-width: 775px) {
     .encouragement-quote {
         font-size: 0.9rem;
-        padding: 0.5rem;
-        min-height: 60px;
+        padding: 0;
+        min-height: auto;
     }
 
     .consistency-score-display {
@@ -1483,7 +1485,6 @@ select.form-control.glass-input {
 .streak-timeline {
     margin-top: 1rem;
     padding-top: 1rem;
-    border-top: 1px solid rgba(100, 150, 200, 0.2);
 }
 
 .streak-timeline-title {
@@ -1509,6 +1510,8 @@ select.form-control.glass-input {
     transition: all 0.2s ease;
     cursor: pointer;
     position: relative;
+    margin-bottom: 10px;
+    margin-top: 5px;
 }
 
 .streak-dot.logged {
@@ -1653,5 +1656,130 @@ select.form-control.glass-input {
     .streak-dot {
         width: 10px;
         height: 10px;
+    }
+}
+
+/* ===== PHASE 4: TOTAL PROGRESS ENHANCEMENTS ===== */
+
+/* Progress Tabs */
+.progress-tabs {
+    display: flex;
+    gap: 0.25rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid rgba(100, 150, 200, 0.2);
+}
+
+.progress-tab-btn {
+    flex: 1;
+    padding: 0.5rem;
+    background: rgba(30, 58, 95, 0.2);
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.progress-tab-btn:hover {
+    background: rgba(30, 58, 95, 0.4);
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.progress-tab-btn.active {
+    background: rgba(100, 166, 216, 0.2);
+    border-bottom-color: #64a6d8;
+    color: white;
+    font-weight: 600;
+}
+
+/* Tab Content */
+.progress-tab-content {
+    display: none;
+}
+
+.progress-tab-content.active {
+    display: block;
+}
+
+/* Mini Charts */
+.mini-chart-container {
+    background: rgba(20, 40, 60, 0.3);
+    border-radius: 10px;
+    padding: 1rem;
+}
+
+.mini-chart-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 0.75rem;
+    text-align: center;
+}
+
+.mini-chart-container canvas {
+    max-height: 180px;
+}
+
+.chart-label {
+    text-align: center;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Weight Comparison Stat */
+.comparison-stat {
+    background: linear-gradient(135deg, rgba(100, 166, 216, 0.2) 0%, rgba(123, 201, 111, 0.2) 100%);
+    border-radius: 10px;
+    padding: 1rem;
+    text-align: center;
+}
+
+.comparison-stat-title {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 0.5rem;
+}
+
+.comparison-stat-value {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: white;
+}
+
+/* Body Fat Input Section */
+.body-fat-input-section .d-flex {
+    gap: 0.5rem;
+}
+
+.body-fat-input-section input {
+    flex-grow: 1;
+}
+
+/* Mobile Responsive - Phase 4 */
+@media (max-width: 775px) {
+    .progress-tab-btn {
+        font-size: 0.65rem;
+        padding: 0.4rem 0.25rem;
+    }
+
+    .mini-chart-container {
+        padding: 0.75rem;
+    }
+
+    .mini-chart-title {
+        font-size: 0.75rem;
+    }
+
+    .mini-chart-container canvas {
+        max-height: 150px;
+    }
+
+    .comparison-stat {
+        padding: 0.75rem;
+    }
+
+    .comparison-stat-value {
+        font-size: 1rem;
     }
 }

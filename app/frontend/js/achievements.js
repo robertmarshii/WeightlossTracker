@@ -10,13 +10,13 @@ function updateAchievementCards(weightData) {
     const lastWeight = parseFloat(sortedData[sortedData.length - 1].weight_kg);
     const totalLoss = firstWeight - lastWeight;
 
-    // Update Total Progress card
-    const unit = getWeightUnitLabel();
-    const displayTotalLoss = convertFromKg(Math.abs(totalLoss));
-    const progressHtml = totalLoss > 0
-        ? `<strong class="text-success">${displayTotalLoss} ${unit} ${t('lost')}</strong><br><small>${t('Over')} ${sortedData.length} ${t('entries')}</small>`
-        : `<strong class="text-info">${displayTotalLoss} ${unit} ${t('gained')}</strong><br><small>${t('Over')} ${sortedData.length} ${t('entries')}</small>`;
-    $('#total-progress').html(progressHtml);
+    // DISABLED: Phase 4 Total Progress now owns this div with enhanced charts and stats
+    // const unit = getWeightUnitLabel();
+    // const displayTotalLoss = convertFromKg(Math.abs(totalLoss));
+    // const progressHtml = totalLoss > 0
+    //     ? `<strong class="text-success">${displayTotalLoss} ${unit} ${t('lost')}</strong><br><small>${t('Over')} ${sortedData.length} ${t('entries')}</small>`
+    //     : `<strong class="text-info">${displayTotalLoss} ${unit} ${t('gained')}</strong><br><small>${t('Over')} ${sortedData.length} ${t('entries')}</small>`;
+    // $('#total-progress').html(progressHtml);
 
     // Calculate streak (consecutive days with entries)
     const today = new Date();

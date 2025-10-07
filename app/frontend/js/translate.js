@@ -733,6 +733,26 @@ const translations = {
         "es": "Reducción del riesgo de cálculos biliares por pérdida de peso",
         "fr": "Réduction du risque de calculs biliaires grâce à la perte de poids",
         "de": "Gallenstein-Risikoreduktion durch Gewichtsverlust"
+    },
+
+    // Phase 4 Total Progress translations
+    "of": {
+        "en": "of",
+        "es": "de",
+        "fr": "de",
+        "de": "von"
+    },
+    "to go": {
+        "en": "to go",
+        "es": "por perder",
+        "fr": "à perdre",
+        "de": "noch zu verlieren"
+    },
+    "that's like losing": {
+        "en": "that's like losing",
+        "es": "eso es como perder",
+        "fr": "c'est comme perdre",
+        "de": "das ist wie zu verlieren"
     }
 };
 

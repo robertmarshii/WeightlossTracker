@@ -3,6 +3,11 @@
  * Tracks function calls to identify untested code paths
  */
 
+// Fallback debugLog if global.js hasn't loaded yet
+if (typeof debugLog === 'undefined') {
+    window.debugLog = function() {};
+}
+
 // JQUERY COMPATIBILITY FIX
 // Fix for jQuery CDN loading issues where $.post method might be missing
 (function() {

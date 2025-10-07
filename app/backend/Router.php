@@ -163,6 +163,10 @@
                 $date = isset($_POST['entry_date']) ? $_POST['entry_date'] : date('Y-m-d');
                 $stmt = $db->prepare("INSERT INTO {$schema}.weight_entries (user_id, weight_kg, entry_date, notes) VALUES (?, ?, ?, NULL)");
                 $stmt->execute([$userId, $w, $date]);
+
+                // Automatically calculate and store body fat % using Deurenberg formula
+                autoCalculateAndStoreBodyFat($userId, $w, $date, $db, $schema);
+
                 echo json_encode(['success' => true, 'message' => 'Weight entry added']);
                 return;
             }
@@ -216,6 +220,15 @@
                 echo json_encode(['success' => true, 'data' => $streakData]);
                 return;
             }
+
+            if ($action === 'get_total_progress') {
+                COVERAGE_LOG('get_total_progress', 'ProfileController', __FILE__, __LINE__);
+                $progress = calculateTotalProgress($userId, $db, $schema);
+                echo json_encode(['success' => true, 'total_progress' => $progress]);
+                return;
+            }
+
+            // log_body_fat action removed - body fat is now automatically calculated when weight is logged
 
             if ($action === 'get_bmi') {
                 // Fetch profile
@@ -1257,6 +1270,9 @@
                 // Add Streak Data (Phase 3)
                 $allData['streak_data'] = calculateStreakData($userId, $db, $schema);
 
+                // Add Total Progress (Phase 4)
+                $allData['total_progress'] = calculateTotalProgress($userId, $db, $schema);
+
                 echo json_encode([
                     'success' => true,
                     'data' => $allData,
@@ -2016,9 +2032,366 @@
     function SeederTesterController() {
         COVERAGE_LOG('SeederTesterController', 'Router', __FILE__, __LINE__);
         require_once '/var/app/backend/DatabaseSeederTester.php';
-        
+
         header('Content-Type: application/json');
         echo json_encode(DatabaseSeederTester::handleRequest());
     }
+
+    // ==================== PHASE 4: TOTAL PROGRESS HELPER FUNCTIONS ====================
+
+    /**
+     * Calculate comprehensive total progress data
+     * @param int $userId
+     * @param PDO $db
+     * @param string $schema
+     * @return array|null Progress data with charts
+     */
+    function calculateTotalProgress($userId, $db, $schema) {
+        COVERAGE_LOG('calculateTotalProgress', 'Router', __FILE__, __LINE__);
+
+        try {
+            // Get weight history
+            $stmt = $db->prepare("
+                SELECT entry_date, weight_kg
+                FROM {$schema}.weight_entries
+                WHERE user_id = ?
+                ORDER BY entry_date ASC
+            ");
+            $stmt->execute([$userId]);
+            $weights = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            // Get user data (goal, height, age)
+            $stmt = $db->prepare("
+                SELECT g.target_weight_kg, up.height_cm, up.age
+                FROM {$schema}.user_profiles up
+                LEFT JOIN {$schema}.goals g ON g.user_id = up.user_id AND g.is_active = true
+                WHERE up.user_id = ?
+                LIMIT 1
+            ");
+            $stmt->execute([$userId]);
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            // Calculate body fat for each weight entry using Deurenberg formula
+            $bodyFatData = [];
+            if (isset($user['height_cm']) && isset($user['age']) && count($weights) > 0) {
+                $heightM = floatval($user['height_cm']) / 100.0;
+                $age = intval($user['age']);
+
+                foreach ($weights as $weight) {
+                    $weightKg = floatval($weight['weight_kg']);
+                    $bmi = $weightKg / ($heightM * $heightM);
+
+                    // Deurenberg formula - use average of male/female
+                    $bfpMale = 1.2 * $bmi + 0.23 * $age - 16.2;
+                    $bfpFemale = 1.2 * $bmi + 0.23 * $age - 5.4;
+                    $bodyFatPercent = ($bfpMale + $bfpFemale) / 2.0;
+
+                    $bodyFatData[] = [
+                        'entry_date' => $weight['entry_date'],
+                        'body_fat_percent' => round($bodyFatPercent, 1)
+                    ];
+                }
+            }
+
+            // Calculate metrics
+            $weeklyLossData = calculateWeeklyLossData($weights);
+            $projectionData = calculateProjectionData($weights);
+            $goalData = calculateGoalChartData($weights, $user);
+            $idealWeightData = calculateIdealWeightData($weights, $user);
+            $totalLostKg = count($weights) > 0 ? (floatval($weights[0]['weight_kg']) - floatval($weights[count($weights) - 1]['weight_kg'])) : 0;
+
+            return [
+                'weekly_loss_data' => $weeklyLossData,
+                'projection_data' => $projectionData,
+                'goal_data' => $goalData,
+                'ideal_weight_data' => $idealWeightData,
+                'body_fat_data' => $bodyFatData,
+                'total_lost_kg' => $totalLostKg
+            ];
+
+        } catch (Exception $e) {
+            error_log("Total progress calculation error: " . $e->getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Calculate weekly loss data for chart
+     * Returns last 26 weeks, filling gaps with 0 loss
+     */
+    function calculateWeeklyLossData($weights) {
+        if (count($weights) < 1) return [];
+
+        // Get the last 26 weeks from today
+        $today = new DateTime();
+        $weeksToShow = [];
+
+        for ($i = 25; $i >= 0; $i--) {
+            $date = clone $today;
+            $date->modify("-$i weeks");
+            $weekNum = (int)$date->format('W');
+            $year = $date->format('Y');
+            $weekKey = $year . '-W' . sprintf('%02d', $weekNum);
+
+            $weeksToShow[$weekKey] = [
+                'week_num' => $weekNum,
+                'year' => $year,
+                'week_key' => $weekKey,
+                'avg_weight' => null
+            ];
+        }
+
+        // Group weights by ISO week number
+        foreach ($weights as $entry) {
+            $date = new DateTime($entry['entry_date']);
+            $weekNum = (int)$date->format('W');
+            $year = $date->format('Y');
+            $weekKey = $year . '-W' . sprintf('%02d', $weekNum);
+
+            // Only include if it's in our 26-week range
+            if (isset($weeksToShow[$weekKey])) {
+                if (!isset($weeksToShow[$weekKey]['weights'])) {
+                    $weeksToShow[$weekKey]['weights'] = [];
+                }
+                $weeksToShow[$weekKey]['weights'][] = floatval($entry['weight_kg']);
+            }
+        }
+
+        // Calculate average weight per week
+        foreach ($weeksToShow as $weekKey => &$weekData) {
+            if (isset($weekData['weights']) && count($weekData['weights']) > 0) {
+                $weekData['avg_weight'] = array_sum($weekData['weights']) / count($weekData['weights']);
+                unset($weekData['weights']);
+            }
+        }
+
+        // Sort by week chronologically
+        ksort($weeksToShow);
+        $weeksToShow = array_values($weeksToShow);
+
+        // Calculate week-to-week loss, filling gaps with 0
+        $weeklyData = [];
+        $lastKnownWeight = null;
+
+        for ($i = 0; $i < count($weeksToShow); $i++) {
+            $currWeek = $weeksToShow[$i];
+
+            if ($currWeek['avg_weight'] !== null) {
+                // We have data for this week
+                if ($lastKnownWeight !== null) {
+                    $loss = $lastKnownWeight - $currWeek['avg_weight'];
+                    $weeklyData[] = [
+                        'week' => $currWeek['week_num'],
+                        'year' => $currWeek['year'],
+                        'avg_loss' => round($loss, 2)
+                    ];
+                } else {
+                    // First week with data - no loss to show yet
+                    $weeklyData[] = [
+                        'week' => $currWeek['week_num'],
+                        'year' => $currWeek['year'],
+                        'avg_loss' => 0
+                    ];
+                }
+                $lastKnownWeight = $currWeek['avg_weight'];
+            } else {
+                // No data for this week - show 0 loss
+                $weeklyData[] = [
+                    'week' => $currWeek['week_num'],
+                    'year' => $currWeek['year'],
+                    'avg_loss' => 0
+                ];
+            }
+        }
+
+        return $weeklyData;
+    }
+
+    /**
+     * Calculate 6-month projection data
+     */
+    function calculateProjectionData($weights) {
+        if (count($weights) < 3) {
+            return ['historical' => ['labels' => [], 'data' => []], 'projected' => ['labels' => [], 'data' => []]];
+        }
+
+        // Simple linear regression
+        $n = count($weights);
+        $sumX = 0;
+        $sumY = 0;
+        $sumXY = 0;
+        $sumX2 = 0;
+
+        foreach ($weights as $i => $entry) {
+            $x = $i;
+            $y = floatval($entry['weight_kg']);
+            $sumX += $x;
+            $sumY += $y;
+            $sumXY += $x * $y;
+            $sumX2 += $x * $x;
+        }
+
+        $slope = ($n * $sumXY - $sumX * $sumY) / ($n * $sumX2 - $sumX * $sumX);
+        $intercept = ($sumY - $slope * $sumX) / $n;
+
+        // Historical data
+        $historicalLabels = [];
+        $historicalData = [];
+        foreach ($weights as $entry) {
+            $historicalLabels[] = date('M j', strtotime($entry['entry_date']));
+            $historicalData[] = round(floatval($entry['weight_kg']), 1);
+        }
+
+        // Projected data (6 months = ~26 weeks)
+        $projectedLabels = [];
+        $projectedData = [];
+        $lastWeight = floatval($weights[$n - 1]['weight_kg']);
+        $lastDate = strtotime($weights[$n - 1]['entry_date']);
+
+        for ($week = 1; $week <= 26; $week++) {
+            $futureDate = $lastDate + ($week * 7 * 24 * 60 * 60);
+            $projectedLabels[] = date('M j', $futureDate);
+            $projectedWeight = $slope * ($n + $week - 1) + $intercept;
+            $projectedData[] = round(max($projectedWeight, 40), 1); // Don't project below 40kg
+        }
+
+        return [
+            'historical' => ['labels' => $historicalLabels, 'data' => $historicalData],
+            'projected' => ['labels' => $projectedLabels, 'data' => $projectedData]
+        ];
+    }
+
+    /**
+     * Calculate goal completion chart data
+     */
+    function calculateGoalChartData($weights, $user) {
+        if (count($weights) === 0 || !isset($user['target_weight_kg'])) {
+            return null;
+        }
+
+        $startWeight = floatval($weights[0]['weight_kg']);
+        $currentWeight = floatval($weights[count($weights) - 1]['weight_kg']);
+        $targetWeight = floatval($user['target_weight_kg']);
+
+        $totalToLose = $startWeight - $targetWeight;
+        $lostSoFar = $startWeight - $currentWeight;
+        $remaining = max(0, $totalToLose - $lostSoFar);
+
+        return [
+            'completed_kg' => round($lostSoFar, 1),
+            'remaining_kg' => round($remaining, 1),
+            'total_kg' => round($totalToLose, 1)
+        ];
+    }
+
+    /**
+     * Calculate ideal weight progress
+     */
+    function calculateIdealWeightData($weights, $user) {
+        if (count($weights) === 0 || !isset($user['height_cm'])) {
+            return null;
+        }
+
+        $startWeight = floatval($weights[0]['weight_kg']);
+        $currentWeight = floatval($weights[count($weights) - 1]['weight_kg']);
+        $heightM = floatval($user['height_cm']) / 100.0;
+
+        // Ideal BMI range 18.5-24.9, use max as target
+        $idealMaxWeight = 24.9 * ($heightM * $heightM);
+        $idealMinWeight = 18.5 * ($heightM * $heightM);
+
+        // If already in range
+        if ($currentWeight <= $idealMaxWeight && $currentWeight >= $idealMinWeight) {
+            $totalLost = $startWeight - $currentWeight;
+            return ['in_range' => true, 'achieved_kg' => round($totalLost, 1), 'remaining_kg' => 0];
+        }
+
+        // Calculate progress towards ideal range
+        $totalToLose = max(0, $startWeight - $idealMaxWeight);
+        $lostSoFar = $startWeight - $currentWeight;
+        $remaining = max(0, $currentWeight - $idealMaxWeight);
+
+        return [
+            'in_range' => false,
+            'achieved_kg' => round($lostSoFar, 1),
+            'remaining_kg' => round($remaining, 1)
+        ];
+    }
+
+    /**
+     * Log body fat percentage
+     * @param int $userId
+     * @param float $bodyFat
+     * @param PDO $db
+     * @param string $schema
+     * @return bool Success
+     */
+    function logBodyFat($userId, $bodyFat, $db, $schema) {
+        try {
+            $stmt = $db->prepare("
+                INSERT INTO {$schema}.body_fat_entries (user_id, body_fat_percent, entry_date)
+                VALUES (?, ?, CURRENT_DATE)
+                ON CONFLICT (user_id, entry_date)
+                DO UPDATE SET body_fat_percent = ?
+            ");
+            $stmt->execute([$userId, $bodyFat, $bodyFat]);
+
+            return true;
+
+        } catch (Exception $e) {
+            error_log("Body fat logging error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Automatically calculate and store body fat % using Deurenberg formula
+     * Called when weight is added
+     * @param int $userId
+     * @param float $weightKg
+     * @param string $date
+     * @param PDO $db
+     * @param string $schema
+     */
+    function autoCalculateAndStoreBodyFat($userId, $weightKg, $date, $db, $schema) {
+        try {
+            // Get user height and age
+            $stmt = $db->prepare("SELECT height_cm, age FROM {$schema}.user_profiles WHERE user_id = ?");
+            $stmt->execute([$userId]);
+            $profile = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$profile || !$profile['height_cm'] || !$profile['age']) {
+                // Can't calculate without height and age
+                return;
+            }
+
+            $heightCm = floatval($profile['height_cm']);
+            $age = intval($profile['age']);
+
+            // Calculate BMI
+            $heightM = $heightCm / 100.0;
+            $bmi = $weightKg / ($heightM * $heightM);
+
+            // Deurenberg formula - use average of male/female estimates
+            $bfpMale = 1.2 * $bmi + 0.23 * $age - 16.2;
+            $bfpFemale = 1.2 * $bmi + 0.23 * $age - 5.4;
+            $bodyFatPercent = ($bfpMale + $bfpFemale) / 2.0; // Average
+
+            // Store it
+            $stmt = $db->prepare("
+                INSERT INTO {$schema}.body_fat_entries (user_id, body_fat_percent, entry_date)
+                VALUES (?, ?, ?)
+                ON CONFLICT (user_id, entry_date)
+                DO UPDATE SET body_fat_percent = ?
+            ");
+            $stmt->execute([$userId, round($bodyFatPercent, 1), $date, round($bodyFatPercent, 1)]);
+
+        } catch (Exception $e) {
+            error_log("Auto body fat calculation error: " . $e->getMessage());
+            // Don't fail the weight entry if body fat calculation fails
+        }
+    }
+
+    // ==================== END PHASE 4 ====================
 
     ?>

@@ -45,6 +45,18 @@ CREATE TABLE wt_test.weight_entries (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Create body_fat_entries table for wt_test
+CREATE TABLE wt_test.body_fat_entries (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES wt_test.users(id) ON DELETE CASCADE,
+    body_fat_percent DECIMAL(5,2) NOT NULL CHECK (body_fat_percent > 0 AND body_fat_percent <= 60),
+    entry_date DATE NOT NULL DEFAULT CURRENT_DATE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT unique_body_fat_per_day UNIQUE (user_id, entry_date)
+);
+
+CREATE INDEX idx_body_fat_user_date ON wt_test.body_fat_entries(user_id, entry_date DESC);
+
 -- Create goals table for wt_test
 CREATE TABLE wt_test.goals (
     id SERIAL PRIMARY KEY,

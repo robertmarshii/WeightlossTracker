@@ -5,6 +5,23 @@
 import './coverage-commands';
 import './coverage-annotations';
 
+// Custom command: Login and navigate to dashboard
+Cypress.Commands.add('loginAndNavigateToDashboard', () => {
+    cy.visit('http://127.0.0.1:8111');
+    cy.get('#loginEmail').type('test@example.com');
+    cy.get('#sendLoginCodeBtn').click();
+    cy.wait(1000);
+    cy.request('POST', 'http://127.0.0.1:8111/login_router.php?controller=auth', {
+        action: 'get_latest_code',
+        email: 'test@example.com'
+    }).then((response) => {
+        const code = response.body.code;
+        cy.get('#loginCode').type(code);
+        cy.get('#verifyLoginBtn').click();
+        cy.url().should('include', 'dashboard.php');
+    });
+});
+
 // Global setup - initialize coverage reporter
 before(() => {
     cy.initCoverage();
