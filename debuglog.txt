@@ -1,10 +1,5 @@
 [
     {
-        "message": "Active schema:",
-        "data": "wt_dev",
-        "time": 1759875611599
-    },
-    {
         "message": "✅ Global dashboard data loaded. Keys:",
         "data": [
             "latest_weight",
@@ -22,31 +17,41 @@
             "streak_data",
             "total_progress"
         ],
-        "time": 1759875612054
+        "time": 1759877516509
     },
     {
         "message": "🔍 health_stats available:",
         "data": true,
-        "time": 1759875612054
+        "time": 1759877516509
     },
     {
         "message": "🔍 weight_progress available:",
         "data": true,
-        "time": 1759875612054
+        "time": 1759877516509
     },
     {
         "message": "🔍 ideal_weight available:",
         "data": true,
-        "time": 1759875612054
+        "time": 1759877516509
     },
     {
         "message": "📞 Calling callback. globalDashboardData exists:",
         "data": true,
-        "time": 1759875612054
+        "time": 1759877516509
+    },
+    {
+        "message": "⚙️ Pre-setting formats before render:",
+        "data": {
+            "date_format": "euro",
+            "weight_unit": "kg",
+            "height_unit": "cm",
+            "language": "en"
+        },
+        "time": 1759877516509
     },
     {
         "message": "🔧 loadSettings() called in dashboard.js",
-        "time": 1759875612054
+        "time": 1759877516509
     },
     {
         "message": "🔍 globalDashboardData:",
@@ -163,18 +168,18 @@
                 "weight_unit": "kg",
                 "height_unit": "cm",
                 "temperature_unit": "c",
-                "date_format": "uk",
+                "date_format": "euro",
                 "time_format": "24",
                 "timezone": "Europe/London",
                 "theme": "glassmorphism",
-                "language": "es",
+                "language": "en",
                 "start_of_week": "monday",
                 "share_data": false,
                 "email_notifications": false,
                 "email_day": "monday",
                 "email_time": "09:00",
                 "weekly_reports": false,
-                "updated_at": "2025-10-07 22:19:28.45397"
+                "updated_at": "2025-10-07 22:32:15.491341"
             },
             "health_stats": {
                 "bmi": 37.2,
@@ -729,11 +734,11 @@
                 "total_lost_kg": 10.099999999999994
             }
         },
-        "time": 1759875612054
+        "time": 1759877516509
     },
     {
         "message": "📊 Using global data for settings",
-        "time": 1759875612054
+        "time": 1759877516509
     },
     {
         "message": "🔧 Settings data:",
@@ -742,76 +747,86 @@
             "weight_unit": "kg",
             "height_unit": "cm",
             "temperature_unit": "c",
-            "date_format": "uk",
+            "date_format": "euro",
             "time_format": "24",
             "timezone": "Europe/London",
             "theme": "glassmorphism",
-            "language": "es",
+            "language": "en",
             "start_of_week": "monday",
             "share_data": false,
             "email_notifications": false,
             "email_day": "monday",
             "email_time": "09:00",
             "weekly_reports": false,
-            "updated_at": "2025-10-07 22:19:28.45397"
+            "updated_at": "2025-10-07 22:32:15.491341"
         },
-        "time": 1759875612054
+        "time": 1759877516509
     },
     {
-        "message": "Switching language to:",
-        "data": "es",
-        "time": 1759875612059
-    },
-    {
-        "message": "Language switched to:",
-        "data": "es",
-        "time": 1759875612070
+        "message": "🔄 dashboard.js FILE HAS RELOADED - timestamp:",
+        "data": 1759877516510,
+        "time": 1759877516510
     },
     {
         "message": "refreshLatestWeight",
         "data": {
             "hasGlobalData": true
         },
-        "time": 1759875612070
+        "time": 1759877516510
     },
     {
         "message": "Using global data for latest weight",
-        "time": 1759875612070
+        "time": 1759877516510
+    },
+    {
+        "message": "⏰ About to call formatDate with:",
+        "data": "2025-09-19",
+        "time": 1759877516510
+    },
+    {
+        "message": "⏰ formatDate returned:",
+        "data": "19/09/2025",
+        "time": 1759877516511
     },
     {
         "message": "🔍 refreshGoal - has global data:",
         "data": true,
-        "time": 1759875612071
+        "time": 1759877516511
     },
     {
         "message": "📊 Using global data for goal",
-        "time": 1759875612071
+        "time": 1759877516511
+    },
+    {
+        "message": "📅 formatDateBySettings - input:",
+        "data": "2025-10-15",
+        "time": 1759877516511
     },
     {
         "message": "📊 Using global data for profile",
-        "time": 1759875612072
+        "time": 1759877516511
     },
     {
         "message": "🔍 refreshBMI - has global data:",
         "data": true,
-        "time": 1759875612073
+        "time": 1759877516511
     },
     {
         "message": "📊 Using global data for BMI",
-        "time": 1759875612073
+        "time": 1759877516511
     },
     {
         "message": "🔍 refreshHealth - has global data:",
         "data": true,
-        "time": 1759875612074
+        "time": 1759877516511
     },
     {
         "message": "📊 Using global data for health stats (body fat)",
-        "time": 1759875612074
+        "time": 1759877516511
     },
     {
         "message": "📊 Using global data for cardiovascular risk",
-        "time": 1759875612074
+        "time": 1759877516511
     },
     {
         "message": "🔍 cardiovascular_risk data:",
@@ -827,42 +842,42 @@
                 "For clinical assessment, consult healthcare provider"
             ]
         },
-        "time": 1759875612074
+        "time": 1759877516511
     },
     {
         "message": "🔍 Risk improvement:",
         "data": 3,
-        "time": 1759875612074
+        "time": 1759877516511
     },
     {
         "message": "📊 Using global data for ideal weight",
-        "time": 1759875612074
+        "time": 1759877516512
     },
     {
         "message": "🔍 refreshWeightProgress - has global data:",
         "data": true,
-        "time": 1759875612075
+        "time": 1759877516512
     },
     {
         "message": "📊 Using global data for weight progress",
-        "time": 1759875612075
+        "time": 1759877516512
     },
     {
         "message": "🔍 refreshGallbladderHealth - has global data:",
         "data": true,
-        "time": 1759875612075
+        "time": 1759877516512
     },
     {
         "message": "📊 Using global data for gallbladder health",
-        "time": 1759875612075
+        "time": 1759877516512
     },
     {
         "message": "Health benefits - checking for data to update cards...",
-        "time": 1759875612075
+        "time": 1759877516512
     },
     {
         "message": "📊 Using global data for health benefit cards",
-        "time": 1759875612075
+        "time": 1759877516512
     },
     {
         "message": "🔍 weight_progress data:",
@@ -886,24 +901,24 @@
             "bmi_change": 3.2,
             "total_entries": 15
         },
-        "time": 1759875612075
+        "time": 1759877516512
     },
     {
         "message": "🔍 loadWeightHistory - has global data:",
         "data": true,
-        "time": 1759875612076
+        "time": 1759877516513
     },
     {
         "message": "📊 Using global data for weight history",
-        "time": 1759875612076
+        "time": 1759877516513
     },
     {
         "message": "🔍 loadQuickLookMetrics called",
-        "time": 1759875612076
+        "time": 1759877516513
     },
     {
         "message": "📊 Using global data for quick look metrics",
-        "time": 1759875612076
+        "time": 1759877516513
     },
     {
         "message": "🎨 renderQuickLookMetrics called with:",
@@ -915,16 +930,16 @@
             "days_until_checkin": -11,
             "average_logging_interval": 7
         },
-        "time": 1759875612076
+        "time": 1759877516514
     },
     {
         "message": "📊 displayConsistencyScore called with score:",
         "data": 83.1,
-        "time": 1759875612076
+        "time": 1759877516514
     },
     {
         "message": "📊 Using global data for goal progress enhanced",
-        "time": 1759875612076
+        "time": 1759877516514
     },
     {
         "message": "📊 renderGoalProgress called with",
@@ -939,20 +954,20 @@
             "eta_date": "2025-11-21",
             "weekly_loss_rate": 0.46
         },
-        "time": 1759875612076
+        "time": 1759877516514
     },
     {
         "message": "🔍 hasGoal",
         "data": true,
-        "time": 1759875612076
+        "time": 1759877516514
     },
     {
         "message": "✅ Hiding placeholder, showing content",
-        "time": 1759875612076
+        "time": 1759877516514
     },
     {
         "message": "Using global data for total progress",
-        "time": 1759875612078
+        "time": 1759877516516
     },
     {
         "message": "Body fat data received:",
@@ -1018,22 +1033,32 @@
                 "body_fat_percent": 43.1
             }
         ],
-        "time": 1759875612100
+        "time": 1759877516538
     },
     {
         "message": "Using cached streak data from global dashboard data",
-        "time": 1759875612102
+        "time": 1759877516540
     },
     {
         "message": "✅ Generated HTML for 28 timeline dots",
-        "time": 1759875612102
+        "time": 1759877516540
     },
     {
         "message": "📊 Using global data for weight chart",
-        "time": 1759875612104
+        "time": 1759877516542
     },
     {
         "message": "Applying translations after all content rendered",
-        "time": 1759875612107
+        "time": 1759877516543
+    },
+    {
+        "message": "🕐 formatLoginTime - dateFormat:",
+        "data": "euro",
+        "time": 1759877516546
+    },
+    {
+        "message": "Active schema:",
+        "data": "wt_dev",
+        "time": 1759877516563
     }
 ]

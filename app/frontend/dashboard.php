@@ -11,19 +11,7 @@ if (!AuthManager::isLoggedIn()) {
 $email = htmlspecialchars($_SESSION['email'] ?? '');
 $firstName = htmlspecialchars($_SESSION['first_name'] ?? '');
 $lastName = htmlspecialchars($_SESSION['last_name'] ?? '');
-$loginTime = '';
-if (isset($_SESSION['login_time'])) {
-    try {
-        $tz = new DateTimeZone('Europe/London');
-        $dt = new DateTime('@' . (int) $_SESSION['login_time']); // epoch base (UTC)
-        $dt->setTimezone($tz); // convert to UK local time (handles DST)
-        // Short UK format (24-hour, no seconds), e.g., 09/09/2025 07:21
-        $loginTime = $dt->format('d/m/Y H:i');
-    } catch (Exception $e) {
-        // Fallback if something goes wrong
-        $loginTime = date('d/m/Y H:i', (int) $_SESSION['login_time']);
-    }
-}
+$loginTimeTimestamp = $_SESSION['login_time'] ?? null;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -76,8 +64,8 @@ if (isset($_SESSION['login_time'])) {
                     <div class="header-left d-flex align-items-center">
                         <div class="user-info text-left">
                             <div class="mb-1"><?php echo $email; ?></div>
-                            <?php if ($loginTime): ?>
-                                <div class="text-muted small"><span data-eng="Login: " data-spa="Inicio de sesión: " data-fre="Connexion: " data-ger="Anmeldung: ">Login: </span><?php echo $loginTime; ?></div>
+                            <?php if ($loginTimeTimestamp): ?>
+                                <div class="text-muted small"><span data-eng="Login: " data-spa="Inicio de sesión: " data-fre="Connexion: " data-ger="Anmeldung: ">Login: </span><span id="login-time" data-timestamp="<?php echo $loginTimeTimestamp; ?>"></span></div>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -1018,9 +1006,9 @@ if (isset($_SESSION['login_time'])) {
 <script src="js/translate.js?v=<?php echo time(); ?>"></script>
 <!-- Modular JS files -->
 <script src="js/health.js?v=<?php echo time(); ?>"></script>
-<script src="js/data.js?v=<?php echo time(); ?>"></script>
+<script src="js/data.js?v=<?php echo time() . '-' . mt_rand(); ?>"></script>
 <script src="js/achievements.js?v=<?php echo time(); ?>"></script>
 <script src="js/settings.js?v=<?php echo time(); ?>"></script>
-<script src="js/dashboard.js?v=<?php echo time() . '-' . mt_rand(); ?>"></script>
+<script src="js/dashboard.js?v=<?php echo time() . '-' . mt_rand(); ?>&bust=999"></script>
 </body>
 </html>

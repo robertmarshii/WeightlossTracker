@@ -163,27 +163,18 @@ function loadWeightHistory() {
 
 function formatDate(dateString) {
     if (window.coverage) window.coverage.logFunction('formatDate', 'data.js');
-    const date = new Date(dateString);
+    debugLog('🔧 formatDate called in data.js with:', dateString);
 
-    // Use shorter date format on mobile devices (screen width <= 768px)
-    const isMobile = window.innerWidth <= 768;
-
-    if (isMobile) {
-        if (window.coverage) window.coverage.logFunction('if', 'data.js');
-        // Short format: 12/09/25
-        return date.toLocaleDateString('en-GB', {
-            day: '2-digit',
-            month: '2-digit',
-            year: '2-digit'
-        });
-    } else {
-        // Full format: 12/09/2025
-        return date.toLocaleDateString('en-GB', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric'
-        });
+    // Check if formatDateBySettings exists
+    if (typeof formatDateBySettings !== 'function') {
+        debugLog('❌ ERROR: formatDateBySettings is NOT defined! Type:', typeof formatDateBySettings);
+        return dateString;
     }
+
+    debugLog('✅ formatDateBySettings exists, calling it');
+    const result = formatDateBySettings(dateString);
+    debugLog('📅 formatDate result:', result);
+    return result;
 }
 
 function editWeight(id, weight, date) {

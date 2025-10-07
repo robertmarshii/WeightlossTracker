@@ -91,11 +91,26 @@ $(function() {
     // FIRST: Load consolidated data, THEN load settings, THEN render content
     testConsolidatedDashboardData(function() {
         if (window.coverage) window.coverage.logFunction('testConsolidatedDashboardData', 'dashboard.js');
-        // This callback runs after consolidated data is loaded
+        // This callback runs after consolidated data is loaded (including settings!)
 
-        // STEP 1: Load settings FIRST to establish language preference
+        // Settings are ALREADY in window.globalDashboardData.settings
+        // Set them in localStorage BEFORE rendering anything
+        if (window.globalDashboardData && window.globalDashboardData.settings) {
+            const s = window.globalDashboardData.settings;
+            debugLog('⚙️ Pre-setting formats before render:', {
+                date_format: s.date_format,
+                weight_unit: s.weight_unit,
+                height_unit: s.height_unit,
+                language: s.language
+            });
+
+            // These are already in globalDashboardData, just confirming they're accessible
+            // getDateFormat(), getWeightUnit(), etc. will read from globalDashboardData.settings
+        }
+
+        // STEP 1: Load settings FIRST (but settings are already in globalDashboardData)
         loadSettings(function() {
-            // STEP 2: Now render all content
+            // STEP 2: Now render all content (settings are already loaded from global data)
             refreshLatestWeight();
             refreshGoal();
             loadProfile();
@@ -119,6 +134,9 @@ $(function() {
                 debugLog('Applying translations after all content rendered');
                 window.settingsApplyCurrentLanguageTranslations();
             }
+
+            // STEP 4: Format all timestamps with user's date format (after settings loaded)
+            formatAllTimestamps();
 
             // Flush debug logs after ALL page initialization completes
             setTimeout(() => {
@@ -467,17 +485,29 @@ function testConsolidatedDashboardData(callback) {
 function refreshLatestWeight() {
     if (window.coverage) window.coverage.logFunction('refreshLatestWeight', 'dashboard.js');
 
+    debugLog('🔄 refreshLatestWeight called');
+
     // Check if we have global data first
     debugLog('refreshLatestWeight', { hasGlobalData: !!window.globalDashboardData });
     if (window.globalDashboardData && window.globalDashboardData.latest_weight) {
         if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
         debugLog('Using global data for latest weight');
         const latestWeight = window.globalDashboardData.latest_weight;
-        const formattedDate = formatDate(latestWeight.entry_date);
         const displayWeight = convertFromKg(latestWeight.weight_kg);
         const unit = getWeightUnitLabel();
-        $('#latest-weight').text(`${t('Latest:')} ${displayWeight} ${unit} ${t('on')} ${formattedDate}`);
+
+        // Convert date to Unix timestamp (seconds)
+        const timestamp = Math.floor(new Date(latestWeight.entry_date).getTime() / 1000);
+
+        // Store data in data attributes, format will be applied by formatAllTimestamps()
+        $('#latest-weight').html(`${t('Latest:')} ${displayWeight} ${unit} ${t('on')} <span class="format-date" data-timestamp="${timestamp}"></span>`);
+
         refreshHistoricalWeights();
+
+        // Format the timestamp we just created
+        if (typeof formatAllTimestamps === 'function') {
+            formatAllTimestamps();
+        }
         return;
     }
 
@@ -487,11 +517,18 @@ function refreshLatestWeight() {
         const data = parseJson(resp);
         if (data.latest) {
             if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
-            const formattedDate = formatDate(data.latest.entry_date);
             const displayWeight = convertFromKg(data.latest.weight_kg);
             const unit = getWeightUnitLabel();
-            $('#latest-weight').text(`${t('Latest:')} ${displayWeight} ${unit} ${t('on')} ${formattedDate}`);
+
+            // Convert date to Unix timestamp (seconds)
+            const timestamp = Math.floor(new Date(data.latest.entry_date).getTime() / 1000);
+            $('#latest-weight').html(`${t('Latest:')} ${displayWeight} ${unit} ${t('on')} <span class="format-date" data-timestamp="${timestamp}"></span>`);
             refreshHistoricalWeights();
+
+            // Format the timestamp we just created
+            if (typeof formatAllTimestamps === 'function') {
+                formatAllTimestamps();
+            }
         } else {
             $('#latest-weight').text('No weight entries yet');
             $('#last-week-weight').text('');
@@ -579,8 +616,8 @@ function findAndDisplayHistoricalWeights(weightHistory, oneWeekAgo, oneMonthAgo)
     if (lastWeekWeight && minWeekDiff <= 10 * 24 * 60 * 60 * 1000) { // Within 10 days
         if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
         const displayWeight = convertFromKg(lastWeekWeight.weight_kg);
-        const formattedDate = formatDate(lastWeekWeight.entry_date);
-        $('#last-week-weight').text(`${t('Last Week:')} ${displayWeight} ${unit} ${t('on')} ${formattedDate}`);
+        const timestamp = Math.floor(new Date(lastWeekWeight.entry_date).getTime() / 1000);
+        $('#last-week-weight').html(`${t('Last Week:')} ${displayWeight} ${unit} ${t('on')} <span class="format-date" data-timestamp="${timestamp}"></span>`);
     } else {
         $('#last-week-weight').text(`${t('Last Week:')} -`);
     }
@@ -588,10 +625,15 @@ function findAndDisplayHistoricalWeights(weightHistory, oneWeekAgo, oneMonthAgo)
     // Display last month weight
     if (lastMonthWeight && minMonthDiff <= 45 * 24 * 60 * 60 * 1000) { // Within 45 days
         const displayWeight = convertFromKg(lastMonthWeight.weight_kg);
-        const formattedDate = formatDate(lastMonthWeight.entry_date);
-        $('#last-month-weight').text(`${t('Last Month:')} ${displayWeight} ${unit} ${t('on')} ${formattedDate}`);
+        const timestamp = Math.floor(new Date(lastMonthWeight.entry_date).getTime() / 1000);
+        $('#last-month-weight').html(`${t('Last Month:')} ${displayWeight} ${unit} ${t('on')} <span class="format-date" data-timestamp="${timestamp}"></span>`);
     } else {
         $('#last-month-weight').text(`${t('Last Month:')} -`);
+    }
+
+    // Format all timestamps we just created
+    if (typeof formatAllTimestamps === 'function') {
+        formatAllTimestamps();
     }
 }
 
@@ -782,14 +824,8 @@ function loadWeightHistory() {
     }
 }
 
-function formatDate(dateString) {
-    if (window.coverage) window.coverage.logFunction('formatDate', 'dashboard.js');
-    // Call the data.js function
-    if (typeof window.dataFormatDate === 'function') {
-        return window.dataFormatDate(dateString);
-    }
-    return dateString;
-}
+// REMOVED: formatDate() wrapper - now calling formatDateBySettings() directly everywhere
+// This function was causing browser caching issues
 
 function editWeight(id, weight, date) {
     if (window.coverage) window.coverage.logFunction('editWeight', 'dashboard.js');
@@ -1351,8 +1387,8 @@ function updateWeightChart(period) {
                 return entryDate >= periodStart && entryDate < periodEnd;
             });
 
-            const startStr = periodStart.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: '2-digit' });
-            const endStr = periodEnd.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: '2-digit' });
+            const startStr = formatDate(periodStart.toISOString().split('T')[0]);
+            const endStr = formatDate(periodEnd.toISOString().split('T')[0]);
 
             if (currentPeriodOffset === 0) {
                 periodInfo = `Current ${daysInPeriod} days (${startStr} - ${endStr})`;
@@ -1456,8 +1492,8 @@ function updateWeightChart(period) {
             });
             
             // Generate period info text
-            const startStr = periodStart.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: '2-digit' });
-            const endStr = periodEnd.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: '2-digit' });
+            const startStr = formatDate(periodStart.toISOString().split('T')[0]);
+            const endStr = formatDate(periodEnd.toISOString().split('T')[0]);
             
             if (currentPeriodOffset === 0) {
                 if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
@@ -1495,9 +1531,14 @@ function updateWeightChart(period) {
         
         // Prepare chart data
         const labels = filteredData.map(entry => {
+            // Use formatDateBySettings for consistent date formatting
+            if (typeof formatDateBySettings === 'function') {
+                return formatDateBySettings(entry.entry_date);
+            }
+            // Fallback
             const date = new Date(entry.entry_date);
-            return date.toLocaleDateString('en-GB', { 
-                day: '2-digit', 
+            return date.toLocaleDateString('en-GB', {
+                day: '2-digit',
                 month: '2-digit',
                 year: period === 'all' ? '2-digit' : undefined
             });
@@ -1567,8 +1608,8 @@ function updateMonthlyChart(sortedData) {
         months.push({
             start: monthDate,
             end: monthEnd,
-            name: monthDate.toLocaleDateString('en-GB', { month: 'short', year: '2-digit' }),
-            fullName: monthDate.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' }),
+            name: monthDate.toLocaleDateString(getDateFormatLocale(), { month: 'short', year: '2-digit' }),
+            fullName: monthDate.toLocaleDateString(getDateFormatLocale(), { month: 'long', year: 'numeric' }),
             data: [],
             color: monthColors[i]
         });
@@ -1915,7 +1956,7 @@ function updateWeeklyAchievementCards(weeklyData, currentYear) {
     /*
     if (bestWeek && bestLoss > 0) {
         if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
-        const weekStartStr = bestWeek.weekStart.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit' });
+        const weekStartStr = formatDate(bestWeek.weekStart.toISOString().split('T')[0]);
         const goalHtml = `<strong class="text-success">🏆 ${bestWeek.weekLabel}</strong><br><small>Best week: ${bestLoss.toFixed(1)} kg (${weekStartStr})</small>`;
         $('#goals-achieved').html(goalHtml);
     } else {
@@ -1989,7 +2030,7 @@ function updateYearlyChart(sortedData) {
         
         yearlyData.push({
             month: monthNames[monthIndex],
-            fullMonth: monthStart.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' }),
+            fullMonth: monthStart.toLocaleDateString(getDateFormatLocale(), { month: 'long', year: 'numeric' }),
             averageWeight: monthValue,
             weightLoss: monthLoss,
             entryCount: monthData.length,
@@ -2479,6 +2520,65 @@ function displayRandomEncouragement() {
 }
 
 /**
+ * Universal timestamp formatter - formats ALL timestamps on the page
+ * Looks for elements with class "format-date" or id "login-time" with data-timestamp attribute
+ * This ensures consistent date formatting across the entire application
+ */
+function formatAllTimestamps() {
+    if (window.coverage) window.coverage.logFunction('formatAllTimestamps', 'dashboard.js');
+    debugLog('🕐 formatAllTimestamps called');
+    const dateFormat = getDateFormat();
+
+    // Format all elements with class "format-date" (dates only, no time)
+    $('.format-date[data-timestamp]').each(function() {
+        const timestamp = parseInt($(this).data('timestamp'));
+        if (!timestamp) return;
+
+        const date = new Date(timestamp * 1000);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+
+        let dateStr = '';
+        switch(dateFormat) {
+            case 'uk': dateStr = `${day}/${month}/${year}`; break;
+            case 'us': dateStr = `${month}/${day}/${year}`; break;
+            case 'iso': dateStr = `${year}-${month}-${day}`; break;
+            case 'euro': dateStr = `${day}.${month}.${year}`; break;
+            default: dateStr = `${day}/${month}/${year}`;
+        }
+        $(this).text(dateStr);
+    });
+
+    // Format login time (includes time component)
+    const loginTimeElement = $('#login-time[data-timestamp]');
+    if (loginTimeElement.length) {
+        const timestamp = parseInt(loginTimeElement.data('timestamp'));
+        if (timestamp) {
+            const date = new Date(timestamp * 1000);
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+
+            let dateStr = '';
+            switch(dateFormat) {
+                case 'uk': dateStr = `${day}/${month}/${year} ${hours}:${minutes}`; break;
+                case 'us': dateStr = `${month}/${day}/${year} ${hours}:${minutes}`; break;
+                case 'iso': dateStr = `${year}-${month}-${day} ${hours}:${minutes}`; break;
+                case 'euro': dateStr = `${day}.${month}.${year} ${hours}:${minutes}`; break;
+                default: dateStr = `${day}/${month}/${year} ${hours}:${minutes}`;
+            }
+            loginTimeElement.text(dateStr);
+        }
+    }
+
+    debugLog('✅ All timestamps formatted with format:', dateFormat);
+}
+window.formatAllTimestamps = formatAllTimestamps;
+
+/**
  * Display next check-in prediction
  * @param {string} nextDate - ISO date string (YYYY-MM-DD)
  * @param {number} daysUntil - Days until next weigh-in
@@ -2891,7 +2991,7 @@ function formatDate(isoDate) {
     if (window.coverage) window.coverage.logFunction('formatDate', 'dashboard.js');
 
     const date = new Date(isoDate + 'T00:00:00'); // Avoid timezone issues
-    const dateFormat = localStorage.getItem('dateFormat') || 'uk';
+    const dateFormat = getDateFormat(); // Use global function instead of localStorage
 
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -2904,6 +3004,7 @@ function formatDate(isoDate) {
             return `${month}/${day}/${year}`;
         case 'iso':
             return `${year}-${month}-${day}`;
+        case 'euro': // Changed from 'european' to match global.js
         case 'european':
             return `${day}.${month}.${year}`;
         default:

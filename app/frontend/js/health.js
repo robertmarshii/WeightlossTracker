@@ -890,7 +890,7 @@ function refreshIdealWeight() {
         // Add timeline prediction if available
         if (data.timeline && data.timeline.target_date) {
             if (window.coverage) window.coverage.logFunction('if', 'health.js');
-            const targetMonth = new Date(data.timeline.target_date + '-01').toLocaleDateString('en-GB', {
+            const targetMonth = new Date(data.timeline.target_date + '-01').toLocaleDateString(getDateFormatLocale(), {
                 year: 'numeric',
                 month: 'long'
             });
@@ -933,7 +933,7 @@ function refreshIdealWeight() {
         // Add timeline prediction if available
         if (data.timeline && data.timeline.target_date) {
             if (window.coverage) window.coverage.logFunction('if', 'health.js');
-            const targetMonth = new Date(data.timeline.target_date + '-01').toLocaleDateString('en-GB', {
+            const targetMonth = new Date(data.timeline.target_date + '-01').toLocaleDateString(getDateFormatLocale(), {
                 year: 'numeric',
                 month: 'long'
             });

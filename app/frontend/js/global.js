@@ -259,6 +259,31 @@ function getDateFormat() {
     return 'uk';
 }
 
+function setDateFormat(format) {
+    if (window.coverage) window.coverage.logFunction('setDateFormat', 'global.js');
+    // Update global dashboard data if available
+    if (window.globalDashboardData && window.globalDashboardData.settings) {
+        window.globalDashboardData.settings.date_format = format;
+    }
+}
+
+function getDateFormatLocale() {
+    if (window.coverage) window.coverage.logFunction('getDateFormatLocale', 'global.js');
+    const format = getDateFormat();
+    switch(format) {
+        case 'uk':
+            return 'en-GB';
+        case 'us':
+            return 'en-US';
+        case 'euro':
+            return 'de-DE';
+        case 'iso':
+            return 'en-GB'; // ISO doesn't have locale, use UK as base
+        default:
+            return 'en-GB';
+    }
+}
+
 /**
  * Format a date according to user's preferred format from settings
  * @param {string|Date} dateInput - Date string or Date object to format
@@ -272,17 +297,25 @@ function formatDateBySettings(dateInput) {
     if (isNaN(date.getTime())) return dateInput; // Return original if invalid date
 
     const format = getDateFormat();
+    debugLog('📅 formatDateBySettings - input:', dateInput, 'format:', format);
+
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
 
     switch(format) {
         case 'uk':
-            return date.toLocaleDateString('en-GB');
+            return `${day}/${month}/${year}`;
         case 'us':
-            return date.toLocaleDateString('en-US');
+            return `${month}/${day}/${year}`;
         case 'iso':
-            return date.toISOString().split('T')[0];
+            return `${year}-${month}-${day}`;
         case 'euro':
-            return date.toLocaleDateString('de-DE');
+            return `${day}.${month}.${year}`;
         default:
-            return date.toLocaleDateString('en-GB');
+            return `${day}/${month}/${year}`;
     }
 }
+
+// Make formatDateBySettings globally accessible
+window.formatDateBySettings = formatDateBySettings;

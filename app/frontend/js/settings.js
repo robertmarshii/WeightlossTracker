@@ -67,10 +67,11 @@ function saveSettings() {
                 debugLog('✅ Updated globalDashboardData.settings cache');
             }
 
-            // Update units in localStorage FIRST
-            debugLog('Settings saved, updating units');
+            // Update units and date format in localStorage FIRST
+            debugLog('Settings saved, updating units and date format');
             setWeightUnit(settings.weight_unit);
             setHeightUnit(settings.height_unit);
+            setDateFormat(settings.date_format);
 
             // Switch language BEFORE reloading data
             switchLanguage(settings.language);
@@ -107,6 +108,24 @@ function saveSettings() {
                     }
                     if (typeof window.refreshStreakCounter === 'function') {
                         window.refreshStreakCounter();
+                    }
+
+                    // Reload weight history table (to update date formats)
+                    if (typeof window.dataLoadWeightHistory === 'function') {
+                        debugLog('Reloading weight history with new date format');
+                        window.dataLoadWeightHistory();
+                    }
+
+                    // Update weight chart (to update date labels)
+                    if (typeof window.updateWeightChart === 'function') {
+                        debugLog('Updating weight chart with new date format');
+                        window.updateWeightChart();
+                    }
+
+                    // Format all timestamps with new date format
+                    if (typeof window.formatAllTimestamps === 'function') {
+                        debugLog('Formatting all timestamps with new date format');
+                        window.formatAllTimestamps();
                     }
 
                     // Apply translations to all newly rendered content
