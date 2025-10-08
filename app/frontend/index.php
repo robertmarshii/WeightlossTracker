@@ -9,12 +9,49 @@ if (AuthManager::isLoggedIn()) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17636245354"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'AW-17636245354');
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
-    <!-- App Icon Title stays the same across languages -->
-    <title data-eng="Weightloss Tracker" data-spa="Weightloss Tracker" data-fre="Weightloss Tracker" data-ger="Weightloss Tracker">Weightloss Tracker</title>
+
+    <!-- SEO Meta Tags -->
+    <title>Weightloss Tracker - Free Weight Loss & Health Tracking App</title>
+    <meta name="description" content="Track your weight loss journey with our free, science-based tracker. Monitor BMI, body fat, health risks, and achieve your goals with personalized insights and progress charts.">
+    <meta name="keywords" content="weight loss tracker, BMI calculator, body fat tracker, health tracker, diet tracker, fitness goals, weight management, health monitoring">
+    <meta name="author" content="Weightloss Tracker">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://www.weightloss-tracker.com/">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.weightloss-tracker.com/">
+    <meta property="og:title" content="Weightloss Tracker - Free Weight Loss & Health Tracking App">
+    <meta property="og:description" content="Track your weight loss journey with our free, science-based tracker. Monitor BMI, body fat, health risks, and achieve your goals with personalized insights.">
+    <meta property="og:image" content="https://www.weightloss-tracker.com/images/favicon.svg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://www.weightloss-tracker.com/">
+    <meta property="twitter:title" content="Weightloss Tracker - Free Weight Loss & Health Tracking App">
+    <meta property="twitter:description" content="Track your weight loss journey with our free, science-based tracker. Monitor BMI, body fat, health risks, and achieve your goals.">
+    <meta property="twitter:image" content="https://www.weightloss-tracker.com/images/favicon.svg">
+
+    <!-- Additional SEO -->
+    <meta name="theme-color" content="#4A90E2">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Weightloss Tracker">
     <!-- jQuery (upgraded for better compatibility) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <!-- Bootstrap -->
