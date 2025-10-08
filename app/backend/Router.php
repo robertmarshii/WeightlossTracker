@@ -1692,16 +1692,33 @@
         $currentWeekStart = (clone $today)->modify('monday this week');
         $streak = 0;
 
-        // Group entries by week
+        // Group entries by week with last entry date
         $weeklyEntries = [];
         foreach ($entries as $dateStr) {
             $date = new DateTime($dateStr);
             $weekStart = (clone $date)->modify('monday this week')->format('Y-m-d');
-            $weeklyEntries[$weekStart] = true;
+            if (!isset($weeklyEntries[$weekStart]) || $dateStr > $weeklyEntries[$weekStart]) {
+                $weeklyEntries[$weekStart] = $dateStr;
+            }
         }
 
-        // Count consecutive weeks backwards from current week
+        // Determine starting point for streak counting
+        // If current week has no entry, check if we're still within 7 days of last entry
         $checkWeek = clone $currentWeekStart;
+        if (!isset($weeklyEntries[$checkWeek->format('Y-m-d')])) {
+            // No entry this week - check if last entry was within 7 days
+            if (!empty($entries)) {
+                $lastEntryDate = new DateTime($entries[0]); // entries are DESC order
+                $daysSinceLastEntry = $today->diff($lastEntryDate)->days;
+
+                // If last entry was within 7 days, start counting from last week
+                if ($daysSinceLastEntry <= 7) {
+                    $checkWeek->modify('-1 week');
+                }
+            }
+        }
+
+        // Count consecutive weeks backwards from starting week
         while (true) {
             $weekKey = $checkWeek->format('Y-m-d');
 

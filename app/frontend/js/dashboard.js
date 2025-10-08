@@ -2635,8 +2635,10 @@ function displayNextCheckin(nextDate, daysUntil, avgInterval) {
         // Future date
         const dayLabel = daysUntil === 1 ? t('day') : t('days');
         html = `
-            <div class="checkin-countdown">${daysUntil}</div>
-            <div class="checkin-date">${dayLabel}</div>
+            <div class="d-flex align-items-baseline justify-content-center">
+                <div class="checkin-countdown">${daysUntil}</div>
+                <div class="checkin-date ms-2">${dayLabel}</div>
+            </div>
             <div class="text-muted small mt-2">${t('Next weigh-in on')} ${formattedDate}</div>
         `;
     }
