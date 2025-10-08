@@ -1,21 +1,29 @@
 /* Global JavaScript - Shared across all pages */
 
 // Debug logging system - collects logs and outputs at end
+// Only enabled in development (not on production domain)
 window.debugLogs = [];
+window.isProduction = window.location.hostname === 'www.weightloss-tracker.com' || window.location.hostname === 'weightloss-tracker.com';
+
 window.debugLog = function(message, data) {
-    window.debugLogs.push({ message, data, time: Date.now() });
+    if (!window.isProduction) {
+        window.debugLogs.push({ message, data, time: Date.now() });
+    }
 };
+
 window.flushDebugLogs = function() {
-    if (window.debugLogs.length > 0) {
+    if (!window.isProduction && window.debugLogs.length > 0) {
         console.log('📋 Debug Log Summary:', window.debugLogs);
         window.debugLogs = []; // Clear after output
     }
 };
 
-// Auto-flush every 10 seconds if new logs exist
-setInterval(() => {
-    window.flushDebugLogs();
-}, 10000);
+// Auto-flush every 10 seconds if new logs exist (only in development)
+if (!window.isProduction) {
+    setInterval(() => {
+        window.flushDebugLogs();
+    }, 10000);
+}
 
 // Global variables
 let currentAlertTimeout = null;
