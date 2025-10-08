@@ -31,6 +31,7 @@ class OAuthManager {
 
             $_SESSION['oauth_state'] = $state;
             $_SESSION['oauth_provider'] = $provider;
+            $_SESSION['oauth_timestamp'] = time(); // Track when state was created
 
             $authorizationUrl = $providerInstance->getAuthorizationUrl([
                 'state' => $state,
@@ -58,7 +59,19 @@ class OAuthManager {
 
         // Verify state parameter
         if (!isset($_SESSION['oauth_state']) || $state !== $_SESSION['oauth_state']) {
-            return ['success' => false, 'message' => 'Invalid state parameter'];
+            // Clear any stale OAuth data
+            unset($_SESSION['oauth_state']);
+            unset($_SESSION['oauth_provider']);
+            unset($_SESSION['oauth_timestamp']);
+            return ['success' => false, 'message' => 'Please try logging in again'];
+        }
+
+        // Check if state is too old (more than 10 minutes)
+        if (isset($_SESSION['oauth_timestamp']) && (time() - $_SESSION['oauth_timestamp']) > 600) {
+            unset($_SESSION['oauth_state']);
+            unset($_SESSION['oauth_provider']);
+            unset($_SESSION['oauth_timestamp']);
+            return ['success' => false, 'message' => 'Session expired, please try logging in again'];
         }
 
         // Verify provider matches
@@ -119,6 +132,7 @@ class OAuthManager {
             // Clear OAuth session data
             unset($_SESSION['oauth_state']);
             unset($_SESSION['oauth_provider']);
+            unset($_SESSION['oauth_timestamp']);
 
             return $result;
 
