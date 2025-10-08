@@ -18,6 +18,8 @@ $loginTimeTimestamp = $_SESSION['login_time'] ?? null;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
     <!-- App Icon Title stays the same across languages -->
     <title data-eng="Dashboard - Weightloss Tracker" data-spa="Panel - Weightloss Tracker" data-fre="Tableau de Bord - Weightloss Tracker" data-ger="Dashboard - Weightloss Tracker">Dashboard - Weightloss Tracker</title>
     <!-- jQuery (upgraded for better compatibility) -->

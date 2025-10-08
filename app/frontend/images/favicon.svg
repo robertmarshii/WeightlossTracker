@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Background circle -->
+  <circle cx="50" cy="50" r="48" fill="#4A90E2" stroke="#2E5C8A" stroke-width="2"/>
+
+  <!-- Weight scale icon -->
+  <g fill="white">
+    <!-- Scale platform -->
+    <rect x="25" y="60" width="50" height="6" rx="2"/>
+
+    <!-- Scale base -->
+    <rect x="45" y="66" width="10" height="8" rx="1"/>
+
+    <!-- Downward trend arrow -->
+    <path d="M 50 25 L 50 48 M 50 48 L 42 40 M 50 48 L 58 40"
+          stroke="white" stroke-width="5" stroke-linecap="round"
+          stroke-linejoin="round" fill="none"/>
+
+    <!-- Small indicator circle -->
+    <circle cx="50" cy="25" r="4" fill="#90EE90"/>
+  </g>
+</svg>
