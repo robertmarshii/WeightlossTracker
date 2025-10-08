@@ -1212,18 +1212,18 @@ select.form-control.glass-input {
     margin-top: 0.5rem;
 }
 
-.checkin-date {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #64a6d8;
-    margin: 0.5rem 0;
-}
-
 .checkin-countdown {
     font-size: 2rem;
     font-weight: bold;
     color: rgba(255, 255, 255, 0.9);
     margin: 0.5rem 0;
+}
+
+.checkin-countdown .checkin-date {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+    margin-left: 0.3rem;
 }
 
 /* Mobile responsive adjustments for Quick Look */
