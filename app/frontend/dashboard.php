@@ -18,7 +18,8 @@ $loginTimeTimestamp = $_SESSION['login_time'] ?? null;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-eng="Dashboard - Weightloss Tracker" data-spa="Panel - Rastreador de Pérdida de Peso" data-fre="Tableau de Bord - Suivi de Perte de Poids" data-ger="Dashboard - Gewichtsverlust-Tracker">Dashboard - Weightloss Tracker</title>
+    <!-- App Icon Title stays the same across languages -->
+    <title data-eng="Dashboard - Weightloss Tracker" data-spa="Panel - Weightloss Tracker" data-fre="Tableau de Bord - Weightloss Tracker" data-ger="Dashboard - Weightloss Tracker">Dashboard - Weightloss Tracker</title>
     <!-- jQuery (upgraded for better compatibility) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
@@ -50,7 +51,8 @@ $loginTimeTimestamp = $_SESSION['login_time'] ?? null;
                                         stroke-linecap="round" class="progress-ring-circle"/>
                             </svg>
                         </div>
-                        <div class="logo-text" data-eng="Weightloss Tracker" data-spa="Rastreador de Pérdida de Peso" data-fre="Suivi de Perte de Poids" data-ger="Gewichtsverlust-Tracker">Weightloss<br>Tracker</div>
+                        <!-- Logo Text stays the same across languages -->
+                        <div class="logo-text" data-eng="Weightloss<br>Tracker" data-spa="Weightloss<br>Tracker" data-fre="Weightloss<br>Tracker" data-ger="Weightloss<br>Tracker">Weightloss<br>Tracker</div>
                     </div>
 
                     <div class="welcome-content flex-grow-1 mx-4">
@@ -133,7 +135,7 @@ $loginTimeTimestamp = $_SESSION['login_time'] ?? null;
                         </div>
                         <div class="row">
                             <div class="col-8">
-                                <input type="date" id="goalDate" class="form-control glass-input">
+                                <input type="text" id="goalDate" class="form-control glass-input" placeholder="dd/mm/yyyy">
                             </div>
                             <div class="col-4">
                                 <button id="btn-save-goal" class="btn primary-btn w-100" style="height: 34px;min-width:90px;"
@@ -186,7 +188,7 @@ $loginTimeTimestamp = $_SESSION['login_time'] ?? null;
                                 data-spa="Fecha"
                                 data-fre="Date"
                                 data-ger="Datum">Date</label>
-                            <input type="date" id="newDate" class="form-control glass-input date-input">
+                            <input type="text" id="newDate" class="form-control glass-input date-input" placeholder="dd/mm/yyyy">
                         </div>
                         <div class="col-12 col-md-3 d-flex flex-row flex-md-column align-items-end form-gap mt-3 mt-md-0" style="gap: 0.5rem;">
                             <button id="btn-save-entry" class="btn primary-btn w-100" style="height: 34px;"

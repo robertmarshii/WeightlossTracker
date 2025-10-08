@@ -138,15 +138,19 @@ $(function() {
             // STEP 4: Format all timestamps with user's date format (after settings loaded)
             formatAllTimestamps();
 
+            // STEP 5: Set today's date as default for new entries (formatted with user's date format)
+            const todayISO = new Date().toISOString().split('T')[0];
+            $('#newDate').val(formatDate(todayISO));
+
+            // Update date input placeholders
+            updateDatePlaceholders();
+
             // Flush debug logs after ALL page initialization completes
             setTimeout(() => {
                 window.flushDebugLogs();
             }, 5000);
         });
     });
-    
-    // Set today's date as default for new entries
-    $('#newDate').val(new Date().toISOString().split('T')[0]);
 
     // Handlers
     $('#btn-add-weight').on('click', function() {
@@ -209,16 +213,24 @@ $(function() {
     $('#btn-cancel-entry').on('click', function() {
         $('#add-entry-form').slideUp();
         $('#newWeight').val('');
-        $('#newDate').val(new Date().toISOString().split('T')[0]);
+        const todayISO = new Date().toISOString().split('T')[0];
+        $('#newDate').val(formatDate(todayISO));
     });
-    
+
     $('#btn-save-entry').on('click', function() {
         const weightInput = $('#newWeight').val().trim();
-        const date = $('#newDate').val();
+        const dateStr = $('#newDate').val();
 
-        if (!weightInput || !date) {
+        if (!weightInput || !dateStr) {
             if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
             showToast('Please enter both weight and date');
+            return;
+        }
+
+        // Parse user's date format to ISO
+        const dateISO = parseUserDate(dateStr);
+        if (!dateISO) {
+            showToast('Please enter a valid date in format: ' + getDatePlaceholder());
             return;
         }
 
@@ -232,7 +244,7 @@ $(function() {
         postRequest('router.php?controller=profile', {
             action: 'add_weight',
             weight_kg: weightKg.toFixed(2),
-            entry_date: date
+            entry_date: dateISO
         })
         .then(resp => {
             const data = parseJson(resp);
@@ -240,7 +252,8 @@ $(function() {
                 showToast('Weight entry saved');
                 $('#add-entry-form').slideUp();
                 $('#newWeight').val('');
-                $('#newDate').val(new Date().toISOString().split('T')[0]);
+                const todayISO = new Date().toISOString().split('T')[0];
+                $('#newDate').val(formatDate(todayISO));
 
                 // Reload global data first, then refresh all functions
                 reloadGlobalDashboardData(function() {
@@ -275,7 +288,7 @@ $(function() {
 
     $('#btn-save-goal').on('click', function() {
         const goalInput = $('#goalWeight').val().trim();
-        const d = $('#goalDate').val();
+        const dateStr = $('#goalDate').val();
         if (!goalInput) { return; }
             if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
 
@@ -286,7 +299,17 @@ $(function() {
             return;
         }
 
-        postRequest('router.php?controller=profile', { action: 'save_goal', target_weight_kg: weightKg.toFixed(2), target_date: d })
+        // Parse goal date if provided
+        let dateISO = null;
+        if (dateStr) {
+            dateISO = parseUserDate(dateStr);
+            if (!dateISO) {
+                showAlert('Please enter a valid date in format: ' + getDatePlaceholder(), 'warning');
+                return;
+            }
+        }
+
+        postRequest('router.php?controller=profile', { action: 'save_goal', target_weight_kg: weightKg.toFixed(2), target_date: dateISO })
         .then(resp => {
             const data = parseJson(resp);
             if (data.success) {
@@ -358,6 +381,7 @@ $(function() {
     // Settings handlers
     $('#dateFormat').on('change', function() {
         updateDateExample();
+        updateDatePlaceholders();
     });
 
     $('#emailNotifications').on('change', function() {
@@ -764,13 +788,13 @@ function refreshWeightProgress() {
             lines.push(`${t('Estimated Fat Loss:')} <strong class="text-success">${fatLoss} ${unit} (${data.fat_loss_percentage}%)</strong>`);
         }
         const avgWeeklyRate = convertFromKg(data.avg_weekly_rate_kg || data.average_weekly_loss_kg);
-        lines.push(`<small class="text-muted">${t('Over')} ${data.weeks_elapsed || data.weeks_tracked} ${t('weeks')} (${avgWeeklyRate} ${t('kg/week average')})</small>`);
+        lines.push(`<small class="text-muted">${t('Over')} ${data.weeks_elapsed || data.weeks_tracked} ${t('weeks')} (${avgWeeklyRate} ${unit}/${t('week average')})</small>`);
         if (data.research_note) {
             if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
             lines.push(`<small class="text-muted">${t('Research suggests ~78% of weight loss is fat when combined with exercise')}</small>`);
         }
 
-        el.html(lines.join('<br>')).removeClass('text-muted');
+        el.html(lines.join('<br>')).removeClass('text-muted').removeAttr('data-eng data-spa data-fre data-ger');
         return;
     }
 
@@ -798,10 +822,10 @@ function refreshWeightProgress() {
         const fatLoss = convertFromKg(data.estimated_fat_loss_kg);
         lines.push(`${t('Estimated Fat Loss:')} <strong class="text-success">${fatLoss} ${unit}</strong> (${data.fat_loss_percentage}%)`);
         const avgWeeklyRate = convertFromKg(data.avg_weekly_rate_kg);
-        lines.push(`<small class="text-muted">${t('Over')} ${data.weeks_elapsed} ${t('weeks')} (${avgWeeklyRate} ${t('kg/week average')})</small>`);
+        lines.push(`<small class="text-muted">${t('Over')} ${data.weeks_elapsed} ${t('weeks')} (${avgWeeklyRate} ${unit}/${t('week average')})</small>`);
         lines.push(`<small class="text-muted">${t('Research suggests ~78% of weight loss is fat when combined with exercise')}</small>`);
 
-        el.html(lines.join('<br>')).removeClass('text-muted');
+        el.html(lines.join('<br>')).removeClass('text-muted').removeAttr('data-eng data-spa data-fre data-ger');
     })
     .catch(() => {
         $('#progress-block').text('Failed to calculate weight progress').addClass('text-muted');
@@ -1418,6 +1442,10 @@ function updateWeightChart(period) {
         }
 
         $('#chart-status').hide();
+
+        // Reset to line chart (in case we're coming from bar/monthly chart)
+        resetToLineChart();
+
         const unit = getWeightUnitLabel();
         const reversedData = filteredData.reverse();
         const labels = reversedData.map(entry => formatDate(entry.entry_date));
@@ -1608,8 +1636,8 @@ function updateMonthlyChart(sortedData) {
         months.push({
             start: monthDate,
             end: monthEnd,
-            name: monthDate.toLocaleDateString(getDateFormatLocale(), { month: 'short', year: '2-digit' }),
-            fullName: monthDate.toLocaleDateString(getDateFormatLocale(), { month: 'long', year: 'numeric' }),
+            name: monthDate.toLocaleDateString(getLanguageLocale(), { month: 'short', year: '2-digit' }),
+            fullName: monthDate.toLocaleDateString(getLanguageLocale(), { month: 'long', year: 'numeric' }),
             data: [],
             color: monthColors[i]
         });
@@ -2030,7 +2058,7 @@ function updateYearlyChart(sortedData) {
         
         yearlyData.push({
             month: monthNames[monthIndex],
-            fullMonth: monthStart.toLocaleDateString(getDateFormatLocale(), { month: 'long', year: 'numeric' }),
+            fullMonth: monthStart.toLocaleDateString(getLanguageLocale(), { month: 'long', year: 'numeric' }),
             averageWeight: monthValue,
             weightLoss: monthLoss,
             entryCount: monthData.length,
@@ -2351,8 +2379,8 @@ function displayConsistencyScore(score, loggingFreq, goalProgress) {
     if (!score && score !== 0) {
         // No data available
         container.html(
-            `<div class="text-muted small" data-eng="Log more weights to see your score" data-spa="Registra más pesos para ver tu puntuación" data-fre="Enregistrez plus de poids pour voir votre score" data-ger="Protokollieren Sie mehr Gewichte, um Ihren Score zu sehen">Log more weights to see your score</div>`
-        );
+            `<div class="text-muted small">${t('Log more weights to see your score')}</div>`
+        ).removeAttr('data-eng data-spa data-fre data-ger');
         return;
     }
 
@@ -2385,7 +2413,7 @@ function displayConsistencyScore(score, loggingFreq, goalProgress) {
         <div class="text-muted small mt-2">${t('Based on logging frequency and goal progress')}</div>
     `;
 
-    container.html(html).removeClass('text-muted');
+    container.html(html).removeClass('text-muted').removeAttr('data-eng data-spa data-fre data-ger');
 }
 
 /**
@@ -2615,7 +2643,7 @@ function displayNextCheckin(nextDate, daysUntil, avgInterval) {
 
     html += `<div class="text-muted small mt-1">${t('Based on your average logging frequency')}</div>`;
 
-    container.html(html).removeClass('text-muted');
+    container.html(html).removeClass('text-muted').removeAttr('data-eng data-spa data-fre data-ger');
 }
 
 // ========================================
@@ -3011,6 +3039,105 @@ function formatDate(isoDate) {
             return `${day}/${month}/${year}`;
     }
 }
+
+/**
+ * Parse user-entered date string to ISO format (YYYY-MM-DD)
+ * @param {string} dateStr - Date string in user's format
+ * @returns {string|null} ISO date string or null if invalid
+ */
+function parseUserDate(dateStr) {
+    if (window.coverage) window.coverage.logFunction('parseUserDate', 'dashboard.js');
+
+    if (!dateStr) return null;
+
+    const dateFormat = getDateFormat();
+    let day, month, year;
+
+    switch (dateFormat) {
+        case 'uk': // dd/mm/yyyy
+            const ukParts = dateStr.split('/');
+            if (ukParts.length !== 3) return null;
+            day = ukParts[0];
+            month = ukParts[1];
+            year = ukParts[2];
+            break;
+        case 'us': // mm/dd/yyyy
+            const usParts = dateStr.split('/');
+            if (usParts.length !== 3) return null;
+            month = usParts[0];
+            day = usParts[1];
+            year = usParts[2];
+            break;
+        case 'euro': // dd.mm.yyyy
+        case 'european':
+            const euroParts = dateStr.split('.');
+            if (euroParts.length !== 3) return null;
+            day = euroParts[0];
+            month = euroParts[1];
+            year = euroParts[2];
+            break;
+        case 'iso': // yyyy-mm-dd
+            const isoParts = dateStr.split('-');
+            if (isoParts.length !== 3) return null;
+            year = isoParts[0];
+            month = isoParts[1];
+            day = isoParts[2];
+            break;
+        default:
+            return null;
+    }
+
+    // Validate and format
+    const d = String(day).padStart(2, '0');
+    const m = String(month).padStart(2, '0');
+    const y = String(year);
+
+    // Check if valid date
+    const testDate = new Date(`${y}-${m}-${d}`);
+    if (isNaN(testDate.getTime())) return null;
+
+    return `${y}-${m}-${d}`;
+}
+
+/**
+ * Get placeholder text for date inputs based on user's format
+ * @returns {string} Placeholder text
+ */
+function getDatePlaceholder() {
+    if (window.coverage) window.coverage.logFunction('getDatePlaceholder', 'dashboard.js');
+
+    const dateFormat = getDateFormat();
+
+    switch (dateFormat) {
+        case 'uk':
+            return 'dd/mm/yyyy';
+        case 'us':
+            return 'mm/dd/yyyy';
+        case 'euro':
+        case 'european':
+            return 'dd.mm.yyyy';
+        case 'iso':
+            return 'yyyy-mm-dd';
+        default:
+            return 'dd/mm/yyyy';
+    }
+}
+
+/**
+ * Update date input placeholders based on user's date format
+ */
+function updateDatePlaceholders() {
+    if (window.coverage) window.coverage.logFunction('updateDatePlaceholders', 'dashboard.js');
+
+    const placeholder = getDatePlaceholder();
+    $('#newDate').attr('placeholder', placeholder);
+    $('#goalDate').attr('placeholder', placeholder);
+}
+
+// Export date functions to window scope for global access
+window.parseUserDate = parseUserDate;
+window.updateDatePlaceholders = updateDatePlaceholders;
+window.getDatePlaceholder = getDatePlaceholder;
 
 // ==================== PHASE 3: STREAK COUNTER ENHANCEMENTS ====================
 

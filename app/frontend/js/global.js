@@ -285,6 +285,27 @@ function getDateFormatLocale() {
 }
 
 /**
+ * Get locale based on user's language setting (for month names, etc.)
+ * @returns {string} Locale string like 'en-US', 'es-ES', 'fr-FR', 'de-DE'
+ */
+function getLanguageLocale() {
+    if (window.coverage) window.coverage.logFunction('getLanguageLocale', 'global.js');
+    const language = localStorage.getItem('language') || 'en';
+    switch(language) {
+        case 'en':
+            return 'en-US';
+        case 'es':
+            return 'es-ES';
+        case 'fr':
+            return 'fr-FR';
+        case 'de':
+            return 'de-DE';
+        default:
+            return 'en-US';
+    }
+}
+
+/**
  * Format a date according to user's preferred format from settings
  * @param {string|Date} dateInput - Date string or Date object to format
  * @returns {string} Formatted date string
@@ -319,3 +340,4 @@ function formatDateBySettings(dateInput) {
 
 // Make formatDateBySettings globally accessible
 window.formatDateBySettings = formatDateBySettings;
+window.getLanguageLocale = getLanguageLocale;

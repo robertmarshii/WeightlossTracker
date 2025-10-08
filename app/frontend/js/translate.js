@@ -127,11 +127,23 @@ const translations = {
         "fr": "Basé sur la Formule Hamwi Modifiée avec ajustements de corpulence. Les plages de poids santé réduisent le risque de maladie de 20-40% (Flegal et al., 2013)",
         "de": "Basierend auf modifizierter Hamwi-Formel mit Körpertyp-Anpassungen. Gesunde Gewichtsbereiche reduzieren Krankheitsrisiko um 20-40% (Flegal et al., 2013)"
     },
+    "week": {
+        "en": "week",
+        "es": "semana",
+        "fr": "semaine",
+        "de": "Woche"
+    },
     "weeks": {
         "en": "weeks",
         "es": "semanas",
         "fr": "semaines",
         "de": "Wochen"
+    },
+    "week average": {
+        "en": "week average",
+        "es": "semana promedio",
+        "fr": "semaine moyenne",
+        "de": "Woche Durchschnitt"
     },
     "average": {
         "en": "average",
@@ -168,6 +180,12 @@ const translations = {
         "es": "La pérdida de peso del 5-10% puede reducir el riesgo de cálculos biliares en 40-50%",
         "fr": "Une perte de poids de 5-10% peut réduire le risque de calculs biliaires de 40-50%",
         "de": "Gewichtsverlust von 5-10% kann Gallensteinrisiko um 40-50% reduzieren"
+    },
+    "Continue weight loss for gallbladder benefits": {
+        "en": "Continue weight loss for gallbladder benefits",
+        "es": "Continúa la pérdida de peso para beneficios de la vesícula biliar",
+        "fr": "Continuez la perte de poids pour les avantages de la vésicule biliaire",
+        "de": "Gewichtsverlust fortsetzen für Gallenblasenvorteile"
     },
     "percentage points": {
         "en": "percentage points",
@@ -352,6 +370,108 @@ const translations = {
         "es": "Riesgo Actual:",
         "fr": "Risque Actuel:",
         "de": "Aktuelles Risiko:"
+    },
+    "Current:": {
+        "en": "Current:",
+        "es": "Actual:",
+        "fr": "Actuel:",
+        "de": "Aktuell:"
+    },
+    "Change:": {
+        "en": "Change:",
+        "es": "Cambio:",
+        "fr": "Changement:",
+        "de": "Änderung:"
+    },
+    "Started:": {
+        "en": "Started:",
+        "es": "Inicio:",
+        "fr": "Début:",
+        "de": "Begonnen:"
+    },
+    "Status:": {
+        "en": "Status:",
+        "es": "Estado:",
+        "fr": "Statut:",
+        "de": "Status:"
+    },
+    "Risk Reduction:": {
+        "en": "Risk Reduction:",
+        "es": "Reducción de Riesgo:",
+        "fr": "Réduction du Risque:",
+        "de": "Risikominderung:"
+    },
+    "Set your height to calculate ideal weight range": {
+        "en": "Set your height to calculate ideal weight range",
+        "es": "Establece tu altura para calcular tu rango de peso ideal",
+        "fr": "Définissez votre taille pour calculer votre plage de poids idéale",
+        "de": "Legen Sie Ihre Größe fest, um Ihren idealen Gewichtsbereich zu berechnen"
+    },
+    "Failed to calculate ideal weight range": {
+        "en": "Failed to calculate ideal weight range",
+        "es": "Error al calcular el rango de peso ideal",
+        "fr": "Échec du calcul de la plage de poids idéale",
+        "de": "Fehler beim Berechnen des idealen Gewichtsbereichs"
+    },
+    "Complete profile to assess gallbladder health benefits": {
+        "en": "Complete profile to assess gallbladder health benefits",
+        "es": "Completa el perfil para evaluar beneficios para la vesícula biliar",
+        "fr": "Complétez le profil pour évaluer les avantages pour la vésicule biliaire",
+        "de": "Vervollständigen Sie das Profil, um Vorteile für die Gallenblase zu bewerten"
+    },
+    "Failed to assess gallbladder health": {
+        "en": "Failed to assess gallbladder health",
+        "es": "Error al evaluar la salud de la vesícula biliar",
+        "fr": "Échec de l'évaluation de la santé de la vésicule biliaire",
+        "de": "Fehler bei der Bewertung der Gallenblasengesundheit"
+    },
+    "Body fat estimation not available": {
+        "en": "Body fat estimation not available",
+        "es": "Estimación de grasa corporal no disponible",
+        "fr": "Estimation de la graisse corporelle non disponible",
+        "de": "Körperfettschätzung nicht verfügbar"
+    },
+    "Cardiovascular risk not available": {
+        "en": "Cardiovascular risk not available",
+        "es": "Riesgo cardiovascular no disponible",
+        "fr": "Risque cardiovasculaire non disponible",
+        "de": "Herz-Kreislauf-Risiko nicht verfügbar"
+    },
+    "Failed to calculate cardiovascular risk": {
+        "en": "Failed to calculate cardiovascular risk",
+        "es": "Error al calcular el riesgo cardiovascular",
+        "fr": "Échec du calcul du risque cardiovasculaire",
+        "de": "Fehler bei der Berechnung des Herz-Kreislauf-Risikos"
+    },
+    "Ideal weight range calculated using modified Hamwi formula for small frame": {
+        "en": "Ideal weight range calculated using modified Hamwi formula for small frame",
+        "es": "Rango de peso ideal calculado usando la fórmula Hamwi modificada para estructura pequeña",
+        "fr": "Plage de poids idéale calculée à l'aide de la formule Hamwi modifiée pour petite ossature",
+        "de": "Idealer Gewichtsbereich berechnet mit modifizierter Hamwi-Formel für kleine Statur"
+    },
+    "Ideal weight range calculated using modified Hamwi formula for medium frame": {
+        "en": "Ideal weight range calculated using modified Hamwi formula for medium frame",
+        "es": "Rango de peso ideal calculado usando la fórmula Hamwi modificada para estructura mediana",
+        "fr": "Plage de poids idéale calculée à l'aide de la formule Hamwi modifiée pour ossature moyenne",
+        "de": "Idealer Gewichtsbereich berechnet mit modifizierter Hamwi-Formel für mittlere Statur"
+    },
+    "Ideal weight range calculated using modified Hamwi formula for large frame": {
+        "en": "Ideal weight range calculated using modified Hamwi formula for large frame",
+        "es": "Rango de peso ideal calculado usando la fórmula Hamwi modificada para estructura grande",
+        "fr": "Plage de poids idéale calculée à l'aide de la formule Hamwi modifiée pour grande ossature",
+        "de": "Idealer Gewichtsbereich berechnet mit modifizierter Hamwi-Formel für große Statur"
+    },
+    "Simplified risk model based on BMI, age, and activity level": {
+        "en": "Simplified risk model based on BMI, age, and activity level",
+        "es": "Modelo de riesgo simplificado basado en IMC, edad y nivel de actividad",
+        "fr": "Modèle de risque simplifié basé sur l'IMC, l'âge et le niveau d'activité",
+        "de": "Vereinfachtes Risikomodell basierend auf BMI, Alter und Aktivitätsniveau"
+    },
+    "For clinical assessment, consult healthcare provider": {
+        "en": "For clinical assessment, consult healthcare provider",
+        "es": "Para evaluación clínica, consulte a un proveedor de atención médica",
+        "fr": "Pour une évaluation clinique, consultez un professionnel de santé",
+        "de": "Für klinische Bewertung, konsultieren Sie einen Gesundheitsdienstleister"
     },
     "Early-stage NAFLD can often be reversed with weight loss (Chalasani et al., 2018, Hepatology)": {
         "en": "Early-stage NAFLD can often be reversed with weight loss (Chalasani et al., 2018, Hepatology)",
@@ -894,6 +1014,12 @@ const translations = {
         "es": "Registra más pesos para ver predicciones",
         "fr": "Enregistrez plus de poids pour voir les prédictions",
         "de": "Protokollieren Sie mehr Gewichte, um Vorhersagen zu sehen"
+    },
+    "Log more weights to see your score": {
+        "en": "Log more weights to see your score",
+        "es": "Registra más pesos para ver tu puntuación",
+        "fr": "Enregistrez plus de poids pour voir votre score",
+        "de": "Protokollieren Sie mehr Gewichte, um Ihren Score zu sehen"
     },
     "📍 You're due for a weigh-in today!": {
         "en": "📍 You're due for a weigh-in today!",

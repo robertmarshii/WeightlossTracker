@@ -335,47 +335,47 @@ function updateHealthBenefitCards() {
                 const originalRisk = getBMIRisk(startBMI);
                 const currentRisk = getBMIRisk(currentBMI);
                 const riskReduction = originalRisk - currentRisk;
-                $('#diabetes-block').html(`Current Risk: <strong>${currentRisk}%</strong><br>${t('Started at')}: <strong>${originalRisk}%</strong> (${startBMI.toFixed(1)} ${t('BMI')})<br>${t('Risk reduced by')} <strong class="text-success">${riskReduction} ${t('percentage points')}</strong><br><small class="text-muted">${t('Weight loss significantly reduces diabetes incidence and HbA1c levels (American Diabetes Association, 2023)')}</small>`).removeClass('text-muted');
+                $('#diabetes-block').html(`${t('Current Risk:')} <strong>${currentRisk}%</strong><br>${t('Started at')}: <strong>${originalRisk}%</strong> (${startBMI.toFixed(1)} ${t('BMI')})<br>${t('Risk reduced by')} <strong class="text-success">${riskReduction} ${t('percentage points')}</strong><br><small class="text-muted">${t('Weight loss significantly reduces diabetes incidence and HbA1c levels (American Diabetes Association, 2023)')}</small>`).removeClass('text-muted').removeAttr('data-eng data-spa data-fre data-ger');
 
                 // Update sleep apnea card with risk percentages
                 const originalSleepRisk = getSleepApneaRisk(startBMI);
                 const currentSleepRisk = getSleepApneaRisk(currentBMI);
                 const sleepRiskReduction = originalSleepRisk - currentSleepRisk;
-                $('#sleep-apnea-block').html(`Current Risk: <strong>${currentSleepRisk}%</strong><br>${t('Started at')}: <strong>${originalSleepRisk}%</strong> (${startBMI.toFixed(1)} ${t('BMI')})<br>${t('Risk reduced by')} <strong class="text-success">${sleepRiskReduction} ${t('percentage points')}</strong><br><small class="text-muted">${t('Weight loss significantly reduces sleep apnea severity and improves sleep quality (Peppard et al., 2013, Am J Respir Crit Care Med)')}</small>`).removeClass('text-muted');
+                $('#sleep-apnea-block').html(`${t('Current Risk:')} <strong>${currentSleepRisk}%</strong><br>${t('Started at')}: <strong>${originalSleepRisk}%</strong> (${startBMI.toFixed(1)} ${t('BMI')})<br>${t('Risk reduced by')} <strong class="text-success">${sleepRiskReduction} ${t('percentage points')}</strong><br><small class="text-muted">${t('Weight loss significantly reduces sleep apnea severity and improves sleep quality (Peppard et al., 2013, Am J Respir Crit Care Med)')}</small>`).removeClass('text-muted').removeAttr('data-eng data-spa data-fre data-ger');
 
                 // Update hypertension card with risk percentages
                 const originalHypertensionRisk = getHypertensionRisk(startBMI);
                 const currentHypertensionRisk = getHypertensionRisk(currentBMI);
                 const hypertensionRiskReduction = originalHypertensionRisk - currentHypertensionRisk;
-                $('#hypertension-block').html(`${t('Current Risk:')} <strong>${currentHypertensionRisk}%</strong><br>${t('Started at')}: <strong>${originalHypertensionRisk}%</strong> (${startBMI.toFixed(1)} ${t('BMI')})<br>${t('Risk reduced by')} <strong class="text-success">${hypertensionRiskReduction} ${t('percentage points')}</strong><br><small class="text-muted">${t('Blood pressure typically drops 5-10 mmHg systolic/diastolic with weight loss (Whelton et al., 2018, JAMA)')}</small>`).removeClass('text-muted');
+                $('#hypertension-block').html(`${t('Current Risk:')} <strong>${currentHypertensionRisk}%</strong><br>${t('Started at')}: <strong>${originalHypertensionRisk}%</strong> (${startBMI.toFixed(1)} ${t('BMI')})<br>${t('Risk reduced by')} <strong class="text-success">${hypertensionRiskReduction} ${t('percentage points')}</strong><br><small class="text-muted">${t('Blood pressure typically drops 5-10 mmHg systolic/diastolic with weight loss (Whelton et al., 2018, JAMA)')}</small>`).removeClass('text-muted').removeAttr('data-eng data-spa data-fre data-ger');
 
                 // Update fatty liver card with risk percentages
                 const originalFattyLiverRisk = getFattyLiverRisk(startBMI);
                 const currentFattyLiverRisk = getFattyLiverRisk(currentBMI);
                 const fattyLiverRiskReduction = originalFattyLiverRisk - currentFattyLiverRisk;
-                $('#fatty-liver-block').html(`${t('Current Risk:')} <strong>${currentFattyLiverRisk}%</strong><br>${t('Started at')}: <strong>${originalFattyLiverRisk}%</strong> (${startBMI.toFixed(1)} ${t('BMI')})<br>${t('Risk reduced by')} <strong class="text-success">${fattyLiverRiskReduction} ${t('percentage points')}</strong><br><small class="text-muted">${t('Early-stage NAFLD can often be reversed with weight loss (Chalasani et al., 2018, Hepatology)')}</small>`).removeClass('text-muted');
+                $('#fatty-liver-block').html(`${t('Current Risk:')} <strong>${currentFattyLiverRisk}%</strong><br>${t('Started at')}: <strong>${originalFattyLiverRisk}%</strong> (${startBMI.toFixed(1)} ${t('BMI')})<br>${t('Risk reduced by')} <strong class="text-success">${fattyLiverRiskReduction} ${t('percentage points')}</strong><br><small class="text-muted">${t('Early-stage NAFLD can often be reversed with weight loss (Chalasani et al., 2018, Hepatology)')}</small>`).removeClass('text-muted').removeAttr('data-eng data-spa data-fre data-ger');
 
                 // Update heart disease card with risk percentages
                 const originalHeartRisk = getHeartDiseaseRisk(startBMI);
                 const currentHeartRisk = getHeartDiseaseRisk(currentBMI);
                 const heartRiskReduction = originalHeartRisk - currentHeartRisk;
-                $('#heart-disease-block').html(`Current Risk: <strong>${currentHeartRisk}%</strong><br>${t('Started at')}: <strong>${originalHeartRisk}%</strong> (${startBMI.toFixed(1)} ${t('BMI')})<br>${t('Risk reduced by')} <strong class="text-success">${heartRiskReduction} ${t('percentage points')}</strong><br><small class="text-muted">${t('Stronger cardiovascular protection with central obesity reduction (Lavie et al., 2021, Circulation)')}</small>`).removeClass('text-muted');
+                $('#heart-disease-block').html(`${t('Current Risk:')} <strong>${currentHeartRisk}%</strong><br>${t('Started at')}: <strong>${originalHeartRisk}%</strong> (${startBMI.toFixed(1)} ${t('BMI')})<br>${t('Risk reduced by')} <strong class="text-success">${heartRiskReduction} ${t('percentage points')}</strong><br><small class="text-muted">${t('Stronger cardiovascular protection with central obesity reduction (Lavie et al., 2021, Circulation)')}</small>`).removeClass('text-muted').removeAttr('data-eng data-spa data-fre data-ger');
 
                 // Update mental health card with risk percentages
                 const originalMentalRisk = getMentalHealthRisk(startBMI);
                 const currentMentalRisk = getMentalHealthRisk(currentBMI);
                 const mentalRiskReduction = originalMentalRisk - currentMentalRisk;
-                $('#mental-health-block').html(`Current Risk: <strong>${currentMentalRisk}%</strong><br>${t('Started at')}: <strong>${originalMentalRisk}%</strong> (${startBMI.toFixed(1)} ${t('BMI')})<br>${t('Risk reduced by')} <strong class="text-success">${mentalRiskReduction} ${t('percentage points')}</strong><br><small class="text-muted">${t('Weight loss improves mood, self-esteem and reduces inflammation (Luppino et al., 2010, Arch Gen Psychiatry')}</small>`).removeClass('text-muted');
+                $('#mental-health-block').html(`${t('Current Risk:')} <strong>${currentMentalRisk}%</strong><br>${t('Started at')}: <strong>${originalMentalRisk}%</strong> (${startBMI.toFixed(1)} ${t('BMI')})<br>${t('Risk reduced by')} <strong class="text-success">${mentalRiskReduction} ${t('percentage points')}</strong><br><small class="text-muted">${t('Weight loss improves mood, self-esteem and reduces inflammation (Luppino et al., 2010, Arch Gen Psychiatry')}</small>`).removeClass('text-muted').removeAttr('data-eng data-spa data-fre data-ger');
 
                 // Update joint health card with risk percentages
                 const originalJointRisk = getJointHealthRisk(startBMI);
                 const currentJointRisk = getJointHealthRisk(currentBMI);
                 const jointRiskReduction = originalJointRisk - currentJointRisk;
-                $('#joint-health-block').html(`Current Risk: <strong>${currentJointRisk}%</strong><br>${t('Started at')}: <strong>${originalJointRisk}%</strong> (${startBMI.toFixed(1)} ${t('BMI')})<br>${t('Risk reduced by')} <strong class="text-success">${jointRiskReduction} ${t('percentage points')}</strong><br><small class="text-muted">${t('Reduced joint load leads to slower progression of knee and hip osteoarthritis (Messier et al., 2013, Arthritis Rheumatol)')}</small>`).removeClass('text-muted');
+                $('#joint-health-block').html(`${t('Current Risk:')} <strong>${currentJointRisk}%</strong><br>${t('Started at')}: <strong>${originalJointRisk}%</strong> (${startBMI.toFixed(1)} ${t('BMI')})<br>${t('Risk reduced by')} <strong class="text-success">${jointRiskReduction} ${t('percentage points')}</strong><br><small class="text-muted">${t('Reduced joint load leads to slower progression of knee and hip osteoarthritis (Messier et al., 2013, Arthritis Rheumatol)')}</small>`).removeClass('text-muted').removeAttr('data-eng data-spa data-fre data-ger');
 
                 // Update life expectancy card
                 const lifeIncrease = Math.min(5, (bmiReduction / 5.0) * 3.5);
-                $('#life-expectancy-block').html(`${t('Life Expectancy Increase:')} <strong>${lifeIncrease.toFixed(1)} ${t('years')}</strong><br>${t('Started at')}: <strong>${startBMI.toFixed(1)} ${t('BMI')}</strong><br>${t('Improvement from')} <strong class="text-success">${bmiReduction.toFixed(1)} ${t('BMI reduction')}</strong><br><small class="text-muted">${t('Stronger benefits when weight loss occurs earlier in life (Flegal et al., 2013, JAMA)')}</small>`).removeClass('text-muted');
+                $('#life-expectancy-block').html(`${t('Life Expectancy Increase:')} <strong>${lifeIncrease.toFixed(1)} ${t('years')}</strong><br>${t('Started at')}: <strong>${startBMI.toFixed(1)} ${t('BMI')}</strong><br>${t('Improvement from')} <strong class="text-success">${bmiReduction.toFixed(1)} ${t('BMI reduction')}</strong><br><small class="text-muted">${t('Stronger benefits when weight loss occurs earlier in life (Flegal et al., 2013, JAMA)')}</small>`).removeClass('text-muted').removeAttr('data-eng data-spa data-fre data-ger');
 
                 // Calculate comprehensive health score
                 const startingHealthScore = calculateHealthScore(startBMI);
@@ -471,47 +471,47 @@ function updateHealthBenefitCards() {
                 const originalRisk = getBMIRisk(startBMI);
                 const currentRisk = getBMIRisk(currentBMI);
                 const riskReduction = originalRisk - currentRisk;
-                $('#diabetes-block').html(`Current Risk: <strong>${currentRisk}%</strong><br>${t('Started at')}: <strong>${originalRisk}%</strong> (${startBMI.toFixed(1)} ${t('BMI')})<br>${t('Risk reduced by')} <strong class="text-success">${riskReduction} ${t('percentage points')}</strong><br><small class="text-muted">${t('Weight loss significantly reduces diabetes incidence and HbA1c levels (American Diabetes Association, 2023)')}</small>`).removeClass('text-muted');
+                $('#diabetes-block').html(`${t('Current Risk:')} <strong>${currentRisk}%</strong><br>${t('Started at')}: <strong>${originalRisk}%</strong> (${startBMI.toFixed(1)} ${t('BMI')})<br>${t('Risk reduced by')} <strong class="text-success">${riskReduction} ${t('percentage points')}</strong><br><small class="text-muted">${t('Weight loss significantly reduces diabetes incidence and HbA1c levels (American Diabetes Association, 2023)')}</small>`).removeClass('text-muted').removeAttr('data-eng data-spa data-fre data-ger');
 
                 // Update sleep apnea card with risk percentages
                 const originalSleepRisk = getSleepApneaRisk(startBMI);
                 const currentSleepRisk = getSleepApneaRisk(currentBMI);
                 const sleepRiskReduction = originalSleepRisk - currentSleepRisk;
-                $('#sleep-apnea-block').html(`Current Risk: <strong>${currentSleepRisk}%</strong><br>${t('Started at')}: <strong>${originalSleepRisk}%</strong> (${startBMI.toFixed(1)} ${t('BMI')})<br>${t('Risk reduced by')} <strong class="text-success">${sleepRiskReduction} ${t('percentage points')}</strong><br><small class="text-muted">${t('Weight loss significantly reduces sleep apnea severity and improves sleep quality (Peppard et al., 2013, Am J Respir Crit Care Med)')}</small>`).removeClass('text-muted');
+                $('#sleep-apnea-block').html(`${t('Current Risk:')} <strong>${currentSleepRisk}%</strong><br>${t('Started at')}: <strong>${originalSleepRisk}%</strong> (${startBMI.toFixed(1)} ${t('BMI')})<br>${t('Risk reduced by')} <strong class="text-success">${sleepRiskReduction} ${t('percentage points')}</strong><br><small class="text-muted">${t('Weight loss significantly reduces sleep apnea severity and improves sleep quality (Peppard et al., 2013, Am J Respir Crit Care Med)')}</small>`).removeClass('text-muted').removeAttr('data-eng data-spa data-fre data-ger');
 
                 // Update hypertension card with risk percentages
                 const originalHypertensionRisk = getHypertensionRisk(startBMI);
                 const currentHypertensionRisk = getHypertensionRisk(currentBMI);
                 const hypertensionRiskReduction = originalHypertensionRisk - currentHypertensionRisk;
-                $('#hypertension-block').html(`${t('Current Risk:')} <strong>${currentHypertensionRisk}%</strong><br>${t('Started at')}: <strong>${originalHypertensionRisk}%</strong> (${startBMI.toFixed(1)} ${t('BMI')})<br>${t('Risk reduced by')} <strong class="text-success">${hypertensionRiskReduction} ${t('percentage points')}</strong><br><small class="text-muted">${t('Blood pressure typically drops 5-10 mmHg systolic/diastolic with weight loss (Whelton et al., 2018, JAMA)')}</small>`).removeClass('text-muted');
+                $('#hypertension-block').html(`${t('Current Risk:')} <strong>${currentHypertensionRisk}%</strong><br>${t('Started at')}: <strong>${originalHypertensionRisk}%</strong> (${startBMI.toFixed(1)} ${t('BMI')})<br>${t('Risk reduced by')} <strong class="text-success">${hypertensionRiskReduction} ${t('percentage points')}</strong><br><small class="text-muted">${t('Blood pressure typically drops 5-10 mmHg systolic/diastolic with weight loss (Whelton et al., 2018, JAMA)')}</small>`).removeClass('text-muted').removeAttr('data-eng data-spa data-fre data-ger');
 
                 // Update fatty liver card with risk percentages
                 const originalFattyLiverRisk = getFattyLiverRisk(startBMI);
                 const currentFattyLiverRisk = getFattyLiverRisk(currentBMI);
                 const fattyLiverRiskReduction = originalFattyLiverRisk - currentFattyLiverRisk;
-                $('#fatty-liver-block').html(`${t('Current Risk:')} <strong>${currentFattyLiverRisk}%</strong><br>${t('Started at')}: <strong>${originalFattyLiverRisk}%</strong> (${startBMI.toFixed(1)} ${t('BMI')})<br>${t('Risk reduced by')} <strong class="text-success">${fattyLiverRiskReduction} ${t('percentage points')}</strong><br><small class="text-muted">${t('Early-stage NAFLD can often be reversed with weight loss (Chalasani et al., 2018, Hepatology)')}</small>`).removeClass('text-muted');
+                $('#fatty-liver-block').html(`${t('Current Risk:')} <strong>${currentFattyLiverRisk}%</strong><br>${t('Started at')}: <strong>${originalFattyLiverRisk}%</strong> (${startBMI.toFixed(1)} ${t('BMI')})<br>${t('Risk reduced by')} <strong class="text-success">${fattyLiverRiskReduction} ${t('percentage points')}</strong><br><small class="text-muted">${t('Early-stage NAFLD can often be reversed with weight loss (Chalasani et al., 2018, Hepatology)')}</small>`).removeClass('text-muted').removeAttr('data-eng data-spa data-fre data-ger');
 
                 // Update heart disease card with risk percentages
                 const originalHeartRisk = getHeartDiseaseRisk(startBMI);
                 const currentHeartRisk = getHeartDiseaseRisk(currentBMI);
                 const heartRiskReduction = originalHeartRisk - currentHeartRisk;
-                $('#heart-disease-block').html(`Current Risk: <strong>${currentHeartRisk}%</strong><br>${t('Started at')}: <strong>${originalHeartRisk}%</strong> (${startBMI.toFixed(1)} ${t('BMI')})<br>${t('Risk reduced by')} <strong class="text-success">${heartRiskReduction} ${t('percentage points')}</strong><br><small class="text-muted">${t('Stronger cardiovascular protection with central obesity reduction (Lavie et al., 2021, Circulation)')}</small>`).removeClass('text-muted');
+                $('#heart-disease-block').html(`${t('Current Risk:')} <strong>${currentHeartRisk}%</strong><br>${t('Started at')}: <strong>${originalHeartRisk}%</strong> (${startBMI.toFixed(1)} ${t('BMI')})<br>${t('Risk reduced by')} <strong class="text-success">${heartRiskReduction} ${t('percentage points')}</strong><br><small class="text-muted">${t('Stronger cardiovascular protection with central obesity reduction (Lavie et al., 2021, Circulation)')}</small>`).removeClass('text-muted').removeAttr('data-eng data-spa data-fre data-ger');
 
                 // Update mental health card with risk percentages
                 const originalMentalRisk = getMentalHealthRisk(startBMI);
                 const currentMentalRisk = getMentalHealthRisk(currentBMI);
                 const mentalRiskReduction = originalMentalRisk - currentMentalRisk;
-                $('#mental-health-block').html(`Current Risk: <strong>${currentMentalRisk}%</strong><br>${t('Started at')}: <strong>${originalMentalRisk}%</strong> (${startBMI.toFixed(1)} ${t('BMI')})<br>${t('Risk reduced by')} <strong class="text-success">${mentalRiskReduction} ${t('percentage points')}</strong><br><small class="text-muted">${t('Weight loss improves mood, self-esteem and reduces inflammation (Luppino et al., 2010, Arch Gen Psychiatry')}</small>`).removeClass('text-muted');
+                $('#mental-health-block').html(`${t('Current Risk:')} <strong>${currentMentalRisk}%</strong><br>${t('Started at')}: <strong>${originalMentalRisk}%</strong> (${startBMI.toFixed(1)} ${t('BMI')})<br>${t('Risk reduced by')} <strong class="text-success">${mentalRiskReduction} ${t('percentage points')}</strong><br><small class="text-muted">${t('Weight loss improves mood, self-esteem and reduces inflammation (Luppino et al., 2010, Arch Gen Psychiatry')}</small>`).removeClass('text-muted').removeAttr('data-eng data-spa data-fre data-ger');
 
                 // Update joint health card with risk percentages
                 const originalJointRisk = getJointHealthRisk(startBMI);
                 const currentJointRisk = getJointHealthRisk(currentBMI);
                 const jointRiskReduction = originalJointRisk - currentJointRisk;
-                $('#joint-health-block').html(`Current Risk: <strong>${currentJointRisk}%</strong><br>${t('Started at')}: <strong>${originalJointRisk}%</strong> (${startBMI.toFixed(1)} ${t('BMI')})<br>${t('Risk reduced by')} <strong class="text-success">${jointRiskReduction} ${t('percentage points')}</strong><br><small class="text-muted">${t('Reduced joint load leads to slower progression of knee and hip osteoarthritis (Messier et al., 2013, Arthritis Rheumatol)')}</small>`).removeClass('text-muted');
+                $('#joint-health-block').html(`${t('Current Risk:')} <strong>${currentJointRisk}%</strong><br>${t('Started at')}: <strong>${originalJointRisk}%</strong> (${startBMI.toFixed(1)} ${t('BMI')})<br>${t('Risk reduced by')} <strong class="text-success">${jointRiskReduction} ${t('percentage points')}</strong><br><small class="text-muted">${t('Reduced joint load leads to slower progression of knee and hip osteoarthritis (Messier et al., 2013, Arthritis Rheumatol)')}</small>`).removeClass('text-muted').removeAttr('data-eng data-spa data-fre data-ger');
 
                 // Update life expectancy card
                 const lifeIncrease = Math.min(5, (bmiReduction / 5.0) * 3.5);
-                $('#life-expectancy-block').html(`${t('Life Expectancy Increase:')} <strong>${lifeIncrease.toFixed(1)} ${t('years')}</strong><br>${t('Started at')}: <strong>${startBMI.toFixed(1)} ${t('BMI')}</strong><br>${t('Improvement from')} <strong class="text-success">${bmiReduction.toFixed(1)} ${t('BMI reduction')}</strong><br><small class="text-muted">${t('Stronger benefits when weight loss occurs earlier in life (Flegal et al., 2013, JAMA)')}</small>`).removeClass('text-muted');
+                $('#life-expectancy-block').html(`${t('Life Expectancy Increase:')} <strong>${lifeIncrease.toFixed(1)} ${t('years')}</strong><br>${t('Started at')}: <strong>${startBMI.toFixed(1)} ${t('BMI')}</strong><br>${t('Improvement from')} <strong class="text-success">${bmiReduction.toFixed(1)} ${t('BMI reduction')}</strong><br><small class="text-muted">${t('Stronger benefits when weight loss occurs earlier in life (Flegal et al., 2013, JAMA)')}</small>`).removeClass('text-muted').removeAttr('data-eng data-spa data-fre data-ger');
 
                 // Calculate comprehensive health score
                 const startingHealthScore = calculateHealthScore(startBMI);
@@ -621,7 +621,7 @@ function refreshBMI() {
             }
         }
 
-        el.html(lines.join('<br>')).removeClass('text-muted');
+        el.html(lines.join('<br>')).removeClass('text-muted').removeAttr('data-eng data-spa data-fre data-ger');
         return;
     }
 
@@ -647,7 +647,7 @@ function refreshBMI() {
             if (window.coverage) window.coverage.logFunction('if', 'health.js');
             debugLog('⚠️ jQuery not available for BMI progress, showing basic BMI');
             lines.push(`<small class="text-muted">BMI correlates with health risks. BMI reduction significantly lowers disease risk (Prospective Studies Collaboration, 2009)</small>`);
-            el.html(lines.join('<br>')).removeClass('text-muted');
+            el.html(lines.join('<br>')).removeClass('text-muted').removeAttr('data-eng data-spa data-fre data-ger');
             return;
         }
         postRequest('router.php?controller=profile', { action: 'get_weight_progress' })
@@ -674,7 +674,7 @@ function refreshBMI() {
                 }
             }
             lines.push(`<small class="text-muted">BMI correlates with health risks. BMI reduction significantly lowers disease risk (Prospective Studies Collaboration, 2009)</small>`);
-            el.html(lines.join('<br>')).removeClass('text-muted');
+            el.html(lines.join('<br>')).removeClass('text-muted').removeAttr('data-eng data-spa data-fre data-ger');
         });
     });
 }
@@ -697,7 +697,7 @@ function refreshHealth() {
             const bodyFatLines = [];
             const currentMin = data.estimated_body_fat_range[0];
             const currentMax = data.estimated_body_fat_range[1];
-            bodyFatLines.push(`Current: <strong>${currentMin}–${currentMax}%</strong>`);
+            bodyFatLines.push(`${t('Current:')} <strong>${currentMin}–${currentMax}%</strong>`);
 
             // Check for weight progress data to calculate historical body fat
             const progressData = window.globalDashboardData.weight_progress;
@@ -717,8 +717,8 @@ function refreshHealth() {
 
                     if (avgImprovement > 0.1) {
                         if (window.coverage) window.coverage.logFunction('if', 'health.js');
-                        bodyFatLines.splice(1, 0, `Change: <strong class="text-success">-${avgImprovement.toFixed(1)}%</strong>`);
-                        bodyFatLines.splice(2, 0, `Started: <strong>${startingMin.toFixed(1)}–${startingMax.toFixed(1)}%</strong>`);
+                        bodyFatLines.splice(1, 0, `${t('Change:')} <strong class="text-success">-${avgImprovement.toFixed(1)}%</strong>`);
+                        bodyFatLines.splice(2, 0, `${t('Started:')} <strong>${startingMin.toFixed(1)}–${startingMax.toFixed(1)}%</strong>`);
                     }
                 }
             }
@@ -726,7 +726,7 @@ function refreshHealth() {
             // Show research notes
             bodyFatLines.push(`<small class="text-muted">${t('Body fat estimated via Deurenberg formula (BMI + age). Each 1% body fat reduction can improve metabolic health (Jackson et al., 2002)')}</small>`);
 
-            bodyFatEl.html(bodyFatLines.join('<br>')).removeClass('text-muted');
+            bodyFatEl.html(bodyFatLines.join('<br>')).removeClass('text-muted').removeAttr('data-eng data-spa data-fre data-ger');
         } else {
             bodyFatEl.text('Body fat estimation not available').addClass('text-muted');
         }
@@ -736,7 +736,7 @@ function refreshHealth() {
         if (typeof $ === 'undefined' || typeof $.post !== 'function') {
             if (window.coverage) window.coverage.logFunction('if', 'health.js');
             debugLog('⚠️ jQuery not available for health stats, skipping API call');
-            $('#body-fat-block').text('Body fat estimation not available').addClass('text-muted');
+            $('#body-fat-block').text(t('Body fat estimation not available')).addClass('text-muted').removeAttr('data-eng data-spa data-fre data-ger');
             return;
         }
         postRequest('router.php?controller=profile', { action: 'get_health_stats' })
@@ -752,7 +752,7 @@ function refreshHealth() {
                 const bodyFatLines = [];
                 const currentMin = data.estimated_body_fat_range[0];
                 const currentMax = data.estimated_body_fat_range[1];
-                bodyFatLines.push(`Current: <strong>${currentMin}–${currentMax}%</strong>`);
+                bodyFatLines.push(`${t('Current:')} <strong>${currentMin}–${currentMax}%</strong>`);
 
                 // Always show research notes
                 bodyFatLines.push(`<small class="text-muted">Body fat estimated via Deurenberg formula (BMI + age). Each 1% body fat reduction can improve metabolic health (Jackson et al., 2002)</small>`);
@@ -760,7 +760,7 @@ function refreshHealth() {
                 // Get before/after body fat comparison
                 if (typeof $ === 'undefined' || typeof $.post !== 'function') {
                     if (window.coverage) window.coverage.logFunction('if', 'health.js');
-                    bodyFatEl.html(bodyFatLines.join('<br>')).removeClass('text-muted');
+                    bodyFatEl.html(bodyFatLines.join('<br>')).removeClass('text-muted').removeAttr('data-eng data-spa data-fre data-ger');
                     return;
                 }
                 postRequest('router.php?controller=profile', { action: 'get_weight_progress' })
@@ -788,10 +788,10 @@ function refreshHealth() {
                             }
                         }
                     }
-                    bodyFatEl.html(bodyFatLines.join('<br>')).removeClass('text-muted');
+                    bodyFatEl.html(bodyFatLines.join('<br>')).removeClass('text-muted').removeAttr('data-eng data-spa data-fre data-ger');
                 }).catch(function() {
                     // If progress fails, still show the current data
-                    bodyFatEl.html(bodyFatLines.join('<br>')).removeClass('text-muted');
+                    bodyFatEl.html(bodyFatLines.join('<br>')).removeClass('text-muted').removeAttr('data-eng data-spa data-fre data-ger');
                 });
             } else {
                 bodyFatEl.text('Add your age to estimate body fat percentage').addClass('text-muted');
@@ -812,7 +812,7 @@ function refreshHealth() {
             cardioEl.text(data.message || 'Cardiovascular risk not available').addClass('text-muted');
         } else {
             const cardioLines = [];
-            cardioLines.push(`Current Risk: <strong>${data.current_risk_percentage}%</strong> (${data.current_risk_category})`);
+            cardioLines.push(`${t('Current Risk:')} <strong>${data.current_risk_percentage}%</strong> (${data.current_risk_category})`);
 
             if (data.risk_improvement_percentage > 0) {
                 if (window.coverage) window.coverage.logFunction('if', 'health.js');
@@ -824,11 +824,12 @@ function refreshHealth() {
             if (data.research_note) {
                 cardioLines.push(`<small class="text-muted">${t(data.research_note)}</small>`);
             } else if (data.notes && Array.isArray(data.notes) && data.notes.length > 0) {
-                // Join notes with period separator for backward compatibility
-                const notesText = data.notes.join('. ');
+                // Translate each note and join with period separator
+                const translatedNotes = data.notes.map(note => t(note));
+                const notesText = translatedNotes.join('. ');
                 cardioLines.push(`<small class="text-muted">${notesText}</small>`);
             }
-            cardioEl.html(cardioLines.join('<br>')).removeClass('text-muted');
+            cardioEl.html(cardioLines.join('<br>')).removeClass('text-muted').removeAttr('data-eng data-spa data-fre data-ger');
         }
         return;
     }
@@ -838,7 +839,7 @@ function refreshHealth() {
     if (typeof $ === 'undefined' || typeof $.post !== 'function') {
         if (window.coverage) window.coverage.logFunction('if', 'health.js');
         debugLog('⚠️ jQuery not available for cardiovascular risk, skipping API call');
-        $('#cardio-risk-block').text('Cardiovascular risk not available').addClass('text-muted');
+        $('#cardio-risk-block').text(t('Cardiovascular risk not available')).addClass('text-muted').removeAttr('data-eng data-spa data-fre data-ger');
         return;
     }
     postRequest('router.php?controller=profile', { action: 'get_cardiovascular_risk' })
@@ -850,7 +851,7 @@ function refreshHealth() {
             cardioEl.text(data.message || 'Cardiovascular risk not available').addClass('text-muted');
         } else {
             const cardioLines = [];
-            cardioLines.push(`Current Risk: <strong>${data.current_risk_percentage}%</strong> (${data.current_risk_category})`);
+            cardioLines.push(`${t('Current Risk:')} <strong>${data.current_risk_percentage}%</strong> (${data.current_risk_category})`);
 
             if (data.risk_improvement_percentage > 0) {
                 if (window.coverage) window.coverage.logFunction('if', 'health.js');
@@ -859,10 +860,10 @@ function refreshHealth() {
             }
 
             cardioLines.push(`<small class="text-muted">${t(data.research_note)}</small>`);
-            cardioEl.html(cardioLines.join('<br>')).removeClass('text-muted');
+            cardioEl.html(cardioLines.join('<br>')).removeClass('text-muted').removeAttr('data-eng data-spa data-fre data-ger');
         }
     }).catch(function() {
-        $('#cardio-risk-block').text('Failed to calculate cardiovascular risk').addClass('text-muted');
+        $('#cardio-risk-block').text(t('Failed to calculate cardiovascular risk')).addClass('text-muted').removeAttr('data-eng data-spa data-fre data-ger');
     });
 }
 
@@ -877,7 +878,7 @@ function refreshIdealWeight() {
         const el = $('#ideal-weight-block');
 
         if (!data.success) {
-            el.text(data.message || 'Set your height to calculate ideal weight range').addClass('text-muted');
+            el.text(data.message || t('Set your height to calculate ideal weight range')).addClass('text-muted').removeAttr('data-eng data-spa data-fre data-ger');
             return;
         }
 
@@ -890,19 +891,19 @@ function refreshIdealWeight() {
         // Add timeline prediction if available
         if (data.timeline && data.timeline.target_date) {
             if (window.coverage) window.coverage.logFunction('if', 'health.js');
-            const targetMonth = new Date(data.timeline.target_date + '-01').toLocaleDateString(getDateFormatLocale(), {
+            const targetMonth = new Date(data.timeline.target_date + '-01').toLocaleDateString(getLanguageLocale(), {
                 year: 'numeric',
                 month: 'long'
             });
             lines.push(`<small class="text-success">${t('Projected to reach upper limit by')} ${targetMonth}</small>`);
             const unit = getWeightUnitLabel();
             const weeklyRate = convertFromKg(data.timeline.current_rate_kg_per_week);
-            lines.push(`<small class="text-muted">${t('Based on current rate of')} ${weeklyRate} ${t('kg/week')}</small>`);
+            lines.push(`<small class="text-muted">${t('Based on current rate of')} ${weeklyRate} ${unit}/${t('week')}</small>`);
         }
 
         lines.push(`<small class="text-muted">${t(data.note)}</small>`);
 
-        el.html(lines.join('<br>')).removeClass('text-muted');
+        el.html(lines.join('<br>')).removeClass('text-muted').removeAttr('data-eng data-spa data-fre data-ger');
         return;
     }
 
@@ -910,7 +911,7 @@ function refreshIdealWeight() {
     debugLog('🌐 Making API call for ideal weight');
     if (typeof $ === 'undefined' || typeof $.post !== 'function') {
         debugLog('⚠️ jQuery not available for ideal weight, skipping API call');
-        $('#ideal-weight-block').text('Set your height to calculate ideal weight range').addClass('text-muted');
+        $('#ideal-weight-block').text(t('Set your height to calculate ideal weight range')).addClass('text-muted').removeAttr('data-eng data-spa data-fre data-ger');
         return;
     }
     postRequest('router.php?controller=profile', { action: 'get_ideal_weight' })
@@ -920,7 +921,7 @@ function refreshIdealWeight() {
 
         if (!data.success) {
             if (window.coverage) window.coverage.logFunction('if', 'health.js');
-            el.text(data.message || 'Set your height to calculate ideal weight range').addClass('text-muted');
+            el.text(data.message || t('Set your height to calculate ideal weight range')).addClass('text-muted').removeAttr('data-eng data-spa data-fre data-ger');
             return;
         }
 
@@ -933,21 +934,21 @@ function refreshIdealWeight() {
         // Add timeline prediction if available
         if (data.timeline && data.timeline.target_date) {
             if (window.coverage) window.coverage.logFunction('if', 'health.js');
-            const targetMonth = new Date(data.timeline.target_date + '-01').toLocaleDateString(getDateFormatLocale(), {
+            const targetMonth = new Date(data.timeline.target_date + '-01').toLocaleDateString(getLanguageLocale(), {
                 year: 'numeric',
                 month: 'long'
             });
             lines.push(`<small class="text-success">${t('Projected to reach upper limit by')} ${targetMonth}</small>`);
             const unit = getWeightUnitLabel();
             const weeklyRate = convertFromKg(data.timeline.current_rate_kg_per_week);
-            lines.push(`<small class="text-muted">${t('Based on current rate of')} ${weeklyRate} ${t('kg/week')}</small>`);
+            lines.push(`<small class="text-muted">${t('Based on current rate of')} ${weeklyRate} ${unit}/${t('week')}</small>`);
         }
 
         lines.push(`<small class="text-muted">${t(data.note)}</small>`);
 
-        el.html(lines.join('<br>')).removeClass('text-muted');
+        el.html(lines.join('<br>')).removeClass('text-muted').removeAttr('data-eng data-spa data-fre data-ger');
     }).catch(function() {
-        $('#ideal-weight-block').text('Failed to calculate ideal weight range').addClass('text-muted');
+        $('#ideal-weight-block').text(t('Failed to calculate ideal weight range')).addClass('text-muted').removeAttr('data-eng data-spa data-fre data-ger');
     });
 }
 
@@ -970,7 +971,7 @@ function refreshGallbladderHealth() {
         const el = $('#gallbladder-block');
 
         if (!data.success) {
-            el.text('Complete profile to assess gallbladder health benefits').addClass('text-muted');
+            el.text(t('Complete profile to assess gallbladder health benefits')).addClass('text-muted').removeAttr('data-eng data-spa data-fre data-ger');
             return;
         }
 
@@ -983,7 +984,7 @@ function refreshGallbladderHealth() {
             const weightLost = convertFromKg(data.weight_lost_kg);
             lines.push(`<small class="text-muted">${t('Based on')} ${weightLost}${unit} ${t('lost')}, ${t('BMI')} ${data.current_bmi}</small>`);
         } else {
-            lines.push(`<small class="text-muted">Continue weight loss for gallbladder benefits</small>`);
+            lines.push(`<small class="text-muted">${t('Continue weight loss for gallbladder benefits')}</small>`);
         }
 
         if (data.benefits && data.benefits.length > 0) {
@@ -995,7 +996,7 @@ function refreshGallbladderHealth() {
             lines.push(`<small class="text-muted">${t(data.research_notes[0])}</small>`);
         }
 
-        el.html(lines.join('<br>')).removeClass('text-muted');
+        el.html(lines.join('<br>')).removeClass('text-muted').removeAttr('data-eng data-spa data-fre data-ger');
         return;
     }
 
@@ -1004,7 +1005,7 @@ function refreshGallbladderHealth() {
     if (typeof $ === 'undefined' || typeof $.post !== 'function') {
         if (window.coverage) window.coverage.logFunction('if', 'health.js');
         debugLog('⚠️ jQuery not available for gallbladder health, skipping API call');
-        $('#gallbladder-block').text('Complete profile to assess gallbladder health benefits').addClass('text-muted');
+        $('#gallbladder-block').text(t('Complete profile to assess gallbladder health benefits')).addClass('text-muted').removeAttr('data-eng data-spa data-fre data-ger');
         return;
     }
     postRequest('router.php?controller=profile', { action: 'get_gallbladder_health' })
@@ -1013,27 +1014,27 @@ function refreshGallbladderHealth() {
         const el = $('#gallbladder-block');
 
         if (!data.success) {
-            el.text(data.message || 'Complete profile to assess gallbladder health benefits').addClass('text-muted');
+            el.text(data.message || t('Complete profile to assess gallbladder health benefits')).addClass('text-muted').removeAttr('data-eng data-spa data-fre data-ger');
             return;
         }
 
         const lines = [];
-        lines.push(`Status: <strong>${data.gallbladder_status}</strong>`);
+        lines.push(`${t('Status:')} <strong>${data.gallbladder_status}</strong>`);
 
         if (data.risk_reduction_percentage > 0) {
             if (window.coverage) window.coverage.logFunction('if', 'health.js');
-            lines.push(`Risk Reduction: <strong class="text-success">${data.risk_reduction_percentage}%</strong>`);
+            lines.push(`${t('Risk Reduction:')} <strong class="text-success">${data.risk_reduction_percentage}%</strong>`);
             const unit = getWeightUnitLabel();
             const weightLost = convertFromKg(data.weight_lost_kg);
-            lines.push(`<small class="text-muted">Based on ${weightLost}${unit} lost, BMI ${data.current_bmi}</small>`);
+            lines.push(`<small class="text-muted">${t('Based on')} ${weightLost}${unit} ${t('lost')}, ${t('BMI')} ${data.current_bmi}</small>`);
         } else {
-            lines.push(`<small class="text-muted">Continue weight loss for gallbladder benefits</small>`);
+            lines.push(`<small class="text-muted">${t('Continue weight loss for gallbladder benefits')}</small>`);
         }
 
         lines.push(`<small class="text-muted">${t(data.research_note)}</small>`);
 
-        el.html(lines.join('<br>')).removeClass('text-muted');
+        el.html(lines.join('<br>')).removeClass('text-muted').removeAttr('data-eng data-spa data-fre data-ger');
     }).catch(function() {
-        $('#gallbladder-block').text('Failed to assess gallbladder health').addClass('text-muted');
+        $('#gallbladder-block').text(t('Failed to assess gallbladder health')).addClass('text-muted').removeAttr('data-eng data-spa data-fre data-ger');
     });
 }

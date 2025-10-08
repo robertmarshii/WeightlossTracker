@@ -128,6 +128,30 @@ function saveSettings() {
                         window.formatAllTimestamps();
                     }
 
+                    // Update date input placeholders
+                    if (typeof window.updateDatePlaceholders === 'function') {
+                        debugLog('Updating date input placeholders with new date format');
+                        window.updateDatePlaceholders();
+                    }
+
+                    // Refresh health cards (to update translations and units)
+                    if (typeof window.healthRefreshBMI === 'function') {
+                        debugLog('Refreshing BMI card');
+                        window.healthRefreshBMI();
+                    }
+                    if (typeof window.healthRefreshHealth === 'function') {
+                        debugLog('Refreshing body fat and cardio risk cards');
+                        window.healthRefreshHealth();
+                    }
+                    if (typeof window.healthRefreshIdealWeight === 'function') {
+                        debugLog('Refreshing ideal weight card');
+                        window.healthRefreshIdealWeight();
+                    }
+                    if (typeof window.healthRefreshGallbladderHealth === 'function') {
+                        debugLog('Refreshing gallbladder health card');
+                        window.healthRefreshGallbladderHealth();
+                    }
+
                     // Apply translations to all newly rendered content
                     if (typeof window.settingsApplyCurrentLanguageTranslations === 'function') {
                         debugLog('Applying translations after settings change content reload');
@@ -277,6 +301,11 @@ function applyCurrentLanguageTranslations() {
             }
             // Handle all other elements - replace text/HTML
             else {
+                // Skip if content is already correct (avoid re-applying and duplicating)
+                if ($element.html() === translatedText) {
+                    return;
+                }
+
                 // Check if element has children that don't have translation attributes
                 const childrenWithoutTranslation = $element.children().filter(function() {
                     return !$(this).attr(`data-${dataAttr}`);

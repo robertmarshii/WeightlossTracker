@@ -11,7 +11,8 @@ if (AuthManager::isLoggedIn()) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-eng="Weightloss Tracker" data-spa="Rastreador de Pérdida de Peso" data-fre="Suivi de Perte de Poids" data-ger="Gewichtsverlust-Tracker">Weightloss Tracker</title>
+    <!-- App Icon Title stays the same across languages -->
+    <title data-eng="Weightloss Tracker" data-spa="Weightloss Tracker" data-fre="Weightloss Tracker" data-ger="Weightloss Tracker">Weightloss Tracker</title>
     <!-- jQuery (upgraded for better compatibility) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <!-- Bootstrap -->
