@@ -1217,13 +1217,13 @@ select.form-control.glass-input {
     font-weight: bold;
     color: rgba(255, 255, 255, 0.9);
     margin: 0.5rem 0;
+    text-align: left;
 }
 
 .checkin-countdown .checkin-date {
     font-size: 1.5rem;
     font-weight: 600;
     color: rgba(255, 255, 255, 0.8);
-    margin-left: 0.3rem;
 }
 
 /* Mobile responsive adjustments for Quick Look */
