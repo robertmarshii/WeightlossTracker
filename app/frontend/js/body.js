@@ -1,5 +1,34 @@
 // Body tab navigation and sub-tab handling
 
+// Function to populate input date text fields with today's date
+function populateBodyDateFields() {
+    // Get today's date in ISO format
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    const isoDate = `${year}-${month}-${day}`;
+
+    // Format using the user's preferred date format
+    const formattedDate = window.formatDate ? window.formatDate(isoDate) : isoDate;
+
+    // Get the current language for "Input for" translation
+    const lang = $('#language').val() || 'en';
+    let inputForText = 'Input for ';
+    switch(lang) {
+        case 'en': inputForText = 'Input for '; break;
+        case 'es': inputForText = 'Entrada para '; break;
+        case 'fr': inputForText = 'Saisie pour '; break;
+        case 'de': inputForText = 'Eingabe für '; break;
+        default: inputForText = 'Input for '; break;
+    }
+
+    const dateText = inputForText + formattedDate;
+
+    // Populate all input-date-text fields
+    $('.input-date-text').text(dateText);
+}
+
 $(function() {
     // Handle Smart Data sub-tab clicks
     $('#smartDataTabs a[data-toggle="tab"]').on('click', function (e) {
@@ -61,4 +90,14 @@ $(function() {
     $(window).on('hashchange', function() {
         handleSubTabFromURL();
     });
+
+    // Populate date fields when Body tab is shown
+    $('#body-tab').on('shown.bs.tab', function() {
+        populateBodyDateFields();
+    });
+
+    // Also populate on initial page load if on Body tab
+    if (window.location.hash.includes('page=body')) {
+        setTimeout(populateBodyDateFields, 200);
+    }
 });

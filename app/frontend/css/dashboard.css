@@ -348,6 +348,7 @@ select.form-control.glass-input {
 #measurementsTabsContent,
 #calipersTabsContent {
     max-height: 400px;
+    min-height: auto;
     height: auto;
     overflow-y: auto;
 }
