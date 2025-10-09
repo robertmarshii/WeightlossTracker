@@ -1799,3 +1799,84 @@ select.form-control.glass-input {
         font-size: 1rem;
     }
 }
+
+/* ===== CARD EDIT BODY TOGGLE ===== */
+.card-edit-body {
+    display: none;
+}
+
+.card-data-body {
+    text-align: center;
+    padding: 1rem 0;
+}
+
+/* Metric Value Display */
+.metric-value {
+    font-size: 2rem !important;
+    font-weight: bold;
+    color: #64a6d8;
+    line-height: 1;
+    margin-bottom: 0.75rem;
+}
+
+/* Metric Change Container */
+.metric-change {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    margin-bottom: 1rem;
+    min-height: 1.5rem;
+}
+
+/* Change Icon (Triangle) */
+.change-icon {
+    font-size: 2rem !important;
+    line-height: 1;
+}
+
+.change-icon.up {
+    color: #7292bb;
+}
+
+.change-icon.down {
+    color: #e74c3c;
+}
+
+/* Change Text */
+.change-text {
+    font-size: 0.8rem !important;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 500;
+}
+
+/* Reduce button heights for toggle buttons */
+.toggle-edit,
+.toggle-back {
+    padding: 0.35rem 0.75rem !important;
+}
+
+.card-edit-body .btn:not(.toggle-back) {
+    padding: 0.35rem 0.75rem !important;
+}
+
+/* Add spacing between back and save buttons */
+.card-edit-body .d-flex.gap-2 {
+    gap: 0.5rem !important;
+}
+
+/* Mobile Responsive for Metrics */
+@media (max-width: 775px) {
+    .metric-value {
+        font-size: 2rem;
+    }
+
+    .change-icon {
+        font-size: 1rem;
+    }
+
+    .change-text {
+        font-size: 0.7rem;
+    }
+}

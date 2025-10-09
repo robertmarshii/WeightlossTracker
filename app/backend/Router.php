@@ -1275,11 +1275,83 @@
                 // Add Total Progress (Phase 4)
                 $allData['total_progress'] = calculateTotalProgress($userId, $db, $schema);
 
+                // Add Body Data entries (Smart Data, Measurements, Calipers)
+                $stmt = $db->prepare("SELECT metric_type, value, unit, entry_date FROM {$schema}.body_data_entries WHERE user_id = ? ORDER BY entry_date DESC, id DESC");
+                $stmt->execute([$userId]);
+                $bodyDataEntries = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                // Group body data by metric type and get latest value for each
+                $bodyData = [];
+                $bodyDataHistory = [];
+                foreach ($bodyDataEntries as $entry) {
+                    $metricType = $entry['metric_type'];
+
+                    // Store latest value (first occurrence since ordered DESC)
+                    if (!isset($bodyData[$metricType])) {
+                        $bodyData[$metricType] = [
+                            'value' => $entry['value'],
+                            'unit' => $entry['unit'],
+                            'entry_date' => $entry['entry_date']
+                        ];
+                    }
+
+                    // Store all history for each metric
+                    if (!isset($bodyDataHistory[$metricType])) {
+                        $bodyDataHistory[$metricType] = [];
+                    }
+                    $bodyDataHistory[$metricType][] = [
+                        'value' => $entry['value'],
+                        'unit' => $entry['unit'],
+                        'entry_date' => $entry['entry_date']
+                    ];
+                }
+
+                $allData['body_data'] = $bodyData;
+                $allData['body_data_history'] = $bodyDataHistory;
+
                 echo json_encode([
                     'success' => true,
                     'data' => $allData,
                     'message' => 'Consolidated dashboard data (testing phase)'
                 ]);
+                return;
+            }
+
+            if ($action === 'save_body_data') {
+                // Save body data entry
+                $metricType = $_POST['metric_type'] ?? null;
+                $value = $_POST['value'] ?? null;
+                $unit = $_POST['unit'] ?? null;
+                $entryDate = $_POST['entry_date'] ?? date('Y-m-d');
+
+                // Validate inputs
+                if (!$metricType || !$value || !$unit) {
+                    echo json_encode(['success' => false, 'message' => 'Missing required fields']);
+                    return;
+                }
+
+                if (!is_numeric($value) || $value <= 0) {
+                    echo json_encode(['success' => false, 'message' => 'Invalid value']);
+                    return;
+                }
+
+                // Insert or update body data entry
+                try {
+                    $stmt = $db->prepare("
+                        INSERT INTO {$schema}.body_data_entries (user_id, metric_type, value, unit, entry_date, created_at)
+                        VALUES (?, ?, ?, ?, ?, NOW())
+                        ON CONFLICT (user_id, metric_type, entry_date)
+                        DO UPDATE SET value = EXCLUDED.value, unit = EXCLUDED.unit
+                    ");
+                    $stmt->execute([$userId, $metricType, $value, $unit, $entryDate]);
+
+                    echo json_encode([
+                        'success' => true,
+                        'message' => 'Body data saved successfully'
+                    ]);
+                } catch (Exception $e) {
+                    echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
+                }
                 return;
             }
 

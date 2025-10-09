@@ -101,3 +101,34 @@ SELECT
     NOW()
 FROM wt_live.users u
 WHERE NOT EXISTS (SELECT 1 FROM wt_live.user_settings WHERE user_id = u.id);
+
+-- Create body_data_entries table for all body metrics (Smart Data, Measurements, Calipers)
+CREATE TABLE IF NOT EXISTS wt_live.body_data_entries (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    metric_type VARCHAR(50) NOT NULL,
+    value DECIMAL(6,2) NOT NULL CHECK (value >= 0),
+    unit VARCHAR(10) NOT NULL,
+    entry_date DATE NOT NULL DEFAULT CURRENT_DATE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT unique_body_metric_per_day UNIQUE (user_id, metric_type, entry_date)
+);
+
+-- Add foreign key for body_data_entries if it doesn't exist
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.table_constraints
+        WHERE constraint_name = 'body_data_entries_user_id_fkey'
+        AND table_schema = 'wt_live'
+    ) THEN
+        ALTER TABLE wt_live.body_data_entries
+        ADD CONSTRAINT body_data_entries_user_id_fkey
+        FOREIGN KEY (user_id) REFERENCES wt_live.users(id) ON DELETE CASCADE;
+    END IF;
+END $$;
+
+-- Create indexes for body_data_entries if they don't exist
+CREATE INDEX IF NOT EXISTS idx_body_data_user_date ON wt_live.body_data_entries(user_id, entry_date DESC);
+CREATE INDEX IF NOT EXISTS idx_body_data_metric_type ON wt_live.body_data_entries(metric_type);
+CREATE INDEX IF NOT EXISTS idx_body_data_user_metric ON wt_live.body_data_entries(user_id, metric_type, entry_date DESC);

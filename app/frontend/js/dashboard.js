@@ -129,6 +129,14 @@ $(function() {
             // Initialize weight chart now that global data is available
             initWeightChart();
 
+            // Populate body data cards and history tables
+            if (typeof window.populateBodyDataCards === 'function') {
+                window.populateBodyDataCards();
+            }
+            if (typeof window.populateBodyDataHistoryTables === 'function') {
+                window.populateBodyDataHistoryTables();
+            }
+
             // STEP 3: Apply translations to all rendered content
             if (typeof window.settingsApplyCurrentLanguageTranslations === 'function') {
                 debugLog('Applying translations after all content rendered');

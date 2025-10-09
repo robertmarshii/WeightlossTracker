@@ -7,8 +7,12 @@ $(function() {
 
         const targetId = $(this).attr('href').substring(1); // Remove # from href
 
-        // Update URL with page= format
-        window.location.hash = 'page=' + targetId;
+        // Update URL with page= format (add area=summary for body tab)
+        if (targetId === 'body') {
+            window.location.hash = 'page=' + targetId + '&area=summary';
+        } else {
+            window.location.hash = 'page=' + targetId;
+        }
 
         // Manually show the tab
         $(this).tab('show');

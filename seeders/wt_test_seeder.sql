@@ -57,6 +57,22 @@ CREATE TABLE wt_test.body_fat_entries (
 
 CREATE INDEX idx_body_fat_user_date ON wt_test.body_fat_entries(user_id, entry_date DESC);
 
+-- Create body_data_entries table for all body metrics (Smart Data, Measurements, Calipers)
+CREATE TABLE wt_test.body_data_entries (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES wt_test.users(id) ON DELETE CASCADE,
+    metric_type VARCHAR(50) NOT NULL,
+    value DECIMAL(6,2) NOT NULL CHECK (value >= 0),
+    unit VARCHAR(10) NOT NULL,
+    entry_date DATE NOT NULL DEFAULT CURRENT_DATE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT unique_body_metric_per_day UNIQUE (user_id, metric_type, entry_date)
+);
+
+CREATE INDEX idx_body_data_user_date ON wt_test.body_data_entries(user_id, entry_date DESC);
+CREATE INDEX idx_body_data_metric_type ON wt_test.body_data_entries(metric_type);
+CREATE INDEX idx_body_data_user_metric ON wt_test.body_data_entries(user_id, metric_type, entry_date DESC);
+
 -- Create goals table for wt_test
 CREATE TABLE wt_test.goals (
     id SERIAL PRIMARY KEY,
@@ -249,6 +265,107 @@ INSERT INTO wt_test.user_settings (user_id, weight_unit, height_unit, date_forma
     (10, 'kg', 'cm', 'uk', 'glassmorphism'),     -- Jack - Default
     (11, 'kg', 'cm', 'uk', 'glassmorphism'),     -- admin@test.com
     (12, 'kg', 'cm', 'uk', 'glassmorphism');     -- manager@test.com
+
+-- Comprehensive body data entries for testing
+INSERT INTO wt_test.body_data_entries (user_id, metric_type, value, unit, entry_date) VALUES
+    -- User 1 (test@dev.com) - Complete data set with progression
+    -- Smart Data - Week 1
+    (1, 'muscle_mass', 38.5, '%', '2024-01-01'),
+    (1, 'fat_percent', 32.0, '%', '2024-01-01'),
+    (1, 'water_percent', 52.0, '%', '2024-01-01'),
+    (1, 'bone_mass', 2.8, 'kg', '2024-01-01'),
+    -- Smart Data - Week 2
+    (1, 'muscle_mass', 38.8, '%', '2024-01-08'),
+    (1, 'fat_percent', 31.5, '%', '2024-01-08'),
+    (1, 'water_percent', 52.5, '%', '2024-01-08'),
+    (1, 'bone_mass', 2.8, 'kg', '2024-01-08'),
+    -- Smart Data - Week 3
+    (1, 'muscle_mass', 39.2, '%', '2024-01-15'),
+    (1, 'fat_percent', 31.0, '%', '2024-01-15'),
+    (1, 'water_percent', 53.0, '%', '2024-01-15'),
+    (1, 'bone_mass', 2.9, 'kg', '2024-01-15'),
+
+    -- Measurements - Week 1
+    (1, 'measurement_neck', 38.0, 'cm', '2024-01-01'),
+    (1, 'measurement_chest', 105.0, 'cm', '2024-01-01'),
+    (1, 'measurement_waist', 95.0, 'cm', '2024-01-01'),
+    (1, 'measurement_hips', 110.0, 'cm', '2024-01-01'),
+    (1, 'measurement_thigh', 65.0, 'cm', '2024-01-01'),
+    (1, 'measurement_calf', 42.0, 'cm', '2024-01-01'),
+    (1, 'measurement_arm', 34.0, 'cm', '2024-01-01'),
+    -- Measurements - Week 2
+    (1, 'measurement_neck', 37.5, 'cm', '2024-01-08'),
+    (1, 'measurement_chest', 104.0, 'cm', '2024-01-08'),
+    (1, 'measurement_waist', 94.0, 'cm', '2024-01-08'),
+    (1, 'measurement_hips', 109.0, 'cm', '2024-01-08'),
+    (1, 'measurement_thigh', 64.5, 'cm', '2024-01-08'),
+    (1, 'measurement_calf', 41.5, 'cm', '2024-01-08'),
+    (1, 'measurement_arm', 33.5, 'cm', '2024-01-08'),
+
+    -- Calipers - Week 1
+    (1, 'caliper_chest', 22.0, 'mm', '2024-01-01'),
+    (1, 'caliper_abdomen', 28.0, 'mm', '2024-01-01'),
+    (1, 'caliper_thigh', 24.0, 'mm', '2024-01-01'),
+    (1, 'caliper_tricep', 18.0, 'mm', '2024-01-01'),
+    (1, 'caliper_suprailiac', 25.0, 'mm', '2024-01-01'),
+    -- Calipers - Week 2
+    (1, 'caliper_chest', 21.5, 'mm', '2024-01-08'),
+    (1, 'caliper_abdomen', 27.0, 'mm', '2024-01-08'),
+    (1, 'caliper_thigh', 23.5, 'mm', '2024-01-08'),
+    (1, 'caliper_tricep', 17.5, 'mm', '2024-01-08'),
+    (1, 'caliper_suprailiac', 24.5, 'mm', '2024-01-08'),
+
+    -- User 2 (Robert Marsh) - Recent data
+    (2, 'muscle_mass', 45.0, '%', '2025-09-01'),
+    (2, 'muscle_mass', 45.5, '%', '2025-09-12'),
+    (2, 'fat_percent', 25.5, '%', '2025-09-01'),
+    (2, 'fat_percent', 24.8, '%', '2025-09-12'),
+    (2, 'water_percent', 55.0, '%', '2025-09-01'),
+    (2, 'water_percent', 55.5, '%', '2025-09-12'),
+    (2, 'bone_mass', 3.8, 'kg', '2025-09-01'),
+    (2, 'bone_mass', 3.8, 'kg', '2025-09-12'),
+    (2, 'measurement_neck', 42.0, 'cm', '2025-09-01'),
+    (2, 'measurement_chest', 115.0, 'cm', '2025-09-01'),
+    (2, 'measurement_waist', 100.0, 'cm', '2025-09-01'),
+    (2, 'measurement_hips', 108.0, 'cm', '2025-09-01'),
+
+    -- User 3 (Carol) - Aggressive cut showing fat loss
+    (3, 'muscle_mass', 40.0, '%', '2024-01-01'),
+    (3, 'muscle_mass', 40.5, '%', '2024-01-15'),
+    (3, 'fat_percent', 35.0, '%', '2024-01-01'),
+    (3, 'fat_percent', 33.5, '%', '2024-01-15'),
+    (3, 'water_percent', 50.0, '%', '2024-01-01'),
+    (3, 'water_percent', 51.0, '%', '2024-01-15'),
+    (3, 'caliper_abdomen', 30.0, 'mm', '2024-01-01'),
+    (3, 'caliper_abdomen', 27.5, 'mm', '2024-01-15'),
+
+    -- User 4 (David) - Bulk phase showing muscle gain
+    (4, 'muscle_mass', 48.0, '%', '2024-01-01'),
+    (4, 'muscle_mass', 49.0, '%', '2024-01-15'),
+    (4, 'fat_percent', 12.0, '%', '2024-01-01'),
+    (4, 'fat_percent', 13.0, '%', '2024-01-15'),
+    (4, 'measurement_chest', 98.0, 'cm', '2024-01-01'),
+    (4, 'measurement_chest', 99.5, 'cm', '2024-01-15'),
+    (4, 'measurement_arm', 36.0, 'cm', '2024-01-01'),
+    (4, 'measurement_arm', 37.0, 'cm', '2024-01-15'),
+
+    -- User 5 (Emma) - Sporadic data
+    (5, 'muscle_mass', 35.0, '%', '2024-01-01'),
+    (5, 'fat_percent', 28.0, '%', '2024-01-01'),
+    (5, 'muscle_mass', 35.5, '%', '2024-02-01'),
+    (5, 'fat_percent', 27.0, '%', '2024-02-01'),
+
+    -- User 6-10 - Basic data for variety
+    (6, 'muscle_mass', 42.0, '%', '2024-01-01'),
+    (6, 'fat_percent', 26.0, '%', '2024-01-01'),
+    (7, 'muscle_mass', 37.0, '%', '2024-01-01'),
+    (7, 'fat_percent', 22.0, '%', '2024-01-01'),
+    (8, 'muscle_mass', 44.0, '%', '2024-01-01'),
+    (8, 'fat_percent', 30.0, '%', '2024-01-01'),
+    (9, 'muscle_mass', 33.0, '%', '2024-01-01'),
+    (9, 'fat_percent', 20.0, '%', '2024-01-01'),
+    (10, 'muscle_mass', 46.0, '%', '2024-01-01'),
+    (10, 'fat_percent', 32.0, '%', '2024-01-01');
 
 -- Grant permissions (adjust as needed for your setup)
 -- GRANT ALL PRIVILEGES ON SCHEMA wt_test TO your_app_user;

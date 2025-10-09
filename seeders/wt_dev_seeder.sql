@@ -57,6 +57,22 @@ CREATE TABLE wt_dev.body_fat_entries (
 
 CREATE INDEX idx_body_fat_user_date ON wt_dev.body_fat_entries(user_id, entry_date DESC);
 
+-- Create body_data_entries table for all body metrics (Smart Data, Measurements, Calipers)
+CREATE TABLE wt_dev.body_data_entries (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES wt_dev.users(id) ON DELETE CASCADE,
+    metric_type VARCHAR(50) NOT NULL, -- muscle_mass, fat_percent, water_percent, bone_mass, measurement_neck, measurement_chest, measurement_waist, measurement_hips, measurement_thigh, measurement_calf, measurement_arm, caliper_chest, caliper_abdomen, caliper_thigh, caliper_tricep, caliper_suprailiac
+    value DECIMAL(6,2) NOT NULL CHECK (value >= 0),
+    unit VARCHAR(10) NOT NULL, -- %, cm, kg, mm, etc.
+    entry_date DATE NOT NULL DEFAULT CURRENT_DATE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT unique_body_metric_per_day UNIQUE (user_id, metric_type, entry_date)
+);
+
+CREATE INDEX idx_body_data_user_date ON wt_dev.body_data_entries(user_id, entry_date DESC);
+CREATE INDEX idx_body_data_metric_type ON wt_dev.body_data_entries(metric_type);
+CREATE INDEX idx_body_data_user_metric ON wt_dev.body_data_entries(user_id, metric_type, entry_date DESC);
+
 -- Create goals table for wt_dev
 CREATE TABLE wt_dev.goals (
     id SERIAL PRIMARY KEY,
@@ -140,6 +156,48 @@ INSERT INTO wt_dev.goals (user_id, target_weight_kg, target_date, is_active) VAL
     (1, 115.0, '2025-10-15', false),
     (1, 115.0, '2025-10-15', true),
     (2, 75.0, '2024-05-01', true);
+
+-- Body data entries for development testing
+INSERT INTO wt_dev.body_data_entries (user_id, metric_type, value, unit, entry_date) VALUES
+    -- Smart Data entries for user 1 - Week 1
+    (1, 'muscle_mass', 42.5, '%', '2025-10-01'),
+    (1, 'fat_percent', 28.3, '%', '2025-10-01'),
+    (1, 'water_percent', 54.2, '%', '2025-10-01'),
+    (1, 'bone_mass', 3.2, 'kg', '2025-10-01'),
+    -- Measurements for user 1 - Week 1
+    (1, 'measurement_neck', 40.5, 'cm', '2025-10-01'),
+    (1, 'measurement_chest', 110.0, 'cm', '2025-10-01'),
+    (1, 'measurement_waist', 98.5, 'cm', '2025-10-01'),
+    (1, 'measurement_hips', 105.0, 'cm', '2025-10-01'),
+    (1, 'measurement_thigh', 62.0, 'cm', '2025-10-01'),
+    (1, 'measurement_calf', 40.0, 'cm', '2025-10-01'),
+    (1, 'measurement_arm', 35.5, 'cm', '2025-10-01'),
+    -- Calipers for user 1 - Week 1
+    (1, 'caliper_chest', 18.5, 'mm', '2025-10-01'),
+    (1, 'caliper_abdomen', 22.0, 'mm', '2025-10-01'),
+    (1, 'caliper_thigh', 20.5, 'mm', '2025-10-01'),
+    (1, 'caliper_tricep', 15.0, 'mm', '2025-10-01'),
+    (1, 'caliper_suprailiac', 19.5, 'mm', '2025-10-01'),
+
+    -- Smart Data entries for user 1 - Week 2 (showing progress)
+    (1, 'muscle_mass', 42.8, '%', '2025-10-05'),
+    (1, 'fat_percent', 27.9, '%', '2025-10-05'),
+    (1, 'water_percent', 54.5, '%', '2025-10-05'),
+    (1, 'bone_mass', 3.3, 'kg', '2025-10-05'),
+    -- Measurements for user 1 - Week 2 (showing progress)
+    (1, 'measurement_neck', 40.0, 'cm', '2025-10-05'),
+    (1, 'measurement_chest', 109.5, 'cm', '2025-10-05'),
+    (1, 'measurement_waist', 98.0, 'cm', '2025-10-05'),
+    (1, 'measurement_hips', 104.5, 'cm', '2025-10-05'),
+    (1, 'measurement_thigh', 61.5, 'cm', '2025-10-05'),
+    (1, 'measurement_calf', 39.8, 'cm', '2025-10-05'),
+    (1, 'measurement_arm', 35.3, 'cm', '2025-10-05'),
+    -- Calipers for user 1 - Week 2 (showing progress)
+    (1, 'caliper_chest', 18.0, 'mm', '2025-10-05'),
+    (1, 'caliper_abdomen', 21.5, 'mm', '2025-10-05'),
+    (1, 'caliper_thigh', 20.0, 'mm', '2025-10-05'),
+    (1, 'caliper_tricep', 14.5, 'mm', '2025-10-05'),
+    (1, 'caliper_suprailiac', 19.0, 'mm', '2025-10-05');
 
 -- Grant permissions (adjust as needed for your setup)
 -- GRANT ALL PRIVILEGES ON SCHEMA wt_dev TO your_app_user;
