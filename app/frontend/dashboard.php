@@ -520,7 +520,7 @@ $loginTimeTimestamp = $_SESSION['login_time'] ?? null;
                             <div class="col-md-3 col-sm-6">
                                 <div class="glass-card-small">
                                     <h6 class="card-title" data-eng="Fat Percent" data-spa="Porcentaje de Grasa" data-fre="Pourcentage de Graisse" data-ger="Fettprozentsatz">Fat Percent</h6>
-                                    <hr>
+                                    
                                     <small class="text-muted d-block mb-2" data-eng="From your smart scales" data-spa="De tu báscula inteligente" data-fre="De votre balance connectée" data-ger="Von Ihrer intelligenten Waage">From your smart scales</small>
                                     <input type="number" step="0.1" min="0" max="100" class="form-control glass-input mb-2" placeholder="%" id="fat-percent-input">
                                     <small class="text-muted d-block mb-2 input-date-text" id="fat-percent-date"></small>
@@ -531,7 +531,7 @@ $loginTimeTimestamp = $_SESSION['login_time'] ?? null;
                             <div class="col-md-3 col-sm-6">
                                 <div class="glass-card-small">
                                     <h6 class="card-title" data-eng="Water Percent" data-spa="Porcentaje de Agua" data-fre="Pourcentage d'Eau" data-ger="Wasserprozentsatz">Water Percent</h6>
-                                    <hr>
+                                    
                                     <small class="text-muted d-block mb-2" data-eng="From your smart scales" data-spa="De tu báscula inteligente" data-fre="De votre balance connectée" data-ger="Von Ihrer intelligenten Waage">From your smart scales</small>
                                     <input type="number" step="0.1" min="0" max="100" class="form-control glass-input mb-2" placeholder="%" id="water-percent-input">
                                     <small class="text-muted d-block mb-2 input-date-text" id="water-percent-date"></small>
@@ -542,7 +542,7 @@ $loginTimeTimestamp = $_SESSION['login_time'] ?? null;
                             <div class="col-md-3 col-sm-6">
                                 <div class="glass-card-small">
                                     <h6 class="card-title" data-eng="Bone Mass" data-spa="Masa Ósea" data-fre="Masse Osseuse" data-ger="Knochenmasse">Bone Mass</h6>
-                                    <hr>
+                                    
                                     <small class="text-muted d-block mb-2" data-eng="From your smart scales" data-spa="De tu báscula inteligente" data-fre="De votre balance connectée" data-ger="Von Ihrer intelligenten Waage">From your smart scales</small>
                                     <input type="number" step="0.1" min="0" max="100" class="form-control glass-input mb-2" placeholder="%" id="bone-mass-input">
                                     <small class="text-muted d-block mb-2 input-date-text" id="bone-mass-date"></small>
@@ -670,7 +670,7 @@ $loginTimeTimestamp = $_SESSION['login_time'] ?? null;
                             <div class="col-md-3 col-sm-6">
                                 <div class="glass-card-small">
                                     <h6 class="card-title" data-eng="Neck" data-spa="Cuello" data-fre="Cou" data-ger="Hals">Neck</h6>
-                                    <hr>
+                                    
                                     <small class="text-muted d-block mb-2" data-eng="Below Adam's apple" data-spa="Debajo de la manzana de Adán" data-fre="Sous la pomme d'Adam" data-ger="Unter dem Adamsapfel">Below Adam's apple</small>
                                     <input type="number" step="0.1" class="form-control glass-input mb-2" placeholder="cm" id="neck-measurement">
                                     <small class="text-muted d-block mb-2 input-date-text" id="neck-date"></small>
@@ -681,7 +681,7 @@ $loginTimeTimestamp = $_SESSION['login_time'] ?? null;
                             <div class="col-md-3 col-sm-6">
                                 <div class="glass-card-small">
                                     <h6 class="card-title" data-eng="Breast" data-spa="Busto" data-fre="Poitrine" data-ger="Brust">Breast</h6>
-                                    <hr>
+                                    
                                     <small class="text-muted d-block mb-2" data-eng="At nipple line" data-spa="A la altura del pezón" data-fre="Au niveau du mamelon" data-ger="Auf Brustwarzenhöhe">At nipple line</small>
                                     <input type="number" step="0.1" class="form-control glass-input mb-2" placeholder="cm" id="breast-measurement">
                                     <small class="text-muted d-block mb-2 input-date-text" id="breast-date"></small>
@@ -692,7 +692,7 @@ $loginTimeTimestamp = $_SESSION['login_time'] ?? null;
                             <div class="col-md-3 col-sm-6">
                                 <div class="glass-card-small">
                                     <h6 class="card-title" data-eng="Waist" data-spa="Cintura" data-fre="Taille" data-ger="Taille">Waist</h6>
-                                    <hr>
+                                    
                                     <small class="text-muted d-block mb-2" data-eng="Narrowest point" data-spa="Punto más estrecho" data-fre="Point le plus étroit" data-ger="Schmalste Stelle">Narrowest point</small>
                                     <input type="number" step="0.1" class="form-control glass-input mb-2" placeholder="cm" id="waist-measurement">
                                     <small class="text-muted d-block mb-2 input-date-text" id="waist-date"></small>
@@ -703,7 +703,7 @@ $loginTimeTimestamp = $_SESSION['login_time'] ?? null;
                             <div class="col-md-3 col-sm-6">
                                 <div class="glass-card-small">
                                     <h6 class="card-title" data-eng="Hips" data-spa="Caderas" data-fre="Hanches" data-ger="Hüften">Hips</h6>
-                                    <hr>
+                                    
                                     <small class="text-muted d-block mb-2" data-eng="Widest part" data-spa="Parte más ancha" data-fre="Partie la plus large" data-ger="Breiteste Stelle">Widest part</small>
                                     <input type="number" step="0.1" class="form-control glass-input mb-2" placeholder="cm" id="hips-measurement">
                                     <small class="text-muted d-block mb-2 input-date-text" id="hips-date"></small>
@@ -716,7 +716,7 @@ $loginTimeTimestamp = $_SESSION['login_time'] ?? null;
                             <div class="col-md-4 col-sm-6">
                                 <div class="glass-card-small">
                                     <h6 class="card-title" data-eng="Thighs" data-spa="Muslos" data-fre="Cuisses" data-ger="Oberschenkel">Thighs</h6>
-                                    <hr>
+                                    
                                     <small class="text-muted d-block mb-2" data-eng="Midway hip to knee" data-spa="Entre cadera y rodilla" data-fre="Entre hanche et genou" data-ger="Zwischen Hüfte und Knie">Midway hip to knee</small>
                                     <input type="number" step="0.1" class="form-control glass-input mb-2" placeholder="cm" id="thighs-measurement">
                                     <small class="text-muted d-block mb-2 input-date-text" id="thighs-date"></small>
@@ -727,7 +727,7 @@ $loginTimeTimestamp = $_SESSION['login_time'] ?? null;
                             <div class="col-md-4 col-sm-6">
                                 <div class="glass-card-small">
                                     <h6 class="card-title" data-eng="Calves" data-spa="Pantorrillas" data-fre="Mollets" data-ger="Waden">Calves</h6>
-                                    <hr>
+                                    
                                     <small class="text-muted d-block mb-2" data-eng="Thickest part" data-spa="Parte más gruesa" data-fre="Partie la plus épaisse" data-ger="Dickste Stelle">Thickest part</small>
                                     <input type="number" step="0.1" class="form-control glass-input mb-2" placeholder="cm" id="calves-measurement">
                                     <small class="text-muted d-block mb-2 input-date-text" id="calves-date"></small>
@@ -738,7 +738,7 @@ $loginTimeTimestamp = $_SESSION['login_time'] ?? null;
                             <div class="col-md-4 col-sm-6">
                                 <div class="glass-card-small">
                                     <h6 class="card-title" data-eng="Arms" data-spa="Brazos" data-fre="Bras" data-ger="Arme">Arms</h6>
-                                    <hr>
+                                    
                                     <small class="text-muted d-block mb-2" data-eng="Unflexed midpoint" data-spa="Punto medio relajado" data-fre="Point médian non fléchi" data-ger="Entspannter Mittelpunkt">Unflexed midpoint</small>
                                     <input type="number" step="0.1" class="form-control glass-input mb-2" placeholder="cm" id="arms-measurement">
                                     <small class="text-muted d-block mb-2 input-date-text" id="arms-date"></small>
@@ -935,7 +935,7 @@ $loginTimeTimestamp = $_SESSION['login_time'] ?? null;
                             <div class="col-md-4 col-sm-6">
                                 <div class="glass-card-small">
                                     <h6 class="card-title" data-eng="Chest" data-spa="Pecho" data-fre="Poitrine" data-ger="Brust">Chest</h6>
-                                    <hr>
+                                    
                                     <small class="text-muted d-block mb-2" data-eng="Diagonal fold armpit-nipple" data-spa="Pliegue diagonal axila-pezón" data-fre="Pli diagonal aisselle-mamelon" data-ger="Diagonale Falte Achsel-Brustwarze">Diagonal fold armpit-nipple</small>
                                     <input type="number" step="0.1" class="form-control glass-input mb-2" placeholder="mm" id="caliper-chest">
                                     <small class="text-muted d-block mb-2 input-date-text" id="caliper-chest-date"></small>
@@ -946,7 +946,7 @@ $loginTimeTimestamp = $_SESSION['login_time'] ?? null;
                             <div class="col-md-4 col-sm-6">
                                 <div class="glass-card-small">
                                     <h6 class="card-title" data-eng="Armpit" data-spa="Axila" data-fre="Aisselle" data-ger="Achselhöhle">Armpit</h6>
-                                    <hr>
+                                    
                                     <small class="text-muted d-block mb-2" data-eng="Vertical fold below armpit" data-spa="Pliegue vertical bajo axila" data-fre="Pli vertical sous l'aisselle" data-ger="Vertikale Falte unter Achsel">Vertical fold below armpit</small>
                                     <input type="number" step="0.1" class="form-control glass-input mb-2" placeholder="mm" id="caliper-axilla">
                                     <small class="text-muted d-block mb-2 input-date-text" id="caliper-axilla-date"></small>
@@ -957,7 +957,7 @@ $loginTimeTimestamp = $_SESSION['login_time'] ?? null;
                             <div class="col-md-4 col-sm-6">
                                 <div class="glass-card-small">
                                     <h6 class="card-title" data-eng="Belly" data-spa="Vientre" data-fre="Ventre" data-ger="Bauch">Belly</h6>
-                                    <hr>
+                                    
                                     <small class="text-muted d-block mb-2" data-eng="2cm right of belly button" data-spa="2cm a la derecha del ombligo" data-fre="2cm à droite du nombril" data-ger="2cm rechts vom Bauchnabel">2cm right of belly button</small>
                                     <input type="number" step="0.1" class="form-control glass-input mb-2" placeholder="mm" id="caliper-abdomen">
                                     <small class="text-muted d-block mb-2 input-date-text" id="caliper-abdomen-date"></small>
@@ -970,7 +970,7 @@ $loginTimeTimestamp = $_SESSION['login_time'] ?? null;
                             <div class="col-md-6 col-sm-6">
                                 <div class="glass-card-small">
                                     <h6 class="card-title" data-eng="Hip" data-spa="Cadera" data-fre="Hanche" data-ger="Hüfte">Hip</h6>
-                                    <hr>
+                                    
                                     <small class="text-muted d-block mb-2" data-eng="Above hip bone" data-spa="Sobre el hueso de la cadera" data-fre="Au-dessus de l'os de la hanche" data-ger="Über dem Hüftknochen">Above hip bone</small>
                                     <input type="number" step="0.1" class="form-control glass-input mb-2" placeholder="mm" id="caliper-suprailiac">
                                     <small class="text-muted d-block mb-2 input-date-text" id="caliper-suprailiac-date"></small>
@@ -981,7 +981,7 @@ $loginTimeTimestamp = $_SESSION['login_time'] ?? null;
                             <div class="col-md-6 col-sm-6">
                                 <div class="glass-card-small">
                                     <h6 class="card-title" data-eng="Thigh" data-spa="Muslo" data-fre="Cuisse" data-ger="Oberschenkel">Thigh</h6>
-                                    <hr>
+                                    
                                     <small class="text-muted d-block mb-2" data-eng="Vertical fold hip-knee" data-spa="Pliegue vertical cadera-rodilla" data-fre="Pli vertical hanche-genou" data-ger="Vertikale Falte Hüfte-Knie">Vertical fold hip-knee</small>
                                     <input type="number" step="0.1" class="form-control glass-input mb-2" placeholder="mm" id="caliper-thigh">
                                     <small class="text-muted d-block mb-2 input-date-text" id="caliper-thigh-date"></small>
