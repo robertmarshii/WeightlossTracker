@@ -353,6 +353,12 @@ select.form-control.glass-input {
     overflow-y: auto;
 }
 
+/* Body page input date text styling */
+.input-date-text {
+    text-align: right !important;
+    font-size: 0.75rem !important;
+}
+
 .tab-icon {
     margin-right: 0.5rem;
 }
