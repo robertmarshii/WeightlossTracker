@@ -999,40 +999,52 @@ function updateDateExample() {
 
 function initTabNavigation() {
     if (window.coverage) window.coverage.logFunction('initTabNavigation', 'dashboard.js');
-    // Handle tab changes - update URL hash
-    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+    // Handle tab changes - update URL hash (only for main navigation tabs)
+    $('.nav-tabs > .nav-item > a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         const target = $(e.target).attr('href');
         const tabName = target.substring(1); // Remove the # symbol
-        window.location.hash = 'tab=' + tabName;
 
-        // Load settings when settings tab is shown
-        if (tabName === 'settings') {
-            debugLog('🔧 Settings tab shown, loading settings...');
-            debugLog('🔍 loadSettings function type:', typeof loadSettings);
-            debugLog('🔍 window.settingsLoadSettings type:', typeof window.settingsLoadSettings);
-            if (typeof loadSettings === 'function') {
-                loadSettings();
-            } else if (typeof window.settingsLoadSettings === 'function') {
-                window.settingsLoadSettings();
-            } else {
-                console.error('❌ No loadSettings function available');
+        // Check if this is a main navigation tab (data, health, body, goals, settings)
+        const mainTabs = ['data', 'health', 'body', 'goals', 'settings'];
+        if (mainTabs.includes(tabName)) {
+            // Don't update hash here - navigation.js handles it
+            // Only load settings if needed
+            if (tabName === 'settings') {
+                debugLog('🔧 Settings tab shown, loading settings...');
+                debugLog('🔍 loadSettings function type:', typeof loadSettings);
+                debugLog('🔍 window.settingsLoadSettings type:', typeof window.settingsLoadSettings);
+                if (typeof loadSettings === 'function') {
+                    loadSettings();
+                } else if (typeof window.settingsLoadSettings === 'function') {
+                    window.settingsLoadSettings();
+                } else {
+                    console.error('❌ No loadSettings function available');
+                }
             }
         }
     });
 
     // Check URL hash on page load and activate correct tab
     const urlHash = window.location.hash;
-    if (urlHash && urlHash.startsWith('#tab=')) {
-        const tabName = urlHash.substring(5); // Remove #tab=
+    if (urlHash && (urlHash.startsWith('#tab=') || urlHash.startsWith('#page='))) {
+        let tabName;
+
+        if (urlHash.startsWith('#page=')) {
+            const params = new URLSearchParams(urlHash.substring(1));
+            tabName = params.get('page');
+        } else {
+            tabName = urlHash.substring(5); // Remove #tab=
+        }
+
         const tabSelector = '#' + tabName + '-tab';
         const tabExists = $(tabSelector).length > 0;
-        
+
         if (tabExists) {
             if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
             // Deactivate current active tab
             $('.nav-link.active').removeClass('active');
             $('.tab-pane.active').removeClass('active show');
-            
+
             // Activate the target tab
             $(tabSelector).addClass('active');
             $('#' + tabName).addClass('active show');
@@ -1047,10 +1059,18 @@ function initTabNavigation() {
     // Handle browser back/forward buttons
     $(window).on('hashchange', function() {
         const urlHash = window.location.hash;
-        if (urlHash && urlHash.startsWith('#tab=')) {
-            const tabName = urlHash.substring(5);
+        if (urlHash && (urlHash.startsWith('#tab=') || urlHash.startsWith('#page='))) {
+            let tabName;
+
+            if (urlHash.startsWith('#page=')) {
+                const params = new URLSearchParams(urlHash.substring(1));
+                tabName = params.get('page');
+            } else {
+                tabName = urlHash.substring(5);
+            }
+
             const tabSelector = '#' + tabName + '-tab';
-            
+
             if ($(tabSelector).length > 0) {
                 $(tabSelector).tab('show');
             }

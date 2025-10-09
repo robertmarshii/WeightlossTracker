@@ -343,6 +343,15 @@ select.form-control.glass-input {
     min-height: 400px;
 }
 
+/* Body page history tables should have max-height instead */
+#smartDataTabsContent,
+#measurementsTabsContent,
+#calipersTabsContent {
+    max-height: 400px;
+    height: auto;
+    overflow-y: auto;
+}
+
 .tab-icon {
     margin-right: 0.5rem;
 }
