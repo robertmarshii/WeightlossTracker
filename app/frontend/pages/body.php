@@ -459,6 +459,9 @@
                                                             </tbody>
                                                         </table>
                                                     </div>
+                                                    <div class="text-right">
+                                                        <button class="btn primary-btn btn-sm mt-2 btn-add-historical-entry" data-metric-type="muscle_mass" data-unit="%" data-eng="+ Add Entry" data-spa="+ Agregar Entrada" data-fre="+ Ajouter Entrée" data-ger="+ Eintrag Hinzufügen">+ Add Entry</button>
+                                                    </div>
                                                 </div>
 
                                                 <!-- Fat Percent History -->
@@ -478,6 +481,9 @@
                                                                 </tr>
                                                             </tbody>
                                                         </table>
+                                                    </div>
+                                                    <div class="text-right">
+                                                        <button class="btn primary-btn btn-sm mt-2 btn-add-historical-entry" data-metric-type="fat_percent" data-unit="%" data-eng="+ Add Entry" data-spa="+ Agregar Entrada" data-fre="+ Ajouter Entrée" data-ger="+ Eintrag Hinzufügen">+ Add Entry</button>
                                                     </div>
                                                 </div>
 
@@ -499,6 +505,9 @@
                                                             </tbody>
                                                         </table>
                                                     </div>
+                                                    <div class="text-right">
+                                                        <button class="btn primary-btn btn-sm mt-2 btn-add-historical-entry" data-metric-type="water_percent" data-unit="%" data-eng="+ Add Entry" data-spa="+ Agregar Entrada" data-fre="+ Ajouter Entrée" data-ger="+ Eintrag Hinzufügen">+ Add Entry</button>
+                                                    </div>
                                                 </div>
 
                                                 <!-- Bone Mass History -->
@@ -518,6 +527,27 @@
                                                                 </tr>
                                                             </tbody>
                                                         </table>
+                                                    </div>
+                                                    <div class="text-right">
+                                                        <button class="btn primary-btn btn-sm mt-2 btn-add-historical-entry" data-metric-type="bone_mass" data-unit="kg" data-eng="+ Add Entry" data-spa="+ Agregar Entrada" data-fre="+ Ajouter Entrée" data-ger="+ Eintrag Hinzufügen">+ Add Entry</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Add Historical Entry Form 1 - Smart Data (hidden by default) -->
+                                            <div id="add-historical-entry-form-1" class="mt-3 hidden">
+                                                <div class="row">
+                                                    <div class="col-12 col-md-5">
+                                                        <label for="historical-entry-value-1" class="form-label" id="historical-entry-label-1">Value</label>
+                                                        <input type="number" step="0.1" min="0" id="historical-entry-value-1" class="form-control glass-input" placeholder="0.0">
+                                                    </div>
+                                                    <div class="col-12 col-md-4">
+                                                        <label for="historical-entry-date-1" class="form-label" data-eng="Date" data-spa="Fecha" data-fre="Date" data-ger="Datum">Date</label>
+                                                        <input type="text" id="historical-entry-date-1" class="form-control glass-input date-input" placeholder="dd/mm/yyyy">
+                                                    </div>
+                                                    <div class="col-12 col-md-3 d-flex align-items-end">
+                                                        <button id="btn-save-historical-entry-1" class="btn primary-btn me-2" data-eng="Save" data-spa="Guardar" data-fre="Enregistrer" data-ger="Speichern">Save</button>
+                                                        <button id="btn-cancel-historical-entry-1" class="btn secondary-btn" data-eng="Cancel" data-spa="Cancelar" data-fre="Annuler" data-ger="Abbrechen">Cancel</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -576,6 +606,9 @@
                                                             </tbody>
                                                         </table>
                                                     </div>
+                                                    <div class="text-right">
+                                                        <button class="btn primary-btn btn-sm mt-2 btn-add-historical-entry" data-metric-type="measurement_neck" data-unit="cm" data-eng="+ Add Entry" data-spa="+ Agregar Entrada" data-fre="+ Ajouter Entrée" data-ger="+ Eintrag Hinzufügen">+ Add Entry</button>
+                                                    </div>
                                                 </div>
 
                                                 <!-- Breast History -->
@@ -595,6 +628,9 @@
                                                                 </tr>
                                                             </tbody>
                                                         </table>
+                                                    </div>
+                                                    <div class="text-right">
+                                                        <button class="btn primary-btn btn-sm mt-2 btn-add-historical-entry" data-metric-type="measurement_chest" data-unit="cm" data-eng="+ Add Entry" data-spa="+ Agregar Entrada" data-fre="+ Ajouter Entrée" data-ger="+ Eintrag Hinzufügen">+ Add Entry</button>
                                                     </div>
                                                 </div>
 
@@ -616,6 +652,9 @@
                                                             </tbody>
                                                         </table>
                                                     </div>
+                                                    <div class="text-right">
+                                                        <button class="btn primary-btn btn-sm mt-2 btn-add-historical-entry" data-metric-type="measurement_waist" data-unit="cm" data-eng="+ Add Entry" data-spa="+ Agregar Entrada" data-fre="+ Ajouter Entrée" data-ger="+ Eintrag Hinzufügen">+ Add Entry</button>
+                                                    </div>
                                                 </div>
 
                                                 <!-- Hips History -->
@@ -635,6 +674,9 @@
                                                                 </tr>
                                                             </tbody>
                                                         </table>
+                                                    </div>
+                                                    <div class="text-right">
+                                                        <button class="btn primary-btn btn-sm mt-2 btn-add-historical-entry" data-metric-type="measurement_hips" data-unit="cm" data-eng="+ Add Entry" data-spa="+ Agregar Entrada" data-fre="+ Ajouter Entrée" data-ger="+ Eintrag Hinzufügen">+ Add Entry</button>
                                                     </div>
                                                 </div>
 
@@ -656,6 +698,9 @@
                                                             </tbody>
                                                         </table>
                                                     </div>
+                                                    <div class="text-right">
+                                                        <button class="btn primary-btn btn-sm mt-2 btn-add-historical-entry" data-metric-type="measurement_thigh" data-unit="cm" data-eng="+ Add Entry" data-spa="+ Agregar Entrada" data-fre="+ Ajouter Entrée" data-ger="+ Eintrag Hinzufügen">+ Add Entry</button>
+                                                    </div>
                                                 </div>
 
                                                 <!-- Calves History -->
@@ -676,6 +721,9 @@
                                                             </tbody>
                                                         </table>
                                                     </div>
+                                                    <div class="text-right">
+                                                        <button class="btn primary-btn btn-sm mt-2 btn-add-historical-entry" data-metric-type="measurement_calf" data-unit="cm" data-eng="+ Add Entry" data-spa="+ Agregar Entrada" data-fre="+ Ajouter Entrée" data-ger="+ Eintrag Hinzufügen">+ Add Entry</button>
+                                                    </div>
                                                 </div>
 
                                                 <!-- Arms History -->
@@ -695,6 +743,27 @@
                                                                 </tr>
                                                             </tbody>
                                                         </table>
+                                                    </div>
+                                                    <div class="text-right">
+                                                        <button class="btn primary-btn btn-sm mt-2 btn-add-historical-entry" data-metric-type="measurement_arm" data-unit="cm" data-eng="+ Add Entry" data-spa="+ Agregar Entrada" data-fre="+ Ajouter Entrée" data-ger="+ Eintrag Hinzufügen">+ Add Entry</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Add Historical Entry Form 2 - Measurements (hidden by default) -->
+                                            <div id="add-historical-entry-form-2" class="mt-3 hidden">
+                                                <div class="row">
+                                                    <div class="col-12 col-md-5">
+                                                        <label for="historical-entry-value-2" class="form-label" id="historical-entry-label-2">Value</label>
+                                                        <input type="number" step="0.1" min="0" id="historical-entry-value-2" class="form-control glass-input" placeholder="0.0">
+                                                    </div>
+                                                    <div class="col-12 col-md-4">
+                                                        <label for="historical-entry-date-2" class="form-label" data-eng="Date" data-spa="Fecha" data-fre="Date" data-ger="Datum">Date</label>
+                                                        <input type="text" id="historical-entry-date-2" class="form-control glass-input date-input" placeholder="dd/mm/yyyy">
+                                                    </div>
+                                                    <div class="col-12 col-md-3 d-flex align-items-end">
+                                                        <button id="btn-save-historical-entry-2" class="btn primary-btn me-2" data-eng="Save" data-spa="Guardar" data-fre="Enregistrer" data-ger="Speichern">Save</button>
+                                                        <button id="btn-cancel-historical-entry-2" class="btn secondary-btn" data-eng="Cancel" data-spa="Cancelar" data-fre="Annuler" data-ger="Abbrechen">Cancel</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -747,6 +816,9 @@
                                                             </tbody>
                                                         </table>
                                                     </div>
+                                                    <div class="text-right">
+                                                        <button class="btn primary-btn btn-sm mt-2 btn-add-historical-entry" data-metric-type="caliper_chest" data-unit="mm" data-eng="+ Add Entry" data-spa="+ Agregar Entrada" data-fre="+ Ajouter Entrée" data-ger="+ Eintrag Hinzufügen">+ Add Entry</button>
+                                                    </div>
                                                 </div>
 
                                                 <!-- Armpit Caliper History -->
@@ -766,6 +838,9 @@
                                                                 </tr>
                                                             </tbody>
                                                         </table>
+                                                    </div>
+                                                    <div class="text-right">
+                                                        <button class="btn primary-btn btn-sm mt-2 btn-add-historical-entry" data-metric-type="caliper_abdomen" data-unit="mm" data-eng="+ Add Entry" data-spa="+ Agregar Entrada" data-fre="+ Ajouter Entrée" data-ger="+ Eintrag Hinzufügen">+ Add Entry</button>
                                                     </div>
                                                 </div>
 
@@ -787,6 +862,9 @@
                                                             </tbody>
                                                         </table>
                                                     </div>
+                                                    <div class="text-right">
+                                                        <button class="btn primary-btn btn-sm mt-2 btn-add-historical-entry" data-metric-type="caliper_thigh" data-unit="mm" data-eng="+ Add Entry" data-spa="+ Agregar Entrada" data-fre="+ Ajouter Entrée" data-ger="+ Eintrag Hinzufügen">+ Add Entry</button>
+                                                    </div>
                                                 </div>
 
                                                 <!-- Hip Caliper History -->
@@ -807,6 +885,9 @@
                                                             </tbody>
                                                         </table>
                                                     </div>
+                                                    <div class="text-right">
+                                                        <button class="btn primary-btn btn-sm mt-2 btn-add-historical-entry" data-metric-type="caliper_suprailiac" data-unit="mm" data-eng="+ Add Entry" data-spa="+ Agregar Entrada" data-fre="+ Ajouter Entrée" data-ger="+ Eintrag Hinzufügen">+ Add Entry</button>
+                                                    </div>
                                                 </div>
 
                                                 <!-- Thigh Caliper History -->
@@ -826,6 +907,27 @@
                                                                 </tr>
                                                             </tbody>
                                                         </table>
+                                                    </div>
+                                                    <div class="text-right">
+                                                        <button class="btn primary-btn btn-sm mt-2 btn-add-historical-entry" data-metric-type="caliper_tricep" data-unit="mm" data-eng="+ Add Entry" data-spa="+ Agregar Entrada" data-fre="+ Ajouter Entrée" data-ger="+ Eintrag Hinzufügen">+ Add Entry</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Add Historical Entry Form 3 - Calipers (hidden by default) -->
+                                            <div id="add-historical-entry-form-3" class="mt-3 hidden">
+                                                <div class="row">
+                                                    <div class="col-12 col-md-5">
+                                                        <label for="historical-entry-value-3" class="form-label" id="historical-entry-label-3">Value</label>
+                                                        <input type="number" step="0.1" min="0" id="historical-entry-value-3" class="form-control glass-input" placeholder="0.0">
+                                                    </div>
+                                                    <div class="col-12 col-md-4">
+                                                        <label for="historical-entry-date-3" class="form-label" data-eng="Date" data-spa="Fecha" data-fre="Date" data-ger="Datum">Date</label>
+                                                        <input type="text" id="historical-entry-date-3" class="form-control glass-input date-input" placeholder="dd/mm/yyyy">
+                                                    </div>
+                                                    <div class="col-12 col-md-3 d-flex align-items-end">
+                                                        <button id="btn-save-historical-entry-3" class="btn primary-btn me-2" data-eng="Save" data-spa="Guardar" data-fre="Enregistrer" data-ger="Speichern">Save</button>
+                                                        <button id="btn-cancel-historical-entry-3" class="btn secondary-btn" data-eng="Cancel" data-spa="Cancelar" data-fre="Annuler" data-ger="Abbrechen">Cancel</button>
                                                     </div>
                                                 </div>
                                             </div>

@@ -370,6 +370,224 @@ $(function() {
         card.find('.card-data-body').show();
     });
 
+    // Handle historical entry forms - separate tracking for each form
+    let currentHistoricalMetric1 = null;  // Form 1 - Smart Data
+    let currentHistoricalUnit1 = null;
+    let currentHistoricalMetric2 = null;  // Form 2 - Measurements
+    let currentHistoricalUnit2 = null;
+    let currentHistoricalMetric3 = null;  // Form 3 - Calipers
+    let currentHistoricalUnit3 = null;
+
+    $(document).on('click', '.btn-add-historical-entry', function() {
+        const metricType = $(this).data('metric-type');
+        const unit = $(this).data('unit');
+
+        // Determine which form to use based on metric type
+        let formId;
+        if (metricType.startsWith('muscle_') || metricType.startsWith('fat_') ||
+            metricType.startsWith('water_') || metricType.startsWith('bone_')) {
+            formId = 'add-historical-entry-form-1'; // Smart Data
+            currentHistoricalMetric1 = metricType;
+            currentHistoricalUnit1 = unit;
+        } else if (metricType.startsWith('measurement_')) {
+            formId = 'add-historical-entry-form-2'; // Measurements
+            currentHistoricalMetric2 = metricType;
+            currentHistoricalUnit2 = unit;
+        } else if (metricType.startsWith('caliper_')) {
+            formId = 'add-historical-entry-form-3'; // Calipers
+            currentHistoricalMetric3 = metricType;
+            currentHistoricalUnit3 = unit;
+        } else {
+            formId = 'add-historical-entry-form-1'; // Default
+            currentHistoricalMetric1 = metricType;
+            currentHistoricalUnit1 = unit;
+        }
+
+        // Get the form number (1, 2, or 3)
+        const formNum = formId.slice(-1);
+
+        // Set label based on metric type
+        const metricName = metricType.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        $(`#historical-entry-label-${formNum}`).text(`${metricName} (${unit})`);
+
+        // Clear previous values
+        $(`#historical-entry-date-${formNum}`).val('');
+        $(`#historical-entry-value-${formNum}`).val('');
+
+        // Hide all forms first
+        $('#add-historical-entry-form-1, #add-historical-entry-form-2, #add-historical-entry-form-3').addClass('hidden');
+
+        // Show the appropriate form
+        $(`#${formId}`).removeClass('hidden');
+
+        // Scroll to form
+        $(`#${formId}`)[0].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+
+    // Handle tab changes - update form if it's open
+    $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
+        const targetTab = $(e.target).attr('href'); // e.g., #caliper-chest-history
+
+        // Determine which form group this tab belongs to and if form is visible
+        if (targetTab && targetTab.includes('-history')) {
+            let formNum;
+            let metricType;
+            let unit;
+
+            // Smart Data tabs
+            if (targetTab === '#muscle-history') {
+                formNum = 1;
+                metricType = 'muscle_mass';
+                unit = '%';
+            } else if (targetTab === '#fat-history') {
+                formNum = 1;
+                metricType = 'fat_percent';
+                unit = '%';
+            } else if (targetTab === '#water-history') {
+                formNum = 1;
+                metricType = 'water_percent';
+                unit = '%';
+            } else if (targetTab === '#bone-history') {
+                formNum = 1;
+                metricType = 'bone_mass';
+                unit = 'kg';
+            }
+            // Measurements tabs
+            else if (targetTab === '#neck-history') {
+                formNum = 2;
+                metricType = 'measurement_neck';
+                unit = 'cm';
+            } else if (targetTab === '#breast-history') {
+                formNum = 2;
+                metricType = 'measurement_chest';
+                unit = 'cm';
+            } else if (targetTab === '#waist-history') {
+                formNum = 2;
+                metricType = 'measurement_waist';
+                unit = 'cm';
+            } else if (targetTab === '#hips-history') {
+                formNum = 2;
+                metricType = 'measurement_hips';
+                unit = 'cm';
+            } else if (targetTab === '#thighs-history') {
+                formNum = 2;
+                metricType = 'measurement_thigh';
+                unit = 'cm';
+            } else if (targetTab === '#calves-history') {
+                formNum = 2;
+                metricType = 'measurement_calf';
+                unit = 'cm';
+            } else if (targetTab === '#arms-history') {
+                formNum = 2;
+                metricType = 'measurement_arm';
+                unit = 'cm';
+            }
+            // Caliper tabs
+            else if (targetTab === '#caliper-chest-history') {
+                formNum = 3;
+                metricType = 'caliper_chest';
+                unit = 'mm';
+            } else if (targetTab === '#caliper-armpit-history') {
+                formNum = 3;
+                metricType = 'caliper_abdomen';
+                unit = 'mm';
+            } else if (targetTab === '#caliper-belly-history') {
+                formNum = 3;
+                metricType = 'caliper_thigh';
+                unit = 'mm';
+            } else if (targetTab === '#caliper-hip-history') {
+                formNum = 3;
+                metricType = 'caliper_suprailiac';
+                unit = 'mm';
+            } else if (targetTab === '#caliper-thigh-history') {
+                formNum = 3;
+                metricType = 'caliper_tricep';
+                unit = 'mm';
+            }
+
+            // If we found a matching tab and its form is visible, update it
+            if (formNum && metricType && !$(`#add-historical-entry-form-${formNum}`).hasClass('hidden')) {
+                // Update the appropriate form's variables
+                if (formNum === 1) {
+                    currentHistoricalMetric1 = metricType;
+                    currentHistoricalUnit1 = unit;
+                } else if (formNum === 2) {
+                    currentHistoricalMetric2 = metricType;
+                    currentHistoricalUnit2 = unit;
+                } else if (formNum === 3) {
+                    currentHistoricalMetric3 = metricType;
+                    currentHistoricalUnit3 = unit;
+                }
+
+                const metricName = metricType.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                $(`#historical-entry-label-${formNum}`).text(`${metricName} (${unit})`);
+            }
+        }
+    });
+
+    // Cancel buttons for all three forms
+    $('#btn-cancel-historical-entry-1').on('click', function() {
+        $('#add-historical-entry-form-1').addClass('hidden');
+    });
+    $('#btn-cancel-historical-entry-2').on('click', function() {
+        $('#add-historical-entry-form-2').addClass('hidden');
+    });
+    $('#btn-cancel-historical-entry-3').on('click', function() {
+        $('#add-historical-entry-form-3').addClass('hidden');
+    });
+
+    // Save buttons for all three forms
+    $('#btn-save-historical-entry-1').on('click', function() {
+        const dateInput = $('#historical-entry-date-1').val();
+        const value = $('#historical-entry-value-1').val();
+
+        if (!dateInput || !value || parseFloat(value) <= 0) {
+            if (window.showAlert) {
+                window.showAlert('Please enter a valid date and value', 'danger');
+            } else {
+                alert('Please enter a valid date and value');
+            }
+            return;
+        }
+
+        const date = window.convertDateToISO ? window.convertDateToISO(dateInput) : dateInput;
+        saveBodyMetricHistorical(currentHistoricalMetric1, value, currentHistoricalUnit1, date, 1);
+    });
+
+    $('#btn-save-historical-entry-2').on('click', function() {
+        const dateInput = $('#historical-entry-date-2').val();
+        const value = $('#historical-entry-value-2').val();
+
+        if (!dateInput || !value || parseFloat(value) <= 0) {
+            if (window.showAlert) {
+                window.showAlert('Please enter a valid date and value', 'danger');
+            } else {
+                alert('Please enter a valid date and value');
+            }
+            return;
+        }
+
+        const date = window.convertDateToISO ? window.convertDateToISO(dateInput) : dateInput;
+        saveBodyMetricHistorical(currentHistoricalMetric2, value, currentHistoricalUnit2, date, 2);
+    });
+
+    $('#btn-save-historical-entry-3').on('click', function() {
+        const dateInput = $('#historical-entry-date-3').val();
+        const value = $('#historical-entry-value-3').val();
+
+        if (!dateInput || !value || parseFloat(value) <= 0) {
+            if (window.showAlert) {
+                window.showAlert('Please enter a valid date and value', 'danger');
+            } else {
+                alert('Please enter a valid date and value');
+            }
+            return;
+        }
+
+        const date = window.convertDateToISO ? window.convertDateToISO(dateInput) : dateInput;
+        saveBodyMetricHistorical(currentHistoricalMetric3, value, currentHistoricalUnit3, date, 3);
+    });
+
     // Handle save button clicks for all body metrics
     // Smart Data
     $('#btn-save-muscle-mass').on('click', function() { saveBodyMetric('muscle_mass', '#muscle-mass-input', '%'); });
@@ -462,6 +680,58 @@ function saveBodyMetric(metricType, inputSelector, unit) {
                 window.showAlert('Error saving body data', 'danger');
             } else {
                 alert('Error saving body data');
+            }
+        });
+    } else {
+        console.error('postRequest function not available');
+        alert('Unable to save - postRequest function not available');
+    }
+}
+
+// Function to save historical body metric data (from inline form)
+function saveBodyMetricHistorical(metricType, value, unit, entryDate, formNum) {
+    // Send to API
+    if (window.postRequest) {
+        window.postRequest('router.php?controller=profile', {
+            action: 'save_body_data',
+            metric_type: metricType,
+            value: parseFloat(value),
+            unit: unit,
+            entry_date: entryDate
+        })
+        .then(resp => {
+            const result = window.parseJson ? window.parseJson(resp) : JSON.parse(resp);
+
+            if (result.success) {
+                // Show success message
+                if (window.showAlert) {
+                    window.showAlert('Historical entry saved successfully!', 'success');
+                }
+
+                // Hide the appropriate form
+                $(`#add-historical-entry-form-${formNum}`).addClass('hidden');
+
+                // Reload dashboard data to refresh tables
+                if (window.testConsolidatedDashboardData) {
+                    window.testConsolidatedDashboardData(function() {
+                        window.populateBodyDataCards();
+                        window.populateBodyDataHistoryTables();
+                    });
+                }
+            } else {
+                if (window.showAlert) {
+                    window.showAlert(result.message || 'Failed to save historical entry', 'danger');
+                } else {
+                    alert(result.message || 'Failed to save historical entry');
+                }
+            }
+        })
+        .catch(err => {
+            console.error('Error saving historical entry:', err);
+            if (window.showAlert) {
+                window.showAlert('Error saving historical entry', 'danger');
+            } else {
+                alert('Error saving historical entry');
             }
         });
     } else {

@@ -343,6 +343,21 @@ select.form-control.glass-input {
     min-height: 400px;
 }
 
+#btn-save-historical-entry-1 {
+    padding: 9px !important;
+    margin-right: 5px;
+}   
+
+#btn-save-historical-entry-2 {
+    padding: 9px !important;
+    margin-right: 5px;
+}  
+
+#btn-save-historical-entry-3 {
+    padding: 8px !important;
+    margin-right: 5px;
+}  
+
 /* Body page history tables should have max-height instead */
 #smartDataTabsContent,
 #measurementsTabsContent,
