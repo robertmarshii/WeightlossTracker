@@ -1,0 +1,10 @@
+ALL THEMES BUT GLASSMORPHISM
+1. encouragement-quote is white, should be #1b5e20? missing important?
+2. .card-title bottom border doesnt fit with the theme
+3. #goal-progress-content has a lot of blue, and white text on light backgrounds, needs re-working
+4. #streak-counter has a lot of blue, and white text on light backgrounds, needs re-working
+5 #total-progress has a lot of blue, and white text on light backgrounds, needs re-working
+6. body page neesd a lot of work
+7. data and health pages look good
+8. charts in total progress in goals page dont match the theme
+9. 

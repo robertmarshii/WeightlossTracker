@@ -136,6 +136,8 @@ $loginTimeTimestamp = $_SESSION['login_time'] ?? null;
 <script src="js/global.js?v=<?php echo time(); ?>"></script>
 <!-- Coverage Logging (Development only) -->
 <script src="js/coverage.js?v=<?php echo time(); ?>"></script>
+<!-- Translation Modules (must load before translate.js) -->
+<script src="js/translations/body-insights.js?v=<?php echo time(); ?>"></script>
 <!-- Translation Helper -->
 <script src="js/translate.js?v=<?php echo time(); ?>"></script>
 <!-- Modular JS files -->

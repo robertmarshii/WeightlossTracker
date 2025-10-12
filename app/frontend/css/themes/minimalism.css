@@ -485,3 +485,250 @@ strong {
 .progress-ring-circle {
     stroke: #495057 !important;
 }
+
+/* Encouragement quote styling for Minimalism */
+.encouragement-quote {
+    color: #212529 !important;
+    font-weight: 400 !important;
+}
+
+/* Card title border should match minimalist theme */
+.glass-card .card-title,
+.glass-card-small .card-title {
+    border-bottom-color: #dee2e6 !important;
+}
+
+/* Goal Progress Content - Minimalist colors */
+#goal-progress-content {
+    color: #212529 !important;
+}
+
+#goal-progress-content .goal-progress-bar {
+    background: rgba(233, 236, 239, 0.5) !important;
+    border-color: #dee2e6 !important;
+}
+
+#goal-progress-content .goal-progress-bar-fill {
+    background: linear-gradient(90deg, #495057 0%, #343a40 100%) !important;
+}
+
+#goal-progress-content .goal-progress-bar-text {
+    color: white !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+}
+
+#goal-progress-content .goal-progress-label {
+    color: #212529 !important;
+}
+
+#goal-progress-content .goal-streak {
+    background: rgba(233, 236, 239, 0.3) !important;
+}
+
+#goal-progress-content .goal-streak-text {
+    color: #212529 !important;
+}
+
+#goal-progress-content .goal-eta {
+    background: rgba(248, 249, 250, 0.5) !important;
+}
+
+#goal-progress-content .goal-eta-text {
+    color: #212529 !important;
+}
+
+#goal-progress-content .goal-badge {
+    background: #ffffff !important;
+    border-color: #dee2e6 !important;
+}
+
+#goal-progress-content .goal-badge.achieved {
+    background: #f8f9fa !important;
+    border-color: #495057 !important;
+    box-shadow: 0 2px 8px rgba(73, 80, 87, 0.15) !important;
+}
+
+#goal-progress-content .goal-badge-label {
+    color: #212529 !important;
+}
+
+#goal-progress-content .goal-badge.achieved .goal-badge-label {
+    color: #343a40 !important;
+    font-weight: 500 !important;
+}
+
+/* Streak Counter - Minimalist colors */
+#streak-counter {
+    color: #212529 !important;
+}
+
+#streak-counter .streak-stat-row {
+    background: rgba(233, 236, 239, 0.3) !important;
+}
+
+#streak-counter .streak-stat-value {
+    color: #495057 !important;
+}
+
+#streak-counter .streak-stat-label {
+    color: #6c757d !important;
+}
+
+#streak-counter .streak-timeline-title {
+    color: #212529 !important;
+}
+
+#streak-counter .streak-dot {
+    border-color: #dee2e6 !important;
+    background: #f8f9fa !important;
+}
+
+#streak-counter .streak-dot.logged {
+    background: linear-gradient(135deg, #6c757d 0%, #495057 100%) !important;
+    border-color: #495057 !important;
+    box-shadow: 0 0 6px rgba(73, 80, 87, 0.3) !important;
+}
+
+#streak-counter .streak-dot.missed {
+    background: rgba(233, 236, 239, 0.5) !important;
+    border-color: #ced4da !important;
+}
+
+#streak-counter .streak-dot.today {
+    border-color: #343a40 !important;
+    border-width: 3px !important;
+    box-shadow: 0 0 10px rgba(52, 58, 64, 0.4) !important;
+}
+
+#streak-counter .streak-legend-label {
+    color: #6c757d !important;
+}
+
+#streak-counter .streak-motivation {
+    background: rgba(248, 249, 250, 0.5) !important;
+    border-left-color: #495057 !important;
+    color: #212529 !important;
+}
+
+#streak-counter .streak-motivation.celebration {
+    border-left-color: #6c757d !important;
+    background: rgba(108, 117, 125, 0.1) !important;
+}
+
+#streak-counter .streak-motivation.warning {
+    border-left-color: #6c757d !important;
+    background: rgba(108, 117, 125, 0.05) !important;
+    color: #495057 !important;
+}
+
+/* Total Progress - Minimalist colors */
+#total-progress {
+    color: #212529 !important;
+}
+
+#total-progress .progress-tabs {
+    border-bottom-color: #dee2e6 !important;
+}
+
+#total-progress .progress-tab-btn {
+    background: rgba(248, 249, 250, 0.5) !important;
+    color: #6c757d !important;
+}
+
+#total-progress .progress-tab-btn:hover {
+    background: rgba(233, 236, 239, 0.5) !important;
+    color: #495057 !important;
+}
+
+#total-progress .progress-tab-btn.active {
+    background: #ffffff !important;
+    border-bottom-color: #495057 !important;
+    color: #212529 !important;
+}
+
+#total-progress .mini-chart-container {
+    background: rgba(248, 249, 250, 0.5) !important;
+}
+
+#total-progress .mini-chart-title {
+    color: #212529 !important;
+}
+
+#total-progress .chart-label {
+    color: #495057 !important;
+}
+
+#total-progress .comparison-stat {
+    background: linear-gradient(135deg, rgba(233, 236, 239, 0.5) 0%, rgba(248, 249, 250, 0.5) 100%) !important;
+}
+
+#total-progress .comparison-stat-title {
+    color: #6c757d !important;
+}
+
+#total-progress .comparison-stat-value {
+    color: #212529 !important;
+}
+
+/* Body Page - Minimalism Theme */
+/* Section titles */
+.section-title {
+    color: #212529 !important;
+    font-weight: 400 !important;
+}
+
+/* Collapsible card headers - override inline white color */
+.card-header-collapsible h5,
+.card-header-collapsible .card-title {
+    color: #212529 !important;
+}
+
+/* Card toggle button */
+.card-toggle {
+    color: #495057 !important;
+}
+
+/* Metric values - change from blue to grayscale */
+.metric-value {
+    color: #495057 !important;
+}
+
+/* Change icons */
+.change-icon.up {
+    color: #343a40 !important;
+}
+
+.change-icon.down {
+    color: #6c757d !important;
+}
+
+/* Change text - fix white on white visibility */
+.change-text {
+    font-size: 0.8rem !important;
+    color: #495057 !important;
+    font-weight: 500 !important;
+}
+
+/* Collapsible cards - Minimalist colors */
+.collapsible-card {
+    background: rgba(248, 249, 250, 0.5) !important;
+}
+
+/* Insight items - change from purple to grayscale */
+.insight-item {
+    border-left-color: #495057 !important;
+    background: rgba(73, 80, 87, 0.05) !important;
+}
+
+.insight-item:hover {
+    background: rgba(73, 80, 87, 0.1) !important;
+    border-left-color: #343a40 !important;
+}
+
+.insight-title {
+    color: #212529 !important;
+}
+
+.insight-description {
+    color: #495057 !important;
+}

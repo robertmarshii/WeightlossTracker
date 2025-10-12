@@ -1,0 +1,595 @@
+
+
+DevTools listening on ws://127.0.0.1:52011/devtools/browser/49abd04b-ea23-4b94-ae7a-f53d0a812e42
+
+====================================================================================================
+
+  (Run Starting)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Cypress:        13.17.0                                                                        │
+  │ Browser:        Electron 118 (headless)                                                        │
+  │ Node Version:   v22.19.0 (C:\Program Files\nodejs\node.exe)                                    │
+  │ Specs:          10 found (edge-case-coverage.cy.js, email-notifications.cy.js, FAILING-TESTS-C │
+  │                 ONSOLIDATED.cy.js, final-70-percent-coverage.cy.js, final-coverage-maximizer.c │
+  │                 y.js, final-coverage-test.cy.js, fix-jquery-issue.cy.js, focus-untested-functi │
+  │                 ons.cy.js, frontend-aut...)                                                    │
+  │ Searched:       C:\GitKraken\WeightlossTracker\cypress\e2e\passing\edge-case-coverage.cy.js, C │
+  │                 :\GitKraken\WeightlossTracker\cypress\e2e\passing\email-notifications.cy.js, C │
+  │                 :\GitKraken\WeightlossTracker\cypress\e2e\passing\FAILING-TESTS-CONSOLIDATED.c │
+  │                 y.js, C:\GitKraken\WeightlossTracker\cypress\e2e\passing\final-70-percent-cove │
+  │                 rage.cy.js, C:\GitKraken\WeightlossTracker\cypress\e2e\passing\final-coverage- │
+  │                 maximizer.cy.js, C:\GitKraken\WeightlossTracker\cypress\e2e\passing\final-cove │
+  │                 rage-test.cy.js, C:\GitKraken\WeightlossTracker\cypress\e2e\passing\fix-jquery │
+  │                 -issue.cy.js, C:\GitKraken\WeightlossTracker\cypress\e2e\passing\focus-unteste │
+  │                 d-functions.cy.js, C:\GitKraken\WeightlossTracker\cypress\e2e\passing\frontend │
+  │                 -auth-edge-cases.cy.js, C:\GitKraken\WeightlossTracker\cypress\e2e\passing\fro │
+  │                 ntend-comprehensive.cy.js                                                      │
+  │ Experiments:    experimentalMemoryManagement=true                                              │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  edge-case-coverage.cy.js                                                       (1 of 10)
+
+
+  Edge Case and Error Condition Coverage
+    Input Validation Edge Cases
+      √ should test boundary value validation functions (2354ms)
+      √ should test date validation edge cases (1180ms)
+    Data Processing Edge Cases
+      √ should test JSON parsing with malformed data (1500ms)
+      √ should test calculation functions with extreme values (1193ms)
+    Error Recovery Functions
+      √ should test network error handling (1483ms)
+      √ should test data corruption recovery (1262ms)
+    Memory and Performance Edge Cases
+      √ should test functions with large datasets (1462ms)
+      √ should test memory cleanup functions (1175ms)
+    Security and Validation Edge Cases
+      √ should test input sanitization functions (1470ms)
+    Browser Compatibility Edge Cases
+      √ should test fallback functions for older browsers (1179ms)
+
+
+  10 passing (15s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        10                                                                               │
+  │ Passing:      10                                                                               │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     14 seconds                                                                       │
+  │ Spec Ran:     edge-case-coverage.cy.js                                                         │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  email-notifications.cy.js                                                      (2 of 10)
+
+
+  Email Notifications
+    Test Endpoint Functionality
+      √ should accept time override parameters (194ms)
+      √ should return proper structure from test endpoint (157ms)
+      √ should handle different days of the week (980ms)
+      √ should handle various time formats (720ms)
+      √ should work without override parameters (use current time) (152ms)
+    Notification Scheduler Integration
+      √ should process notifications with matching criteria (164ms)
+      √ should return zero counts when no users match criteria (149ms)
+    SparkPost Sandbox Mode
+      √ should have cypress_testing cookie set for sandbox mode (23ms)
+      √ should process notifications in sandbox mode without actual delivery (152ms)
+    Error Handling
+      √ should return error for invalid action (26ms)
+      √ should handle malformed day parameter gracefully (147ms)
+      √ should handle malformed time parameter gracefully (149ms)
+    Notification Log Verification
+      √ should process notifications and log to file (154ms)
+
+
+  13 passing (4s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        13                                                                               │
+  │ Passing:      13                                                                               │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     3 seconds                                                                        │
+  │ Spec Ran:     email-notifications.cy.js                                                        │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  FAILING-TESTS-CONSOLIDATED.cy.js                                               (3 of 10)
+
+
+  CONSOLIDATED FAILING TESTS - Debugging Suite
+    Category: Frontend Auth Edge Cases (9 failures)
+      √ FAILING: should handle sendLoginCode with empty email (527ms)
+      √ FAILING: should handle empty verification code (24ms)
+      √ FAILING: should handle invalid verification code format (10ms)
+      √ FAILING: should handle verification with wrong code (9ms)
+      √ FAILING: should handle createAccount with invalid email (9ms)
+      √ FAILING: should handle signup verification with wrong code (8ms)
+      √ FAILING: should handle terms and conditions validation (8ms)
+      √ FAILING: should handle rapid button clicks (10ms)
+      √ FAILING: should handle session state edge cases (7ms)
+    Category: Interactive UI Coverage (7 failures)
+      √ FAILING: Interactive UI test 1 (5586ms)
+    Category: Frontend Comprehensive (5 failures)
+      √ FAILING: Frontend comprehensive test 1 (33ms)
+    Category: Modules Comprehensive (6 failures)
+      1) "before each" hook for "FAILING: Modules test 1"
+    Category: Reworked Tests (6 failures, 1 pending)
+      √ FAILING: Reworked test 1 (35ms)
+    Category: Coverage-Related Tests (Multiple files)
+      √ FAILING: comprehensive-function-coverage (3 failures) (8ms)
+      √ FAILING: data-coverage (3 failures) (22ms)
+      √ FAILING: dashboard-function-coverage (1 failure, 4 skipped) (17ms)
+      √ FAILING: data-management-coverage (1 failure, 6 skipped) (7ms)
+      √ FAILING: global-utility-coverage (1 failure) (13ms)
+      √ FAILING: health-calculations-coverage (1 failure) (22ms)
+      √ FAILING: settings-theme-coverage (1 failure, 4 skipped) (14ms)
+      √ FAILING: settings-utilities-coverage (2 failures) (18ms)
+      √ FAILING: edge-case-coverage (1 failure) (16ms)
+      √ FAILING: final-coverage-maximizer (1 failure) (17ms)
+      √ FAILING: high-priority-functions (1 failure) (14ms)
+      √ FAILING: maximum-coverage-push (1 failure) (15ms)
+      √ FAILING: quick-function-coverage (3 failures) (17ms)
+      √ FAILING: rapid-coverage-boost (2 failures) (21ms)
+      √ FAILING: remaining-uncovered-functions (1 failure, 3 skipped) (15ms)
+      √ FAILING: test-existing-functions (2 failures) (14ms)
+    Category: UI Responsive (2 failures)
+      √ FAILING: UI responsive test 1 (15ms)
+      √ FAILING: UI responsive test 2 (15ms)
+    QUICK WINS - Tests that just need login setup
+      2) "before each" hook for "FIX: interactive-ui-coverage - Weight entry test"
+    ANALYSIS: Root Cause Summary
+      √ Common Failure Patterns (357ms)
+      √ Recommended Fix Order (20ms)
+    README: How to use this file
+      √ Step-by-Step Guide (25ms)
+      √ Quick Fixes Available (23ms)
+
+
+  34 passing (31s)
+  2 failing
+
+  1) CONSOLIDATED FAILING TESTS - Debugging Suite
+       Category: Modules Comprehensive (6 failures)
+         "before each" hook for "FAILING: Modules test 1":
+     AssertionError: Timed out retrying after 8000ms: expected 'http://127.0.0.1:8111/' to include 'dashboard.php'
+
+Because this error occurred during a `before each` hook we are skipping the remaining tests in the current suite: `Category: Modules Comprehen...`
+      at setupDashboard (webpack://weightloss-tracker/./cypress/e2e/passing/FAILING-TESTS-CONSOLIDATED.cy.js:83:34)
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/passing/FAILING-TESTS-CONSOLIDATED.cy.js:154:12)
+
+  2) CONSOLIDATED FAILING TESTS - Debugging Suite
+       QUICK WINS - Tests that just need login setup
+         "before each" hook for "FIX: interactive-ui-coverage - Weight entry test":
+     AssertionError: Timed out retrying after 8000ms: expected 'http://127.0.0.1:8111/' to include 'dashboard.php'
+
+Because this error occurred during a `before each` hook we are skipping the remaining tests in the current suite: `QUICK WINS - Tests that jus...`
+      at setupDashboard (webpack://weightloss-tracker/./cypress/e2e/passing/FAILING-TESTS-CONSOLIDATED.cy.js:83:34)
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/passing/FAILING-TESTS-CONSOLIDATED.cy.js:250:12)
+
+
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        41                                                                               │
+  │ Passing:      34                                                                               │
+  │ Failing:      2                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      5                                                                                │
+  │ Screenshots:  2                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     30 seconds                                                                       │
+  │ Spec Ran:     FAILING-TESTS-CONSOLIDATED.cy.js                                                 │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+  (Screenshots)
+
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\FAILING-TESTS-CONSOLIDATED.cy     (1280x720)
+     .js\CONSOLIDATED FAILING TESTS - Debugging Suite -- Category Modules Comprehensi               
+     ve (6 failures) -- FAILING Modules test 1 -- before each hook (failed).png                     
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\FAILING-TESTS-CONSOLIDATED.cy     (1280x720)
+     .js\CONSOLIDATED FAILING TESTS - Debugging Suite -- QUICK WINS - Tests that just               
+      need login setup -- FIX interactive-ui-coverage - Weight entry test -- before e               
+     ach hook (failed).png                                                                          
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  final-70-percent-coverage.cy.js                                                (4 of 10)
+
+
+  Final Push to 70% Coverage
+    Remaining High-Impact Dashboard Functions
+      √ should test final batch of untested dashboard functions for 70% target (2866ms)
+      √ should test remaining index.js authentication functions for completion (4233ms)
+      √ should test remaining global utility functions for completion (4199ms)
+      √ should test final batch of settings and health functions (2562ms)
+
+
+  4 passing (14s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        4                                                                                │
+  │ Passing:      4                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     14 seconds                                                                       │
+  │ Spec Ran:     final-70-percent-coverage.cy.js                                                  │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  final-coverage-maximizer.cy.js                                                 (5 of 10)
+
+
+  Final Coverage Maximizer - Target Critical Functions
+    Critical Untested Functions - Mass Coverage
+      √ should test all critical weight and height conversion functions (2253ms)
+      √ should test all health calculation functions (2503ms)
+      √ should test dashboard refresh and data functions (2217ms)
+      √ should test settings and authentication functions (2512ms)
+      √ should test chart and achievement functions (2175ms)
+      √ should test initialization and utility functions (2498ms)
+    Coverage System Functions
+      √ should test coverage system logging and reporting (2259ms)
+
+
+  7 passing (18s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        7                                                                                │
+  │ Passing:      7                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     17 seconds                                                                       │
+  │ Spec Ran:     final-coverage-maximizer.cy.js                                                   │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  final-coverage-test.cy.js                                                      (6 of 10)
+
+
+  Final Coverage Test
+    √ should force frontend function coverage logging (1848ms)
+    √ should test achievement function if available (400ms)
+
+
+  2 passing (2s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        2                                                                                │
+  │ Passing:      2                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     2 seconds                                                                        │
+  │ Spec Ran:     final-coverage-test.cy.js                                                        │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  fix-jquery-issue.cy.js                                                         (7 of 10)
+
+
+  Fix jQuery Issue
+    √ should diagnose and fix jQuery $.post issue (2921ms)
+    √ should patch jQuery in coverage.js to prevent future issues (1187ms)
+
+
+  2 passing (4s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        2                                                                                │
+  │ Passing:      2                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     4 seconds                                                                        │
+  │ Spec Ran:     fix-jquery-issue.cy.js                                                           │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  focus-untested-functions.cy.js                                                 (8 of 10)
+
+
+  Focus on High Priority Untested Functions
+    Dashboard Core Functions - High Priority
+      √ should test reloadGlobalDashboardData and data loading functions (2842ms)
+      √ should test settings loading and saving functions (2193ms)
+      √ should test health calculation functions (2506ms)
+      √ should test authentication functions (3649ms)
+      √ should test data management functions (3792ms)
+      √ should test chart and UI functions (2209ms)
+      √ should test remaining utility functions (2500ms)
+
+
+  7 passing (22s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        7                                                                                │
+  │ Passing:      7                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     21 seconds                                                                       │
+  │ Spec Ran:     focus-untested-functions.cy.js                                                   │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  frontend-auth-edge-cases.cy.js                                                 (9 of 10)
+
+
+  Frontend Authentication Edge Cases
+    Email Validation Edge Cases
+      √ should test isValidEmail with various invalid formats (487ms)
+      √ should test isValidEmail with valid email formats (474ms)
+    Login Form Error Handling
+      √ should handle sendLoginCode with invalid email (1595ms)
+      √ should handle sendLoginCode with empty email (1573ms)
+      √ should handle network errors during sendLoginCode (1034ms)
+    Verification Code Edge Cases
+      √ should handle empty verification code (2563ms)
+      √ should handle invalid verification code format (2647ms)
+      √ should handle verification with wrong code (2655ms)
+    Signup Flow Edge Cases
+      √ should handle createAccount with invalid email (2305ms)
+      √ should handle signup verification with wrong code (3636ms)
+      √ should handle terms and conditions validation (3260ms)
+    UI State Management Edge Cases
+      √ should handle rapid button clicks (2141ms)
+      √ should handle form submission during loading states (1177ms)
+      √ should handle browser back button scenarios (2859ms)
+    Data Persistence Edge Cases
+      √ should handle email field persistence (1640ms)
+      √ should handle session state edge cases (2648ms)
+    Error Message Display Edge Cases
+      √ should test showAlert function with various message types (193ms)
+      √ should handle multiple simultaneous alerts (221ms)
+    Form Validation Edge Cases
+      √ should handle special characters in email field (3193ms)
+      √ should handle very long email addresses (1796ms)
+      √ should handle copy-paste scenarios (1593ms)
+    Accessibility and Edge Cases
+      √ should handle keyboard navigation (1510ms)
+      √ should handle disabled state edge cases (1578ms)
+
+
+  23 passing (45s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        23                                                                               │
+  │ Passing:      23                                                                               │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     44 seconds                                                                       │
+  │ Spec Ran:     frontend-auth-edge-cases.cy.js                                                   │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  frontend-comprehensive.cy.js                                                  (10 of 10)
+
+
+  Frontend Comprehensive Test Suite - All JavaScript Functions
+    Index.js Functions - Authentication & Login Flow
+      1) should test all login/signup form functions
+      √ should test verification code functions (2810ms)
+      √ should call ALL index.js authentication functions directly (1068ms)
+      √ should test utility and helper functions (2987ms)
+    Global.js Functions - Utility Functions
+      √ should test showAlert function with all alert types (3081ms)
+      √ should test showToast function (1387ms)
+      √ should test parseJson utility function (1032ms)
+      √ should test openModal utility function (758ms)
+      √ should call ALL global utility functions directly (1071ms)
+    Dashboard.js Core Functions - Data Loading & Management
+      √ should test refreshLatestWeight() function directly (4248ms)
+      √ should test refreshGoal() function directly (3875ms)
+      √ should test loadProfile() function directly (3893ms)
+      √ should test loadWeightHistory() function directly (3891ms)
+      √ should call ALL core data loading functions directly (3936ms)
+      √ should stress test data loading functions with multiple calls (3873ms)
+    Dashboard.js Health Functions - BMI & Health Calculations
+      √ should test refreshBMI() function directly (2264ms)
+      √ should test refreshHealth() function directly (2303ms)
+      √ should test refreshIdealWeight() function directly (2612ms)
+      √ should test refreshWeightProgress() function directly (2265ms)
+      √ should test refreshGallbladderHealth() function directly (2659ms)
+      √ should call ALL health calculation functions directly (2259ms)
+    Dashboard.js Weight Management Functions
+      √ should test weight management functions (6 functions) (6234ms)
+      √ should test formatDate() function with test data (2090ms)
+      √ should test weight management functions with parameters (2310ms)
+      √ should call ALL weight management functions directly (2562ms)
+    Dashboard.js Profile & Settings Functions
+      √ should test profile and settings functions (8 functions) (10464ms)
+      √ should test goal management functions (2 functions) (8231ms)
+      √ should call ALL settings and profile functions directly (2515ms)
+    Dashboard.js Chart & Visualization Functions
+      √ should test chart and visualization functions (6 functions) (10091ms)
+      √ should call ALL basic chart functions directly (2904ms)
+      √ should call ALL monthly chart functions with mock data (2227ms)
+      √ should call ALL weekly chart functions with mock data (2522ms)
+      √ should call ALL yearly chart functions with mock data (2300ms)
+      √ should call updateAchievementCards with comprehensive mock data (2590ms)
+    Dashboard.js UI & Navigation Functions
+      √ should call ALL UI and navigation functions directly (2216ms)
+      √ should test tab navigation and UI updates (8584ms)
+      √ should test form interactions and calculations (10148ms)
+    API Integration & Authentication Tests
+      √ should test sendLoginCode() via direct API call (191ms)
+      √ should test createAccount() via direct API call (182ms)
+      √ should test verifyLoginCode() via direct API call (179ms)
+      √ should test ProfileController get_latest_weight action (88ms)
+      √ should test ProfileController multiple actions in sequence (171ms)
+    Comprehensive Integration Tests - All Functions Together
+      √ should perform comprehensive frontend workflow hitting all functions (14467ms)
+      √ should stress test all frontend functions with rapid interactions (15046ms)
+      √ should call ALL 28 dashboard functions in sequence with various parameters (2373ms)
+    Function Stress Testing & Edge Cases
+      √ should call functions multiple times with different parameters (1063ms)
+      √ should test dashboard functions with mock data (1050ms)
+      √ should handle function calls with invalid parameters (548ms)
+      √ should test functions with null/undefined parameters (555ms)
+      √ should test API error handling (82ms)
+    Coverage System & Schema Logger Testing
+      √ should test coverage logging functions (551ms)
+      √ should verify function coverage metrics (1059ms)
+
+
+  51 passing (3m)
+  1 failing
+
+  1) Frontend Comprehensive Test Suite - All JavaScript Functions
+       Index.js Functions - Authentication & Login Flow
+         should test all login/signup form functions:
+     CypressError: Timed out retrying after 8050ms: `cy.click()` failed because this element is not visible:
+
+`<a href="#" id="backToEmailLink" onclick="backToEmailLogin(); return false;" data-eng="← Back to email" data-spa="← Volver al correo" data-fre="← Retour à l'e-mail" data-ger="← Zurück zur E-Mail">← Back ...</a>`
+
+This element `<a#backToEmailLink>` is not visible because its parent `<form#verifyLoginForm.verify-form>` has CSS property: `display: none`
+
+Fix this problem, or use `{force: true}` to disable error checking.
+
+https://on.cypress.io/element-cannot-be-interacted-with
+      at runVisibilityCheck (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:144957:58)
+      at Object.isStrictlyVisible (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:144971:10)
+      at runAllChecks (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:113271:26)
+      at retryActionability (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:113339:16)
+      at tryCatcher (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1830:23)
+      at Promise.attempt.Promise.try (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:4338:29)
+      at whenStable (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:143744:68)
+      at <unknown> (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:143685:14)
+      at tryCatcher (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1830:23)
+      at Promise._settlePromiseFromHandler (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1542:31)
+      at Promise._settlePromise (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1599:18)
+      at Promise._settlePromise0 (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1644:10)
+      at Promise._settlePromises (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1724:18)
+      at Promise._fulfill (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1668:18)
+      at <unknown> (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:5473:46)
+  From Your Spec Code:
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/passing/frontend-comprehensive.cy.js:174:39)
+
+
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        52                                                                               │
+  │ Passing:      51                                                                               │
+  │ Failing:      1                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  1                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     3 minutes, 10 seconds                                                            │
+  │ Spec Ran:     frontend-comprehensive.cy.js                                                     │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+  (Screenshots)
+
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\frontend-comprehensive.cy.js\     (1280x720)
+     Frontend Comprehensive Test Suite - All JavaScript Functions -- Index.js Functio               
+     ns - Authentication & Login Flow -- should test all loginsignup form functions (               
+     failed).png                                                                                    
+
+
+====================================================================================================
+
+  (Run Finished)
+
+
+       Spec                                              Tests  Passing  Failing  Pending  Skipped  
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ ✔  edge-case-coverage.cy.js                 00:14       10       10        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  email-notifications.cy.js                00:03       13       13        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✖  FAILING-TESTS-CONSOLIDATED.cy.js         00:30       41       34        2        -        5 │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  final-70-percent-coverage.cy.js          00:14        4        4        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  final-coverage-maximizer.cy.js           00:17        7        7        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  final-coverage-test.cy.js                00:02        2        2        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  fix-jquery-issue.cy.js                   00:04        2        2        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  focus-untested-functions.cy.js           00:21        7        7        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  frontend-auth-edge-cases.cy.js           00:44       23       23        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✖  frontend-comprehensive.cy.js             03:10       52       51        1        -        - │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+    ✖  2 of 10 failed (20%)                     05:45      161      153        3        -        5  
+

@@ -373,3 +373,39 @@ strong {
 .progress-ring-circle {
     stroke: #bb86fc !important;
 }
+
+/* Override dashboard.css blue colors with purple */
+.benefit-projection {
+    border-left-color: #bb86fc !important;
+}
+
+.consistency-score-display {
+    color: #bb86fc !important;
+}
+
+.goal-progress-bar-fill {
+    background: linear-gradient(90deg, #bb86fc 0%, #9965d4 100%) !important;
+}
+
+.streak-stat-value {
+    color: #bb86fc !important;
+}
+
+.streak-dot.today {
+    border-color: #bb86fc !important;
+    box-shadow: 0 0 12px rgba(187, 134, 252, 0.6) !important;
+}
+
+.streak-motivation {
+    border-left-color: #bb86fc !important;
+    background: rgba(187, 134, 252, 0.1) !important;
+}
+
+.progress-tab-btn.active {
+    border-bottom-color: #bb86fc !important;
+    background: rgba(187, 134, 252, 0.2) !important;
+}
+
+.metric-value {
+    color: #bb86fc !important;
+}

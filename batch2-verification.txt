@@ -1,0 +1,146 @@
+
+> cypress:run
+> cypress run --spec cypress/e2e/data-coverage.cy.js,cypress/e2e/date-formatting-comprehensive.cy.js
+
+
+
+DevTools listening on ws://127.0.0.1:58923/devtools/browser/d4ddc17e-f25d-4cd4-aa0a-b973b0241173
+Warning: We failed to trash the existing run results.
+
+This error will not affect or change the exit code.
+
+Error: Command failed: C:\Users\rober\AppData\Local\Cypress\Cache\13.17.0\Cypress\resources\app\node_modules\trash\lib\win-trash.exe C:\GitKraken\WeightlossTracker\cypress\videos\frontend-auth-edge-cases.cy.js.mp4
+
+    at ChildProcess.exithandler (node:child_process:419:12)
+    at ChildProcess.emit (node:events:514:28)
+    at maybeClose (node:internal/child_process:1091:16)
+    at Process.onexit (node:internal/child_process:302:5)
+
+====================================================================================================
+
+  (Run Starting)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Cypress:        13.17.0                                                                        │
+  │ Browser:        Electron 118 (headless)                                                        │
+  │ Node Version:   v22.19.0 (C:\Program Files\nodejs\node.exe)                                    │
+  │ Specs:          2 found (data-coverage.cy.js, date-formatting-comprehensive.cy.js)             │
+  │ Searched:       C:\GitKraken\WeightlossTracker\cypress\e2e\data-coverage.cy.js, C:\GitKraken\W │
+  │                 eightlossTracker\cypress\e2e\date-formatting-comprehensive.cy.js               │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  data-coverage.cy.js                                                             (1 of 2)
+
+
+  Data Module Coverage Tests
+    Weight History Functions
+      - should test loadWeightHistory() function with successful data
+      - should test loadWeightHistory() function with no data
+      - should test loadWeightHistory() function with network failure
+      √ should test formatDate() function with various date formats (3650ms)
+      √ should test editWeight() function UI interactions (2430ms)
+      √ should test deleteWeight() function with successful deletion (8280ms)
+      √ should test deleteWeight() function with user cancellation (8032ms)
+      √ should test deleteWeight() function with server error (7571ms)
+
+
+  5 passing (31s)
+  3 pending
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        8                                                                                │
+  │ Passing:      5                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      3                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        true                                                                             │
+  │ Duration:     31 seconds                                                                       │
+  │ Spec Ran:     data-coverage.cy.js                                                              │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+  (Video)
+
+  -  Video output: C:\GitKraken\WeightlossTracker\cypress\videos\data-coverage.cy.js.mp4
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  date-formatting-comprehensive.cy.js                                             (2 of 2)
+
+
+  Date Formatting Comprehensive
+    formatDateBySettings() Function
+      √ should format dates in UK format (dd/mm/yyyy) (465ms)
+      √ should format dates in US format (mm/dd/yyyy) (717ms)
+      √ should format dates in Euro format (dd.mm.yyyy) (376ms)
+      √ should format dates in ISO format (yyyy-mm-dd) (681ms)
+      √ should handle invalid dates gracefully (371ms)
+    formatAllTimestamps() Function
+      √ should exist and be callable (3727ms)
+      - should format all .format-date elements on the page
+      - should format login time with date and time
+      - should update all timestamps when date format changes
+    Settings Integration
+      - should update dates when changing date format in settings
+      - should persist date format across page reloads
+    Weight History Table Dates
+      - should format dates in weight history table
+    Chart Date Labels
+      √ should format dates in weight chart (5436ms)
+    Goal Date Display
+      - should format goal date correctly
+    Streak Counter Dates
+      - should format streak counter dates
+    Edge Cases
+      √ should handle missing timestamps gracefully (3706ms)
+      √ should handle invalid timestamp values (3488ms)
+      √ should handle zero timestamp (3751ms)
+    Coverage Verification
+      √ should call formatDateBySettings from multiple places (4479ms)
+
+
+  11 passing (28s)
+  8 pending
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        19                                                                               │
+  │ Passing:      11                                                                               │
+  │ Failing:      0                                                                                │
+  │ Pending:      8                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        true                                                                             │
+  │ Duration:     27 seconds                                                                       │
+  │ Spec Ran:     date-formatting-comprehensive.cy.js                                              │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+  (Video)
+
+  -  Video output: C:\GitKraken\WeightlossTracker\cypress\videos\date-formatting-comprehensive.cy.js.mp4
+
+
+====================================================================================================
+
+  (Run Finished)
+
+
+       Spec                                              Tests  Passing  Failing  Pending  Skipped  
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ ✔  data-coverage.cy.js                      00:31        8        5        -        3        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  date-formatting-comprehensive.cy.js      00:27       19       11        -        8        - │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+    ✔  All specs passed!                        00:59       27       16        -       11        -  
+

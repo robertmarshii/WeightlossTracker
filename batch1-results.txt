@@ -1,0 +1,585 @@
+
+
+DevTools listening on ws://127.0.0.1:55299/devtools/browser/76b6f40a-c861-4196-b058-186042454fcb
+
+====================================================================================================
+
+  (Run Starting)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Cypress:        13.17.0                                                                        │
+  │ Browser:        Electron 118 (headless)                                                        │
+  │ Node Version:   v22.19.0 (C:\Program Files\nodejs\node.exe)                                    │
+  │ Specs:          10 found (achievements-functionality.cy.js, auth-comprehensive.cy.js, backend- │
+  │                 api-coverage.cy.js, backend-auth-edge-cases.cy.js, backend-comprehensive.cy.js │
+  │                 , body-insights-comprehensive.cy.js, body-tab-comprehensive.cy.js, comprehensi │
+  │                 ve-function-coverage.cy...)                                                    │
+  │ Searched:       C:\GitKraken\WeightlossTracker\cypress\e2e\passing\achievements-functionality. │
+  │                 cy.js, C:\GitKraken\WeightlossTracker\cypress\e2e\passing\auth-comprehensive.c │
+  │                 y.js, C:\GitKraken\WeightlossTracker\cypress\e2e\passing\backend-api-coverage. │
+  │                 cy.js, C:\GitKraken\WeightlossTracker\cypress\e2e\passing\backend-auth-edge-ca │
+  │                 ses.cy.js, C:\GitKraken\WeightlossTracker\cypress\e2e\passing\backend-comprehe │
+  │                 nsive.cy.js, C:\GitKraken\WeightlossTracker\cypress\e2e\passing\body-insights- │
+  │                 comprehensive.cy.js, C:\GitKraken\WeightlossTracker\cypress\e2e\passing\body-t │
+  │                 ab-comprehensive.cy.js, C:\GitKraken\WeightlossTracker\cypress\e2e\passing\com │
+  │                 prehensive-function-coverage.cy.js, C:\GitKraken\WeightlossTracker\cypress\e2e │
+  │                 \passing\core-functionality.cy.js, C:\GitKraken\WeightlossTracker\cypress\e2e\ │
+  │                 passing\dashboard-comprehensive-coverage.cy.js                                 │
+  │ Experiments:    experimentalMemoryManagement=true                                              │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  achievements-functionality.cy.js                                               (1 of 10)
+
+
+  Achievements Functionality
+    Achievement Cards Update Function
+      √ should test updateAchievementCards function exists and executes (1585ms)
+      √ should test updateAchievementCards with mock data (363ms)
+      √ should handle empty achievement data (657ms)
+      √ should handle malformed achievement data (351ms)
+    Achievement Progress Calculations
+      √ should test achievement progress display (658ms)
+      √ should test completed achievement styling (355ms)
+    Achievement Types and Categories
+      √ should test weight loss achievements (711ms)
+      √ should test consistency achievements (352ms)
+      √ should test health achievements (693ms)
+    Achievement Animations and Effects
+      √ should test achievement unlock animation (371ms)
+      √ should test progress bar animations (729ms)
+    Achievement Integration with Dashboard
+      √ should test achievements update with weight changes (347ms)
+      √ should test achievements persistence (702ms)
+    Achievement Performance and Memory
+      √ should test large achievement dataset performance (339ms)
+      √ should test memory usage during achievement updates (684ms)
+
+
+  15 passing (9s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        15                                                                               │
+  │ Passing:      15                                                                               │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     9 seconds                                                                        │
+  │ Spec Ran:     achievements-functionality.cy.js                                                 │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  auth-comprehensive.cy.js                                                       (2 of 10)
+
+
+  Comprehensive Authentication Test Suite
+    Email Validation Functions
+      √ should validate email formats and show appropriate alerts (1132ms)
+      √ should test isValidEmail() with valid emails (2040ms)
+      √ should test isValidEmail() with invalid emails (2471ms)
+    Account Creation and Signup Flow
+      √ should create new account successfully (1130ms)
+      √ should test createAccount() function (1168ms)
+      √ creates account and verifies, then can login (1955ms)
+      √ rejects account creation with invalid email (342ms)
+    Login Code Request Flow
+      √ should request login code for valid email (1008ms)
+      √ should test sendLoginCode() function (807ms)
+      √ sends login code and verifies it (4226ms)
+    Login Code Verification Flow
+      √ should verify login code and redirect to dashboard (4092ms)
+      √ should test verifyLoginCode() function (594ms)
+      √ rejects wrong login code (777ms)
+    Signup Code Verification Flow
+      √ should test verifySignupCode() with valid code (3303ms)
+      √ should test verifySignupCode() with invalid code (475ms)
+      √ should test verifySignupCode() with missing email (333ms)
+      √ should test verifySignupCode() function (726ms)
+    Session Management - logout() and isLoggedIn()
+      √ should test logout() function directly (1141ms)
+      √ should test logout() with existing session (316ms)
+      √ should test isLoggedIn() function directly (637ms)
+      √ should test isLoggedIn() after successful login (703ms)
+      √ should test isLoggedIn() after logout (644ms)
+    Navigation Between Forms
+      √ should navigate between login and signup forms (1477ms)
+      √ should test backToEmailLogin() function (845ms)
+      √ should test backToEmailSignup() function (1098ms)
+    Error Handling and Edge Cases
+      √ should handle errors and rate limiting gracefully (689ms)
+      √ should handle API failures gracefully (787ms)
+      √ should handle empty form submissions (539ms)
+      √ should handle network timeouts (696ms)
+    UI State Management Functions
+      √ should test updateSignupButton() function (1076ms)
+      √ should test showAlert() function (698ms)
+      √ should test parseJson() function indirectly (738ms)
+    Backend Router Controller Tests
+      √ should test SchemaController endpoint (308ms)
+      √ should test ProfileController endpoint (335ms)
+      √ should test SeederController endpoint (624ms)
+      √ should test EmailController endpoint (280ms)
+
+
+  36 passing (44s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        36                                                                               │
+  │ Passing:      36                                                                               │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     43 seconds                                                                       │
+  │ Spec Ran:     auth-comprehensive.cy.js                                                         │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  backend-api-coverage.cy.js                                                     (3 of 10)
+
+
+  Backend API Function Coverage Tests
+    √ should test AuthManager authentication functions (4303ms)
+    √ should test profile and dashboard API functions (4245ms)
+    √ should test database seeder functions (1535ms)
+    √ should test coverage logger backend functions (1038ms)
+    √ should test schema management functions (1059ms)
+
+
+  5 passing (13s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        5                                                                                │
+  │ Passing:      5                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     12 seconds                                                                       │
+  │ Spec Ran:     backend-api-coverage.cy.js                                                       │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  backend-auth-edge-cases.cy.js                                                  (4 of 10)
+
+
+  Backend Authentication Edge Cases
+    AuthManager::isLoggedIn Edge Cases
+      √ should handle expired session cleanup (1096ms)
+      √ should handle remember token validation (307ms)
+      √ should handle database errors gracefully in isLoggedIn (589ms)
+    AuthManager::checkRateLimit Edge Cases
+      √ should handle rate limit blocking scenarios (789ms)
+      √ should handle rate limit file creation (870ms)
+      √ should handle rate limit cleanup of old attempts (823ms)
+    AuthManager::sendEmail Edge Cases
+      √ should handle email sending with different test modes (623ms)
+      √ should handle force_email_success mode (264ms)
+      √ should handle test@dev.com special case (632ms)
+    AuthManager::generateCode Edge Cases
+      √ should test deterministic code generation for test emails (702ms)
+    AuthManager::createAccount Edge Cases
+      √ should handle duplicate account creation attempts (776ms)
+      √ should handle createAccount rate limiting (1431ms)
+    AuthManager::verifyLoginCode Edge Cases
+      √ should handle invalid and expired codes (460ms)
+      √ should handle session creation and remember token setting (424ms)
+    AuthManager::logout and Token Management
+      √ should handle logout and token cleanup (385ms)
+      √ should handle setRememberToken and clearRememberToken edge cases (853ms)
+    Database Error Handling
+      √ should handle database connection errors gracefully (137ms)
+
+
+  17 passing (12s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        17                                                                               │
+  │ Passing:      17                                                                               │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     11 seconds                                                                       │
+  │ Spec Ran:     backend-auth-edge-cases.cy.js                                                    │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  backend-comprehensive.cy.js                                                    (5 of 10)
+
+
+  Backend Comprehensive Test Suite
+    Authentication & Basic API Tests
+      √ should test backend authentication functions via API (1062ms)
+      √ should test backend account creation functions via API (1034ms)
+      √ should test backend login verification functions via API (987ms)
+      √ should test login API with simple debug call (680ms)
+      √ should stress test ALL AuthManager functions with maximum calls (2095ms)
+      √ should test AuthController function with comprehensive auth operations (1765ms)
+    Router Controller Tests
+      √ should test SchemaController with GET request (1003ms)
+      √ should test SchemaController with POST request (655ms)
+      √ should test SchemaController with schema switching (999ms)
+      √ should test ProfileController without authentication (711ms)
+      √ should test ProfileController with POST actions (1038ms)
+      √ should test ProfileController with update operations (725ms)
+      √ should test SeederController with GET request (1017ms)
+      √ should test SeederController with seeding actions (745ms)
+      √ should test EmailController with GET request (1000ms)
+      √ should test EmailController with email actions (762ms)
+      √ should test Get1 function with POST request (952ms)
+      √ should test Get1 function with different pages (718ms)
+      √ should test Get1 class constructor and Get method (2598ms)
+    Database & Schema Management
+      √ should test backend schema functions via API (713ms)
+      √ should test backend database seeding functions via API (1554ms)
+      √ should test basic schema API without coverage (711ms)
+      √ should test Get1 class with various page parameters (1027ms)
+      √ should test Get1 with edge case page parameters (775ms)
+      √ should test Get1 without page parameter (1031ms)
+      √ should test SchemaController with various schema actions (793ms)
+      √ should test SchemaController with different schema names (1023ms)
+      √ should test DatabaseSeeder resetSchemas function (1266ms)
+      √ should test DatabaseSeeder utility functions with comprehensive calls (2061ms)
+      √ should stress test DatabaseSeeder with multiple rapid calls (1760ms)
+      √ should test SchemaManager switchSchema function (1791ms)
+      √ should test SchemaManager getCurrentSchema function (1259ms)
+      √ should stress test SchemaManager with validation calls (2445ms)
+      √ should trigger Database getInstance and connection functions (1270ms)
+      √ should trigger Database getSchema function (1532ms)
+      √ should stress test Database class with intensive operations (1795ms)
+    Coverage & Logging System
+      √ should test coverage API endpoint (1008ms)
+      √ should test CoverageController function (702ms)
+      √ should test CoverageController with different actions (1037ms)
+      √ should test CoverageController with advanced coverage actions (828ms)
+      √ should test CoverageLogger getInstance and reporting functions (1579ms)
+      √ should trigger CoverageLogger internal functions (1249ms)
+      √ should stress test CoverageLogger with intensive logging (2061ms)
+    Advanced Testing & Edge Cases
+      √ should test SeederController with comprehensive seeding actions (839ms)
+      √ should test SeederController with different schema targets (1067ms)
+      √ should test EmailController with comprehensive email actions (841ms)
+      √ should test EmailController with email template management (1067ms)
+      √ should handle invalid controller names (689ms)
+      √ should handle missing parameters (1039ms)
+      √ should handle malformed controller requests (683ms)
+    Stress Testing & Performance
+      √ should test multiple concurrent requests to different controllers (1187ms)
+      √ should test rapid sequential requests to ProfileController (1133ms)
+      √ should test ALL Router controller functions aggressively (2350ms)
+      √ should stress test Router controllers with multiple calls (3126ms)
+    Coverage Target Tests (75% Goal)
+      √ should trigger DatabaseSeeder resetSchemas function (1526ms)
+      √ should trigger DatabaseSeeder seedSchema function (1171ms)
+      √ should trigger DatabaseSeeder isLocalhost function (1526ms)
+      √ should trigger CoverageLogger clearCoverage function (1237ms)
+      √ should trigger CoverageLogger loadCoverageData function (1558ms)
+      √ should trigger coverage_log and COVERAGE_LOG functions (2044ms)
+      √ should perform comprehensive backend function targeting to reach 75% (4898ms)
+      √ should perform intensive targeting with multiple rounds (2434ms)
+      √ should call EVERY instrumented backend function in massive sequence (3475ms)
+      √ should perform intensive multi-round coverage of all functions (3104ms)
+
+
+  64 passing (2m)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        64                                                                               │
+  │ Passing:      64                                                                               │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     1 minute, 32 seconds                                                             │
+  │ Spec Ran:     backend-comprehensive.cy.js                                                      │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  body-insights-comprehensive.cy.js                                              (6 of 10)
+
+
+  Body Insights - Comprehensive Tests
+    Smart Data Insights
+      √ should display Smart Data Insights card (8110ms)
+      √ should toggle Smart Data Insights card (7424ms)
+      1) "before each" hook for "should generate insights with existing data"
+
+
+  2 passing (30s)
+  1 failing
+
+  1) Body Insights - Comprehensive Tests
+       Smart Data Insights
+         "before each" hook for "should generate insights with existing data":
+     AssertionError: Timed out retrying after 10000ms: expected 'http://127.0.0.1:8111/' to include 'dashboard.php'
+
+Because this error occurred during a `before each` hook we are skipping the remaining tests in the current suite: `Body Insights - Comprehensi...`
+      at Context.eval (webpack://weightloss-tracker/./cypress/support/e2e.js:56:39)
+
+
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        18                                                                               │
+  │ Passing:      2                                                                                │
+  │ Failing:      1                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      15                                                                               │
+  │ Screenshots:  1                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     29 seconds                                                                       │
+  │ Spec Ran:     body-insights-comprehensive.cy.js                                                │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+  (Screenshots)
+
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\body-insights-comprehensive.c     (1280x720)
+     y.js\Body Insights - Comprehensive Tests -- should generate insights with existi               
+     ng data -- before each hook (failed).png                                                       
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  body-tab-comprehensive.cy.js                                                   (7 of 10)
+
+
+  Body Tab - Comprehensive Tests
+    Body Tab - Navigation
+      √ should navigate to Body tab with #page=body&area=summary (5602ms)
+      √ should show Summary sub-tab as active by default (4891ms)
+      √ should switch to History sub-tab (5518ms)
+    Summary Area - Smart Data Cards
+      √ should display all Smart Data cards with Add Data buttons (5057ms)
+      √ should toggle edit mode on Muscle Mass card (6191ms)
+      √ should save Muscle Mass data (7987ms)
+    Summary Area - Measurements Cards
+      √ should display all Measurements cards (5409ms)
+    Summary Area - Calipers Cards
+      1) "before each" hook for "should display all Calipers cards"
+
+
+  7 passing (54s)
+  1 failing
+
+  1) Body Tab - Comprehensive Tests
+       Summary Area - Calipers Cards
+         "before each" hook for "should display all Calipers cards":
+     AssertionError: Timed out retrying after 8000ms: Expected to find element: `#body-tab`, but never found it.
+
+Because this error occurred during a `before each` hook we are skipping the remaining tests in the current suite: `Body Tab - Comprehensive Tests`
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/passing/body-tab-comprehensive.cy.js:64:15)
+
+
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        31                                                                               │
+  │ Passing:      7                                                                                │
+  │ Failing:      1                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      23                                                                               │
+  │ Screenshots:  1                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     54 seconds                                                                       │
+  │ Spec Ran:     body-tab-comprehensive.cy.js                                                     │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+  (Screenshots)
+
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\body-tab-comprehensive.cy.js\     (1280x720)
+     Body Tab - Comprehensive Tests -- should display all Calipers cards -- before ea               
+     ch hook (failed).png                                                                           
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  comprehensive-function-coverage.cy.js                                          (8 of 10)
+
+
+  Comprehensive Function Coverage Tests
+    Dashboard Core Functions
+      √ should test weight entry and management functions (1848ms)
+      √ should test height conversion and management functions (1193ms)
+      √ should test date formatting and utility functions (1477ms)
+      √ should test chart and visualization functions (1207ms)
+    Health Calculation Functions
+      √ should test BMI calculation and display functions (1522ms)
+      √ should test health score and risk assessment functions (1217ms)
+      √ should test body composition and analysis functions (1483ms)
+    Settings and Theme Functions
+      √ should test theme management functions (1226ms)
+      √ should test settings validation and update functions (1516ms)
+    Data Management Functions
+      √ should test weight history and data functions (1211ms)
+      √ should test goal management functions (1506ms)
+    UI Interaction Functions
+      √ should test modal and popup functions (1209ms)
+      √ should test form validation functions (1492ms)
+    Achievement and Progress Functions
+      √ should test achievement calculation functions (1198ms)
+    Coverage System Functions
+      √ should test coverage reporting and analysis functions (1521ms)
+    Navigation and Tab Functions
+      √ should test tab navigation and initialization functions (1241ms)
+    Data Processing Functions
+      √ should test JSON parsing and data processing functions (1475ms)
+
+
+  17 passing (25s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        17                                                                               │
+  │ Passing:      17                                                                               │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     24 seconds                                                                       │
+  │ Spec Ran:     comprehensive-function-coverage.cy.js                                            │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  core-functionality.cy.js                                                       (9 of 10)
+
+
+  Core Functionality - Weight Tracking & Profile Management
+    Weight and Goal Management
+      √ adds weight entries and manages weight loss goals (1836ms)
+    Profile, BMI and Health Statistics
+      √ saves profile data, calculates BMI, and generates health statistics (1370ms)
+    Integrated Workflow
+      √ completes full weight tracking workflow with profile and goal management (1820ms)
+
+
+  3 passing (5s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        3                                                                                │
+  │ Passing:      3                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     5 seconds                                                                        │
+  │ Spec Ran:     core-functionality.cy.js                                                         │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  dashboard-comprehensive-coverage.cy.js                                        (10 of 10)
+
+
+  Dashboard Comprehensive Function Coverage
+    Core Data Loading Functions
+      √ should test primary data loading and refresh functions (2855ms)
+      √ should test settings management functions (2217ms)
+    Chart and Visualization Functions
+      √ should test chart initialization and update functions (2482ms)
+      √ should test achievement and UI functions (2233ms)
+    Weight Management Functions
+      √ should test weight editing and deletion functions (2529ms)
+      √ should test display and unit functions (2230ms)
+    Advanced Dashboard Functions
+      √ should test remaining high-priority dashboard functions (2505ms)
+
+
+  7 passing (17s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        7                                                                                │
+  │ Passing:      7                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     17 seconds                                                                       │
+  │ Spec Ran:     dashboard-comprehensive-coverage.cy.js                                           │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+====================================================================================================
+
+  (Run Finished)
+
+
+       Spec                                              Tests  Passing  Failing  Pending  Skipped  
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ ✔  achievements-functionality.cy.js         00:09       15       15        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  auth-comprehensive.cy.js                 00:43       36       36        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  backend-api-coverage.cy.js               00:12        5        5        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  backend-auth-edge-cases.cy.js            00:11       17       17        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  backend-comprehensive.cy.js              01:32       64       64        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✖  body-insights-comprehensive.cy.js        00:29       18        2        1        -       15 │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✖  body-tab-comprehensive.cy.js             00:54       31        7        1        -       23 │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  comprehensive-function-coverage.cy.      00:24       17       17        -        -        - │
+  │    js                                                                                          │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  core-functionality.cy.js                 00:05        3        3        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  dashboard-comprehensive-coverage.cy      00:17        7        7        -        -        - │
+  │    .js                                                                                         │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+    ✖  2 of 10 failed (20%)                     05:01      213      173        2        -       38  
+

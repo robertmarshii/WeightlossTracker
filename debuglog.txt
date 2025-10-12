@@ -1,5 +1,13 @@
 [
     {
+        "message": "📊 Body: No body data available yet",
+        "time": 1760134962921
+    },
+    {
+        "message": "📊 Body: No body data history available yet",
+        "time": 1760134962921
+    },
+    {
         "message": "✅ Global dashboard data loaded. Keys:",
         "data": [
             "latest_weight",
@@ -15,43 +23,45 @@
             "quick_look_metrics",
             "goal_progress_enhanced",
             "streak_data",
-            "total_progress"
+            "total_progress",
+            "body_data",
+            "body_data_history"
         ],
-        "time": 1759877516509
+        "time": 1760134963325
     },
     {
         "message": "🔍 health_stats available:",
         "data": true,
-        "time": 1759877516509
+        "time": 1760134963325
     },
     {
         "message": "🔍 weight_progress available:",
         "data": true,
-        "time": 1759877516509
+        "time": 1760134963325
     },
     {
         "message": "🔍 ideal_weight available:",
         "data": true,
-        "time": 1759877516509
+        "time": 1760134963325
     },
     {
         "message": "📞 Calling callback. globalDashboardData exists:",
         "data": true,
-        "time": 1759877516509
+        "time": 1760134963325
     },
     {
         "message": "⚙️ Pre-setting formats before render:",
         "data": {
-            "date_format": "euro",
+            "date_format": "uk",
             "weight_unit": "kg",
             "height_unit": "cm",
             "language": "en"
         },
-        "time": 1759877516509
+        "time": 1760134963325
     },
     {
         "message": "🔧 loadSettings() called in dashboard.js",
-        "time": 1759877516509
+        "time": 1760134963326
     },
     {
         "message": "🔍 globalDashboardData:",
@@ -164,11 +174,10 @@
                 }
             ],
             "settings": {
-                "user_id": 1,
                 "weight_unit": "kg",
                 "height_unit": "cm",
                 "temperature_unit": "c",
-                "date_format": "euro",
+                "date_format": "uk",
                 "time_format": "24",
                 "timezone": "Europe/London",
                 "theme": "glassmorphism",
@@ -178,8 +187,7 @@
                 "email_notifications": false,
                 "email_day": "monday",
                 "email_time": "09:00",
-                "weekly_reports": false,
-                "updated_at": "2025-10-07 22:32:15.491341"
+                "weekly_reports": false
             },
             "health_stats": {
                 "bmi": 37.2,
@@ -265,11 +273,11 @@
                 ]
             },
             "quick_look_metrics": {
-                "consistency_score": 83.1,
+                "consistency_score": 80.4,
                 "logging_frequency": 100,
-                "goal_progress": 66.27906976744177,
+                "goal_progress": 60.810810810810764,
                 "next_checkin_date": "2025-09-26",
-                "days_until_checkin": -11,
+                "days_until_checkin": -14,
                 "average_logging_interval": 7
             },
             "goal_progress_enhanced": {
@@ -280,29 +288,14 @@
                 "weight_lost": 10.1,
                 "weekly_progress": 0,
                 "monthly_progress": 6.15,
-                "eta_date": "2025-11-21",
+                "eta_date": "2025-11-24",
                 "weekly_loss_rate": 0.46
             },
             "streak_data": {
                 "current_streak": 0,
-                "longest_streak": 11,
-                "missed_weeks_this_month": 3,
+                "longest_streak": 10,
+                "missed_weeks_this_month": 4,
                 "timeline": [
-                    {
-                        "date": "2025-09-10",
-                        "logged": false,
-                        "is_today": false
-                    },
-                    {
-                        "date": "2025-09-11",
-                        "logged": false,
-                        "is_today": false
-                    },
-                    {
-                        "date": "2025-09-12",
-                        "logged": true,
-                        "is_today": false
-                    },
                     {
                         "date": "2025-09-13",
                         "logged": false,
@@ -425,6 +418,21 @@
                     },
                     {
                         "date": "2025-10-07",
+                        "logged": false,
+                        "is_today": false
+                    },
+                    {
+                        "date": "2025-10-08",
+                        "logged": false,
+                        "is_today": false
+                    },
+                    {
+                        "date": "2025-10-09",
+                        "logged": false,
+                        "is_today": false
+                    },
+                    {
+                        "date": "2025-10-10",
                         "logged": false,
                         "is_today": true
                     }
@@ -732,22 +740,297 @@
                     }
                 ],
                 "total_lost_kg": 10.099999999999994
+            },
+            "body_data": {
+                "caliper_suprailiac": {
+                    "value": "19.00",
+                    "unit": "mm",
+                    "entry_date": "2025-10-05"
+                },
+                "caliper_tricep": {
+                    "value": "14.50",
+                    "unit": "mm",
+                    "entry_date": "2025-10-05"
+                },
+                "caliper_thigh": {
+                    "value": "20.00",
+                    "unit": "mm",
+                    "entry_date": "2025-10-05"
+                },
+                "caliper_abdomen": {
+                    "value": "21.50",
+                    "unit": "mm",
+                    "entry_date": "2025-10-05"
+                },
+                "caliper_chest": {
+                    "value": "18.00",
+                    "unit": "mm",
+                    "entry_date": "2025-10-05"
+                },
+                "measurement_arm": {
+                    "value": "35.30",
+                    "unit": "cm",
+                    "entry_date": "2025-10-05"
+                },
+                "measurement_calf": {
+                    "value": "39.80",
+                    "unit": "cm",
+                    "entry_date": "2025-10-05"
+                },
+                "measurement_thigh": {
+                    "value": "61.50",
+                    "unit": "cm",
+                    "entry_date": "2025-10-05"
+                },
+                "measurement_hips": {
+                    "value": "104.50",
+                    "unit": "cm",
+                    "entry_date": "2025-10-05"
+                },
+                "measurement_waist": {
+                    "value": "98.00",
+                    "unit": "cm",
+                    "entry_date": "2025-10-05"
+                },
+                "measurement_chest": {
+                    "value": "109.50",
+                    "unit": "cm",
+                    "entry_date": "2025-10-05"
+                },
+                "measurement_neck": {
+                    "value": "40.00",
+                    "unit": "cm",
+                    "entry_date": "2025-10-05"
+                },
+                "bone_mass": {
+                    "value": "3.30",
+                    "unit": "kg",
+                    "entry_date": "2025-10-05"
+                },
+                "water_percent": {
+                    "value": "54.50",
+                    "unit": "%",
+                    "entry_date": "2025-10-05"
+                },
+                "fat_percent": {
+                    "value": "27.90",
+                    "unit": "%",
+                    "entry_date": "2025-10-05"
+                },
+                "muscle_mass": {
+                    "value": "42.80",
+                    "unit": "%",
+                    "entry_date": "2025-10-05"
+                }
+            },
+            "body_data_history": {
+                "caliper_suprailiac": [
+                    {
+                        "value": "19.00",
+                        "unit": "mm",
+                        "entry_date": "2025-10-05"
+                    },
+                    {
+                        "value": "19.50",
+                        "unit": "mm",
+                        "entry_date": "2025-10-01"
+                    }
+                ],
+                "caliper_tricep": [
+                    {
+                        "value": "14.50",
+                        "unit": "mm",
+                        "entry_date": "2025-10-05"
+                    },
+                    {
+                        "value": "15.00",
+                        "unit": "mm",
+                        "entry_date": "2025-10-01"
+                    }
+                ],
+                "caliper_thigh": [
+                    {
+                        "value": "20.00",
+                        "unit": "mm",
+                        "entry_date": "2025-10-05"
+                    },
+                    {
+                        "value": "20.50",
+                        "unit": "mm",
+                        "entry_date": "2025-10-01"
+                    }
+                ],
+                "caliper_abdomen": [
+                    {
+                        "value": "21.50",
+                        "unit": "mm",
+                        "entry_date": "2025-10-05"
+                    },
+                    {
+                        "value": "22.00",
+                        "unit": "mm",
+                        "entry_date": "2025-10-01"
+                    }
+                ],
+                "caliper_chest": [
+                    {
+                        "value": "18.00",
+                        "unit": "mm",
+                        "entry_date": "2025-10-05"
+                    },
+                    {
+                        "value": "18.50",
+                        "unit": "mm",
+                        "entry_date": "2025-10-01"
+                    }
+                ],
+                "measurement_arm": [
+                    {
+                        "value": "35.30",
+                        "unit": "cm",
+                        "entry_date": "2025-10-05"
+                    },
+                    {
+                        "value": "35.50",
+                        "unit": "cm",
+                        "entry_date": "2025-10-01"
+                    }
+                ],
+                "measurement_calf": [
+                    {
+                        "value": "39.80",
+                        "unit": "cm",
+                        "entry_date": "2025-10-05"
+                    },
+                    {
+                        "value": "40.00",
+                        "unit": "cm",
+                        "entry_date": "2025-10-01"
+                    }
+                ],
+                "measurement_thigh": [
+                    {
+                        "value": "61.50",
+                        "unit": "cm",
+                        "entry_date": "2025-10-05"
+                    },
+                    {
+                        "value": "62.00",
+                        "unit": "cm",
+                        "entry_date": "2025-10-01"
+                    }
+                ],
+                "measurement_hips": [
+                    {
+                        "value": "104.50",
+                        "unit": "cm",
+                        "entry_date": "2025-10-05"
+                    },
+                    {
+                        "value": "105.00",
+                        "unit": "cm",
+                        "entry_date": "2025-10-01"
+                    }
+                ],
+                "measurement_waist": [
+                    {
+                        "value": "98.00",
+                        "unit": "cm",
+                        "entry_date": "2025-10-05"
+                    },
+                    {
+                        "value": "98.50",
+                        "unit": "cm",
+                        "entry_date": "2025-10-01"
+                    }
+                ],
+                "measurement_chest": [
+                    {
+                        "value": "109.50",
+                        "unit": "cm",
+                        "entry_date": "2025-10-05"
+                    },
+                    {
+                        "value": "110.00",
+                        "unit": "cm",
+                        "entry_date": "2025-10-01"
+                    }
+                ],
+                "measurement_neck": [
+                    {
+                        "value": "40.00",
+                        "unit": "cm",
+                        "entry_date": "2025-10-05"
+                    },
+                    {
+                        "value": "40.50",
+                        "unit": "cm",
+                        "entry_date": "2025-10-01"
+                    }
+                ],
+                "bone_mass": [
+                    {
+                        "value": "3.30",
+                        "unit": "kg",
+                        "entry_date": "2025-10-05"
+                    },
+                    {
+                        "value": "3.20",
+                        "unit": "kg",
+                        "entry_date": "2025-10-01"
+                    }
+                ],
+                "water_percent": [
+                    {
+                        "value": "54.50",
+                        "unit": "%",
+                        "entry_date": "2025-10-05"
+                    },
+                    {
+                        "value": "54.20",
+                        "unit": "%",
+                        "entry_date": "2025-10-01"
+                    }
+                ],
+                "fat_percent": [
+                    {
+                        "value": "27.90",
+                        "unit": "%",
+                        "entry_date": "2025-10-05"
+                    },
+                    {
+                        "value": "28.30",
+                        "unit": "%",
+                        "entry_date": "2025-10-01"
+                    }
+                ],
+                "muscle_mass": [
+                    {
+                        "value": "42.80",
+                        "unit": "%",
+                        "entry_date": "2025-10-05"
+                    },
+                    {
+                        "value": "42.50",
+                        "unit": "%",
+                        "entry_date": "2025-10-01"
+                    }
+                ]
             }
         },
-        "time": 1759877516509
+        "time": 1760134963326
     },
     {
         "message": "📊 Using global data for settings",
-        "time": 1759877516509
+        "time": 1760134963326
     },
     {
         "message": "🔧 Settings data:",
         "data": {
-            "user_id": 1,
             "weight_unit": "kg",
             "height_unit": "cm",
             "temperature_unit": "c",
-            "date_format": "euro",
+            "date_format": "uk",
             "time_format": "24",
             "timezone": "Europe/London",
             "theme": "glassmorphism",
@@ -757,76 +1040,82 @@
             "email_notifications": false,
             "email_day": "monday",
             "email_time": "09:00",
-            "weekly_reports": false,
-            "updated_at": "2025-10-07 22:32:15.491341"
+            "weekly_reports": false
         },
-        "time": 1759877516509
+        "time": 1760134963326
     },
     {
-        "message": "🔄 dashboard.js FILE HAS RELOADED - timestamp:",
-        "data": 1759877516510,
-        "time": 1759877516510
+        "message": "🔄 refreshLatestWeight called",
+        "time": 1760134963326
     },
     {
         "message": "refreshLatestWeight",
         "data": {
             "hasGlobalData": true
         },
-        "time": 1759877516510
+        "time": 1760134963326
     },
     {
         "message": "Using global data for latest weight",
-        "time": 1759877516510
+        "time": 1760134963326
     },
     {
-        "message": "⏰ About to call formatDate with:",
-        "data": "2025-09-19",
-        "time": 1759877516510
+        "message": "🕐 formatAllTimestamps called",
+        "time": 1760134963327
     },
     {
-        "message": "⏰ formatDate returned:",
-        "data": "19/09/2025",
-        "time": 1759877516511
+        "message": "✅ All timestamps formatted with format:",
+        "data": "uk",
+        "time": 1760134963327
+    },
+    {
+        "message": "🕐 formatAllTimestamps called",
+        "time": 1760134963327
+    },
+    {
+        "message": "✅ All timestamps formatted with format:",
+        "data": "uk",
+        "time": 1760134963327
     },
     {
         "message": "🔍 refreshGoal - has global data:",
         "data": true,
-        "time": 1759877516511
+        "time": 1760134963327
     },
     {
         "message": "📊 Using global data for goal",
-        "time": 1759877516511
+        "time": 1760134963327
     },
     {
         "message": "📅 formatDateBySettings - input:",
         "data": "2025-10-15",
-        "time": 1759877516511
+        "time": 1760134963327
     },
     {
         "message": "📊 Using global data for profile",
-        "time": 1759877516511
+        "time": 1760134963327
     },
     {
         "message": "🔍 refreshBMI - has global data:",
         "data": true,
-        "time": 1759877516511
+        "time": 1760134963327
     },
     {
         "message": "📊 Using global data for BMI",
-        "time": 1759877516511
+        "time": 1760134963327
     },
     {
         "message": "🔍 refreshHealth - has global data:",
         "data": true,
-        "time": 1759877516511
+        "time": 1760134963327
     },
     {
         "message": "📊 Using global data for health stats (body fat)",
-        "time": 1759877516511
+        "time": 1760134963327
     },
     {
         "message": "📊 Using global data for cardiovascular risk",
-        "time": 1759877516511
+        "time": 1760134963328
     },
     {
         "message": "🔍 cardiovascular_risk data:",
@@ -842,42 +1131,42 @@
                 "For clinical assessment, consult healthcare provider"
             ]
         },
-        "time": 1759877516511
+        "time": 1760134963328
     },
     {
         "message": "🔍 Risk improvement:",
         "data": 3,
-        "time": 1759877516511
+        "time": 1760134963328
     },
     {
         "message": "📊 Using global data for ideal weight",
-        "time": 1759877516512
+        "time": 1760134963328
     },
     {
         "message": "🔍 refreshWeightProgress - has global data:",
         "data": true,
-        "time": 1759877516512
+        "time": 1760134963328
     },
     {
         "message": "📊 Using global data for weight progress",
-        "time": 1759877516512
+        "time": 1760134963328
     },
     {
         "message": "🔍 refreshGallbladderHealth - has global data:",
         "data": true,
-        "time": 1759877516512
+        "time": 1760134963328
     },
     {
         "message": "📊 Using global data for gallbladder health",
-        "time": 1759877516512
+        "time": 1760134963328
     },
     {
         "message": "Health benefits - checking for data to update cards...",
-        "time": 1759877516512
+        "time": 1760134963328
     },
     {
         "message": "📊 Using global data for health benefit cards",
-        "time": 1759877516512
+        "time": 1760134963328
     },
     {
         "message": "🔍 weight_progress data:",
@@ -901,45 +1190,45 @@
             "bmi_change": 3.2,
             "total_entries": 15
         },
-        "time": 1759877516512
+        "time": 1760134963328
     },
     {
         "message": "🔍 loadWeightHistory - has global data:",
         "data": true,
-        "time": 1759877516513
+        "time": 1760134963329
     },
     {
         "message": "📊 Using global data for weight history",
-        "time": 1759877516513
+        "time": 1760134963329
     },
     {
         "message": "🔍 loadQuickLookMetrics called",
-        "time": 1759877516513
+        "time": 1760134963329
     },
     {
         "message": "📊 Using global data for quick look metrics",
-        "time": 1759877516513
+        "time": 1760134963329
     },
     {
         "message": "🎨 renderQuickLookMetrics called with:",
         "data": {
-            "consistency_score": 83.1,
+            "consistency_score": 80.4,
             "logging_frequency": 100,
-            "goal_progress": 66.27906976744177,
+            "goal_progress": 60.810810810810764,
             "next_checkin_date": "2025-09-26",
-            "days_until_checkin": -11,
+            "days_until_checkin": -14,
             "average_logging_interval": 7
         },
-        "time": 1759877516514
+        "time": 1760134963329
     },
     {
         "message": "📊 displayConsistencyScore called with score:",
-        "data": 83.1,
-        "time": 1759877516514
+        "data": 80.4,
+        "time": 1760134963329
     },
     {
         "message": "📊 Using global data for goal progress enhanced",
-        "time": 1759877516514
+        "time": 1760134963330
     },
     {
         "message": "📊 renderGoalProgress called with",
@@ -951,23 +1240,23 @@
             "weight_lost": 10.1,
             "weekly_progress": 0,
             "monthly_progress": 6.15,
-            "eta_date": "2025-11-21",
+            "eta_date": "2025-11-24",
             "weekly_loss_rate": 0.46
         },
-        "time": 1759877516514
+        "time": 1760134963330
     },
     {
         "message": "🔍 hasGoal",
         "data": true,
-        "time": 1759877516514
+        "time": 1760134963330
     },
     {
         "message": "✅ Hiding placeholder, showing content",
-        "time": 1759877516514
+        "time": 1760134963330
     },
     {
         "message": "Using global data for total progress",
-        "time": 1759877516516
+        "time": 1760134963330
     },
     {
         "message": "Body fat data received:",
@@ -1033,32 +1322,308 @@
                 "body_fat_percent": 43.1
             }
         ],
-        "time": 1759877516538
+        "time": 1760134963346
     },
     {
         "message": "Using cached streak data from global dashboard data",
-        "time": 1759877516540
+        "time": 1760134963347
     },
     {
         "message": "✅ Generated HTML for 28 timeline dots",
-        "time": 1759877516540
+        "time": 1760134963347
     },
     {
         "message": "📊 Using global data for weight chart",
-        "time": 1759877516542
+        "time": 1760134963349
+    },
+    {
+        "message": "🕐 formatAllTimestamps called",
+        "time": 1760134963352
+    },
+    {
+        "message": "✅ All timestamps formatted with format:",
+        "data": "uk",
+        "time": 1760134963352
     },
     {
         "message": "Applying translations after all content rendered",
-        "time": 1759877516543
+        "time": 1760134963352
     },
     {
-        "message": "🕐 formatLoginTime - dateFormat:",
-        "data": "euro",
-        "time": 1759877516546
+        "message": "🕐 formatAllTimestamps called",
+        "time": 1760134963353
+    },
+    {
+        "message": "✅ All timestamps formatted with format:",
+        "data": "uk",
+        "time": 1760134963353
     },
     {
         "message": "Active schema:",
         "data": "wt_dev",
-        "time": 1759877516563
+        "time": 1760134963358
+    },
+    {
+        "message": "🕐 formatAllTimestamps called",
+        "time": 1760134963374
+    },
+    {
+        "message": "✅ All timestamps formatted with format:",
+        "data": "uk",
+        "time": 1760134963374
+    },
+    {
+        "message": "💡 Body Insights: Analyzing data...",
+        "data": {
+            "caliper_suprailiac": [
+                {
+                    "value": "19.00",
+                    "unit": "mm",
+                    "entry_date": "2025-10-05"
+                },
+                {
+                    "value": "19.50",
+                    "unit": "mm",
+                    "entry_date": "2025-10-01"
+                }
+            ],
+            "caliper_tricep": [
+                {
+                    "value": "14.50",
+                    "unit": "mm",
+                    "entry_date": "2025-10-05"
+                },
+                {
+                    "value": "15.00",
+                    "unit": "mm",
+                    "entry_date": "2025-10-01"
+                }
+            ],
+            "caliper_thigh": [
+                {
+                    "value": "20.00",
+                    "unit": "mm",
+                    "entry_date": "2025-10-05"
+                },
+                {
+                    "value": "20.50",
+                    "unit": "mm",
+                    "entry_date": "2025-10-01"
+                }
+            ],
+            "caliper_abdomen": [
+                {
+                    "value": "21.50",
+                    "unit": "mm",
+                    "entry_date": "2025-10-05"
+                },
+                {
+                    "value": "22.00",
+                    "unit": "mm",
+                    "entry_date": "2025-10-01"
+                }
+            ],
+            "caliper_chest": [
+                {
+                    "value": "18.00",
+                    "unit": "mm",
+                    "entry_date": "2025-10-05"
+                },
+                {
+                    "value": "18.50",
+                    "unit": "mm",
+                    "entry_date": "2025-10-01"
+                }
+            ],
+            "measurement_arm": [
+                {
+                    "value": "35.30",
+                    "unit": "cm",
+                    "entry_date": "2025-10-05"
+                },
+                {
+                    "value": "35.50",
+                    "unit": "cm",
+                    "entry_date": "2025-10-01"
+                }
+            ],
+            "measurement_calf": [
+                {
+                    "value": "39.80",
+                    "unit": "cm",
+                    "entry_date": "2025-10-05"
+                },
+                {
+                    "value": "40.00",
+                    "unit": "cm",
+                    "entry_date": "2025-10-01"
+                }
+            ],
+            "measurement_thigh": [
+                {
+                    "value": "61.50",
+                    "unit": "cm",
+                    "entry_date": "2025-10-05"
+                },
+                {
+                    "value": "62.00",
+                    "unit": "cm",
+                    "entry_date": "2025-10-01"
+                }
+            ],
+            "measurement_hips": [
+                {
+                    "value": "104.50",
+                    "unit": "cm",
+                    "entry_date": "2025-10-05"
+                },
+                {
+                    "value": "105.00",
+                    "unit": "cm",
+                    "entry_date": "2025-10-01"
+                }
+            ],
+            "measurement_waist": [
+                {
+                    "value": "98.00",
+                    "unit": "cm",
+                    "entry_date": "2025-10-05"
+                },
+                {
+                    "value": "98.50",
+                    "unit": "cm",
+                    "entry_date": "2025-10-01"
+                }
+            ],
+            "measurement_chest": [
+                {
+                    "value": "109.50",
+                    "unit": "cm",
+                    "entry_date": "2025-10-05"
+                },
+                {
+                    "value": "110.00",
+                    "unit": "cm",
+                    "entry_date": "2025-10-01"
+                }
+            ],
+            "measurement_neck": [
+                {
+                    "value": "40.00",
+                    "unit": "cm",
+                    "entry_date": "2025-10-05"
+                },
+                {
+                    "value": "40.50",
+                    "unit": "cm",
+                    "entry_date": "2025-10-01"
+                }
+            ],
+            "bone_mass": [
+                {
+                    "value": "3.30",
+                    "unit": "kg",
+                    "entry_date": "2025-10-05"
+                },
+                {
+                    "value": "3.20",
+                    "unit": "kg",
+                    "entry_date": "2025-10-01"
+                }
+            ],
+            "water_percent": [
+                {
+                    "value": "54.50",
+                    "unit": "%",
+                    "entry_date": "2025-10-05"
+                },
+                {
+                    "value": "54.20",
+                    "unit": "%",
+                    "entry_date": "2025-10-01"
+                }
+            ],
+            "fat_percent": [
+                {
+                    "value": "27.90",
+                    "unit": "%",
+                    "entry_date": "2025-10-05"
+                },
+                {
+                    "value": "28.30",
+                    "unit": "%",
+                    "entry_date": "2025-10-01"
+                }
+            ],
+            "muscle_mass": [
+                {
+                    "value": "42.80",
+                    "unit": "%",
+                    "entry_date": "2025-10-05"
+                },
+                {
+                    "value": "42.50",
+                    "unit": "%",
+                    "entry_date": "2025-10-01"
+                }
+            ]
+        },
+        "time": 1760134963374
+    },
+    {
+        "message": "💡 Body Insights: Data points found",
+        "data": {
+            "muscleMass": 2,
+            "fatPercent": 2,
+            "waterPercent": 2,
+            "boneMass": 2
+        },
+        "time": 1760134963374
+    },
+    {
+        "message": "💡 Body Insights: Generated 7 insights",
+        "data": [
+            {
+                "title": "You're trending in a healthy direction.",
+                "description": "Muscle ↑ and Fat ↓ indicates your training and/or diet are effective."
+            },
+            {
+                "title": "Body recomposition in progress.",
+                "description": "Even if total body weight isn't changing much, increasing muscle and reducing fat improves metabolism, posture, and energy use efficiency."
+            },
+            {
+                "title": "Hydration looks solid.",
+                "description": "The combination of muscle ↑ and water ↑ is normal — muscle retains more intracellular water than fat. A 54.5% water level is healthy."
+            },
+            {
+                "title": "Bone Mass Increasing.",
+                "description": "Your bone mass increased to 3.3kg. This can come from strength training, calcium/vitamin D intake, or reduced inflammation."
+            },
+            {
+                "title": "Body Composition Breakdown",
+                "description": "You have 50.5kg of muscle, 32.9kg of fat, and 85.0kg of lean mass. This gives you a strong foundation for recomposition."
+            },
+            {
+                "title": "Mild Excess Body Fat",
+                "description": "At 27.9%, you're 3.9% above the healthy range. Your high muscle % shows a strong frame with room for recomposition rather than strict weight loss."
+            },
+            {
+                "title": "Strong Muscle-to-Fat Ratio",
+                "description": "Your muscle-to-fat ratio of 1.53:1 indicates excellent body composition. Continue with your training program."
+            }
+        ],
+        "time": 1760134963374
+    },
+    {
+        "message": "💡 Body Insights: Rendering insights...",
+        "data": {
+            "insightsCount": 7,
+            "elementFound": true
+        },
+        "time": 1760134963374
+    },
+    {
+        "message": "💡 Body Insights: Rendered successfully",
+        "time": 1760134963374
     }
 ]

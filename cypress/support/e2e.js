@@ -1,25 +1,51 @@
 // You can add global Cypress configuration or hooks here.
 // Runs before each spec automatically.
 
+// Import custom commands
+import './commands';
 // Import coverage commands
 import './coverage-commands';
 import './coverage-annotations';
 
 // Custom command: Login and navigate to dashboard
 Cypress.Commands.add('loginAndNavigateToDashboard', () => {
-    cy.visit('http://127.0.0.1:8111');
-    cy.get('#loginEmail').type('test@example.com');
-    cy.get('#sendLoginCodeBtn').click();
-    cy.wait(1000);
-    cy.request('POST', 'http://127.0.0.1:8111/login_router.php?controller=auth', {
-        action: 'get_latest_code',
-        email: 'test@example.com'
-    }).then((response) => {
-        const code = response.body.code;
-        cy.get('#loginCode').type(code);
-        cy.get('#verifyLoginBtn').click();
-        cy.url().should('include', 'dashboard.php');
+    const email = 'test@dev.com';
+    const base = 'http://127.0.0.1:8111';
+
+    // Clear everything first
+    cy.clearCookies();
+    cy.clearLocalStorage();
+
+    // Set cypress_testing cookie to disable rate limiting
+    cy.setCookie('cypress_testing', 'true');
+
+    // Clear rate limits for the test email
+    cy.request({
+        method: 'POST',
+        url: `${base}/router.php?controller=email`,
+        body: {
+            action: 'clear_rate_limits',
+            email: email
+        },
+        failOnStatusCode: false
     });
+
+    // Send login code via API
+    cy.request({
+        method: 'POST',
+        url: `${base}/login_router.php?controller=auth`,
+        body: { action: 'send_login_code', email: email }
+    });
+
+    // Visit the login page and do UI login
+    cy.visit('/', { failOnStatusCode: false });
+    cy.get('#loginEmail', {timeout: 5000}).should('be.visible').type(email);
+    cy.get('#loginForm').submit();
+    cy.wait(500);
+    cy.get('#loginCode', {timeout: 5000}).should('be.visible').type('111111');
+    cy.get('#verifyLoginForm button[type="submit"]').click();
+    cy.url({timeout: 10000}).should('include', 'dashboard.php');
+    cy.wait(1000);
 });
 
 // Global setup - initialize coverage reporter

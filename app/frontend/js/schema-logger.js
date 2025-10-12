@@ -17,11 +17,11 @@
             if (data.success && data.schema) {
                 // Remove 'wt_' prefix and log just dev/live/test
                 const schemaName = data.schema.replace('wt_', '');
-                debugLog(`%c🗄️ Schema: ${schemaName}`, 'color: #007bff; font-weight: bold; font-size: 14px;');
+                console.log(`%c🗄️ Schema: ${schemaName}`, 'color: #007bff; font-weight: bold; font-size: 14px;');
             }
         })
         .catch(error => {
-            debugLog('Schema info unavailable');
+            console.log('Schema info unavailable');
         });
     }
     

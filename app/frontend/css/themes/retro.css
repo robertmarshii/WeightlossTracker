@@ -329,13 +329,15 @@ body {
 
 /* Theme-aware strong tags and highlights */
 strong {
-    color: #33bb55 !important;
-    text-shadow: 0 0 5px #33bb55;
+    color: #e8ffe8 !important;
+    font-weight: 700 !important;
+    text-shadow: 0 0 8px #33bb55;
 }
 
 .health-message-success {
-    color: #10b981 !important;
-    text-shadow: 0 0 5px #10b981;
+    color: #e8ffe8 !important;
+    font-weight: 700 !important;
+    text-shadow: 0 0 10px #10b981;
 }
 
 /* Retro Neon Checkboxes */
@@ -400,4 +402,397 @@ strong {
 /* Retro Progress Ring */
 .progress-ring-circle {
     stroke: #33bb55 !important;
+}
+
+/* Fix text visibility - override default colors */
+.card-title,
+h1, h2, h3, h4, h5, h6 {
+    color: #e8ffe8 !important;
+    text-shadow: 0 0 5px #33bb55;
+}
+
+/* Form labels */
+.form-label,
+label {
+    color: #e8ffe8 !important;
+    text-shadow: 0 0 3px #33bb55;
+}
+
+/* Fix form-check-label visibility - lighter color on dark background */
+.form-check-label {
+    color: #e8ffe8 !important;
+    text-shadow: 0 0 3px #33bb55;
+}
+
+.form-check-label a {
+    color: #e8ffe8 !important;
+    text-shadow: 0 0 5px #33bb55;
+}
+
+/* Small text elements */
+small,
+.small,
+.text-muted,
+small.text-muted,
+small.text-info,
+p small,
+div small,
+span small,
+* small {
+    color: rgba(232, 255, 232, 0.8) !important;
+}
+
+.glass-card small,
+.glass-card-small small {
+    color: rgba(232, 255, 232, 0.8) !important;
+}
+
+/* Chart and dashboard text */
+.chart-container,
+.chart-container * {
+    color: #e8ffe8 !important;
+}
+
+/* Table action buttons */
+.table-actions .btn,
+.table-actions .btn-sm {
+    background: rgba(8, 24, 8, 0.8) !important;
+    color: #e8ffe8 !important;
+    border: 1px solid #229944 !important;
+    text-shadow: 0 0 5px #33bb55;
+}
+
+.table-actions .btn:hover,
+.table-actions .btn-sm:hover {
+    background: rgba(51, 187, 85, 0.2) !important;
+    border-color: #33bb55 !important;
+    box-shadow: 0 0 10px rgba(51, 187, 85, 0.5) !important;
+}
+
+/* Input placeholders and text */
+.glass-input,
+input[type="time"],
+input[type="date"],
+input[type="email"],
+input[type="number"],
+select,
+.form-control,
+#emailTime,
+#emailDay {
+    color: #e8ffe8 !important;
+    background: rgba(8, 24, 8, 0.8) !important;
+}
+
+/* Time input specific styling */
+input[type="time"]::-webkit-datetime-edit,
+input[type="time"]::-webkit-datetime-edit-text,
+input[type="time"]::-webkit-datetime-edit-hour-field,
+input[type="time"]::-webkit-datetime-edit-minute-field {
+    color: #e8ffe8 !important;
+}
+
+.glass-input::placeholder,
+input::placeholder {
+    color: rgba(232, 255, 232, 0.6) !important;
+}
+
+/* General text elements */
+.text-white {
+    color: #e8ffe8 !important;
+}
+
+/* Progress text and numbers */
+.progress-text,
+.health-score,
+.bmi-value,
+.weight-value {
+    color: #e8ffe8 !important;
+}
+
+/* Encouragement quote styling for Retro */
+.encouragement-quote {
+    color: #e8ffe8 !important;
+    font-weight: 700 !important;
+    text-shadow: 0 0 8px #33bb55;
+}
+
+/* Card title border should match retro theme */
+.glass-card .card-title,
+.glass-card-small .card-title {
+    border-bottom-color: #33bb55 !important;
+}
+
+/* Goal Progress Content - Retro neon green colors */
+#goal-progress-content {
+    color: #e8ffe8 !important;
+}
+
+#goal-progress-content .goal-progress-bar {
+    background: rgba(8, 24, 8, 0.8) !important;
+    border: 1px solid #229944 !important;
+    box-shadow: inset 0 0 10px rgba(51, 187, 85, 0.2) !important;
+}
+
+#goal-progress-content .goal-progress-bar-fill {
+    background: linear-gradient(90deg, #33bb55 0%, #10b981 100%) !important;
+    box-shadow: 0 0 10px #33bb55 !important;
+}
+
+#goal-progress-content .goal-progress-bar-text {
+    color: #0a1a0a !important;
+    font-weight: 700 !important;
+    text-shadow: 0 0 5px #33bb55 !important;
+}
+
+#goal-progress-content .goal-progress-label {
+    color: #e8ffe8 !important;
+    text-shadow: 0 0 5px #33bb55;
+}
+
+#goal-progress-content .goal-streak {
+    background: rgba(51, 187, 85, 0.1) !important;
+    border: 1px solid #229944 !important;
+    box-shadow: 0 0 5px rgba(51, 187, 85, 0.3) !important;
+}
+
+#goal-progress-content .goal-streak-text {
+    color: #e8ffe8 !important;
+    text-shadow: 0 0 5px #33bb55;
+}
+
+#goal-progress-content .goal-eta {
+    background: rgba(16, 185, 129, 0.1) !important;
+    border: 1px solid #10b981 !important;
+    box-shadow: 0 0 5px rgba(16, 185, 129, 0.3) !important;
+}
+
+#goal-progress-content .goal-eta-text {
+    color: #e8ffe8 !important;
+    text-shadow: 0 0 5px #10b981;
+}
+
+#goal-progress-content .goal-badge {
+    background: rgba(8, 24, 8, 0.8) !important;
+    border: 1px solid #229944 !important;
+    box-shadow: 0 0 5px rgba(34, 153, 68, 0.3) !important;
+}
+
+#goal-progress-content .goal-badge.achieved {
+    background: rgba(51, 187, 85, 0.2) !important;
+    border-color: #33bb55 !important;
+    box-shadow: 0 0 15px rgba(51, 187, 85, 0.6) !important;
+}
+
+#goal-progress-content .goal-badge-label {
+    color: #e8ffe8 !important;
+    text-shadow: 0 0 3px #33bb55;
+}
+
+#goal-progress-content .goal-badge.achieved .goal-badge-label {
+    color: #e8ffe8 !important;
+    font-weight: 700 !important;
+    text-shadow: 0 0 8px #33bb55;
+}
+
+/* Streak Counter - Retro neon colors */
+#streak-counter {
+    color: #e8ffe8 !important;
+}
+
+#streak-counter .streak-stat-row {
+    background: rgba(8, 24, 8, 0.8) !important;
+    border: 1px solid #229944 !important;
+    box-shadow: 0 0 5px rgba(34, 153, 68, 0.3) !important;
+}
+
+#streak-counter .streak-stat-value {
+    color: #e8ffe8 !important;
+    text-shadow: 0 0 10px #33bb55;
+}
+
+#streak-counter .streak-stat-label {
+    color: #e8ffe8 !important;
+    text-shadow: 0 0 5px #33bb55;
+}
+
+#streak-counter .streak-timeline-title {
+    color: #e8ffe8 !important;
+    text-shadow: 0 0 5px #33bb55;
+}
+
+#streak-counter .streak-dot {
+    border-color: #229944 !important;
+    background: rgba(8, 24, 8, 0.8) !important;
+    box-shadow: 0 0 3px rgba(34, 153, 68, 0.3) !important;
+}
+
+#streak-counter .streak-dot.logged {
+    background: #33bb55 !important;
+    border-color: #33bb55 !important;
+    box-shadow: 0 0 10px #33bb55 !important;
+}
+
+#streak-counter .streak-dot.missed {
+    background: rgba(8, 24, 8, 0.5) !important;
+    border-color: rgba(34, 153, 68, 0.3) !important;
+}
+
+#streak-counter .streak-dot.today {
+    border-color: #10b981 !important;
+    border-width: 3px !important;
+    box-shadow: 0 0 15px #10b981 !important;
+}
+
+#streak-counter .streak-legend-label {
+    color: #e8ffe8 !important;
+    text-shadow: 0 0 3px #33bb55;
+}
+
+#streak-counter .streak-motivation {
+    background: rgba(51, 187, 85, 0.1) !important;
+    border-left: 3px solid #33bb55 !important;
+    color: #e8ffe8 !important;
+    text-shadow: 0 0 5px #33bb55;
+    box-shadow: 0 0 5px rgba(51, 187, 85, 0.2) !important;
+}
+
+#streak-counter .streak-motivation.celebration {
+    border-left-color: #10b981 !important;
+    background: rgba(16, 185, 129, 0.1) !important;
+}
+
+#streak-counter .streak-motivation.warning {
+    border-left-color: #fbbf24 !important;
+    background: rgba(251, 191, 36, 0.1) !important;
+    color: #fbbf24 !important;
+    text-shadow: 0 0 5px #fbbf24;
+}
+
+/* Total Progress - Retro neon colors */
+#total-progress {
+    color: #e8ffe8 !important;
+}
+
+#total-progress .progress-tabs {
+    border-bottom: 1px solid #229944 !important;
+}
+
+#total-progress .progress-tab-btn {
+    background: rgba(8, 24, 8, 0.8) !important;
+    color: rgba(232, 255, 232, 0.7) !important;
+    border: 1px solid #229944 !important;
+}
+
+#total-progress .progress-tab-btn:hover {
+    background: rgba(51, 187, 85, 0.1) !important;
+    color: #e8ffe8 !important;
+    box-shadow: 0 0 5px rgba(51, 187, 85, 0.3) !important;
+}
+
+#total-progress .progress-tab-btn.active {
+    background: linear-gradient(45deg, #33bb55, #117733) !important;
+    border-color: #33bb55 !important;
+    color: #0a1a0a !important;
+    font-weight: 700 !important;
+    box-shadow: 0 0 10px rgba(51, 187, 85, 0.5) !important;
+}
+
+#total-progress .mini-chart-container {
+    background: rgba(8, 24, 8, 0.8) !important;
+    border: 1px solid #229944 !important;
+    box-shadow: 0 0 5px rgba(34, 153, 68, 0.3) !important;
+}
+
+#total-progress .mini-chart-title {
+    color: #e8ffe8 !important;
+    text-shadow: 0 0 5px #33bb55;
+}
+
+#total-progress .chart-label {
+    color: #e8ffe8 !important;
+    text-shadow: 0 0 3px #33bb55;
+}
+
+#total-progress .comparison-stat {
+    background: linear-gradient(135deg, rgba(51, 187, 85, 0.2) 0%, rgba(16, 185, 129, 0.2) 100%) !important;
+    border: 1px solid #229944 !important;
+    box-shadow: 0 0 10px rgba(51, 187, 85, 0.3) !important;
+}
+
+#total-progress .comparison-stat-title {
+    color: #e8ffe8 !important;
+    text-shadow: 0 0 3px #33bb55;
+}
+
+#total-progress .comparison-stat-value {
+    color: #e8ffe8 !important;
+    text-shadow: 0 0 8px #33bb55;
+}
+
+/* Body Page - Retro Theme */
+/* Section titles */
+.section-title {
+    color: #e8ffe8 !important;
+    font-weight: 700 !important;
+    text-shadow: 0 0 8px #33bb55;
+}
+
+/* Collapsible card headers - override inline white color */
+.card-header-collapsible h5,
+.card-header-collapsible .card-title {
+    color: #e8ffe8 !important;
+    text-shadow: 0 0 5px #33bb55;
+}
+
+/* Card toggle button */
+.card-toggle {
+    color: #e8ffe8 !important;
+    text-shadow: 0 0 8px #33bb55;
+}
+
+/* Metric values - change from blue to neon green */
+.metric-value {
+    color: #e8ffe8 !important;
+    text-shadow: 0 0 10px #33bb55;
+}
+
+/* Change icons */
+.change-icon.up {
+    color: #10b981 !important;
+    text-shadow: 0 0 5px #10b981;
+}
+
+.change-icon.down {
+    color: #fbbf24 !important;
+    text-shadow: 0 0 5px #fbbf24;
+}
+
+/* Collapsible cards - Retro colors */
+.collapsible-card {
+    background: rgba(8, 24, 8, 0.8) !important;
+    border: 1px solid #229944 !important;
+    box-shadow: 0 0 5px rgba(34, 153, 68, 0.3) !important;
+}
+
+/* Insight items - change from purple to neon green */
+.insight-item {
+    border-left-color: #33bb55 !important;
+    background: rgba(51, 187, 85, 0.1) !important;
+    box-shadow: 0 0 5px rgba(51, 187, 85, 0.2) !important;
+}
+
+.insight-item:hover {
+    background: rgba(51, 187, 85, 0.2) !important;
+    border-left-color: #33bb55 !important;
+    box-shadow: 0 0 10px rgba(51, 187, 85, 0.4) !important;
+}
+
+.insight-title {
+    color: #e8ffe8 !important;
+    text-shadow: 0 0 5px #33bb55;
+}
+
+.insight-description {
+    color: rgba(232, 255, 232, 0.9) !important;
+    text-shadow: 0 0 3px #33bb55;
 }

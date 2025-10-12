@@ -1,0 +1,345 @@
+
+
+DevTools listening on ws://127.0.0.1:51037/devtools/browser/5c8af379-06bc-4bc6-8e7d-b152ca7304a8
+
+====================================================================================================
+
+  (Run Starting)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Cypress:        13.17.0                                                                        │
+  │ Browser:        Electron 118 (headless)                                                        │
+  │ Node Version:   v22.19.0 (C:\Program Files\nodejs\node.exe)                                    │
+  │ Specs:          6 found (body-insights-comprehensive.cy.js, body-tab-comprehensive.cy.js, dash │
+  │                 board-data-sync.cy.js, data-management-coverage.cy.js, FAILING-TESTS-CONSOLIDA │
+  │                 TED.cy.js, interactive-ui-coverage.cy.js)                                      │
+  │ Searched:       C:\GitKraken\WeightlossTracker\cypress\e2e\passing\body-insights-comprehensive │
+  │                 .cy.js, C:\GitKraken\WeightlossTracker\cypress\e2e\passing\body-tab-comprehens │
+  │                 ive.cy.js, C:\GitKraken\WeightlossTracker\cypress\e2e\passing\dashboard-data-s │
+  │                 ync.cy.js, C:\GitKraken\WeightlossTracker\cypress\e2e\passing\data-management- │
+  │                 coverage.cy.js, C:\GitKraken\WeightlossTracker\cypress\e2e\passing\FAILING-TES │
+  │                 TS-CONSOLIDATED.cy.js, C:\GitKraken\WeightlossTracker\cypress\e2e\passing\inte │
+  │                 ractive-ui-coverage.cy.js                                                      │
+  │ Experiments:    experimentalMemoryManagement=true                                              │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  body-insights-comprehensive.cy.js                                               (1 of 6)
+
+
+  Body Insights - Comprehensive Tests
+    Smart Data Insights
+      1) "before each" hook for "should display Smart Data Insights card"
+
+
+  0 passing (13s)
+  1 failing
+
+  1) Body Insights - Comprehensive Tests
+       Smart Data Insights
+         "before each" hook for "should display Smart Data Insights card":
+     AssertionError: Timed out retrying after 10000ms: expected 'http://127.0.0.1:8111/index.php' to include 'dashboard.php'
+
+Because this error occurred during a `before each` hook we are skipping the remaining tests in the current suite: `Body Insights - Comprehensi...`
+      at Context.eval (webpack://weightloss-tracker/./cypress/support/e2e.js:61:47)
+
+
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        18                                                                               │
+  │ Passing:      0                                                                                │
+  │ Failing:      1                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      17                                                                               │
+  │ Screenshots:  1                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     12 seconds                                                                       │
+  │ Spec Ran:     body-insights-comprehensive.cy.js                                                │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+  (Screenshots)
+
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\body-insights-comprehensive.c     (1280x720)
+     y.js\Body Insights - Comprehensive Tests -- should display Smart Data Insights c               
+     ard -- before each hook (failed).png                                                           
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  body-tab-comprehensive.cy.js                                                    (2 of 6)
+
+
+  Body Tab - Comprehensive Tests
+    Body Tab - Navigation
+      √ should navigate to Body tab with #page=body&area=summary (5536ms)
+      √ should show Summary sub-tab as active by default (5279ms)
+      √ should switch to History sub-tab (5601ms)
+    Summary Area - Smart Data Cards
+      √ should display all Smart Data cards with Add Data buttons (5183ms)
+      √ should toggle edit mode on Muscle Mass card (6322ms)
+      √ should save Muscle Mass data (8197ms)
+    Summary Area - Measurements Cards
+      √ should display all Measurements cards (5213ms)
+    Summary Area - Calipers Cards
+      √ should display all Calipers cards (5157ms)
+      √ should save Chest caliper data (8146ms)
+    History Area - Smart Data History
+      √ should display Smart Data History with 4 tabs (5784ms)
+      √ should switch between Smart Data history tabs (6876ms)
+      √ should show Add Entry button on each tab (6357ms)
+    History Area - Measurements History
+      √ should display Measurements History with 7 tabs (5796ms)
+      √ should switch between Measurements history tabs (6223ms)
+    History Area - Calipers History
+      √ should display Calipers History with 5 tabs (5796ms)
+      √ should switch between Calipers history tabs (6276ms)
+    Historical Entry Form - Form 1 (Smart Data)
+      √ should open Form 1 when clicking Add Entry on Muscle Mass (6311ms)
+      √ should update Form 1 label when switching to Fat Percent tab (6953ms)
+      √ should save historical Muscle Mass entry (8895ms)
+      √ should cancel Form 1 (7552ms)
+    Historical Entry Form - Form 2 (Measurements)
+      √ should open Form 2 when clicking Add Entry on Neck (6348ms)
+      √ should update Form 2 label when switching to Breast tab (6950ms)
+      √ should save historical Neck measurement (8968ms)
+    Historical Entry Form - Form 3 (Calipers)
+      √ should open Form 3 when clicking Add Entry on Chest caliper (6937ms)
+      √ should update Form 3 label when switching to Armpit tab (6903ms)
+      √ should save historical Chest caliper measurement (8855ms)
+    Form Behavior Tests
+      √ should maintain separate form state for each section (8017ms)
+      √ should save data from different form sections sequentially (12110ms)
+    Data Validation
+      √ should validate empty value in Summary cards (7712ms)
+      √ should validate empty value in historical form (7474ms)
+      √ should validate empty date in historical form (7089ms)
+
+
+  31 passing (4m)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        31                                                                               │
+  │ Passing:      31                                                                               │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     3 minutes, 38 seconds                                                            │
+  │ Spec Ran:     body-tab-comprehensive.cy.js                                                     │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  dashboard-data-sync.cy.js                                                       (3 of 6)
+
+
+  Dashboard Data Synchronization
+    √ should update health cards when adding current weight (11770ms)
+    √ should update BMI when changing height in profile settings (11644ms)
+    √ should verify chart exists and updates after weight entry (9891ms)
+    √ should verify all health blocks are present (7868ms)
+
+
+  4 passing (42s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        4                                                                                │
+  │ Passing:      4                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     41 seconds                                                                       │
+  │ Spec Ran:     dashboard-data-sync.cy.js                                                        │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  data-management-coverage.cy.js                                                  (4 of 6)
+
+
+  Data Management Coverage Tests
+    √ should test weight history loading and display (8026ms)
+    √ should test date formatting functions (6422ms)
+    √ should test weight entry editing (9832ms)
+    √ should test weight entry deletion (7661ms)
+    √ should test data refresh and reload functions (6822ms)
+    √ should test weight unit conversions in data display (12043ms)
+    √ should test weight history table interactions (7047ms)
+
+
+  7 passing (59s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        7                                                                                │
+  │ Passing:      7                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     58 seconds                                                                       │
+  │ Spec Ran:     data-management-coverage.cy.js                                                   │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  FAILING-TESTS-CONSOLIDATED.cy.js                                                (5 of 6)
+
+
+  CONSOLIDATED FAILING TESTS - Debugging Suite
+    Category: Frontend Auth Edge Cases (9 failures)
+      √ FAILING: should handle sendLoginCode with empty email (499ms)
+      √ FAILING: should handle empty verification code (21ms)
+      √ FAILING: should handle invalid verification code format (9ms)
+      √ FAILING: should handle verification with wrong code (7ms)
+      √ FAILING: should handle createAccount with invalid email (8ms)
+      √ FAILING: should handle signup verification with wrong code (10ms)
+      √ FAILING: should handle terms and conditions validation (13ms)
+      √ FAILING: should handle rapid button clicks (8ms)
+      √ FAILING: should handle session state edge cases (12ms)
+    Category: Interactive UI Coverage (7 failures)
+      √ FAILING: Interactive UI test 1 (5824ms)
+    Category: Frontend Comprehensive (5 failures)
+      √ FAILING: Frontend comprehensive test 1 (33ms)
+    Category: Modules Comprehensive (6 failures)
+      √ FAILING: Modules test 1 (5645ms)
+    Category: Reworked Tests (6 failures, 1 pending)
+      √ FAILING: Reworked test 1 (29ms)
+    Category: Coverage-Related Tests (Multiple files)
+      √ FAILING: comprehensive-function-coverage (3 failures) (9ms)
+      √ FAILING: data-coverage (3 failures) (16ms)
+      √ FAILING: dashboard-function-coverage (1 failure, 4 skipped) (8ms)
+      √ FAILING: data-management-coverage (1 failure, 6 skipped) (12ms)
+      √ FAILING: global-utility-coverage (1 failure) (7ms)
+      √ FAILING: health-calculations-coverage (1 failure) (7ms)
+      √ FAILING: settings-theme-coverage (1 failure, 4 skipped) (7ms)
+      √ FAILING: settings-utilities-coverage (2 failures) (8ms)
+      √ FAILING: edge-case-coverage (1 failure) (10ms)
+      √ FAILING: final-coverage-maximizer (1 failure) (7ms)
+      √ FAILING: high-priority-functions (1 failure) (9ms)
+      √ FAILING: maximum-coverage-push (1 failure) (7ms)
+      √ FAILING: quick-function-coverage (3 failures) (7ms)
+      √ FAILING: rapid-coverage-boost (2 failures) (9ms)
+      √ FAILING: remaining-uncovered-functions (1 failure, 3 skipped) (10ms)
+      √ FAILING: test-existing-functions (2 failures) (12ms)
+    Category: UI Responsive (2 failures)
+      √ FAILING: UI responsive test 1 (10ms)
+      √ FAILING: UI responsive test 2 (13ms)
+    QUICK WINS - Tests that just need login setup
+      √ FIX: interactive-ui-coverage - Weight entry test (5889ms)
+      √ FIX: interactive-ui-coverage - Goal weight test (6216ms)
+      √ FIX: interactive-ui-coverage - Height test (5933ms)
+      √ FIX: interactive-ui-coverage - Weight unit test (6208ms)
+      √ FIX: interactive-ui-coverage - Chart test (5966ms)
+      √ FIX: interactive-ui-coverage - Health tab test (5502ms)
+    ANALYSIS: Root Cause Summary
+      √ Common Failure Patterns (31ms)
+      √ Recommended Fix Order (12ms)
+    README: How to use this file
+      √ Step-by-Step Guide (9ms)
+      √ Quick Fixes Available (10ms)
+
+
+  41 passing (51s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        41                                                                               │
+  │ Passing:      41                                                                               │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     51 seconds                                                                       │
+  │ Spec Ran:     FAILING-TESTS-CONSOLIDATED.cy.js                                                 │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  interactive-ui-coverage.cy.js                                                   (6 of 6)
+
+
+  Interactive UI Function Coverage
+    Authentication Flow Functions
+      √ should test login code sending and validation functions (3683ms)
+      √ should test account creation functions (2332ms)
+    Dashboard Interactive Functions
+      √ should test weight entry form functions (6103ms)
+      √ should test goal setting functions (8110ms)
+      √ should test profile management functions (7391ms)
+    Settings Page Interactive Functions
+      √ should test settings modification functions (2548ms)
+    Chart and Visualization Functions
+      √ should test chart interaction functions (3280ms)
+    Tab Navigation Functions
+      √ should test all tab navigation functions (6976ms)
+    Error Handling Functions
+      √ should test error handling and recovery functions (2273ms)
+    Data Export and Import Functions
+      √ should test data management functions (2493ms)
+
+
+  10 passing (46s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        10                                                                               │
+  │ Passing:      10                                                                               │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     46 seconds                                                                       │
+  │ Spec Ran:     interactive-ui-coverage.cy.js                                                    │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+====================================================================================================
+
+  (Run Finished)
+
+
+       Spec                                              Tests  Passing  Failing  Pending  Skipped  
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ ✖  body-insights-comprehensive.cy.js        00:12       18        -        1        -       17 │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  body-tab-comprehensive.cy.js             03:38       31       31        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  dashboard-data-sync.cy.js                00:41        4        4        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  data-management-coverage.cy.js           00:58        7        7        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  FAILING-TESTS-CONSOLIDATED.cy.js         00:51       41       41        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  interactive-ui-coverage.cy.js            00:46       10       10        -        -        - │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+    ✖  1 of 6 failed (17%)                      07:09      111       93        1        -       17  
+

@@ -346,6 +346,35 @@ function formatDateBySettings(dateInput) {
     }
 }
 
+/**
+ * Format all timestamps on the page with class 'format-date'
+ * Finds all elements with data-timestamp or data-date attributes and formats them
+ */
+function formatAllTimestamps() {
+    if (window.coverage) window.coverage.logFunction('formatAllTimestamps', 'global.js');
+    if (window.coverage) coverage.logFunction('formatAllTimestamps', 'global.js');
+
+    debugLog('📅 formatAllTimestamps - formatting all date elements');
+
+    // Find all elements with format-date class
+    const dateElements = document.querySelectorAll('.format-date');
+
+    dateElements.forEach(element => {
+        // Check for data-timestamp or data-date attribute
+        const timestamp = element.getAttribute('data-timestamp') || element.getAttribute('data-date');
+
+        if (timestamp) {
+            // Format the date and update the element text
+            const formattedDate = formatDateBySettings(timestamp);
+            element.textContent = formattedDate;
+            debugLog('📅 Formatted timestamp:', timestamp, '→', formattedDate);
+        }
+    });
+
+    debugLog('📅 formatAllTimestamps - completed, formatted', dateElements.length, 'elements');
+}
+
 // Make formatDateBySettings globally accessible
 window.formatDateBySettings = formatDateBySettings;
+window.formatAllTimestamps = formatAllTimestamps;
 window.getLanguageLocale = getLanguageLocale;

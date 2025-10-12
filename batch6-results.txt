@@ -1,0 +1,849 @@
+
+
+DevTools listening on ws://127.0.0.1:61626/devtools/browser/ec47f2b3-bd1a-4466-86e3-6298bf95cfe8
+
+====================================================================================================
+
+  (Run Starting)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Cypress:        13.17.0                                                                        │
+  │ Browser:        Electron 118 (headless)                                                        │
+  │ Node Version:   v22.19.0 (C:\Program Files\nodejs\node.exe)                                    │
+  │ Specs:          8 found (settings-theme-coverage.cy.js, settings-utilities-coverage.cy.js, smo │
+  │                 ke.cy.js, test-existing-functions.cy.js, ui-responsive.cy.js, unit-conversion- │
+  │                 functions.cy.js, utilities-testing.cy.js, x01-manual-failing-test-group.cy.js) │
+  │ Searched:       C:\GitKraken\WeightlossTracker\cypress\e2e\passing\settings-theme-coverage.cy. │
+  │                 js, C:\GitKraken\WeightlossTracker\cypress\e2e\passing\settings-utilities-cove │
+  │                 rage.cy.js, C:\GitKraken\WeightlossTracker\cypress\e2e\passing\smoke.cy.js, C: │
+  │                 \GitKraken\WeightlossTracker\cypress\e2e\passing\test-existing-functions.cy.js │
+  │                 , C:\GitKraken\WeightlossTracker\cypress\e2e\passing\ui-responsive.cy.js, C:\G │
+  │                 itKraken\WeightlossTracker\cypress\e2e\passing\unit-conversion-functions.cy.js │
+  │                 , C:\GitKraken\WeightlossTracker\cypress\e2e\passing\utilities-testing.cy.js,  │
+  │                 C:\GitKraken\WeightlossTracker\cypress\e2e\passing\x01-manual-failing-test-gro │
+  │                 up.cy.js                                                                       │
+  │ Experiments:    experimentalMemoryManagement=true                                              │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  settings-theme-coverage.cy.js                                                   (1 of 8)
+
+
+  Settings & Theme Management Coverage Tests
+    √ should test settings loading and saving functions (11065ms)
+    √ should test theme management functions (10076ms)
+    √ should test email notification functions (8399ms)
+    √ should test date format functions (8208ms)
+    √ should test settings persistence (10053ms)
+
+
+  5 passing (49s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        5                                                                                │
+  │ Passing:      5                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     48 seconds                                                                       │
+  │ Spec Ran:     settings-theme-coverage.cy.js                                                    │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  settings-utilities-coverage.cy.js                                               (2 of 8)
+
+
+  Settings and Utilities Function Coverage
+    Settings Management Functions
+      √ should test settings save and load functions (2928ms)
+      √ should test theme and display update functions (2236ms)
+    Post Request Helper Functions
+      √ should test all postRequest helper functions (2527ms)
+    Schema and Utility Functions
+      √ should test schema logger functions (2198ms)
+    Chart and Achievement Functions
+      √ should test chart period and achievement update functions (2586ms)
+
+
+  5 passing (13s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        5                                                                                │
+  │ Passing:      5                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     13 seconds                                                                       │
+  │ Spec Ran:     settings-utilities-coverage.cy.js                                                │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  smoke.cy.js                                                                     (3 of 8)
+
+
+  App smoke tests
+    √ loads the index page (568ms)
+    √ API get1 returns valid JSON (243ms)
+
+
+  2 passing (1s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        2                                                                                │
+  │ Passing:      2                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     1 second                                                                         │
+  │ Spec Ran:     smoke.cy.js                                                                      │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  test-existing-functions.cy.js                                                   (4 of 8)
+
+
+  Test Only Functions That Actually Exist
+    √ should test resetSettings function which definitely exists (8146ms)
+    √ should check if the health refresh functions actually exist (6252ms)
+
+
+  2 passing (15s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        2                                                                                │
+  │ Passing:      2                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     15 seconds                                                                       │
+  │ Spec Ran:     test-existing-functions.cy.js                                                    │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  ui-responsive.cy.js                                                             (5 of 8)
+
+
+  Comprehensive UI and Responsive Design Tests
+    iPhone SE Specific Tests
+      √ should display login page properly on iPhone SE (656ms)
+      √ should display dashboard properly on iPhone SE (6880ms)
+      √ should have readable text on iPhone SE (254ms)
+    Multi-Device Responsive Tests
+      iPhone SE (375x667)
+        √ should display login page elements properly (625ms)
+        √ should test dashboard responsiveness after login (4329ms)
+        √ should test form elements on different screen sizes (216ms)
+      Mobile Landscape (667x375)
+        √ should display login page elements properly (598ms)
+        √ should test dashboard responsiveness after login (4392ms)
+        √ should test form elements on different screen sizes (562ms)
+      iPad Portrait (768x1024)
+        √ should display login page elements properly (239ms)
+        √ should test dashboard responsiveness after login (4452ms)
+        √ should test form elements on different screen sizes (240ms)
+      iPad Landscape (1024x768)
+        √ should display login page elements properly (519ms)
+        √ should test dashboard responsiveness after login (4355ms)
+        √ should test form elements on different screen sizes (243ms)
+      Desktop (1280x720)
+        √ should display login page elements properly (580ms)
+        √ should test dashboard responsiveness after login (4293ms)
+        √ should test form elements on different screen sizes (238ms)
+      Large Desktop (1920x1080)
+        √ should display login page elements properly (567ms)
+        √ should test dashboard responsiveness after login (4301ms)
+        √ should test form elements on different screen sizes (261ms)
+    Core Device Validation
+      iPhone SE Validation (375x667)
+        √ should display login page without horizontal overflow (591ms)
+        √ should have properly sized elements (241ms)
+        √ should test dashboard responsiveness (4438ms)
+      iPad Validation (768x1024)
+        √ should display login page without horizontal overflow (543ms)
+        √ should have properly sized elements (251ms)
+        √ should test dashboard responsiveness (4439ms)
+      Desktop Validation (1280x720)
+        √ should display login page without horizontal overflow (229ms)
+        √ should have properly sized elements (502ms)
+        √ should test dashboard responsiveness (4288ms)
+    Mobile Touch Targets
+      √ should have adequate touch targets on mobile (233ms)
+    Responsive Issues Detection
+      √ should identify current responsive issues (946ms)
+
+
+  32 passing (1m)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        32                                                                               │
+  │ Passing:      32                                                                               │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     1 minute, 2 seconds                                                              │
+  │ Spec Ran:     ui-responsive.cy.js                                                              │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  unit-conversion-functions.cy.js                                                 (6 of 8)
+
+
+  Unit Conversion Functions
+    Weight Unit Conversion Functions
+      √ should test getWeightUnit function (541ms)
+      √ should test setWeightUnit function (506ms)
+      √ should test convertFromKg function with various weights (210ms)
+      √ should test convertToKg function with various inputs (255ms)
+      √ should test getWeightUnitLabel function (219ms)
+    Height Unit Conversion Functions
+      √ should test getHeightUnit function (231ms)
+      √ should test setHeightUnit function (204ms)
+      √ should test convertFromCm function with various heights (225ms)
+      √ should test convertToCm function with various inputs (244ms)
+      √ should test getHeightUnitLabel function (206ms)
+    Unit Conversion Edge Cases
+      √ should handle invalid inputs gracefully (229ms)
+      √ should test unit conversions with decimal values (208ms)
+    Unit Display Integration
+      √ should test weight unit changes affect display (234ms)
+      √ should test height unit changes affect display (209ms)
+    Unit Initialization Functions
+      √ should test initializeWeightUnit function (225ms)
+      √ should test initializeHeightUnit function (195ms)
+
+
+  16 passing (5s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        16                                                                               │
+  │ Passing:      16                                                                               │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     4 seconds                                                                        │
+  │ Spec Ran:     unit-conversion-functions.cy.js                                                  │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  utilities-testing.cy.js                                                         (7 of 8)
+
+
+  Coverage System Testing
+    Coverage System Diagnostics
+      √ should diagnose coverage system and write results to file (267ms)
+    Simple Coverage Debug
+      √ should check if coverage object exists (461ms)
+      √ should check if global functions have coverage instrumentation (224ms)
+    Simple Coverage Test
+      √ should visit the app and collect basic coverage (597ms)
+      √ should verify coverage object exists (180ms)
+    Coverage API Testing
+      √ should call backend function and retrieve coverage data (55ms)
+      √ should test multiple API calls and accumulate coverage (596ms)
+
+  Function Testing & Debugging
+    Function Loading Debug
+      √ should check what page we actually land on (2508ms)
+    Simple Function Testing
+      √ should test functions with manual creation (1698ms)
+    Working Coverage Validation
+      √ should track showAlert function coverage (647ms)
+      √ should track parseJson function coverage (265ms)
+      √ should track openModal function coverage (553ms)
+      √ should track multiple alert functions (364ms)
+
+  API & Backend Testing
+    Basic API Functionality
+      √ returns data from get1 (799ms)
+    Email Login Functionality
+      Cypress Testing Mode Toggle
+        √ should toggle cypress testing mode on and off via cookie (635ms)
+      Email Sending with Sandbox Mode
+        √ should send login code in sandbox mode without actual email delivery (12002ms)
+        √ should send login code in production mode (real email) (1606ms)
+        √ should show proper loading states during email sending (2098ms)
+      Error Handling
+        √ should handle network errors gracefully (1200ms)
+        √ should handle server errors gracefully (939ms)
+    Targeted Coverage Testing
+      DatabaseSeeder Functions - All 8 Missing Functions Target
+        √ should trigger DatabaseSeeder::resetSchemas function with multiple calls (1860ms)
+        √ should trigger DatabaseSeeder::seedSchema function (1717ms)
+        √ should trigger DatabaseSeeder::migrateLive function (1756ms)
+        √ should trigger all private DatabaseSeeder helper functions (1765ms)
+      Force Coverage Data Persistence
+        √ should force multiple coverage saves to ensure persistence (6054ms)
+      75% Target Validation
+        √ should perform comprehensive DatabaseSeeder coverage to reach 75%+ (13164ms)
+
+  Integration & Example Tests
+    Annotated Coverage Examples
+      √ should test complete login flow with coverage verification (1331ms)
+      √ should test modal functionality (629ms)
+      √ should test error handling with different alert types (1146ms)
+      √ should test UI elements without function coverage (187ms)
+    Comprehensive Final Coverage
+      All Backend Functions Test
+        √ should trigger all backend API endpoints comprehensively (2149ms)
+      All Frontend Functions Test
+        √ should trigger all frontend JavaScript functions (3892ms)
+        √ should test dashboard functions if accessible (2255ms)
+      Maximum Coverage Push
+        √ should perform intensive function calling for maximum coverage (5449ms)
+
+
+  34 passing (1m)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        34                                                                               │
+  │ Passing:      34                                                                               │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     1 minute, 13 seconds                                                             │
+  │ Spec Ran:     utilities-testing.cy.js                                                          │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  x01-manual-failing-test-group.cy.js                                             (8 of 8)
+
+
+  Test Page Output
+    1) retrieves DB JSON via API while visiting test page
+    2) should test schema logger and test functions
+
+  Real Settings UI Interaction
+    3) should test settings functions through UI interactions
+    4) should test reset settings functionality
+    5) should test critical UI and utility functions
+    6) should test UI helper and modal functions
+    7) should save Neck measurement data
+    8) should test weight management functions
+    9) should test loadWeightHistory() function with successful data
+    10) should test loadWeightHistory() function with no data
+    11) should test loadWeightHistory() function with network failure
+    √ should format all .format-date elements on the page (10658ms)
+    √ should format login time with date and time (8804ms)
+    √ should update all timestamps when date format changes (9131ms)
+    √ should update dates when changing date format in settings (9992ms)
+
+  Settings Integration
+    12) should persist date format across page reloads
+
+  Weight History Table Dates
+    13) should format dates in weight history table
+
+  Goal Date Display
+    14) should format goal date correctly
+
+  Streak Counter Dates
+    15) should format streak counter dates
+
+  Achievement Tracking Functions
+    16) should test updateAchievementCards() function with progress data
+    √ should test updateAchievementCards() function with no data (5028ms)
+    17) should test updateAchievementCards() function with weight gain scenario
+    18) should test updateAchievementCards() streak calculation
+
+  Health Data Refresh Functions
+    19) should test refreshBMI() function with successful data
+    20) should test refreshIdealWeight() function with successful data
+    21) should test refreshGallbladderHealth() function with successful data
+
+  Health Benefit Cards Update Function
+    22) should test updateHealthBenefitCards() function with weight progress
+    23) should test refreshPersonalHealthBenefits() function
+
+  Settings Management Functions
+    24) should test loadSettings() function with failed response
+    25) should test saveSettings() function with successful save
+    26) should test saveSettings() function with server failure
+    27) should test saveSettings() function with network error
+    28) should test resetSettings() function
+
+
+  5 passing (3m)
+  28 failing
+
+  1) Test Page Output
+       retrieves DB JSON via API while visiting test page:
+     ReferenceError: The following error originated from your application code, not from Cypress. It was caused by an unhandled promise rejection.
+
+  > debugLog is not defined
+
+When Cypress detects uncaught errors originating from your application it will automatically fail the current test.
+
+This behavior is configurable, and you can choose to turn this off by listening to the `uncaught:exception` event.
+
+https://on.cypress.io/uncaught-exception-from-application
+      at getData (http://127.0.0.1:8111/test/call.js:12:9)
+
+  2) Test Page Output
+       should test schema logger and test functions:
+     ReferenceError: The following error originated from your application code, not from Cypress. It was caused by an unhandled promise rejection.
+
+  > debugLog is not defined
+
+When Cypress detects uncaught errors originating from your application it will automatically fail the current test.
+
+This behavior is configurable, and you can choose to turn this off by listening to the `uncaught:exception` event.
+
+https://on.cypress.io/uncaught-exception-from-application
+      at getData (http://127.0.0.1:8111/test/call.js:12:9)
+
+  3) Real Settings UI Interaction
+       should test settings functions through UI interactions:
+     CypressError: Timed out retrying after 8000ms: `cy.select()` failed because it could not find a single `<option>` with value, index, or text matching: `dark`
+
+https://on.cypress.io/select
+      at getOptions (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:114180:72)
+      at tryCatcher (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1830:23)
+      at Promise.attempt.Promise.try (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:4338:29)
+      at retryOptions (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:114212:70)
+      at tryCatcher (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1830:23)
+      at Promise.attempt.Promise.try (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:4338:29)
+      at whenStable (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:143744:68)
+      at <unknown> (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:143685:14)
+      at tryCatcher (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1830:23)
+      at Promise._settlePromiseFromHandler (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1542:31)
+      at Promise._settlePromise (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1599:18)
+      at Promise._settlePromise0 (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1644:10)
+      at Promise._settlePromises (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1724:18)
+      at Promise._fulfill (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1668:18)
+      at <unknown> (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:5473:46)
+  From Your Spec Code:
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/passing/x01-manual-failing-test-group.cy.js:89:29)
+
+  4) Real Settings UI Interaction
+       should test reset settings functionality:
+     CypressError: Timed out retrying after 8000ms: `cy.select()` failed because it could not find a single `<option>` with value, index, or text matching: `dark`
+
+https://on.cypress.io/select
+      at getOptions (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:114180:72)
+      at tryCatcher (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1830:23)
+      at Promise.attempt.Promise.try (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:4338:29)
+      at retryOptions (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:114212:70)
+      at tryCatcher (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1830:23)
+      at Promise.attempt.Promise.try (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:4338:29)
+      at whenStable (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:143744:68)
+      at <unknown> (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:143685:14)
+      at tryCatcher (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1830:23)
+      at Promise._settlePromiseFromHandler (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1542:31)
+      at Promise._settlePromise (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1599:18)
+      at Promise._settlePromise0 (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1644:10)
+      at Promise._settlePromises (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1724:18)
+      at Promise._fulfill (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1668:18)
+      at <unknown> (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:5473:46)
+  From Your Spec Code:
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/passing/x01-manual-failing-test-group.cy.js:130:29)
+
+  5) Real Settings UI Interaction
+       should test critical UI and utility functions:
+     Error: Syntax error, unrecognized expression: #<h1>HTML Modal</h1>
+      at I.error (https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js:2:11769)
+      at Y (https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js:2:17234)
+      at re (https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js:2:20008)
+      at Function.I [as find] (https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js:2:7520)
+      at ce.fn.init.find (https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js:2:21991)
+      at ce.fn.init (https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js:2:22483)
+      at ce (https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js:2:1077)
+      at obj.<computed> (http://127.0.0.1:8111/js/coverage.js?v=1760231725:480:41)
+      at openModal (http://127.0.0.1:8111/js/global.js?v=1760231725:252:5)
+
+  6) Real Settings UI Interaction
+       should test UI helper and modal functions:
+     AssertionError: expected null to exist
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/passing/x01-manual-failing-test-group.cy.js:231:40)
+
+  7) Real Settings UI Interaction
+       should save Neck measurement data:
+     CypressError: Timed out retrying after 8050ms: `cy.click()` failed because this element is not visible:
+
+`<button class="btn secondary-btn btn-sm w-100 mt-2 toggle-edit" data-eng="+ Add Data" data-spa="+ Agregar Datos" data-fre="+ Ajouter Données" data-ger="+ Daten Hinzufügen">+ Add Data</button>`
+
+This element `<button.btn.secondary-btn.btn-sm.w-100.mt-2.toggle-edit>` is not visible because its parent `<div#body.tab-pane.fade>` has CSS property: `display: none`
+
+Fix this problem, or use `{force: true}` to disable error checking.
+
+https://on.cypress.io/element-cannot-be-interacted-with
+      at runVisibilityCheck (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:144957:58)
+      at Object.isStrictlyVisible (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:144971:10)
+      at runAllChecks (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:113271:26)
+      at retryActionability (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:113339:16)
+      at tryCatcher (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1830:23)
+      at Promise.attempt.Promise.try (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:4338:29)
+      at whenStable (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:143744:68)
+      at <unknown> (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:143685:14)
+      at tryCatcher (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1830:23)
+      at Promise._settlePromiseFromHandler (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1542:31)
+      at Promise._settlePromise (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1599:18)
+      at Promise._settlePromise0 (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1644:10)
+      at Promise._settlePromises (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1724:18)
+      at Promise._fulfill (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1668:18)
+      at <unknown> (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:5473:46)
+  From Your Spec Code:
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/passing/x01-manual-failing-test-group.cy.js:256:103)
+
+  8) Real Settings UI Interaction
+       should test weight management functions:
+     CypressError: Timed out retrying after 8000ms: `cy.clear()` failed because this element is not visible:
+
+`<input type="number" step="0.1" min="0" id="newWeight" class="form-control glass-input weight-input" placeholder="e.g. 70.5" data-eng="e.g. 75.5" data-spa="ej. 75.5" data-fre="ex. 75,5" data-ger="z.B. 75,5">`
+
+This element `<input#newWeight.form-control.glass-input.weight-input>` is not visible because its parent `<div#add-entry-form.mb-4.hidden>` has CSS property: `display: none`
+
+Fix this problem, or use `{force: true}` to disable error checking.
+
+https://on.cypress.io/element-cannot-be-interacted-with
+      at runVisibilityCheck (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:144957:58)
+      at Object.isStrictlyVisible (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:144971:10)
+      at runAllChecks (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:113271:26)
+      at retryActionability (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:113339:16)
+      at tryCatcher (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1830:23)
+      at Promise.attempt.Promise.try (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:4338:29)
+      at whenStable (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:143744:68)
+      at <unknown> (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:143685:14)
+      at tryCatcher (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1830:23)
+      at Promise._settlePromiseFromHandler (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1542:31)
+      at Promise._settlePromise (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1599:18)
+      at Promise._settlePromise0 (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1644:10)
+      at Promise._settlePromises (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1724:18)
+      at Promise._fulfill (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1668:18)
+      at <unknown> (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:5473:46)
+  From Your Spec Code:
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/passing/x01-manual-failing-test-group.cy.js:271:33)
+
+  9) Real Settings UI Interaction
+       should test loadWeightHistory() function with successful data:
+     CypressError: Timed out retrying after 5000ms: `cy.wait()` timed out waiting `5000ms` for the 1st request to the route: `getWeightHistory`. No request ever occurred.
+
+https://on.cypress.io/wait
+      at cypressErr (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:76065:18)
+      at Object.errByPath (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:76119:10)
+      at checkForXhr (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:135342:84)
+      at <unknown> (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:135368:28)
+      at tryCatcher (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1830:23)
+      at Promise.attempt.Promise.try (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:4338:29)
+      at whenStable (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:143744:68)
+      at <unknown> (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:143685:14)
+      at tryCatcher (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1830:23)
+      at Promise._settlePromiseFromHandler (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1542:31)
+      at Promise._settlePromise (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1599:18)
+      at Promise._settlePromise0 (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1644:10)
+      at Promise._settlePromises (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1724:18)
+      at Promise._fulfill (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1668:18)
+      at <unknown> (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:5473:46)
+  From Your Spec Code:
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/passing/x01-manual-failing-test-group.cy.js:301:16)
+
+  10) Real Settings UI Interaction
+       should test loadWeightHistory() function with no data:
+     CypressError: Timed out retrying after 5000ms: `cy.wait()` timed out waiting `5000ms` for the 1st request to the route: `getEmptyHistory`. No request ever occurred.
+
+https://on.cypress.io/wait
+      at cypressErr (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:76065:18)
+      at Object.errByPath (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:76119:10)
+      at checkForXhr (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:135342:84)
+      at <unknown> (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:135368:28)
+      at tryCatcher (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1830:23)
+      at Promise.attempt.Promise.try (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:4338:29)
+      at whenStable (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:143744:68)
+      at <unknown> (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:143685:14)
+      at tryCatcher (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1830:23)
+      at Promise._settlePromiseFromHandler (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1542:31)
+      at Promise._settlePromise (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1599:18)
+      at Promise._settlePromise0 (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1644:10)
+      at Promise._settlePromises (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1724:18)
+      at Promise._fulfill (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1668:18)
+      at <unknown> (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:5473:46)
+  From Your Spec Code:
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/passing/x01-manual-failing-test-group.cy.js:328:19)
+
+  11) Real Settings UI Interaction
+       should test loadWeightHistory() function with network failure:
+     CypressError: Timed out retrying after 5000ms: `cy.wait()` timed out waiting `5000ms` for the 1st request to the route: `getHistoryFail`. No request ever occurred.
+
+https://on.cypress.io/wait
+      at cypressErr (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:76065:18)
+      at Object.errByPath (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:76119:10)
+      at checkForXhr (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:135342:84)
+      at <unknown> (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:135368:28)
+      at tryCatcher (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1830:23)
+      at Promise.attempt.Promise.try (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:4338:29)
+      at whenStable (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:143744:68)
+      at <unknown> (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:143685:14)
+      at tryCatcher (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1830:23)
+      at Promise._settlePromiseFromHandler (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1542:31)
+      at Promise._settlePromise (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1599:18)
+      at Promise._settlePromise0 (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1644:10)
+      at Promise._settlePromises (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1724:18)
+      at Promise._fulfill (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:1668:18)
+      at <unknown> (http://127.0.0.1:8111/__cypress/runner/cypress_runner.js:5473:46)
+  From Your Spec Code:
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/passing/x01-manual-failing-test-group.cy.js:354:19)
+
+  12) Settings Integration
+       should persist date format across page reloads:
+     TypeError: win.setDateFormat is not a function
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/passing/x01-manual-failing-test-group.cy.js:479:20)
+
+  13) Weight History Table Dates
+       should format dates in weight history table:
+     AssertionError: Timed out retrying after 8000ms: Expected to find element: `a[href="#data"]`, but never found it.
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/passing/x01-manual-failing-test-group.cy.js:505:15)
+
+  14) Goal Date Display
+       should format goal date correctly:
+     TypeError: win.formatAllTimestamps is not a function
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/passing/x01-manual-failing-test-group.cy.js:537:20)
+
+  15) Streak Counter Dates
+       should format streak counter dates:
+     AssertionError: Timed out retrying after 8000ms: Expected to find element: `a[href="#health"]`, but never found it.
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/passing/x01-manual-failing-test-group.cy.js:571:15)
+
+  16) Achievement Tracking Functions
+       should test updateAchievementCards() function with progress data:
+     AssertionError: expected undefined to be a function
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/passing/x01-manual-failing-test-group.cy.js:596:70)
+
+  17) Achievement Tracking Functions
+       should test updateAchievementCards() function with weight gain scenario:
+     TypeError: win.$ is not a function
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/passing/x01-manual-failing-test-group.cy.js:649:21)
+
+  18) Achievement Tracking Functions
+       should test updateAchievementCards() streak calculation:
+     TypeError: win.$ is not a function
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/passing/x01-manual-failing-test-group.cy.js:682:21)
+
+  19) Health Data Refresh Functions
+       should test refreshBMI() function with successful data:
+     AssertionError: expected undefined to be a function
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/passing/x01-manual-failing-test-group.cy.js:735:52)
+
+  20) Health Data Refresh Functions
+       should test refreshIdealWeight() function with successful data:
+     AssertionError: expected undefined to be a function
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/passing/x01-manual-failing-test-group.cy.js:773:60)
+
+  21) Health Data Refresh Functions
+       should test refreshGallbladderHealth() function with successful data:
+     AssertionError: expected undefined to be a function
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/passing/x01-manual-failing-test-group.cy.js:807:66)
+
+  22) Health Benefit Cards Update Function
+       should test updateHealthBenefitCards() function with weight progress:
+     AssertionError: expected undefined to be a function
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/passing/x01-manual-failing-test-group.cy.js:847:60)
+
+  23) Health Benefit Cards Update Function
+       should test refreshPersonalHealthBenefits() function:
+     AssertionError: expected undefined to be a function
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/passing/x01-manual-failing-test-group.cy.js:879:65)
+
+  24) Settings Management Functions
+       should test loadSettings() function with failed response:
+     TypeError: win.$ is not a function
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/passing/x01-manual-failing-test-group.cy.js:913:21)
+
+  25) Settings Management Functions
+       should test saveSettings() function with successful save:
+     AssertionError: expected undefined to be a function
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/passing/x01-manual-failing-test-group.cy.js:947:56)
+
+  26) Settings Management Functions
+       should test saveSettings() function with server failure:
+     TypeError: win.$ is not a function
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/passing/x01-manual-failing-test-group.cy.js:994:21)
+
+  27) Settings Management Functions
+       should test saveSettings() function with network error:
+     TypeError: win.$ is not a function
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/passing/x01-manual-failing-test-group.cy.js:1030:21)
+
+  28) Settings Management Functions
+       should test resetSettings() function:
+     AssertionError: expected undefined to be a function
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/passing/x01-manual-failing-test-group.cy.js:1061:57)
+
+
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        33                                                                               │
+  │ Passing:      5                                                                                │
+  │ Failing:      28                                                                               │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  28                                                                               │
+  │ Video:        false                                                                            │
+  │ Duration:     3 minutes, 0 seconds                                                             │
+  │ Spec Ran:     x01-manual-failing-test-group.cy.js                                              │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+  (Screenshots)
+
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\x01-manual-failing-test-group     (1280x720)
+     .cy.js\Test Page Output -- retrieves DB JSON via API while visiting test page (f               
+     ailed).png                                                                                     
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\x01-manual-failing-test-group     (1280x720)
+     .cy.js\Test Page Output -- should test schema logger and test functions (failed)               
+     .png                                                                                           
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\x01-manual-failing-test-group     (1280x720)
+     .cy.js\Real Settings UI Interaction -- should test settings functions through UI               
+      interactions (failed).png                                                                     
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\x01-manual-failing-test-group     (1280x720)
+     .cy.js\Real Settings UI Interaction -- should test reset settings functionality                
+     (failed).png                                                                                   
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\x01-manual-failing-test-group     (1280x720)
+     .cy.js\Real Settings UI Interaction -- should test critical UI and utility funct               
+     ions (failed).png                                                                              
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\x01-manual-failing-test-group     (1280x720)
+     .cy.js\Real Settings UI Interaction -- should test UI helper and modal functions               
+      (failed).png                                                                                  
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\x01-manual-failing-test-group     (1280x720)
+     .cy.js\Real Settings UI Interaction -- should save Neck measurement data (failed               
+     ).png                                                                                          
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\x01-manual-failing-test-group     (1280x720)
+     .cy.js\Real Settings UI Interaction -- should test weight management functions (               
+     failed).png                                                                                    
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\x01-manual-failing-test-group     (1280x720)
+     .cy.js\Real Settings UI Interaction -- should test loadWeightHistory() function                
+     with successful data (failed).png                                                              
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\x01-manual-failing-test-group     (1280x720)
+     .cy.js\Real Settings UI Interaction -- should test loadWeightHistory() function                
+     with no data (failed).png                                                                      
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\x01-manual-failing-test-group     (1280x720)
+     .cy.js\Real Settings UI Interaction -- should test loadWeightHistory() function                
+     with network failure (failed).png                                                              
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\x01-manual-failing-test-group     (1280x720)
+     .cy.js\Settings Integration -- should persist date format across page reloads (f               
+     ailed).png                                                                                     
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\x01-manual-failing-test-group     (1280x720)
+     .cy.js\Weight History Table Dates -- should format dates in weight history table               
+      (failed).png                                                                                  
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\x01-manual-failing-test-group     (1280x720)
+     .cy.js\Goal Date Display -- should format goal date correctly (failed).png                     
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\x01-manual-failing-test-group     (1280x720)
+     .cy.js\Streak Counter Dates -- should format streak counter dates (failed).png                 
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\x01-manual-failing-test-group     (1280x720)
+     .cy.js\Achievement Tracking Functions -- should test updateAchievementCards() fu               
+     nction with progress data (failed).png                                                         
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\x01-manual-failing-test-group     (1280x720)
+     .cy.js\Achievement Tracking Functions -- should test updateAchievementCards() fu               
+     nction with weight gain scenario (failed).png                                                  
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\x01-manual-failing-test-group     (1280x720)
+     .cy.js\Achievement Tracking Functions -- should test updateAchievementCards() st               
+     reak calculation (failed).png                                                                  
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\x01-manual-failing-test-group     (1280x720)
+     .cy.js\Health Data Refresh Functions -- should test refreshBMI() function with s               
+     uccessful data (failed).png                                                                    
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\x01-manual-failing-test-group     (1280x720)
+     .cy.js\Health Data Refresh Functions -- should test refreshIdealWeight() functio               
+     n with successful data (failed).png                                                            
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\x01-manual-failing-test-group     (1280x720)
+     .cy.js\Health Data Refresh Functions -- should test refreshGallbladderHealth() f               
+     unction with successful data (failed).png                                                      
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\x01-manual-failing-test-group     (1280x720)
+     .cy.js\Health Benefit Cards Update Function -- should test updateHealthBenefitCa               
+     rds() function with weight progress (failed).png                                               
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\x01-manual-failing-test-group     (1280x720)
+     .cy.js\Health Benefit Cards Update Function -- should test refreshPersonalHealth               
+     Benefits() function (failed).png                                                               
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\x01-manual-failing-test-group     (1280x720)
+     .cy.js\Settings Management Functions -- should test loadSettings() function with               
+      failed response (failed).png                                                                  
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\x01-manual-failing-test-group     (1280x720)
+     .cy.js\Settings Management Functions -- should test saveSettings() function with               
+      successful save (failed).png                                                                  
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\x01-manual-failing-test-group     (1280x720)
+     .cy.js\Settings Management Functions -- should test saveSettings() function with               
+      server failure (failed).png                                                                   
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\x01-manual-failing-test-group     (1280x720)
+     .cy.js\Settings Management Functions -- should test saveSettings() function with               
+      network error (failed).png                                                                    
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\x01-manual-failing-test-group     (1280x720)
+     .cy.js\Settings Management Functions -- should test resetSettings() function (fa               
+     iled).png                                                                                      
+
+
+====================================================================================================
+
+  (Run Finished)
+
+
+       Spec                                              Tests  Passing  Failing  Pending  Skipped  
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ ✔  settings-theme-coverage.cy.js            00:48        5        5        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  settings-utilities-coverage.cy.js        00:13        5        5        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  smoke.cy.js                              00:01        2        2        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  test-existing-functions.cy.js            00:15        2        2        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  ui-responsive.cy.js                      01:02       32       32        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  unit-conversion-functions.cy.js          00:04       16       16        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  utilities-testing.cy.js                  01:13       34       34        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✖  x01-manual-failing-test-group.cy.js      03:00       33        5       28        -        - │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+    ✖  1 of 8 failed (13%)                      06:39      129      101       28        -        -  
+

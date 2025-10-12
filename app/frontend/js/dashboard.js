@@ -1111,42 +1111,95 @@ function getChartTextColor() {
 // Function to update chart colors when theme changes
 function updateChartThemeColors() {
     if (window.coverage) window.coverage.logFunction('updateChartThemeColors', 'dashboard.js');
+
+    const colors = getThemeColors();
+
+    // Update main weight chart
     if (typeof weightChart !== 'undefined' && weightChart) {
         // Update axis colors
         if (weightChart.options.scales) {
             if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
             if (weightChart.options.scales.x && weightChart.options.scales.x.ticks) {
-                weightChart.options.scales.x.ticks.color = getChartTextColor();
+                weightChart.options.scales.x.ticks.color = colors.tickColor;
             }
             if (weightChart.options.scales.y && weightChart.options.scales.y.ticks) {
-                weightChart.options.scales.y.ticks.color = getChartTextColor();
+                weightChart.options.scales.y.ticks.color = colors.tickColor;
             }
             if (weightChart.options.scales.x && weightChart.options.scales.x.grid) {
-                weightChart.options.scales.x.grid.color = getChartGridColor();
+                weightChart.options.scales.x.grid.color = colors.gridColor;
             }
             if (weightChart.options.scales.y && weightChart.options.scales.y.grid) {
                 if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
-                weightChart.options.scales.y.grid.color = getChartGridColor();
+                weightChart.options.scales.y.grid.color = colors.gridColor;
             }
         }
 
         // Update axis title colors
         if (weightChart.options.scales && weightChart.options.scales.y && weightChart.options.scales.y.title) {
-            weightChart.options.scales.y.title.color = getChartTextColor();
+            weightChart.options.scales.y.title.color = colors.tickColor;
         }
 
         // Update dataset colors
         if (weightChart.data && weightChart.data.datasets) {
             if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
             weightChart.data.datasets.forEach(dataset => {
-                if (dataset.borderColor) dataset.borderColor = getChartLineColor();
-                if (dataset.pointBackgroundColor) dataset.pointBackgroundColor = getChartLineColor();
-                if (dataset.pointBorderColor) dataset.pointBorderColor = getChartTextColor();
+                if (dataset.borderColor) dataset.borderColor = colors.primary;
+                if (dataset.pointBackgroundColor) dataset.pointBackgroundColor = colors.primary;
+                if (dataset.pointBorderColor) dataset.pointBorderColor = colors.tickColor;
             });
         }
 
         // Update the chart
         weightChart.update();
+    }
+
+    // Update weekly loss chart
+    if (window.weeklyLossChartInstance && window.weeklyLossChartInstance.data) {
+        window.weeklyLossChartInstance.data.datasets[0].borderColor = colors.primary;
+        window.weeklyLossChartInstance.data.datasets[0].backgroundColor = colors.primaryRgba;
+        window.weeklyLossChartInstance.options.scales.y.grid.color = colors.gridColor;
+        window.weeklyLossChartInstance.options.scales.y.ticks.color = colors.tickColor;
+        window.weeklyLossChartInstance.options.scales.x.ticks.color = colors.tickColor;
+        window.weeklyLossChartInstance.update();
+    }
+
+    // Update projection chart
+    if (window.projectionChartInstance && window.projectionChartInstance.data) {
+        window.projectionChartInstance.data.datasets[0].borderColor = colors.primary;
+        window.projectionChartInstance.data.datasets[0].backgroundColor = colors.primaryRgba;
+        window.projectionChartInstance.data.datasets[1].borderColor = colors.secondary;
+        window.projectionChartInstance.data.datasets[1].backgroundColor = colors.secondaryRgba;
+        window.projectionChartInstance.options.scales.y.grid.color = colors.gridColor;
+        window.projectionChartInstance.options.scales.y.ticks.color = colors.tickColor;
+        window.projectionChartInstance.options.scales.x.ticks.color = colors.tickColor;
+        window.projectionChartInstance.options.plugins.legend.labels.color = colors.tickColor;
+        window.projectionChartInstance.update();
+    }
+
+    // Update goal pie chart
+    if (window.goalPieChartInstance && window.goalPieChartInstance.data) {
+        window.goalPieChartInstance.data.datasets[0].backgroundColor = [colors.primary, colors.secondaryRgba];
+        window.goalPieChartInstance.data.datasets[0].borderColor = [colors.primary, colors.secondary];
+        window.goalPieChartInstance.options.plugins.legend.labels.color = colors.tickColor;
+        window.goalPieChartInstance.update();
+    }
+
+    // Update ideal weight pie chart
+    if (window.idealWeightPieChartInstance && window.idealWeightPieChartInstance.data) {
+        window.idealWeightPieChartInstance.data.datasets[0].backgroundColor = [colors.primary, colors.secondaryRgba];
+        window.idealWeightPieChartInstance.data.datasets[0].borderColor = [colors.primary, colors.secondary];
+        window.idealWeightPieChartInstance.options.plugins.legend.labels.color = colors.tickColor;
+        window.idealWeightPieChartInstance.update();
+    }
+
+    // Update body fat chart
+    if (window.bodyFatChartInstance && window.bodyFatChartInstance.data) {
+        window.bodyFatChartInstance.data.datasets[0].borderColor = colors.primary;
+        window.bodyFatChartInstance.data.datasets[0].backgroundColor = colors.primaryRgba;
+        window.bodyFatChartInstance.options.scales.y.grid.color = colors.gridColor;
+        window.bodyFatChartInstance.options.scales.y.ticks.color = colors.tickColor;
+        window.bodyFatChartInstance.options.scales.x.ticks.color = colors.tickColor;
+        window.bodyFatChartInstance.update();
     }
 }
 
@@ -3550,6 +3603,7 @@ function renderWeeklyLossChart(weeklyData) {
 
     const labels = weeklyData.map(d => `Week ${d.week}`);
     const data = weeklyData.map(d => d.avg_loss);
+    const colors = getThemeColors();
 
     window.weeklyLossChartInstance = new Chart(ctx, {
         type: 'line',
@@ -3558,8 +3612,8 @@ function renderWeeklyLossChart(weeklyData) {
             datasets: [{
                 label: 'Weight Loss (kg)',
                 data: data,
-                borderColor: '#64a6d8',
-                backgroundColor: 'rgba(100, 166, 216, 0.1)',
+                borderColor: colors.primary,
+                backgroundColor: colors.primaryRgba,
                 tension: 0.3,
                 fill: true,
                 pointRadius: 0,
@@ -3578,10 +3632,10 @@ function renderWeeklyLossChart(weeklyData) {
                 y: {
                     beginAtZero: true,
                     grid: {
-                        color: 'rgba(100, 150, 200, 0.1)'
+                        color: colors.gridColor
                     },
                     ticks: {
-                        color: 'rgba(255, 255, 255, 0.7)'
+                        color: colors.tickColor
                     }
                 },
                 x: {
@@ -3589,7 +3643,7 @@ function renderWeeklyLossChart(weeklyData) {
                         display: false
                     },
                     ticks: {
-                        color: 'rgba(255, 255, 255, 0.7)'
+                        color: colors.tickColor
                     }
                 }
             }
@@ -3617,6 +3671,7 @@ function renderProjectionChart(projectionData) {
     }
 
     const { historical, projected } = projectionData;
+    const colors = getThemeColors();
 
     window.projectionChartInstance = new Chart(ctx, {
         type: 'line',
@@ -3626,8 +3681,8 @@ function renderProjectionChart(projectionData) {
                 {
                     label: 'Actual',
                     data: [...historical.data, ...Array(projected.data.length).fill(null)],
-                    borderColor: '#64a6d8',
-                    backgroundColor: 'rgba(100, 166, 216, 0.1)',
+                    borderColor: colors.primary,
+                    backgroundColor: colors.primaryRgba,
                     tension: 0.3,
                     pointRadius: 0,
                     pointHoverRadius: 0
@@ -3635,8 +3690,8 @@ function renderProjectionChart(projectionData) {
                 {
                     label: 'Projected',
                     data: [...Array(historical.data.length).fill(null), ...projected.data],
-                    borderColor: '#7bc96f',
-                    backgroundColor: 'rgba(123, 201, 111, 0.1)',
+                    borderColor: colors.secondary,
+                    backgroundColor: colors.secondaryRgba,
                     borderDash: [5, 5],
                     tension: 0.3,
                     pointRadius: 0,
@@ -3650,17 +3705,17 @@ function renderProjectionChart(projectionData) {
             plugins: {
                 legend: {
                     labels: {
-                        color: 'rgba(255, 255, 255, 0.8)'
+                        color: colors.tickColor
                     }
                 }
             },
             scales: {
                 y: {
                     grid: {
-                        color: 'rgba(100, 150, 200, 0.1)'
+                        color: colors.gridColor
                     },
                     ticks: {
-                        color: 'rgba(255, 255, 255, 0.7)'
+                        color: colors.tickColor
                     }
                 },
                 x: {
@@ -3668,7 +3723,7 @@ function renderProjectionChart(projectionData) {
                         display: false
                     },
                     ticks: {
-                        color: 'rgba(255, 255, 255, 0.7)'
+                        color: colors.tickColor
                     }
                 }
             }
@@ -3700,6 +3755,7 @@ function renderGoalPieChart(goalData) {
 
     const completedLabel = t('Completed') || 'Completed';
     const remainingLabel = t('Remaining') || 'Remaining';
+    const colors = getThemeColors();
 
     window.goalPieChartInstance = new Chart(ctx, {
         type: 'doughnut',
@@ -3707,8 +3763,8 @@ function renderGoalPieChart(goalData) {
             labels: [completedLabel, remainingLabel],
             datasets: [{
                 data: [Math.abs(completed_kg), Math.abs(remaining_kg)],
-                backgroundColor: ['#7bc96f', 'rgba(100, 150, 200, 0.3)'],
-                borderColor: ['#7bc96f', 'rgba(100, 150, 200, 0.5)'],
+                backgroundColor: [colors.primary, colors.secondaryRgba],
+                borderColor: [colors.primary, colors.secondary],
                 borderWidth: 2
             }]
         },
@@ -3718,7 +3774,7 @@ function renderGoalPieChart(goalData) {
             plugins: {
                 legend: {
                     labels: {
-                        color: 'rgba(255, 255, 255, 0.8)'
+                        color: colors.tickColor
                     }
                 }
             }
@@ -3762,6 +3818,7 @@ function renderIdealWeightPieChart(idealWeightData) {
 
     const achievedLabel = t('Achieved') || 'Achieved';
     const remainingLabel = t('Remaining') || 'Remaining';
+    const colors = getThemeColors();
 
     window.idealWeightPieChartInstance = new Chart(ctx, {
         type: 'doughnut',
@@ -3769,8 +3826,8 @@ function renderIdealWeightPieChart(idealWeightData) {
             labels: [achievedLabel, remainingLabel],
             datasets: [{
                 data: [achieved_kg, remaining_kg],
-                backgroundColor: ['#7bc96f', 'rgba(100, 150, 200, 0.3)'],
-                borderColor: ['#7bc96f', 'rgba(100, 150, 200, 0.5)'],
+                backgroundColor: [colors.primary, colors.secondaryRgba],
+                borderColor: [colors.primary, colors.secondary],
                 borderWidth: 2
             }]
         },
@@ -3780,7 +3837,7 @@ function renderIdealWeightPieChart(idealWeightData) {
             plugins: {
                 legend: {
                     labels: {
-                        color: 'rgba(255, 255, 255, 0.8)'
+                        color: colors.tickColor
                     }
                 }
             }
@@ -3822,6 +3879,7 @@ function renderBodyFatChart(bodyFatData) {
 
     const labels = bodyFatData.map(d => formatDate(d.entry_date));
     const data = bodyFatData.map(d => parseFloat(d.body_fat_percent));
+    const colors = getThemeColors();
 
     window.bodyFatChartInstance = new Chart(ctx, {
         type: 'line',
@@ -3830,8 +3888,8 @@ function renderBodyFatChart(bodyFatData) {
             datasets: [{
                 label: 'Body Fat %',
                 data: data,
-                borderColor: '#f39c12',
-                backgroundColor: 'rgba(243, 156, 18, 0.1)',
+                borderColor: colors.primary,
+                backgroundColor: colors.primaryRgba,
                 tension: 0.3,
                 fill: true
             }]
@@ -3848,10 +3906,10 @@ function renderBodyFatChart(bodyFatData) {
                 y: {
                     beginAtZero: false,
                     grid: {
-                        color: 'rgba(100, 150, 200, 0.1)'
+                        color: colors.gridColor
                     },
                     ticks: {
-                        color: 'rgba(255, 255, 255, 0.7)',
+                        color: colors.tickColor,
                         callback: function(value) {
                             return value + '%';
                         }
@@ -3862,7 +3920,7 @@ function renderBodyFatChart(bodyFatData) {
                         display: false
                     },
                     ticks: {
-                        color: 'rgba(255, 255, 255, 0.7)'
+                        color: colors.tickColor
                     }
                 }
             }
@@ -3913,6 +3971,84 @@ function displayWeightComparison(totalLostKg) {
 // No manual input needed - uses Deurenberg formula (BMI + age)
 
 // ==================== End Phase 4: Total Progress ====================
+
+// ==================== Chart Theme Colors ====================
+
+/**
+ * Get theme-specific colors for charts
+ * @returns {Object} Color palette for current theme
+ */
+function getThemeColors() {
+    if (window.coverage) window.coverage.logFunction('getThemeColors', 'dashboard.js');
+
+    // Detect current theme from loaded CSS file
+    const themeLink = document.getElementById('theme-css');
+    let themeName = 'glassmorphism'; // default
+
+    if (themeLink && themeLink.href) {
+        const match = themeLink.href.match(/themes\/([^.]+)\.css/);
+        if (match) {
+            themeName = match[1];
+        }
+    }
+
+    // Theme color palettes
+    const themeColors = {
+        glassmorphism: {
+            primary: '#64a6d8',
+            primaryRgba: 'rgba(100, 166, 216, 0.1)',
+            secondary: '#7bc96f',
+            secondaryRgba: 'rgba(123, 201, 111, 0.1)',
+            gridColor: 'rgba(100, 150, 200, 0.1)',
+            tickColor: 'rgba(255, 255, 255, 0.7)'
+        },
+        material: {
+            primary: '#4caf50',
+            primaryRgba: 'rgba(76, 175, 80, 0.1)',
+            secondary: '#66bb6a',
+            secondaryRgba: 'rgba(102, 187, 106, 0.1)',
+            gridColor: 'rgba(76, 175, 80, 0.1)',
+            tickColor: '#1b5e20'
+        },
+        minimalism: {
+            primary: '#495057',
+            primaryRgba: 'rgba(73, 80, 87, 0.1)',
+            secondary: '#6c757d',
+            secondaryRgba: 'rgba(108, 117, 125, 0.1)',
+            gridColor: 'rgba(73, 80, 87, 0.1)',
+            tickColor: '#212529'
+        },
+        skeuomorphism: {
+            primary: '#ff8c00',
+            primaryRgba: 'rgba(255, 140, 0, 0.1)',
+            secondary: '#daa520',
+            secondaryRgba: 'rgba(218, 165, 32, 0.1)',
+            gridColor: 'rgba(218, 165, 32, 0.2)',
+            tickColor: '#8b4513'
+        },
+        neumorphism: {
+            primary: '#667eea',
+            primaryRgba: 'rgba(102, 126, 234, 0.1)',
+            secondary: '#764ba2',
+            secondaryRgba: 'rgba(118, 75, 162, 0.1)',
+            gridColor: 'rgba(102, 126, 234, 0.1)',
+            tickColor: '#4c566a'
+        },
+        retro: {
+            primary: '#33bb55',
+            primaryRgba: 'rgba(51, 187, 85, 0.2)',
+            secondary: '#10b981',
+            secondaryRgba: 'rgba(16, 185, 129, 0.2)',
+            gridColor: 'rgba(51, 187, 85, 0.2)',
+            tickColor: '#e8ffe8'
+        }
+    };
+
+    return themeColors[themeName] || themeColors.glassmorphism;
+}
+
+
+// ==================== End Chart Theme Colors ====================
 
 // Make functions globally available for settings
 window.updateWeightUnitDisplay = updateWeightUnitDisplay;

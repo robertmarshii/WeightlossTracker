@@ -1,7 +1,11 @@
 // Translation helper for dynamically generated content
 
+// Merge body insights translations if available
+const bodyInsights = window.bodyInsightsTranslations || {};
+
 // Translation dictionary for dynamically generated text
 const translations = {
+    ...bodyInsights,
     // Achievement cards
     "Goal tracking": {
         "en": "Goal tracking",
@@ -32,6 +36,26 @@ const translations = {
         "es": "entradas",
         "fr": "entrées",
         "de": "Einträge"
+    },
+
+    // Body metric change indicators
+    "from last entry": {
+        "en": "from last entry",
+        "es": "desde última entrada",
+        "fr": "depuis la dernière entrée",
+        "de": "seit letztem Eintrag"
+    },
+    "No change": {
+        "en": "No change",
+        "es": "Sin cambios",
+        "fr": "Aucun changement",
+        "de": "Keine Änderung"
+    },
+    "First entry": {
+        "en": "First entry",
+        "es": "Primera entrada",
+        "fr": "Première entrée",
+        "de": "Erster Eintrag"
     },
 
     // Health messages

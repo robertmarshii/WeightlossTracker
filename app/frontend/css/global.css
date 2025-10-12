@@ -456,6 +456,95 @@ input[type="time"]::-webkit-datetime-edit-minute-field {
     }
 }
 
+/* ===== BODY INSIGHTS CARD STYLING ===== */
+
+/* Collapsible card header */
+.card-header-collapsible {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    margin-bottom: 1rem;
+}
+
+.card-header-collapsible:hover {
+    opacity: 0.8;
+}
+
+.card-toggle {
+    font-size: 2rem !important;
+    font-weight: 300;
+    color: #ffffff;
+    margin-left: 1rem;
+    line-height: 1;
+    min-width: 25px;
+    text-align: center;
+}
+
+.collapsible-content {
+    overflow: hidden;
+}
+
+/* Insights content */
+.insights-content {
+    line-height: 1.6;
+}
+
+.insight-item {
+    padding: 0.75rem;
+    border-left: 3px solid rgba(123, 97, 255, 0.5);
+    background: rgba(123, 97, 255, 0.05);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.insight-item:hover {
+    background: rgba(123, 97, 255, 0.1);
+    border-left-color: rgba(123, 97, 255, 0.8);
+}
+
+.insight-item:last-child {
+    margin-bottom: 0 !important;
+}
+
+.insight-title {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #ffffff;
+    margin-bottom: 0.25rem;
+}
+
+.insight-description {
+    font-size: 0.9rem;
+    color: #bbbbbb;
+    margin: 0;
+}
+
+/* Mobile responsive adjustments for insights */
+@media (max-width: 775px) {
+    .card-header-collapsible {
+        margin-bottom: 0.75rem;
+        padding-bottom: 0.5rem;
+    }
+
+    .card-toggle {
+        font-size: 1.3rem;
+    }
+
+    .insight-item {
+        padding: 0.5rem;
+    }
+
+    .insight-title {
+        font-size: 0.9rem;
+    }
+
+    .insight-description {
+        font-size: 0.85rem;
+    }
+}
+
 /* ===== FINAL OVERRIDES - Must be at end of file ===== */
 
 /* NOTE: Checkbox styling moved to individual theme files for better theming */

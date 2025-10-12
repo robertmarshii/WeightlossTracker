@@ -157,14 +157,85 @@ INSERT INTO wt_dev.goals (user_id, target_weight_kg, target_date, is_active) VAL
     (1, 115.0, '2025-10-15', true),
     (2, 75.0, '2024-05-01', true);
 
--- Body data entries for development testing
+-- Body data entries for development testing (showing progression over 6 months)
 INSERT INTO wt_dev.body_data_entries (user_id, metric_type, value, unit, entry_date) VALUES
-    -- Smart Data entries for user 1 - Week 1
+    -- Starting point - June 2025 (worst scores)
+    (1, 'muscle_mass', 40.5, '%', '2025-06-15'),
+    (1, 'fat_percent', 31.2, '%', '2025-06-15'),
+    (1, 'water_percent', 52.8, '%', '2025-06-15'),
+    (1, 'bone_mass', 3.0, 'kg', '2025-06-15'),
+    (1, 'measurement_neck', 42.0, 'cm', '2025-06-15'),
+    (1, 'measurement_chest', 114.0, 'cm', '2025-06-15'),
+    (1, 'measurement_waist', 103.0, 'cm', '2025-06-15'),
+    (1, 'measurement_hips', 108.0, 'cm', '2025-06-15'),
+    (1, 'measurement_thigh', 65.0, 'cm', '2025-06-15'),
+    (1, 'measurement_calf', 41.5, 'cm', '2025-06-15'),
+    (1, 'measurement_arm', 37.0, 'cm', '2025-06-15'),
+    (1, 'caliper_chest', 21.0, 'mm', '2025-06-15'),
+    (1, 'caliper_abdomen', 25.5, 'mm', '2025-06-15'),
+    (1, 'caliper_thigh', 23.5, 'mm', '2025-06-15'),
+    (1, 'caliper_tricep', 17.5, 'mm', '2025-06-15'),
+    (1, 'caliper_suprailiac', 22.0, 'mm', '2025-06-15'),
+
+    -- July 2025 - Early progress
+    (1, 'muscle_mass', 41.2, '%', '2025-07-15'),
+    (1, 'fat_percent', 30.1, '%', '2025-07-15'),
+    (1, 'water_percent', 53.2, '%', '2025-07-15'),
+    (1, 'bone_mass', 3.1, 'kg', '2025-07-15'),
+    (1, 'measurement_neck', 41.5, 'cm', '2025-07-15'),
+    (1, 'measurement_chest', 112.5, 'cm', '2025-07-15'),
+    (1, 'measurement_waist', 101.5, 'cm', '2025-07-15'),
+    (1, 'measurement_hips', 107.0, 'cm', '2025-07-15'),
+    (1, 'measurement_thigh', 64.0, 'cm', '2025-07-15'),
+    (1, 'measurement_calf', 41.0, 'cm', '2025-07-15'),
+    (1, 'measurement_arm', 36.5, 'cm', '2025-07-15'),
+    (1, 'caliper_chest', 20.2, 'mm', '2025-07-15'),
+    (1, 'caliper_abdomen', 24.5, 'mm', '2025-07-15'),
+    (1, 'caliper_thigh', 22.8, 'mm', '2025-07-15'),
+    (1, 'caliper_tricep', 16.8, 'mm', '2025-07-15'),
+    (1, 'caliper_suprailiac', 21.2, 'mm', '2025-07-15'),
+
+    -- August 2025 - Continued improvement
+    (1, 'muscle_mass', 41.8, '%', '2025-08-15'),
+    (1, 'fat_percent', 29.3, '%', '2025-08-15'),
+    (1, 'water_percent', 53.7, '%', '2025-08-15'),
+    (1, 'bone_mass', 3.15, 'kg', '2025-08-15'),
+    (1, 'measurement_neck', 41.0, 'cm', '2025-08-15'),
+    (1, 'measurement_chest', 111.5, 'cm', '2025-08-15'),
+    (1, 'measurement_waist', 100.0, 'cm', '2025-08-15'),
+    (1, 'measurement_hips', 106.0, 'cm', '2025-08-15'),
+    (1, 'measurement_thigh', 63.0, 'cm', '2025-08-15'),
+    (1, 'measurement_calf', 40.5, 'cm', '2025-08-15'),
+    (1, 'measurement_arm', 36.0, 'cm', '2025-08-15'),
+    (1, 'caliper_chest', 19.5, 'mm', '2025-08-15'),
+    (1, 'caliper_abdomen', 23.5, 'mm', '2025-08-15'),
+    (1, 'caliper_thigh', 22.0, 'mm', '2025-08-15'),
+    (1, 'caliper_tricep', 16.2, 'mm', '2025-08-15'),
+    (1, 'caliper_suprailiac', 20.5, 'mm', '2025-08-15'),
+
+    -- September 2025 - More progress
+    (1, 'muscle_mass', 42.3, '%', '2025-09-15'),
+    (1, 'fat_percent', 28.6, '%', '2025-09-15'),
+    (1, 'water_percent', 54.0, '%', '2025-09-15'),
+    (1, 'bone_mass', 3.2, 'kg', '2025-09-15'),
+    (1, 'measurement_neck', 40.8, 'cm', '2025-09-15'),
+    (1, 'measurement_chest', 110.5, 'cm', '2025-09-15'),
+    (1, 'measurement_waist', 99.0, 'cm', '2025-09-15'),
+    (1, 'measurement_hips', 105.5, 'cm', '2025-09-15'),
+    (1, 'measurement_thigh', 62.5, 'cm', '2025-09-15'),
+    (1, 'measurement_calf', 40.2, 'cm', '2025-09-15'),
+    (1, 'measurement_arm', 35.8, 'cm', '2025-09-15'),
+    (1, 'caliper_chest', 19.0, 'mm', '2025-09-15'),
+    (1, 'caliper_abdomen', 22.8, 'mm', '2025-09-15'),
+    (1, 'caliper_thigh', 21.2, 'mm', '2025-09-15'),
+    (1, 'caliper_tricep', 15.5, 'mm', '2025-09-15'),
+    (1, 'caliper_suprailiac', 20.0, 'mm', '2025-09-15'),
+
+    -- Week 1 October
     (1, 'muscle_mass', 42.5, '%', '2025-10-01'),
     (1, 'fat_percent', 28.3, '%', '2025-10-01'),
     (1, 'water_percent', 54.2, '%', '2025-10-01'),
     (1, 'bone_mass', 3.2, 'kg', '2025-10-01'),
-    -- Measurements for user 1 - Week 1
     (1, 'measurement_neck', 40.5, 'cm', '2025-10-01'),
     (1, 'measurement_chest', 110.0, 'cm', '2025-10-01'),
     (1, 'measurement_waist', 98.5, 'cm', '2025-10-01'),
@@ -172,19 +243,17 @@ INSERT INTO wt_dev.body_data_entries (user_id, metric_type, value, unit, entry_d
     (1, 'measurement_thigh', 62.0, 'cm', '2025-10-01'),
     (1, 'measurement_calf', 40.0, 'cm', '2025-10-01'),
     (1, 'measurement_arm', 35.5, 'cm', '2025-10-01'),
-    -- Calipers for user 1 - Week 1
     (1, 'caliper_chest', 18.5, 'mm', '2025-10-01'),
     (1, 'caliper_abdomen', 22.0, 'mm', '2025-10-01'),
     (1, 'caliper_thigh', 20.5, 'mm', '2025-10-01'),
     (1, 'caliper_tricep', 15.0, 'mm', '2025-10-01'),
     (1, 'caliper_suprailiac', 19.5, 'mm', '2025-10-01'),
 
-    -- Smart Data entries for user 1 - Week 2 (showing progress)
+    -- Week 2 October (current/best scores)
     (1, 'muscle_mass', 42.8, '%', '2025-10-05'),
     (1, 'fat_percent', 27.9, '%', '2025-10-05'),
     (1, 'water_percent', 54.5, '%', '2025-10-05'),
     (1, 'bone_mass', 3.3, 'kg', '2025-10-05'),
-    -- Measurements for user 1 - Week 2 (showing progress)
     (1, 'measurement_neck', 40.0, 'cm', '2025-10-05'),
     (1, 'measurement_chest', 109.5, 'cm', '2025-10-05'),
     (1, 'measurement_waist', 98.0, 'cm', '2025-10-05'),
@@ -192,7 +261,6 @@ INSERT INTO wt_dev.body_data_entries (user_id, metric_type, value, unit, entry_d
     (1, 'measurement_thigh', 61.5, 'cm', '2025-10-05'),
     (1, 'measurement_calf', 39.8, 'cm', '2025-10-05'),
     (1, 'measurement_arm', 35.3, 'cm', '2025-10-05'),
-    -- Calipers for user 1 - Week 2 (showing progress)
     (1, 'caliper_chest', 18.0, 'mm', '2025-10-05'),
     (1, 'caliper_abdomen', 21.5, 'mm', '2025-10-05'),
     (1, 'caliper_thigh', 20.0, 'mm', '2025-10-05'),

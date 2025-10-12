@@ -31,7 +31,7 @@
                                             <span class="change-icon" id="muscle-mass-change-icon"></span>
                                             <span class="change-text" id="muscle-mass-change-text"></span>
                                         </div>
-                                        <button class="btn secondary-btn btn-sm w-100 mt-2 toggle-edit" data-eng="📝 Add Data" data-spa="📝 Agregar Datos" data-fre="📝 Ajouter Données" data-ger="📝 Daten Hinzufügen">📝 Add Data</button>
+                                        <button class="btn secondary-btn btn-sm w-100 mt-2 toggle-edit" data-eng="+ Add Data" data-spa="+ Agregar Datos" data-fre="+ Ajouter Données" data-ger="+ Daten Hinzufügen">+ Add Data</button>
                                     </div>
                                     <div class="card-edit-body">
                                         <small class="text-muted d-block mb-2" data-eng="From your smart scales" data-spa="De tu báscula inteligente" data-fre="De votre balance connectée" data-ger="Von Ihrer intelligenten Waage">From your smart scales</small>
@@ -54,7 +54,7 @@
                                             <span class="change-icon" id="fat-percent-change-icon"></span>
                                             <span class="change-text" id="fat-percent-change-text"></span>
                                         </div>
-                                        <button class="btn secondary-btn btn-sm w-100 mt-2 toggle-edit" data-eng="📝 Add Data" data-spa="📝 Agregar Datos" data-fre="📝 Ajouter Données" data-ger="📝 Daten Hinzufügen">📝 Add Data</button>
+                                        <button class="btn secondary-btn btn-sm w-100 mt-2 toggle-edit" data-eng="+ Add Data" data-spa="+ Agregar Datos" data-fre="+ Ajouter Données" data-ger="+ Daten Hinzufügen">+ Add Data</button>
                                     </div>
                                     <div class="card-edit-body">
                                         <small class="text-muted d-block mb-2" data-eng="From your smart scales" data-spa="De tu báscula inteligente" data-fre="De votre balance connectée" data-ger="Von Ihrer intelligenten Waage">From your smart scales</small>
@@ -77,7 +77,7 @@
                                             <span class="change-icon" id="water-percent-change-icon"></span>
                                             <span class="change-text" id="water-percent-change-text"></span>
                                         </div>
-                                        <button class="btn secondary-btn btn-sm w-100 mt-2 toggle-edit" data-eng="📝 Add Data" data-spa="📝 Agregar Datos" data-fre="📝 Ajouter Données" data-ger="📝 Daten Hinzufügen">📝 Add Data</button>
+                                        <button class="btn secondary-btn btn-sm w-100 mt-2 toggle-edit" data-eng="+ Add Data" data-spa="+ Agregar Datos" data-fre="+ Ajouter Données" data-ger="+ Daten Hinzufügen">+ Add Data</button>
                                     </div>
                                     <div class="card-edit-body">
                                         <small class="text-muted d-block mb-2" data-eng="From your smart scales" data-spa="De tu báscula inteligente" data-fre="De votre balance connectée" data-ger="Von Ihrer intelligenten Waage">From your smart scales</small>
@@ -100,7 +100,7 @@
                                             <span class="change-icon" id="bone-mass-change-icon"></span>
                                             <span class="change-text" id="bone-mass-change-text"></span>
                                         </div>
-                                        <button class="btn secondary-btn btn-sm w-100 mt-2 toggle-edit" data-eng="📝 Add Data" data-spa="📝 Agregar Datos" data-fre="📝 Ajouter Données" data-ger="📝 Daten Hinzufügen">📝 Add Data</button>
+                                        <button class="btn secondary-btn btn-sm w-100 mt-2 toggle-edit" data-eng="+ Add Data" data-spa="+ Agregar Datos" data-fre="+ Ajouter Données" data-ger="+ Daten Hinzufügen">+ Add Data</button>
                                     </div>
                                     <div class="card-edit-body">
                                         <small class="text-muted d-block mb-2" data-eng="From your smart scales" data-spa="De tu báscula inteligente" data-fre="De votre balance connectée" data-ger="Von Ihrer intelligenten Waage">From your smart scales</small>
@@ -110,6 +110,21 @@
                                             <button class="btn secondary-btn btn-sm toggle-back" style="flex: 0 0 40%;">←</button>
                                             <button class="btn primary-btn btn-sm" style="flex: 0 0 60%;" id="btn-save-bone-mass" data-eng="✓ Save" data-spa="✓ Guardar" data-fre="✓ Enreg." data-ger="✓ Speichern">✓ Save</button>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Insights Section -->
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <div class="glass-card collapsible-card collapsed" id="body-insights-card">
+                                    <div class="card-header-collapsible" data-toggle-target="body-insights-content">
+                                        <h5 class="card-title mb-0" style="color: #ffffff;" data-eng="💡 Smart Data Insights" data-spa="💡 Perspectivas de Datos Inteligentes" data-fre="💡 Perspectives de Données Intelligentes" data-ger="💡 Intelligente Dateneinblicke">💡 Smart Data Insights</h5>
+                                        <span class="card-toggle">+</span>
+                                    </div>
+                                    <div id="body-insights-content" class="insights-content collapsible-content" style="display: none;">
+                                        <p class="text-muted" data-eng="Log your body composition data to see personalized insights." data-spa="Registra tus datos de composición corporal para ver perspectivas personalizadas." data-fre="Enregistrez vos données de composition corporelle pour voir des perspectives personnalisées." data-ger="Erfassen Sie Ihre Körperzusammensetzungsdaten, um personalisierte Einblicke zu erhalten.">Log your body composition data to see personalized insights.</p>
                                     </div>
                                 </div>
                             </div>
@@ -132,7 +147,7 @@
                                             <span class="change-icon" id="neck-change-icon"></span>
                                             <span class="change-text" id="neck-change-text"></span>
                                         </div>
-                                        <button class="btn secondary-btn btn-sm w-100 mt-2 toggle-edit" data-eng="📝 Add Data" data-spa="📝 Agregar Datos" data-fre="📝 Ajouter Données" data-ger="📝 Daten Hinzufügen">📝 Add Data</button>
+                                        <button class="btn secondary-btn btn-sm w-100 mt-2 toggle-edit" data-eng="+ Add Data" data-spa="+ Agregar Datos" data-fre="+ Ajouter Données" data-ger="+ Daten Hinzufügen">+ Add Data</button>
                                     </div>
                                     <div class="card-edit-body">
                                         <small class="text-muted d-block mb-2" data-eng="Below Adam's apple" data-spa="Debajo de la manzana de Adán" data-fre="Sous la pomme d'Adam" data-ger="Unter dem Adamsapfel">Below Adam's apple</small>
@@ -155,7 +170,7 @@
                                             <span class="change-icon" id="breast-change-icon"></span>
                                             <span class="change-text" id="breast-change-text"></span>
                                         </div>
-                                        <button class="btn secondary-btn btn-sm w-100 mt-2 toggle-edit" data-eng="📝 Add Data" data-spa="📝 Agregar Datos" data-fre="📝 Ajouter Données" data-ger="📝 Daten Hinzufügen">📝 Add Data</button>
+                                        <button class="btn secondary-btn btn-sm w-100 mt-2 toggle-edit" data-eng="+ Add Data" data-spa="+ Agregar Datos" data-fre="+ Ajouter Données" data-ger="+ Daten Hinzufügen">+ Add Data</button>
                                     </div>
                                     <div class="card-edit-body">
                                         <small class="text-muted d-block mb-2" data-eng="At nipple line" data-spa="A la altura del pezón" data-fre="Au niveau du mamelon" data-ger="Auf Brustwarzenhöhe">At nipple line</small>
@@ -178,7 +193,7 @@
                                             <span class="change-icon" id="waist-change-icon"></span>
                                             <span class="change-text" id="waist-change-text"></span>
                                         </div>
-                                        <button class="btn secondary-btn btn-sm w-100 mt-2 toggle-edit" data-eng="📝 Add Data" data-spa="📝 Agregar Datos" data-fre="📝 Ajouter Données" data-ger="📝 Daten Hinzufügen">📝 Add Data</button>
+                                        <button class="btn secondary-btn btn-sm w-100 mt-2 toggle-edit" data-eng="+ Add Data" data-spa="+ Agregar Datos" data-fre="+ Ajouter Données" data-ger="+ Daten Hinzufügen">+ Add Data</button>
                                     </div>
                                     <div class="card-edit-body">
                                         <small class="text-muted d-block mb-2" data-eng="Narrowest point" data-spa="Punto más estrecho" data-fre="Point le plus étroit" data-ger="Schmalste Stelle">Narrowest point</small>
@@ -201,7 +216,7 @@
                                             <span class="change-icon" id="hips-change-icon"></span>
                                             <span class="change-text" id="hips-change-text"></span>
                                         </div>
-                                        <button class="btn secondary-btn btn-sm w-100 mt-2 toggle-edit" data-eng="📝 Add Data" data-spa="📝 Agregar Datos" data-fre="📝 Ajouter Données" data-ger="📝 Daten Hinzufügen">📝 Add Data</button>
+                                        <button class="btn secondary-btn btn-sm w-100 mt-2 toggle-edit" data-eng="+ Add Data" data-spa="+ Agregar Datos" data-fre="+ Ajouter Données" data-ger="+ Daten Hinzufügen">+ Add Data</button>
                                     </div>
                                     <div class="card-edit-body">
                                         <small class="text-muted d-block mb-2" data-eng="Widest part" data-spa="Parte más ancha" data-fre="Partie la plus large" data-ger="Breiteste Stelle">Widest part</small>
@@ -226,7 +241,7 @@
                                             <span class="change-icon" id="thighs-change-icon"></span>
                                             <span class="change-text" id="thighs-change-text"></span>
                                         </div>
-                                        <button class="btn secondary-btn btn-sm w-100 mt-2 toggle-edit" data-eng="📝 Add Data" data-spa="📝 Agregar Datos" data-fre="📝 Ajouter Données" data-ger="📝 Daten Hinzufügen">📝 Add Data</button>
+                                        <button class="btn secondary-btn btn-sm w-100 mt-2 toggle-edit" data-eng="+ Add Data" data-spa="+ Agregar Datos" data-fre="+ Ajouter Données" data-ger="+ Daten Hinzufügen">+ Add Data</button>
                                     </div>
                                     <div class="card-edit-body">
                                         <small class="text-muted d-block mb-2" data-eng="Midway hip to knee" data-spa="Entre cadera y rodilla" data-fre="Entre hanche et genou" data-ger="Zwischen Hüfte und Knie">Midway hip to knee</small>
@@ -249,7 +264,7 @@
                                             <span class="change-icon" id="calves-change-icon"></span>
                                             <span class="change-text" id="calves-change-text"></span>
                                         </div>
-                                        <button class="btn secondary-btn btn-sm w-100 mt-2 toggle-edit" data-eng="📝 Add Data" data-spa="📝 Agregar Datos" data-fre="📝 Ajouter Données" data-ger="📝 Daten Hinzufügen">📝 Add Data</button>
+                                        <button class="btn secondary-btn btn-sm w-100 mt-2 toggle-edit" data-eng="+ Add Data" data-spa="+ Agregar Datos" data-fre="+ Ajouter Données" data-ger="+ Daten Hinzufügen">+ Add Data</button>
                                     </div>
                                     <div class="card-edit-body">
                                         <small class="text-muted d-block mb-2" data-eng="Thickest part" data-spa="Parte más gruesa" data-fre="Partie la plus épaisse" data-ger="Dickste Stelle">Thickest part</small>
@@ -272,7 +287,7 @@
                                             <span class="change-icon" id="arms-change-icon"></span>
                                             <span class="change-text" id="arms-change-text"></span>
                                         </div>
-                                        <button class="btn secondary-btn btn-sm w-100 mt-2 toggle-edit" data-eng="📝 Add Data" data-spa="📝 Agregar Datos" data-fre="📝 Ajouter Données" data-ger="📝 Daten Hinzufügen">📝 Add Data</button>
+                                        <button class="btn secondary-btn btn-sm w-100 mt-2 toggle-edit" data-eng="+ Add Data" data-spa="+ Agregar Datos" data-fre="+ Ajouter Données" data-ger="+ Daten Hinzufügen">+ Add Data</button>
                                     </div>
                                     <div class="card-edit-body">
                                         <small class="text-muted d-block mb-2" data-eng="Unflexed midpoint" data-spa="Punto medio relajado" data-fre="Point médian non fléchi" data-ger="Entspannter Mittelpunkt">Unflexed midpoint</small>
@@ -282,6 +297,21 @@
                                             <button class="btn secondary-btn btn-sm toggle-back" style="flex: 0 0 40%;">←</button>
                                             <button class="btn primary-btn btn-sm" style="flex: 0 0 60%;" id="btn-save-arms" data-eng="✓ Save" data-spa="✓ Guardar" data-fre="✓ Enreg." data-ger="✓ Speichern">✓ Save</button>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Measurement Insights Section -->
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <div class="glass-card collapsible-card collapsed" id="measurement-insights-card">
+                                    <div class="card-header-collapsible" data-toggle-target="measurement-insights-content">
+                                        <h5 class="card-title mb-0" style="color: #ffffff;" data-eng="📊 Measurement Insights" data-spa="📊 Perspectivas de Mediciones" data-fre="📊 Perspectives de Mesures" data-ger="📊 Messeinblicke">📊 Measurement Insights</h5>
+                                        <span class="card-toggle">+</span>
+                                    </div>
+                                    <div id="measurement-insights-content" class="insights-content collapsible-content" style="display: none;">
+                                        <p class="text-muted" data-eng="Log your body measurements to see personalized insights about fat loss and body changes." data-spa="Registra tus medidas corporales para ver perspectivas personalizadas sobre pérdida de grasa y cambios corporales." data-fre="Enregistrez vos mesures corporelles pour voir des perspectives personnalisées sur la perte de graisse et les changements corporels." data-ger="Erfassen Sie Ihre Körpermaße, um personalisierte Einblicke in Fettabbau und Körperveränderungen zu erhalten.">Log your body measurements to see personalized insights about fat loss and body changes.</p>
                                     </div>
                                 </div>
                             </div>
@@ -304,7 +334,7 @@
                                             <span class="change-icon" id="caliper-chest-change-icon"></span>
                                             <span class="change-text" id="caliper-chest-change-text"></span>
                                         </div>
-                                        <button class="btn secondary-btn btn-sm w-100 mt-2 toggle-edit" data-eng="📝 Add Data" data-spa="📝 Agregar Datos" data-fre="📝 Ajouter Données" data-ger="📝 Daten Hinzufügen">📝 Add Data</button>
+                                        <button class="btn secondary-btn btn-sm w-100 mt-2 toggle-edit" data-eng="+ Add Data" data-spa="+ Agregar Datos" data-fre="+ Ajouter Données" data-ger="+ Daten Hinzufügen">+ Add Data</button>
                                     </div>
                                     <div class="card-edit-body">
                                         <small class="text-muted d-block mb-2" data-eng="Diagonal fold armpit-nipple" data-spa="Pliegue diagonal axila-pezón" data-fre="Pli diagonal aisselle-mamelon" data-ger="Diagonale Falte Achsel-Brustwarze">Diagonal fold armpit-nipple</small>
@@ -327,7 +357,7 @@
                                             <span class="change-icon" id="caliper-armpit-change-icon"></span>
                                             <span class="change-text" id="caliper-armpit-change-text"></span>
                                         </div>
-                                        <button class="btn secondary-btn btn-sm w-100 mt-2 toggle-edit" data-eng="📝 Add Data" data-spa="📝 Agregar Datos" data-fre="📝 Ajouter Données" data-ger="📝 Daten Hinzufügen">📝 Add Data</button>
+                                        <button class="btn secondary-btn btn-sm w-100 mt-2 toggle-edit" data-eng="+ Add Data" data-spa="+ Agregar Datos" data-fre="+ Ajouter Données" data-ger="+ Daten Hinzufügen">+ Add Data</button>
                                     </div>
                                     <div class="card-edit-body">
                                         <small class="text-muted d-block mb-2" data-eng="Vertical fold below armpit" data-spa="Pliegue vertical bajo axila" data-fre="Pli vertical sous l'aisselle" data-ger="Vertikale Falte unter Achsel">Vertical fold below armpit</small>
@@ -350,7 +380,7 @@
                                             <span class="change-icon" id="caliper-belly-change-icon"></span>
                                             <span class="change-text" id="caliper-belly-change-text"></span>
                                         </div>
-                                        <button class="btn secondary-btn btn-sm w-100 mt-2 toggle-edit" data-eng="📝 Add Data" data-spa="📝 Agregar Datos" data-fre="📝 Ajouter Données" data-ger="📝 Daten Hinzufügen">📝 Add Data</button>
+                                        <button class="btn secondary-btn btn-sm w-100 mt-2 toggle-edit" data-eng="+ Add Data" data-spa="+ Agregar Datos" data-fre="+ Ajouter Données" data-ger="+ Daten Hinzufügen">+ Add Data</button>
                                     </div>
                                     <div class="card-edit-body">
                                         <small class="text-muted d-block mb-2" data-eng="2cm right of belly button" data-spa="2cm a la derecha del ombligo" data-fre="2cm à droite du nombril" data-ger="2cm rechts vom Bauchnabel">2cm right of belly button</small>
@@ -375,7 +405,7 @@
                                             <span class="change-icon" id="caliper-hip-change-icon"></span>
                                             <span class="change-text" id="caliper-hip-change-text"></span>
                                         </div>
-                                        <button class="btn secondary-btn btn-sm w-100 mt-2 toggle-edit" data-eng="📝 Add Data" data-spa="📝 Agregar Datos" data-fre="📝 Ajouter Données" data-ger="📝 Daten Hinzufügen">📝 Add Data</button>
+                                        <button class="btn secondary-btn btn-sm w-100 mt-2 toggle-edit" data-eng="+ Add Data" data-spa="+ Agregar Datos" data-fre="+ Ajouter Données" data-ger="+ Daten Hinzufügen">+ Add Data</button>
                                     </div>
                                     <div class="card-edit-body">
                                         <small class="text-muted d-block mb-2" data-eng="Above hip bone" data-spa="Sobre el hueso de la cadera" data-fre="Au-dessus de l'os de la hanche" data-ger="Über dem Hüftknochen">Above hip bone</small>
@@ -398,7 +428,7 @@
                                             <span class="change-icon" id="caliper-thigh-change-icon"></span>
                                             <span class="change-text" id="caliper-thigh-change-text"></span>
                                         </div>
-                                        <button class="btn secondary-btn btn-sm w-100 mt-2 toggle-edit" data-eng="📝 Add Data" data-spa="📝 Agregar Datos" data-fre="📝 Ajouter Données" data-ger="📝 Daten Hinzufügen">📝 Add Data</button>
+                                        <button class="btn secondary-btn btn-sm w-100 mt-2 toggle-edit" data-eng="+ Add Data" data-spa="+ Agregar Datos" data-fre="+ Ajouter Données" data-ger="+ Daten Hinzufügen">+ Add Data</button>
                                     </div>
                                     <div class="card-edit-body">
                                         <small class="text-muted d-block mb-2" data-eng="Vertical fold hip-knee" data-spa="Pliegue vertical cadera-rodilla" data-fre="Pli vertical hanche-genou" data-ger="Vertikale Falte Hüfte-Knie">Vertical fold hip-knee</small>
@@ -408,6 +438,21 @@
                                             <button class="btn secondary-btn btn-sm toggle-back" style="flex: 0 0 40%;">←</button>
                                             <button class="btn primary-btn btn-sm" style="flex: 0 0 60%;" id="btn-save-caliper-thigh" data-eng="✓ Save" data-spa="✓ Guardar" data-fre="✓ Enreg." data-ger="✓ Speichern">✓ Save</button>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Caliper Insights Section -->
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <div class="glass-card collapsible-card collapsed" id="caliper-insights-card">
+                                    <div class="card-header-collapsible" data-toggle-target="caliper-insights-content">
+                                        <h5 class="card-title mb-0" style="color: #ffffff;" data-eng="📐 Caliper Insights" data-spa="📐 Perspectivas de Calibradores" data-fre="📐 Perspectives des Calipers" data-ger="📐 Messschieber Einblicke">📐 Caliper Insights</h5>
+                                        <span class="card-toggle">+</span>
+                                    </div>
+                                    <div id="caliper-insights-content" class="insights-content collapsible-content" style="display: none;">
+                                        <p class="text-muted" data-eng="Log your caliper measurements to see personalized insights about body fat distribution and composition changes." data-spa="Registra tus medidas de calibrador para ver perspectivas personalizadas sobre distribución de grasa corporal y cambios de composición." data-fre="Enregistrez vos mesures de caliper pour voir des perspectives personnalisées sur la distribution de la graisse corporelle et les changements de composition." data-ger="Erfassen Sie Ihre Messschieber-Messungen, um personalisierte Einblicke in Körperfettverteilung und Zusammensetzungsänderungen zu erhalten.">Log your caliper measurements to see personalized insights about body fat distribution and composition changes.</p>
                                     </div>
                                 </div>
                             </div>

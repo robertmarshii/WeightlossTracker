@@ -362,6 +362,190 @@ input::placeholder {
     color: #1b5e20 !important;
 }
 
+/* Encouragement quote styling for Material Design */
+.encouragement-quote {
+    color: #1b5e20 !important;
+    font-weight: 600 !important;
+}
+
+/* Card title border should match green theme, not blue */
+.glass-card .card-title,
+.glass-card-small .card-title {
+    border-bottom-color: rgba(76, 175, 80, 0.3) !important;
+}
+
+/* Goal Progress Content - Fix blue colors and white text */
+#goal-progress-content {
+    color: #1b5e20 !important;
+}
+
+#goal-progress-content .goal-progress-bar {
+    background: rgba(200, 230, 201, 0.3) !important;
+    border-color: rgba(76, 175, 80, 0.3) !important;
+}
+
+#goal-progress-content .goal-progress-bar-fill {
+    background: linear-gradient(90deg, #4caf50 0%, #388e3c 100%) !important;
+}
+
+#goal-progress-content .goal-progress-bar-text {
+    color: white !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5) !important;
+}
+
+#goal-progress-content .goal-progress-label {
+    color: #1b5e20 !important;
+}
+
+#goal-progress-content .goal-streak {
+    background: rgba(76, 175, 80, 0.1) !important;
+}
+
+#goal-progress-content .goal-streak-text {
+    color: #1b5e20 !important;
+}
+
+#goal-progress-content .goal-eta {
+    background: rgba(56, 142, 60, 0.1) !important;
+}
+
+#goal-progress-content .goal-eta-text {
+    color: #1b5e20 !important;
+}
+
+#goal-progress-content .goal-badge {
+    background: rgba(200, 230, 201, 0.3) !important;
+    border-color: rgba(76, 175, 80, 0.3) !important;
+}
+
+#goal-progress-content .goal-badge.achieved {
+    background: rgba(76, 175, 80, 0.3) !important;
+    border-color: #4caf50 !important;
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3) !important;
+}
+
+#goal-progress-content .goal-badge-label {
+    color: #1b5e20 !important;
+}
+
+#goal-progress-content .goal-badge.achieved .goal-badge-label {
+    color: #2e7d32 !important;
+    font-weight: 600 !important;
+}
+
+/* Streak Counter - Fix blue colors and white text */
+#streak-counter {
+    color: #1b5e20 !important;
+}
+
+#streak-counter .streak-stat-row {
+    background: rgba(200, 230, 201, 0.3) !important;
+}
+
+#streak-counter .streak-stat-value {
+    color: #4caf50 !important;
+}
+
+#streak-counter .streak-stat-label {
+    color: #2e7d32 !important;
+}
+
+#streak-counter .streak-timeline-title {
+    color: #1b5e20 !important;
+}
+
+#streak-counter .streak-dot {
+    border-color: rgba(76, 175, 80, 0.3) !important;
+    background: rgba(200, 230, 201, 0.3) !important;
+}
+
+#streak-counter .streak-dot.logged {
+    background: linear-gradient(135deg, #66bb6a 0%, #4caf50 100%) !important;
+    border-color: #4caf50 !important;
+    box-shadow: 0 0 8px rgba(76, 175, 80, 0.4) !important;
+}
+
+#streak-counter .streak-dot.missed {
+    background: rgba(189, 189, 189, 0.3) !important;
+    border-color: rgba(158, 158, 158, 0.3) !important;
+}
+
+#streak-counter .streak-dot.today {
+    border-color: #388e3c !important;
+    border-width: 3px !important;
+    box-shadow: 0 0 12px rgba(56, 142, 60, 0.6) !important;
+}
+
+#streak-counter .streak-legend-label {
+    color: #1b5e20 !important;
+}
+
+#streak-counter .streak-motivation {
+    background: rgba(76, 175, 80, 0.1) !important;
+    border-left-color: #4caf50 !important;
+    color: #1b5e20 !important;
+}
+
+#streak-counter .streak-motivation.celebration {
+    border-left-color: #66bb6a !important;
+    background: rgba(102, 187, 106, 0.1) !important;
+}
+
+#streak-counter .streak-motivation.warning {
+    border-left-color: #ff9800 !important;
+    background: rgba(255, 152, 0, 0.1) !important;
+    color: #e65100 !important;
+}
+
+/* Total Progress - Fix blue colors and white text */
+#total-progress {
+    color: #1b5e20 !important;
+}
+
+#total-progress .progress-tabs {
+    border-bottom-color: rgba(76, 175, 80, 0.2) !important;
+}
+
+#total-progress .progress-tab-btn {
+    background: rgba(200, 230, 201, 0.2) !important;
+    color: #1b5e20 !important;
+}
+
+#total-progress .progress-tab-btn:hover {
+    background: rgba(200, 230, 201, 0.4) !important;
+    color: #2e7d32 !important;
+}
+
+#total-progress .progress-tab-btn.active {
+    background: rgba(76, 175, 80, 0.2) !important;
+    border-bottom-color: #4caf50 !important;
+    color: #1b5e20 !important;
+}
+
+#total-progress .mini-chart-container {
+    background: rgba(200, 230, 201, 0.2) !important;
+}
+
+#total-progress .mini-chart-title {
+    color: #1b5e20 !important;
+}
+
+#total-progress .chart-label {
+    color: #2e7d32 !important;
+}
+
+#total-progress .comparison-stat {
+    background: linear-gradient(135deg, rgba(76, 175, 80, 0.2) 0%, rgba(129, 199, 132, 0.2) 100%) !important;
+}
+
+#total-progress .comparison-stat-title {
+    color: #2e7d32 !important;
+}
+
+#total-progress .comparison-stat-value {
+    color: #1b5e20 !important;
+}
+
 /* Theme-aware strong tags and highlights */
 strong {
     color: #2e7d32 !important;
@@ -452,4 +636,60 @@ input[type="time"]::-webkit-datetime-edit-minute-field {
 /* Material Design Progress Ring */
 .progress-ring-circle {
     stroke: #4caf50 !important;
+}
+
+/* Body Page - Material Design Theme */
+/* Section titles */
+.section-title {
+    color: #1b5e20 !important;
+    font-weight: 600 !important;
+}
+
+/* Collapsible card headers - override inline white color */
+.card-header-collapsible h5,
+.card-header-collapsible .card-title {
+    color: #1b5e20 !important;
+}
+
+/* Card toggle button */
+.card-toggle {
+    color: #4caf50 !important;
+}
+
+/* Metric values - change from blue to green */
+.metric-value {
+    color: #4caf50 !important;
+}
+
+/* Change icons */
+.change-icon.up {
+    color: #2e7d32 !important;
+}
+
+.change-icon.down {
+    color: #e53935 !important;
+}
+
+/* Collapsible cards - Material colors */
+.collapsible-card {
+    background: rgba(200, 230, 201, 0.2) !important;
+}
+
+/* Insight items - change from purple to green */
+.insight-item {
+    border-left-color: rgba(76, 175, 80, 0.5) !important;
+    background: rgba(76, 175, 80, 0.05) !important;
+}
+
+.insight-item:hover {
+    background: rgba(76, 175, 80, 0.1) !important;
+    border-left-color: rgba(76, 175, 80, 0.8) !important;
+}
+
+.insight-title {
+    color: #1b5e20 !important;
+}
+
+.insight-description {
+    color: #388e3c !important;
 }

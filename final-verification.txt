@@ -1,0 +1,378 @@
+
+
+DevTools listening on ws://127.0.0.1:57117/devtools/browser/8ed22919-2a0e-450c-9948-134a18b3d173
+
+====================================================================================================
+
+  (Run Starting)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Cypress:        13.17.0                                                                        │
+  │ Browser:        Electron 118 (headless)                                                        │
+  │ Node Version:   v22.19.0 (C:\Program Files\nodejs\node.exe)                                    │
+  │ Specs:          5 found (body-insights-comprehensive.cy.js, phase3-goals-achievements.cy.js, p │
+  │                 hase4-total-progress.cy.js, language-switching.cy.js, frontend-comprehensive.c │
+  │                 y.js)                                                                          │
+  │ Searched:       C:\GitKraken\WeightlossTracker\cypress\e2e\passing\body-insights-comprehensive │
+  │                 .cy.js, C:\GitKraken\WeightlossTracker\cypress\e2e\passing\phase3-goals-achiev │
+  │                 ements.cy.js, C:\GitKraken\WeightlossTracker\cypress\e2e\passing\phase4-total- │
+  │                 progress.cy.js, C:\GitKraken\WeightlossTracker\cypress\e2e\passing\language-sw │
+  │                 itching.cy.js, C:\GitKraken\WeightlossTracker\cypress\e2e\passing\frontend-com │
+  │                 prehensive.cy.js                                                               │
+  │ Experiments:    experimentalMemoryManagement=true                                              │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  body-insights-comprehensive.cy.js                                               (1 of 5)
+
+
+  Body Insights - Comprehensive Tests
+    Smart Data Insights
+      1) "before each" hook for "should display Smart Data Insights card"
+
+
+  0 passing (13s)
+  1 failing
+
+  1) Body Insights - Comprehensive Tests
+       Smart Data Insights
+         "before each" hook for "should display Smart Data Insights card":
+     AssertionError: Timed out retrying after 10000ms: expected 'http://127.0.0.1:8111/index.php' to include 'dashboard.php'
+
+Because this error occurred during a `before each` hook we are skipping the remaining tests in the current suite: `Body Insights - Comprehensi...`
+      at Context.eval (webpack://weightloss-tracker/./cypress/support/e2e.js:63:47)
+
+
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        18                                                                               │
+  │ Passing:      0                                                                                │
+  │ Failing:      1                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      17                                                                               │
+  │ Screenshots:  1                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     13 seconds                                                                       │
+  │ Spec Ran:     body-insights-comprehensive.cy.js                                                │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+  (Screenshots)
+
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\body-insights-comprehensive.c     (1280x720)
+     y.js\Body Insights - Comprehensive Tests -- should display Smart Data Insights c               
+     ard -- before each hook (failed).png                                                           
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  phase3-goals-achievements.cy.js                                                 (2 of 5)
+
+
+  Phase 3: Goals & Achievements Tab - Complete Coverage
+    1. Consistency Score - Streak Counter
+      1) "before each" hook for "should display correct streak statistics"
+
+
+  0 passing (33s)
+  1 failing
+
+  1) Phase 3: Goals & Achievements Tab - Complete Coverage
+       1. Consistency Score - Streak Counter
+         "before each" hook for "should display correct streak statistics":
+     AssertionError: Timed out retrying after 8000ms: Expected to find element: `#loginEmail`, but never found it.
+
+Because this error occurred during a `before each` hook we are skipping the remaining tests in the current suite: `Phase 3: Goals & Achievemen...`
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/passing/phase3-goals-achievements.cy.js:112:11)
+
+
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        23                                                                               │
+  │ Passing:      0                                                                                │
+  │ Failing:      1                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      22                                                                               │
+  │ Screenshots:  1                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     32 seconds                                                                       │
+  │ Spec Ran:     phase3-goals-achievements.cy.js                                                  │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+  (Screenshots)
+
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\phase3-goals-achievements.cy.     (1280x720)
+     js\Phase 3 Goals & Achievements Tab - Complete Coverage -- should display correc               
+     t streak statistics -- before each hook (failed).png                                           
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  phase4-total-progress.cy.js                                                     (3 of 5)
+
+
+  Phase 4: Total Progress Enhanced
+    Total Progress Card Structure
+      √ should display Total Progress card with correct structure (6573ms)
+      √ should switch between tabs correctly (5875ms)
+    Charts Tab
+      √ should display Average Weekly Loss chart (4948ms)
+      √ should display 6-Month Projection chart (4954ms)
+      √ should display charts in full width (col-md-12) (4958ms)
+    Stats Tab
+      √ should display Goal Completion pie chart (5884ms)
+      √ should display Ideal Weight Progress pie chart (5900ms)
+      √ should display weight comparison stat (5933ms)
+      √ should format weight comparison correctly (6368ms)
+    Body Fat Tab
+      √ should display Body Fat Trend chart or placeholder (5800ms)
+      √ should show automatic calculation message (5777ms)
+    Data Integration
+      √ should use global dashboard data when available (4892ms)
+      √ should refresh charts when new weight is added (8654ms)
+    Weekly Loss Chart Specifics
+      √ should show last 26 weeks of data (5675ms)
+      √ should use week numbers (Week 1, Week 2, etc) (4983ms)
+    Projection Chart Specifics
+      √ should hide point circles (show only lines) (4885ms)
+      √ should show two datasets: Actual and Projected (4918ms)
+    Ideal Weight Calculation
+      √ should show remaining weight to go, not achieved weight (5780ms)
+    Responsive Layout
+      √ should display Total Progress card as full width (col-md-12) (4936ms)
+      √ should display both charts in full width within Charts tab (4913ms)
+    Error Handling
+      √ should handle missing goal data gracefully (5991ms)
+      √ should handle empty body fat data gracefully (5002ms)
+
+
+  22 passing (2m)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        22                                                                               │
+  │ Passing:      22                                                                               │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     2 minutes, 7 seconds                                                             │
+  │ Spec Ran:     phase4-total-progress.cy.js                                                      │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  language-switching.cy.js                                                        (4 of 5)
+
+
+  Language Switching
+    English Language (Default)
+      1) should display all UI elements in English by default
+      2) should show English translations in Data tab
+      √ should show English translations in Health tab (6005ms)
+    Spanish Language
+      √ should switch all UI elements to Spanish (6067ms)
+      √ should show Spanish translations in Data tab (7008ms)
+      √ should show Spanish translations in Health tab (7198ms)
+      √ should show Spanish translations in Goals tab (6591ms)
+    French Language
+      √ should switch all UI elements to French (6026ms)
+      √ should show French translations in Data tab (6792ms)
+      √ should show French translations in Health tab (7243ms)
+    German Language
+      √ should switch all UI elements to German (6136ms)
+      √ should show German translations in Data tab (6685ms)
+      √ should show German translations in Health tab (7520ms)
+      √ should show German translations in Goals tab (6650ms)
+    Language Persistence
+      √ should persist language selection across page reloads (8347ms)
+      √ should persist language in localStorage (5869ms)
+      √ should persist language dropdown value when navigating between tabs (7939ms)
+      √ should persist language dropdown after switching languages and navigating tabs (9970ms)
+    Dynamic Content Translation
+      √ should translate dynamically generated health messages in Spanish (11221ms)
+      √ should translate data tab content in French (10954ms)
+    Switch Between Languages
+      3) should switch from English to Spanish to French to German and back
+
+
+  18 passing (3m)
+  3 failing
+
+  1) Language Switching
+       English Language (Default)
+         should display all UI elements in English by default:
+     AssertionError: Timed out retrying after 8000ms: expected '<div#settings.tab-pane.fade.active.show>' to contain 'Settings'
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/passing/language-switching.cy.js:52:32)
+
+  2) Language Switching
+       English Language (Default)
+         should show English translations in Data tab:
+     AssertionError: Timed out retrying after 8000ms: Expected to find content: 'Goal' but never did.
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/passing/language-switching.cy.js:69:32)
+
+  3) Language Switching
+       Switch Between Languages
+         should switch from English to Spanish to French to German and back:
+
+      Timed out retrying after 8000ms
+      + expected - actual
+
+      -'fr'
+      +'en'
+      
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/passing/language-switching.cy.js:337:32)
+
+
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        21                                                                               │
+  │ Passing:      18                                                                               │
+  │ Failing:      3                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  3                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     3 minutes, 1 second                                                              │
+  │ Spec Ran:     language-switching.cy.js                                                         │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+  (Screenshots)
+
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\language-switching.cy.js\Lang     (1280x720)
+     uage Switching -- English Language (Default) -- should display all UI elements i               
+     n English by default (failed).png                                                              
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\language-switching.cy.js\Lang     (1280x720)
+     uage Switching -- English Language (Default) -- should show English translations               
+      in Data tab (failed).png                                                                      
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\language-switching.cy.js\Lang     (1280x720)
+     uage Switching -- Switch Between Languages -- should switch from English to Span               
+     ish to French to German and back (failed).png                                                  
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  frontend-comprehensive.cy.js                                                    (5 of 5)
+
+
+  Frontend Comprehensive Test Suite - All JavaScript Functions
+    Index.js Functions - Authentication & Login Flow
+      √ should test all login/signup form functions (7907ms)
+      √ should test verification code functions (2527ms)
+      √ should call ALL index.js authentication functions directly (1088ms)
+      √ should test utility and helper functions (3020ms)
+    Global.js Functions - Utility Functions
+      √ should test showAlert function with all alert types (3079ms)
+      √ should test showToast function (1376ms)
+      √ should test parseJson utility function (1051ms)
+      √ should test openModal utility function (841ms)
+      √ should call ALL global utility functions directly (1079ms)
+    Dashboard.js Core Functions - Data Loading & Management
+      √ should test refreshLatestWeight() function directly (4219ms)
+      √ should test refreshGoal() function directly (3872ms)
+      √ should test loadProfile() function directly (3873ms)
+      √ should test loadWeightHistory() function directly (3911ms)
+      √ should call ALL core data loading functions directly (3889ms)
+      √ should stress test data loading functions with multiple calls (4002ms)
+    Dashboard.js Health Functions - BMI & Health Calculations
+      √ should test refreshBMI() function directly (2384ms)
+      √ should test refreshHealth() function directly (2336ms)
+      √ should test refreshIdealWeight() function directly (2607ms)
+      √ should test refreshWeightProgress() function directly (2374ms)
+      √ should test refreshGallbladderHealth() function directly (2645ms)
+      √ should call ALL health calculation functions directly (2268ms)
+    Dashboard.js Weight Management Functions
+      √ should test weight management functions (6 functions) (6255ms)
+      √ should test formatDate() function with test data (2108ms)
+      √ should test weight management functions with parameters (2352ms)
+      √ should call ALL weight management functions directly (2586ms)
+    Dashboard.js Profile & Settings Functions
+      √ should test profile and settings functions (8 functions) (10348ms)
+      √ should test goal management functions (2 functions) (8195ms)
+      √ should call ALL settings and profile functions directly (2627ms)
+    Dashboard.js Chart & Visualization Functions
+      √ should test chart and visualization functions (6 functions) (10193ms)
+      √ should call ALL basic chart functions directly (2971ms)
+      √ should call ALL monthly chart functions with mock data (2304ms)
+      √ should call ALL weekly chart functions with mock data (2625ms)
+      √ should call ALL yearly chart functions with mock data (2286ms)
+      √ should call updateAchievementCards with comprehensive mock data (2577ms)
+    Dashboard.js UI & Navigation Functions
+      √ should call ALL UI and navigation functions directly (2360ms)
+      √ should test tab navigation and UI updates (8513ms)
+      √ should test form interactions and calculations (10206ms)
+    API Integration & Authentication Tests
+      √ should test sendLoginCode() via direct API call (241ms)
+      √ should test createAccount() via direct API call (214ms)
+      √ should test verifyLoginCode() via direct API call (197ms)
+      √ should test ProfileController get_latest_weight action (90ms)
+      √ should test ProfileController multiple actions in sequence (278ms)
+    Comprehensive Integration Tests - All Functions Together
+      √ should perform comprehensive frontend workflow hitting all functions (13924ms)
+      √ should stress test all frontend functions with rapid interactions (14351ms)
+      √ should call ALL 28 dashboard functions in sequence with various parameters (2098ms)
+    Function Stress Testing & Edge Cases
+      √ should call functions multiple times with different parameters (1063ms)
+      √ should test dashboard functions with mock data (1059ms)
+      √ should handle function calls with invalid parameters (558ms)
+      √ should test functions with null/undefined parameters (569ms)
+      √ should test API error handling (166ms)
+    Coverage System & Schema Logger Testing
+      √ should test coverage logging functions (566ms)
+      √ should verify function coverage metrics (1082ms)
+
+
+  52 passing (3m)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        52                                                                               │
+  │ Passing:      52                                                                               │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     3 minutes, 14 seconds                                                            │
+  │ Spec Ran:     frontend-comprehensive.cy.js                                                     │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+====================================================================================================
+
+  (Run Finished)
+
+
+       Spec                                              Tests  Passing  Failing  Pending  Skipped  
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ ✖  body-insights-comprehensive.cy.js        00:13       18        -        1        -       17 │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✖  phase3-goals-achievements.cy.js          00:32       23        -        1        -       22 │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  phase4-total-progress.cy.js              02:07       22       22        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✖  language-switching.cy.js                 03:01       21       18        3        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  frontend-comprehensive.cy.js             03:14       52       52        -        -        - │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+    ✖  3 of 5 failed (60%)                      09:09      136       92        5        -       39  
+

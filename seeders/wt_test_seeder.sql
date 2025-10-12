@@ -266,26 +266,13 @@ INSERT INTO wt_test.user_settings (user_id, weight_unit, height_unit, date_forma
     (11, 'kg', 'cm', 'uk', 'glassmorphism'),     -- admin@test.com
     (12, 'kg', 'cm', 'uk', 'glassmorphism');     -- manager@test.com
 
--- Comprehensive body data entries for testing
+-- Comprehensive body data entries for testing (6 month progression for User 1)
 INSERT INTO wt_test.body_data_entries (user_id, metric_type, value, unit, entry_date) VALUES
-    -- User 1 (test@dev.com) - Complete data set with progression
-    -- Smart Data - Week 1
+    -- User 1 (test@dev.com) - Starting point (worst scores)
     (1, 'muscle_mass', 38.5, '%', '2024-01-01'),
     (1, 'fat_percent', 32.0, '%', '2024-01-01'),
     (1, 'water_percent', 52.0, '%', '2024-01-01'),
     (1, 'bone_mass', 2.8, 'kg', '2024-01-01'),
-    -- Smart Data - Week 2
-    (1, 'muscle_mass', 38.8, '%', '2024-01-08'),
-    (1, 'fat_percent', 31.5, '%', '2024-01-08'),
-    (1, 'water_percent', 52.5, '%', '2024-01-08'),
-    (1, 'bone_mass', 2.8, 'kg', '2024-01-08'),
-    -- Smart Data - Week 3
-    (1, 'muscle_mass', 39.2, '%', '2024-01-15'),
-    (1, 'fat_percent', 31.0, '%', '2024-01-15'),
-    (1, 'water_percent', 53.0, '%', '2024-01-15'),
-    (1, 'bone_mass', 2.9, 'kg', '2024-01-15'),
-
-    -- Measurements - Week 1
     (1, 'measurement_neck', 38.0, 'cm', '2024-01-01'),
     (1, 'measurement_chest', 105.0, 'cm', '2024-01-01'),
     (1, 'measurement_waist', 95.0, 'cm', '2024-01-01'),
@@ -293,7 +280,17 @@ INSERT INTO wt_test.body_data_entries (user_id, metric_type, value, unit, entry_
     (1, 'measurement_thigh', 65.0, 'cm', '2024-01-01'),
     (1, 'measurement_calf', 42.0, 'cm', '2024-01-01'),
     (1, 'measurement_arm', 34.0, 'cm', '2024-01-01'),
-    -- Measurements - Week 2
+    (1, 'caliper_chest', 22.0, 'mm', '2024-01-01'),
+    (1, 'caliper_abdomen', 28.0, 'mm', '2024-01-01'),
+    (1, 'caliper_thigh', 24.0, 'mm', '2024-01-01'),
+    (1, 'caliper_tricep', 18.0, 'mm', '2024-01-01'),
+    (1, 'caliper_suprailiac', 25.0, 'mm', '2024-01-01'),
+
+    -- Week 2 - Early progress
+    (1, 'muscle_mass', 38.8, '%', '2024-01-08'),
+    (1, 'fat_percent', 31.5, '%', '2024-01-08'),
+    (1, 'water_percent', 52.5, '%', '2024-01-08'),
+    (1, 'bone_mass', 2.8, 'kg', '2024-01-08'),
     (1, 'measurement_neck', 37.5, 'cm', '2024-01-08'),
     (1, 'measurement_chest', 104.0, 'cm', '2024-01-08'),
     (1, 'measurement_waist', 94.0, 'cm', '2024-01-08'),
@@ -301,19 +298,65 @@ INSERT INTO wt_test.body_data_entries (user_id, metric_type, value, unit, entry_
     (1, 'measurement_thigh', 64.5, 'cm', '2024-01-08'),
     (1, 'measurement_calf', 41.5, 'cm', '2024-01-08'),
     (1, 'measurement_arm', 33.5, 'cm', '2024-01-08'),
-
-    -- Calipers - Week 1
-    (1, 'caliper_chest', 22.0, 'mm', '2024-01-01'),
-    (1, 'caliper_abdomen', 28.0, 'mm', '2024-01-01'),
-    (1, 'caliper_thigh', 24.0, 'mm', '2024-01-01'),
-    (1, 'caliper_tricep', 18.0, 'mm', '2024-01-01'),
-    (1, 'caliper_suprailiac', 25.0, 'mm', '2024-01-01'),
-    -- Calipers - Week 2
     (1, 'caliper_chest', 21.5, 'mm', '2024-01-08'),
     (1, 'caliper_abdomen', 27.0, 'mm', '2024-01-08'),
     (1, 'caliper_thigh', 23.5, 'mm', '2024-01-08'),
     (1, 'caliper_tricep', 17.5, 'mm', '2024-01-08'),
     (1, 'caliper_suprailiac', 24.5, 'mm', '2024-01-08'),
+
+    -- Week 3
+    (1, 'muscle_mass', 39.2, '%', '2024-01-15'),
+    (1, 'fat_percent', 31.0, '%', '2024-01-15'),
+    (1, 'water_percent', 53.0, '%', '2024-01-15'),
+    (1, 'bone_mass', 2.9, 'kg', '2024-01-15'),
+    (1, 'measurement_neck', 37.2, 'cm', '2024-01-15'),
+    (1, 'measurement_chest', 103.0, 'cm', '2024-01-15'),
+    (1, 'measurement_waist', 93.0, 'cm', '2024-01-15'),
+    (1, 'measurement_hips', 108.0, 'cm', '2024-01-15'),
+    (1, 'measurement_thigh', 64.0, 'cm', '2024-01-15'),
+    (1, 'measurement_calf', 41.0, 'cm', '2024-01-15'),
+    (1, 'measurement_arm', 33.2, 'cm', '2024-01-15'),
+    (1, 'caliper_chest', 21.0, 'mm', '2024-01-15'),
+    (1, 'caliper_abdomen', 26.5, 'mm', '2024-01-15'),
+    (1, 'caliper_thigh', 23.0, 'mm', '2024-01-15'),
+    (1, 'caliper_tricep', 17.0, 'mm', '2024-01-15'),
+    (1, 'caliper_suprailiac', 24.0, 'mm', '2024-01-15'),
+
+    -- Month 2 - February
+    (1, 'muscle_mass', 39.8, '%', '2024-02-15'),
+    (1, 'fat_percent', 30.2, '%', '2024-02-15'),
+    (1, 'water_percent', 53.5, '%', '2024-02-15'),
+    (1, 'bone_mass', 2.9, 'kg', '2024-02-15'),
+    (1, 'measurement_neck', 36.8, 'cm', '2024-02-15'),
+    (1, 'measurement_chest', 102.0, 'cm', '2024-02-15'),
+    (1, 'measurement_waist', 91.5, 'cm', '2024-02-15'),
+    (1, 'measurement_hips', 107.0, 'cm', '2024-02-15'),
+    (1, 'measurement_thigh', 63.5, 'cm', '2024-02-15'),
+    (1, 'measurement_calf', 40.5, 'cm', '2024-02-15'),
+    (1, 'measurement_arm', 33.0, 'cm', '2024-02-15'),
+    (1, 'caliper_chest', 20.5, 'mm', '2024-02-15'),
+    (1, 'caliper_abdomen', 25.5, 'mm', '2024-02-15'),
+    (1, 'caliper_thigh', 22.5, 'mm', '2024-02-15'),
+    (1, 'caliper_tricep', 16.5, 'mm', '2024-02-15'),
+    (1, 'caliper_suprailiac', 23.5, 'mm', '2024-02-15'),
+
+    -- Month 3 - March (current/best scores)
+    (1, 'muscle_mass', 40.5, '%', '2024-03-15'),
+    (1, 'fat_percent', 29.5, '%', '2024-03-15'),
+    (1, 'water_percent', 54.0, '%', '2024-03-15'),
+    (1, 'bone_mass', 3.0, 'kg', '2024-03-15'),
+    (1, 'measurement_neck', 36.5, 'cm', '2024-03-15'),
+    (1, 'measurement_chest', 101.0, 'cm', '2024-03-15'),
+    (1, 'measurement_waist', 90.0, 'cm', '2024-03-15'),
+    (1, 'measurement_hips', 106.0, 'cm', '2024-03-15'),
+    (1, 'measurement_thigh', 63.0, 'cm', '2024-03-15'),
+    (1, 'measurement_calf', 40.0, 'cm', '2024-03-15'),
+    (1, 'measurement_arm', 32.8, 'cm', '2024-03-15'),
+    (1, 'caliper_chest', 20.0, 'mm', '2024-03-15'),
+    (1, 'caliper_abdomen', 25.0, 'mm', '2024-03-15'),
+    (1, 'caliper_thigh', 22.0, 'mm', '2024-03-15'),
+    (1, 'caliper_tricep', 16.0, 'mm', '2024-03-15'),
+    (1, 'caliper_suprailiac', 23.0, 'mm', '2024-03-15'),
 
     -- User 2 (Robert Marsh) - Recent data
     (2, 'muscle_mass', 45.0, '%', '2025-09-01'),

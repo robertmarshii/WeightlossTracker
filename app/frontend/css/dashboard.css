@@ -465,7 +465,22 @@ select.form-control.glass-input {
 
     .glass-card-small {
         margin: 5px !important;
+        padding: 0.4rem!important;
+        border-radius:8px!important;
+        min-height:160px!important;
     }
+
+    .glass-card-smaller {
+        margin: 5px !important;
+        padding: 0.4rem!important;
+        border-radius:8px!important;
+        min-height:120px!important;
+    }
+
+    .streak-timeline {
+        margin-top: 0rem!important;
+    }
+
     .glass-card {
         margin: 5px !important;
     }
@@ -496,9 +511,9 @@ select.form-control.glass-input {
     }
 
     .glass-card {
-        padding: 1rem;
-        margin-bottom: 0.5rem;
-        border-radius: 8px;
+        padding: .6rem!important;
+        margin-bottom: 0.5rem!important;
+        border-radius: 8px!important;
     }
 
     /* Header section - two row layout on mobile */
@@ -627,9 +642,10 @@ select.form-control.glass-input {
     }
 
     .glass-table tbody td {
-        padding: 0.25rem 0.1rem;
-        font-size: 0.65rem;
-        line-height: 1.2;
+        text-align: center;
+        padding: 0.25rem 0.1rem !important;
+        font-size: 0.75rem !important;
+        line-height: 1.5 !important;
     }
 
     /* Make table responsive on mobile */
@@ -1529,6 +1545,10 @@ select.form-control.glass-input {
     grid-template-columns: repeat(7, 1fr);
     gap: 0.4rem;
     margin-bottom: 0.75rem;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    justify-items: center;
 }
 
 /* Individual Timeline Dots */
@@ -1881,17 +1901,21 @@ select.form-control.glass-input {
     gap: 0.5rem !important;
 }
 
+.collapsible-card  {
+    background: rgba(0, 0, 0, 0.2)!important;
+}
+
 /* Mobile Responsive for Metrics */
 @media (max-width: 775px) {
     .metric-value {
-        font-size: 2rem;
+        font-size: 2rem !important;
     }
 
     .change-icon {
-        font-size: 1rem;
+        font-size: 1rem !important;
     }
 
     .change-text {
-        font-size: 0.7rem;
+        font-size: 0.7rem !important;
     }
 }

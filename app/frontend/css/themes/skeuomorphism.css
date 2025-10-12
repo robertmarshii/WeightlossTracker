@@ -539,3 +539,294 @@ span small,
 .progress-ring-circle {
     stroke: #8b4513 !important;
 }
+
+/* Encouragement quote styling for Skeuomorphism */
+.encouragement-quote {
+    color: #8b4513 !important;
+    font-weight: 600 !important;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+/* Card title border should match skeuomorphic theme */
+.glass-card .card-title,
+.glass-card-small .card-title {
+    border-bottom-color: rgba(218, 165, 32, 0.5) !important;
+}
+
+/* Goal Progress Content - Skeuomorphic colors */
+#goal-progress-content {
+    color: #8b4513 !important;
+}
+
+#goal-progress-content .goal-progress-bar {
+    background: linear-gradient(145deg, #f5deb3 0%, #daa520 100%) !important;
+    border-color: #cd853f !important;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+}
+
+#goal-progress-content .goal-progress-bar-fill {
+    background: linear-gradient(90deg, #ff8c00 0%, #d2691e 100%) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 -1px 0 rgba(0, 0, 0, 0.2) !important;
+}
+
+#goal-progress-content .goal-progress-bar-text {
+    color: white !important;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.3) !important;
+}
+
+#goal-progress-content .goal-progress-label {
+    color: #8b4513 !important;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+#goal-progress-content .goal-streak {
+    background: linear-gradient(145deg, #fff8dc 0%, #f5deb3 100%) !important;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05), 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+}
+
+#goal-progress-content .goal-streak-text {
+    color: #8b4513 !important;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+#goal-progress-content .goal-eta {
+    background: linear-gradient(145deg, #fffaf0 0%, #fff8dc 100%) !important;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05), 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+}
+
+#goal-progress-content .goal-eta-text {
+    color: #8b4513 !important;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+#goal-progress-content .goal-badge {
+    background: linear-gradient(145deg, #faf0e6 0%, #f5deb3 100%) !important;
+    border-color: #daa520 !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+}
+
+#goal-progress-content .goal-badge.achieved {
+    background: linear-gradient(145deg, #daa520 0%, #cd853f 100%) !important;
+    border-color: #8b4513 !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 4px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+#goal-progress-content .goal-badge-label {
+    color: #8b4513 !important;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+#goal-progress-content .goal-badge.achieved .goal-badge-label {
+    color: white !important;
+    font-weight: 600 !important;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* Streak Counter - Skeuomorphic colors */
+#streak-counter {
+    color: #8b4513 !important;
+}
+
+#streak-counter .streak-stat-row {
+    background: linear-gradient(145deg, #fff8dc 0%, #f5deb3 100%) !important;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05), 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+}
+
+#streak-counter .streak-stat-value {
+    color: #ff8c00 !important;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+#streak-counter .streak-stat-label {
+    color: #cd853f !important;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+#streak-counter .streak-timeline-title {
+    color: #8b4513 !important;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+#streak-counter .streak-dot {
+    border-color: #daa520 !important;
+    background: linear-gradient(145deg, #fffaf0 0%, #fff8dc 100%) !important;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05), 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+}
+
+#streak-counter .streak-dot.logged {
+    background: linear-gradient(135deg, #daa520 0%, #cd853f 100%) !important;
+    border-color: #8b4513 !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+}
+
+#streak-counter .streak-dot.missed {
+    background: linear-gradient(145deg, #f5deb3 0%, #e0ccaa 100%) !important;
+    border-color: #cd853f !important;
+}
+
+#streak-counter .streak-dot.today {
+    border-color: #ff8c00 !important;
+    border-width: 3px !important;
+    box-shadow: 0 0 10px rgba(255, 140, 0, 0.6), inset 0 1px 1px rgba(0, 0, 0, 0.05) !important;
+}
+
+#streak-counter .streak-legend-label {
+    color: #cd853f !important;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+#streak-counter .streak-motivation {
+    background: linear-gradient(145deg, #fffaf0 0%, #fff8dc 100%) !important;
+    border-left-color: #ff8c00 !important;
+    color: #8b4513 !important;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05), 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+}
+
+#streak-counter .streak-motivation.celebration {
+    border-left-color: #daa520 !important;
+    background: linear-gradient(145deg, #f0e68c 0%, #f5deb3 100%) !important;
+}
+
+#streak-counter .streak-motivation.warning {
+    border-left-color: #ff8c00 !important;
+    background: linear-gradient(145deg, #ffefd5 0%, #ffe4b5 100%) !important;
+    color: #d2691e !important;
+}
+
+/* Total Progress - Skeuomorphic colors */
+#total-progress {
+    color: #8b4513 !important;
+}
+
+#total-progress .progress-tabs {
+    border-bottom-color: #daa520 !important;
+    background: linear-gradient(145deg, #f5deb3 0%, #daa520 100%) !important;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+}
+
+#total-progress .progress-tab-btn {
+    background: transparent !important;
+    color: #8b4513 !important;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+#total-progress .progress-tab-btn:hover {
+    background: linear-gradient(145deg, #fff8dc 0%, #f5deb3 100%) !important;
+    color: #ff8c00 !important;
+}
+
+#total-progress .progress-tab-btn.active {
+    background: linear-gradient(145deg, #fffaf0 0%, #faf0e6 100%) !important;
+    border-bottom-color: #ff8c00 !important;
+    color: #ff8c00 !important;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+}
+
+#total-progress .mini-chart-container {
+    background: linear-gradient(145deg, #fffaf0 0%, #fff8dc 100%) !important;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05), 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+}
+
+#total-progress .mini-chart-title {
+    color: #8b4513 !important;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+#total-progress .chart-label {
+    color: #cd853f !important;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+#total-progress .comparison-stat {
+    background: linear-gradient(135deg, rgba(245, 222, 179, 0.8) 0%, rgba(218, 165, 32, 0.6) 100%) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+}
+
+#total-progress .comparison-stat-title {
+    color: #cd853f !important;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+#total-progress .comparison-stat-value {
+    color: #8b4513 !important;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+/* Body Page - Skeuomorphism Theme */
+/* Section titles */
+.section-title {
+    color: #8b4513 !important;
+    font-weight: 600 !important;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+/* Collapsible card headers - override inline white color */
+.card-header-collapsible h5,
+.card-header-collapsible .card-title {
+    color: #8b4513 !important;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+/* Card toggle button */
+.card-toggle {
+    color: #ff8c00 !important;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+/* Metric values - change from blue to orange */
+.metric-value {
+    color: #ff8c00 !important;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+/* Change icons */
+.change-icon.up {
+    color: #daa520 !important;
+}
+
+.change-icon.down {
+    color: #d2691e !important;
+}
+
+/* Change text - fix white visibility */
+.change-text {
+    font-size: 0.8rem !important;
+    color: #8b4513 !important;
+    font-weight: 500 !important;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+/* Consistency score label - fix white visibility */
+.consistency-score-label {
+    color: #cd853f !important;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+/* Collapsible cards - Skeuomorphic colors */
+.collapsible-card {
+    background: linear-gradient(145deg, #fff8dc 0%, #f5deb3 100%) !important;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05), 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+}
+
+/* Insight items - change from purple to autumn colors */
+.insight-item {
+    border-left-color: rgba(255, 140, 0, 0.5) !important;
+    background: rgba(255, 140, 0, 0.05) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+}
+
+.insight-item:hover {
+    background: rgba(255, 140, 0, 0.1) !important;
+    border-left-color: rgba(255, 140, 0, 0.8) !important;
+}
+
+.insight-title {
+    color: #8b4513 !important;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.insight-description {
+    color: #cd853f !important;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
