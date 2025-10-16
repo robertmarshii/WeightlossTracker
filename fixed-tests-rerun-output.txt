@@ -1,0 +1,334 @@
+
+
+DevTools listening on ws://127.0.0.1:52366/devtools/browser/f85ae8cd-61fd-465f-9166-4c9fb1f3461b
+
+====================================================================================================
+
+  (Run Starting)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Cypress:        13.17.0                                                                        │
+  │ Browser:        Electron 118 (headless)                                                        │
+  │ Node Version:   v22.19.0 (C:\Program Files\nodejs\node.exe)                                    │
+  │ Specs:          3 found (edit-delete-verification.cy.js, final-issues-fixes.cy.js, issue-4-ver │
+  │                 ification.cy.js)                                                               │
+  │ Searched:       C:\GitKraken\WeightlossTracker\cypress\e2e\edit-delete-verification.cy.js, C:\ │
+  │                 GitKraken\WeightlossTracker\cypress\e2e\final-issues-fixes.cy.js, C:\GitKraken │
+  │                 \WeightlossTracker\cypress\e2e\issue-4-verification.cy.js                      │
+  │ Experiments:    experimentalMemoryManagement=true                                              │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  edit-delete-verification.cy.js                                                  (1 of 3)
+
+
+  Edit/Delete Button Verification
+    Issue 7: Delete Button Functionality
+      1) should delete entry immediately and persist on reload
+      2) should delete caliper entry and persist
+    Issue 8: Edit Button Functionality
+      3) should edit entry immediately and persist on reload
+      4) should edit smart data entry and persist
+    Complete Integration: Edit and Delete Together
+      5) should handle multiple edits and deletes in sequence
+
+
+  0 passing (1m)
+  5 failing
+
+  1) Edit/Delete Button Verification
+       Issue 7: Delete Button Functionality
+         should delete entry immediately and persist on reload:
+     AssertionError: Timed out retrying after 8000ms: Expected to find content: 'History' within the element: <button#btn-reset-settings.btn.secondary-btn> but never did.
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/edit-delete-verification.cy.js:55:29)
+
+  2) Edit/Delete Button Verification
+       Issue 7: Delete Button Functionality
+         should delete caliper entry and persist:
+     AssertionError: Timed out retrying after 8000ms: Expected to find content: 'History' within the element: <button#btn-reset-settings.btn.secondary-btn> but never did.
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/edit-delete-verification.cy.js:108:29)
+
+  3) Edit/Delete Button Verification
+       Issue 8: Edit Button Functionality
+         should edit entry immediately and persist on reload:
+     AssertionError: Timed out retrying after 8000ms: Expected to find content: 'History' within the element: <button#btn-reset-settings.btn.secondary-btn> but never did.
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/edit-delete-verification.cy.js:154:29)
+
+  4) Edit/Delete Button Verification
+       Issue 8: Edit Button Functionality
+         should edit smart data entry and persist:
+     AssertionError: Timed out retrying after 8000ms: Expected to find content: 'History' within the element: <button#btn-reset-settings.btn.secondary-btn> but never did.
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/edit-delete-verification.cy.js:209:29)
+
+  5) Edit/Delete Button Verification
+       Complete Integration: Edit and Delete Together
+         should handle multiple edits and deletes in sequence:
+     AssertionError: Timed out retrying after 8000ms: Expected to find content: 'History' within the element: <button#btn-reset-settings.btn.secondary-btn> but never did.
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/edit-delete-verification.cy.js:256:29)
+
+
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        5                                                                                │
+  │ Passing:      0                                                                                │
+  │ Failing:      5                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  5                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     1 minute, 13 seconds                                                             │
+  │ Spec Ran:     edit-delete-verification.cy.js                                                   │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+  (Screenshots)
+
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\edit-delete-verification.cy.j     (1280x720)
+     s\EditDelete Button Verification -- Issue 7 Delete Button Functionality -- shoul               
+     d delete entry immediately and persist on reload (failed).png                                  
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\edit-delete-verification.cy.j     (1280x720)
+     s\EditDelete Button Verification -- Issue 7 Delete Button Functionality -- shoul               
+     d delete caliper entry and persist (failed).png                                                
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\edit-delete-verification.cy.j     (1280x720)
+     s\EditDelete Button Verification -- Issue 8 Edit Button Functionality -- should                
+     edit entry immediately and persist on reload (failed).png                                      
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\edit-delete-verification.cy.j     (1280x720)
+     s\EditDelete Button Verification -- Issue 8 Edit Button Functionality -- should                
+     edit smart data entry and persist (failed).png                                                 
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\edit-delete-verification.cy.j     (1280x720)
+     s\EditDelete Button Verification -- Complete Integration Edit and Delete Togethe               
+     r -- should handle multiple edits and deletes in sequence (failed).png                         
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  final-issues-fixes.cy.js                                                        (2 of 3)
+
+
+  Final Issues - All Fixes Verified
+    Issue 1: Bone Mass Shows % Not kg
+      √ should show % placeholder in bone mass summary card input (6424ms)
+      1) should show % unit in bone mass history "Add Entry" button
+      2) should display % when adding historical bone mass entry
+    Issue 2: Edit/Delete Buttons in History Tables
+      3) should have Actions column in bone mass history table
+      4) should show edit and delete buttons after adding bone mass entry
+    Issue 3: Bone Mass Insights Show % Not kg
+      √ should show % in bone mass insight descriptions (9076ms)
+      √ should display value with % unit in bone mass current value card (9015ms)
+    Issue 4: Measurement Input Validation Works
+      5) should successfully save neck measurement with value 41
+      6) should successfully save neck measurement with value 38.5
+    Issue 5: Measurement Instructions Show in History Forms
+      7) should show "Below Adam's apple" for neck measurement
+      8) should show "At nipple line" for chest measurement
+      9) should show "Narrowest point" for waist measurement
+      10) should show instruction for caliper abdomen measurement
+    Complete Integration Test - All Issues Fixed
+      11) should complete full workflow with all fixes working
+
+
+  3 passing (3m)
+  11 failing
+
+  1) Final Issues - All Fixes Verified
+       Issue 1: Bone Mass Shows % Not kg
+         should show % unit in bone mass history "Add Entry" button:
+     AssertionError: Timed out retrying after 8000ms: Expected to find content: 'History' within the element: <button#btn-reset-settings.btn.secondary-btn> but never did.
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/final-issues-fixes.cy.js:85:29)
+
+  2) Final Issues - All Fixes Verified
+       Issue 1: Bone Mass Shows % Not kg
+         should display % when adding historical bone mass entry:
+     AssertionError: Timed out retrying after 8000ms: Expected to find content: 'History' within the element: <button#btn-reset-settings.btn.secondary-btn> but never did.
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/final-issues-fixes.cy.js:101:29)
+
+  3) Final Issues - All Fixes Verified
+       Issue 2: Edit/Delete Buttons in History Tables
+         should have Actions column in bone mass history table:
+     AssertionError: Timed out retrying after 8000ms: Expected to find content: 'History' within the element: <button#btn-reset-settings.btn.secondary-btn> but never did.
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/final-issues-fixes.cy.js:124:29)
+
+  4) Final Issues - All Fixes Verified
+       Issue 2: Edit/Delete Buttons in History Tables
+         should show edit and delete buttons after adding bone mass entry:
+     AssertionError: Timed out retrying after 8000ms: Expected to find content: 'History' within the element: <button#btn-reset-settings.btn.secondary-btn> but never did.
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/final-issues-fixes.cy.js:139:29)
+
+  5) Final Issues - All Fixes Verified
+       Issue 4: Measurement Input Validation Works
+         should successfully save neck measurement with value 41:
+     AssertionError: Timed out retrying after 8000ms: Expected to find content: 'Measurements' within the element: <a#caliper-thigh-history-tab.nav-link> but never did.
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/final-issues-fixes.cy.js:217:42)
+
+  6) Final Issues - All Fixes Verified
+       Issue 4: Measurement Input Validation Works
+         should successfully save neck measurement with value 38.5:
+     AssertionError: Timed out retrying after 8000ms: Expected to find content: 'Measurements' within the element: <a#caliper-thigh-history-tab.nav-link> but never did.
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/final-issues-fixes.cy.js:240:42)
+
+  7) Final Issues - All Fixes Verified
+       Issue 5: Measurement Instructions Show in History Forms
+         should show "Below Adam's apple" for neck measurement:
+     AssertionError: Timed out retrying after 8000ms: Expected to find content: 'History' within the element: <button#btn-reset-settings.btn.secondary-btn> but never did.
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/final-issues-fixes.cy.js:263:29)
+
+  8) Final Issues - All Fixes Verified
+       Issue 5: Measurement Instructions Show in History Forms
+         should show "At nipple line" for chest measurement:
+     AssertionError: Timed out retrying after 8000ms: Expected to find content: 'History' within the element: <button#btn-reset-settings.btn.secondary-btn> but never did.
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/final-issues-fixes.cy.js:284:29)
+
+  9) Final Issues - All Fixes Verified
+       Issue 5: Measurement Instructions Show in History Forms
+         should show "Narrowest point" for waist measurement:
+     AssertionError: Timed out retrying after 8000ms: Expected to find content: 'History' within the element: <button#btn-reset-settings.btn.secondary-btn> but never did.
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/final-issues-fixes.cy.js:305:29)
+
+  10) Final Issues - All Fixes Verified
+       Issue 5: Measurement Instructions Show in History Forms
+         should show instruction for caliper abdomen measurement:
+     AssertionError: Timed out retrying after 8000ms: Expected to find content: 'History' within the element: <button#btn-reset-settings.btn.secondary-btn> but never did.
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/final-issues-fixes.cy.js:326:29)
+
+  11) Final Issues - All Fixes Verified
+       Complete Integration Test - All Issues Fixed
+         should complete full workflow with all fixes working:
+     AssertionError: Timed out retrying after 8000ms: Expected to find content: 'Measurements' within the element: <a#caliper-thigh-history-tab.nav-link> but never did.
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/final-issues-fixes.cy.js:367:42)
+
+
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        14                                                                               │
+  │ Passing:      3                                                                                │
+  │ Failing:      11                                                                               │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  11                                                                               │
+  │ Video:        false                                                                            │
+  │ Duration:     3 minutes, 9 seconds                                                             │
+  │ Spec Ran:     final-issues-fixes.cy.js                                                         │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+  (Screenshots)
+
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\final-issues-fixes.cy.js\Fina     (1280x720)
+     l Issues - All Fixes Verified -- Issue 1 Bone Mass Shows % Not kg -- should show               
+      % unit in bone mass history Add Entry button (failed).png                                     
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\final-issues-fixes.cy.js\Fina     (1280x720)
+     l Issues - All Fixes Verified -- Issue 1 Bone Mass Shows % Not kg -- should disp               
+     lay % when adding historical bone mass entry (failed).png                                      
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\final-issues-fixes.cy.js\Fina     (1280x720)
+     l Issues - All Fixes Verified -- Issue 2 EditDelete Buttons in History Tables --               
+      should have Actions column in bone mass history table (failed).png                            
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\final-issues-fixes.cy.js\Fina     (1280x720)
+     l Issues - All Fixes Verified -- Issue 2 EditDelete Buttons in History Tables --               
+      should show edit and delete buttons after adding bone mass entry (failed).png                 
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\final-issues-fixes.cy.js\Fina     (1280x720)
+     l Issues - All Fixes Verified -- Issue 4 Measurement Input Validation Works -- s               
+     hould successfully save neck measurement with value 41 (failed).png                            
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\final-issues-fixes.cy.js\Fina     (1280x720)
+     l Issues - All Fixes Verified -- Issue 4 Measurement Input Validation Works -- s               
+     hould successfully save neck measurement with value 38.5 (failed).png                          
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\final-issues-fixes.cy.js\Fina     (1280x720)
+     l Issues - All Fixes Verified -- Issue 5 Measurement Instructions Show in Histor               
+     y Forms -- should show Below Adam's apple for neck measurement (failed).png                    
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\final-issues-fixes.cy.js\Fina     (1280x720)
+     l Issues - All Fixes Verified -- Issue 5 Measurement Instructions Show in Histor               
+     y Forms -- should show At nipple line for chest measurement (failed).png                       
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\final-issues-fixes.cy.js\Fina     (1280x720)
+     l Issues - All Fixes Verified -- Issue 5 Measurement Instructions Show in Histor               
+     y Forms -- should show Narrowest point for waist measurement (failed).png                      
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\final-issues-fixes.cy.js\Fina     (1280x720)
+     l Issues - All Fixes Verified -- Issue 5 Measurement Instructions Show in Histor               
+     y Forms -- should show instruction for caliper abdomen measurement (failed).png                
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\final-issues-fixes.cy.js\Fina     (1280x720)
+     l Issues - All Fixes Verified -- Complete Integration Test - All Issues Fixed --               
+      should complete full workflow with all fixes working (failed).png                             
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  issue-4-verification.cy.js                                                      (3 of 3)
+
+
+  Issue 4: Measurement Input Validation - Quick Verification
+    1) should successfully enter value 41 into neck measurement
+    2) should accept decimal values like 38.5
+    3) should accept integer values in caliper measurements
+
+
+  0 passing (32s)
+  3 failing
+
+  1) Issue 4: Measurement Input Validation - Quick Verification
+       should successfully enter value 41 into neck measurement:
+     AssertionError: Timed out retrying after 8000ms: Expected to find content: 'Measurements' within the element: <a#caliper-thigh-history-tab.nav-link> but never did.
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/issue-4-verification.cy.js:53:38)
+
+  2) Issue 4: Measurement Input Validation - Quick Verification
+       should accept decimal values like 38.5:
+     AssertionError: Timed out retrying after 8000ms: Expected to find element: `.nav-tabs .nav-link`, but never found it.
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/issue-4-verification.cy.js:81:11)
+
+  3) Issue 4: Measurement Input Validation - Quick Verification
+       should accept integer values in caliper measurements:
+     AssertionError: Timed out retrying after 8000ms: Expected to find element: `.nav-tabs .nav-link`, but never found it.
+      at Context.eval (webpack://weightloss-tracker/./cypress/e2e/issue-4-verification.cy.js:111:11)
+
+
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        3                                                                                │
+  │ Passing:      0                                                                                │
+  │ Failing:      3                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  3                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     31 seconds                                                                       │
+  │ Spec Ran:     issue-4-verification.cy.js                                                       │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+  (Screenshots)
+
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\issue-4-verification.cy.js\Is     (1280x720)
+     sue 4 Measurement Input Validation - Quick Verification -- should successfully e               
+     nter value 41 into neck measurement (failed).png                                               
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\issue-4-verification.cy.js\Is     (1280x720)
+     sue 4 Measurement Input Validation - Quick Verification -- should accept decimal               
+      values like 38.5 (failed).png                                                                 
+  -  C:\GitKraken\WeightlossTracker\cypress\screenshots\issue-4-verification.cy.js\Is     (1280x720)
+     sue 4 Measurement Input Validation - Quick Verification -- should accept integer               
+      values in caliper measurements (failed).png                                                   
+
+
+====================================================================================================
+
+  (Run Finished)
+
+
+       Spec                                              Tests  Passing  Failing  Pending  Skipped  
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ ✖  edit-delete-verification.cy.js           01:13        5        -        5        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✖  final-issues-fixes.cy.js                 03:09       14        3       11        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✖  issue-4-verification.cy.js               00:31        3        -        3        -        - │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+    ✖  3 of 3 failed (100%)                     04:54       22        3       19        -        -  
+

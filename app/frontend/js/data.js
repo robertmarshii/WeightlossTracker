@@ -179,9 +179,15 @@ function formatDate(dateString) {
 
 function editWeight(id, weight, date) {
     if (window.coverage) window.coverage.logFunction('editWeight', 'data.js');
-    // For now, just show the add form with the values pre-filled
+
+    // Pre-fill weight (already in display units)
     $('#newWeight').val(weight);
-    $('#newDate').val(date);
+
+    // Format date to user's preferred format before pre-filling
+    const formattedDate = formatDateBySettings(date);
+    $('#newDate').val(formattedDate);
+
+    // Show form and focus
     $('#add-entry-form').slideDown();
     $('#newWeight').focus();
 

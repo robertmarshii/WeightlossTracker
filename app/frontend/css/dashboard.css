@@ -1,6 +1,32 @@
 
 /* Dashboard-specific styles */
 
+/* Custom Scrollbar Styling to match glass theme */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(100, 166, 216, 0.6) rgba(20, 40, 60, 0.4);
+}
+
+*::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+    background: rgba(20, 40, 60, 0.4);
+    border-radius: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+    background: rgba(100, 166, 216, 0.6);
+    border-radius: 10px;
+    border: 2px solid rgba(20, 40, 60, 0.4);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background: rgba(100, 166, 216, 0.8);
+}
+
 /* Reduced padding for primary buttons to prevent wrapping */
 .primary-btn {
     padding: 3px 6px !important;
@@ -358,13 +384,11 @@ select.form-control.glass-input {
     margin-right: 5px;
 }  
 
-/* Body page history tables should have max-height instead */
-#smartDataTabsContent,
-#measurementsTabsContent,
-#calipersTabsContent {
+/* Body page history tables - scroll only the table, not the entire tab content */
+#smartDataTabsContent .table-responsive,
+#measurementsTabsContent .table-responsive,
+#calipersTabsContent .table-responsive {
     max-height: 400px;
-    min-height: auto;
-    height: auto;
     overflow-y: auto;
 }
 

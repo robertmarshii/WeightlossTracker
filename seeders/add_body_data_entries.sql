@@ -23,7 +23,7 @@ INSERT INTO wt_dev.body_data_entries (user_id, metric_type, value, unit, entry_d
     (1, 'muscle_mass', 42.5, '%', '2025-10-01'),
     (1, 'fat_percent', 28.3, '%', '2025-10-01'),
     (1, 'water_percent', 54.2, '%', '2025-10-01'),
-    (1, 'bone_mass', 3.2, 'kg', '2025-10-01'),
+    (1, 'bone_mass', 3.2, '%', '2025-10-01'),
     (1, 'measurement_neck', 40.5, 'cm', '2025-10-01'),
     (1, 'measurement_chest', 110.0, 'cm', '2025-10-01'),
     (1, 'measurement_waist', 98.5, 'cm', '2025-10-01'),

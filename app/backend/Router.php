@@ -1276,7 +1276,7 @@
                 $allData['total_progress'] = calculateTotalProgress($userId, $db, $schema);
 
                 // Add Body Data entries (Smart Data, Measurements, Calipers)
-                $stmt = $db->prepare("SELECT metric_type, value, unit, entry_date FROM {$schema}.body_data_entries WHERE user_id = ? ORDER BY entry_date DESC, id DESC");
+                $stmt = $db->prepare("SELECT id, metric_type, value, unit, entry_date FROM {$schema}.body_data_entries WHERE user_id = ? ORDER BY entry_date DESC, id DESC");
                 $stmt->execute([$userId]);
                 $bodyDataEntries = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -1289,6 +1289,7 @@
                     // Store latest value (first occurrence since ordered DESC)
                     if (!isset($bodyData[$metricType])) {
                         $bodyData[$metricType] = [
+                            'id' => $entry['id'],
                             'value' => $entry['value'],
                             'unit' => $entry['unit'],
                             'entry_date' => $entry['entry_date']
@@ -1300,6 +1301,7 @@
                         $bodyDataHistory[$metricType] = [];
                     }
                     $bodyDataHistory[$metricType][] = [
+                        'id' => $entry['id'],
                         'value' => $entry['value'],
                         'unit' => $entry['unit'],
                         'entry_date' => $entry['entry_date']
@@ -1351,6 +1353,24 @@
                     ]);
                 } catch (Exception $e) {
                     echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
+                }
+                return;
+            }
+
+            if ($action === 'delete_body_data') {
+                if (!isset($_POST['id'])) {
+                    echo json_encode(['success' => false, 'message' => 'Entry ID required']);
+                    return;
+                }
+
+                $entryId = (int)$_POST['id'];
+                $stmt = $db->prepare("DELETE FROM {$schema}.body_data_entries WHERE id = ? AND user_id = ?");
+                $stmt->execute([$entryId, $userId]);
+
+                if ($stmt->rowCount() > 0) {
+                    echo json_encode(['success' => true, 'message' => 'Body data entry deleted']);
+                } else {
+                    echo json_encode(['success' => false, 'message' => 'Entry not found or not authorized']);
                 }
                 return;
             }

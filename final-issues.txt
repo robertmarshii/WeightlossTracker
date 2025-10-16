@@ -1,6 +1,1 @@
-1. bone mass add entry says (kg) instead of %
-2. the history tables on the body>history page dont have edit and delete buttons for each row
-3. Your current bone mass is 3.0kg. Track this over time to monitor skeletal health. - should be % to kg conversions
-4. Please enter a valid value when i tried to enter 41 into #neck-measurement = likely all the inputs have same issue
-5. on the history page it should give the info text telling you where to measure when you click add entry for example, belows adams apple
-6. 
+

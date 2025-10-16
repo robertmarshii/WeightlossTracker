@@ -347,6 +347,85 @@ function formatDateBySettings(dateInput) {
 }
 
 /**
+ * Convert a user-formatted date string to ISO format (YYYY-MM-DD)
+ * @param {string} dateInput - Date string in user's preferred format
+ * @returns {string} ISO formatted date (YYYY-MM-DD) or original if invalid
+ */
+function convertDateToISO(dateInput) {
+    if (window.coverage) window.coverage.logFunction('convertDateToISO', 'global.js');
+
+    // If already in ISO format (YYYY-MM-DD), return as-is
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateInput)) {
+        return dateInput;
+    }
+
+    const format = getDateFormat();
+    debugLog('📅 convertDateToISO - input:', dateInput, 'format:', format);
+
+    let day, month, year;
+
+    try {
+        switch(format) {
+            case 'uk': // dd/mm/yyyy
+                const ukParts = dateInput.split('/');
+                if (ukParts.length !== 3) return dateInput;
+                day = parseInt(ukParts[0]);
+                month = parseInt(ukParts[1]);
+                year = parseInt(ukParts[2]);
+                break;
+
+            case 'us': // mm/dd/yyyy
+                const usParts = dateInput.split('/');
+                if (usParts.length !== 3) return dateInput;
+                month = parseInt(usParts[0]);
+                day = parseInt(usParts[1]);
+                year = parseInt(usParts[2]);
+                break;
+
+            case 'euro': // dd.mm.yyyy
+                const euroParts = dateInput.split('.');
+                if (euroParts.length !== 3) return dateInput;
+                day = parseInt(euroParts[0]);
+                month = parseInt(euroParts[1]);
+                year = parseInt(euroParts[2]);
+                break;
+
+            case 'iso': // yyyy-mm-dd (already checked above, but fallback)
+                return dateInput;
+
+            default:
+                // Default to UK format
+                const defaultParts = dateInput.split('/');
+                if (defaultParts.length !== 3) return dateInput;
+                day = parseInt(defaultParts[0]);
+                month = parseInt(defaultParts[1]);
+                year = parseInt(defaultParts[2]);
+        }
+
+        // Validate parsed values
+        if (isNaN(day) || isNaN(month) || isNaN(year)) {
+            debugLog('❌ convertDateToISO - invalid date parts:', { day, month, year });
+            return dateInput;
+        }
+
+        // Validate ranges
+        if (month < 1 || month > 12 || day < 1 || day > 31 || year < 1900 || year > 2100) {
+            debugLog('❌ convertDateToISO - out of range:', { day, month, year });
+            return dateInput;
+        }
+
+        // Format as ISO
+        const isoDate = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        debugLog('✅ convertDateToISO - result:', isoDate);
+        return isoDate;
+
+    } catch (error) {
+        debugLog('❌ convertDateToISO - error:', error);
+        return dateInput; // Return original on error
+    }
+}
+
+/**
  * Format all timestamps on the page with class 'format-date'
  * Finds all elements with data-timestamp or data-date attributes and formats them
  */
@@ -374,7 +453,8 @@ function formatAllTimestamps() {
     debugLog('📅 formatAllTimestamps - completed, formatted', dateElements.length, 'elements');
 }
 
-// Make formatDateBySettings globally accessible
+// Make functions globally accessible
 window.formatDateBySettings = formatDateBySettings;
+window.convertDateToISO = convertDateToISO;
 window.formatAllTimestamps = formatAllTimestamps;
 window.getLanguageLocale = getLanguageLocale;

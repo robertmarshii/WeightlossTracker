@@ -151,7 +151,7 @@
                                     </div>
                                     <div class="card-edit-body">
                                         <small class="text-muted d-block mb-2" data-eng="Below Adam's apple" data-spa="Debajo de la manzana de Adán" data-fre="Sous la pomme d'Adam" data-ger="Unter dem Adamsapfel">Below Adam's apple</small>
-                                        <input type="number" step="0.1" class="form-control glass-input mb-2" placeholder="cm" id="neck-measurement">
+                                        <input type="number" step="any" min="10" max="200" class="form-control glass-input mb-2" placeholder="cm" id="neck-measurement">
                                         <small class="text-muted d-block mb-2 input-date-text" id="neck-date"></small>
                                         <div class="d-flex gap-2">
                                             <button class="btn secondary-btn btn-sm toggle-back" style="flex: 0 0 40%;">←</button>
@@ -174,7 +174,7 @@
                                     </div>
                                     <div class="card-edit-body">
                                         <small class="text-muted d-block mb-2" data-eng="At nipple line" data-spa="A la altura del pezón" data-fre="Au niveau du mamelon" data-ger="Auf Brustwarzenhöhe">At nipple line</small>
-                                        <input type="number" step="0.1" class="form-control glass-input mb-2" placeholder="cm" id="breast-measurement">
+                                        <input type="number" step="any" min="10" max="200" class="form-control glass-input mb-2" placeholder="cm" id="breast-measurement">
                                         <small class="text-muted d-block mb-2 input-date-text" id="breast-date"></small>
                                         <div class="d-flex gap-2">
                                             <button class="btn secondary-btn btn-sm toggle-back" style="flex: 0 0 40%;">←</button>
@@ -197,7 +197,7 @@
                                     </div>
                                     <div class="card-edit-body">
                                         <small class="text-muted d-block mb-2" data-eng="Narrowest point" data-spa="Punto más estrecho" data-fre="Point le plus étroit" data-ger="Schmalste Stelle">Narrowest point</small>
-                                        <input type="number" step="0.1" class="form-control glass-input mb-2" placeholder="cm" id="waist-measurement">
+                                        <input type="number" step="any" min="10" max="200" class="form-control glass-input mb-2" placeholder="cm" id="waist-measurement">
                                         <small class="text-muted d-block mb-2 input-date-text" id="waist-date"></small>
                                         <div class="d-flex gap-2">
                                             <button class="btn secondary-btn btn-sm toggle-back" style="flex: 0 0 40%;">←</button>
@@ -220,7 +220,7 @@
                                     </div>
                                     <div class="card-edit-body">
                                         <small class="text-muted d-block mb-2" data-eng="Widest part" data-spa="Parte más ancha" data-fre="Partie la plus large" data-ger="Breiteste Stelle">Widest part</small>
-                                        <input type="number" step="0.1" class="form-control glass-input mb-2" placeholder="cm" id="hips-measurement">
+                                        <input type="number" step="any" min="10" max="200" class="form-control glass-input mb-2" placeholder="cm" id="hips-measurement">
                                         <small class="text-muted d-block mb-2 input-date-text" id="hips-date"></small>
                                         <div class="d-flex gap-2">
                                             <button class="btn secondary-btn btn-sm toggle-back" style="flex: 0 0 40%;">←</button>
@@ -245,7 +245,7 @@
                                     </div>
                                     <div class="card-edit-body">
                                         <small class="text-muted d-block mb-2" data-eng="Midway hip to knee" data-spa="Entre cadera y rodilla" data-fre="Entre hanche et genou" data-ger="Zwischen Hüfte und Knie">Midway hip to knee</small>
-                                        <input type="number" step="0.1" class="form-control glass-input mb-2" placeholder="cm" id="thighs-measurement">
+                                        <input type="number" step="any" min="10" max="200" class="form-control glass-input mb-2" placeholder="cm" id="thighs-measurement">
                                         <small class="text-muted d-block mb-2 input-date-text" id="thighs-date"></small>
                                         <div class="d-flex gap-2">
                                             <button class="btn secondary-btn btn-sm toggle-back" style="flex: 0 0 40%;">←</button>
@@ -268,7 +268,7 @@
                                     </div>
                                     <div class="card-edit-body">
                                         <small class="text-muted d-block mb-2" data-eng="Thickest part" data-spa="Parte más gruesa" data-fre="Partie la plus épaisse" data-ger="Dickste Stelle">Thickest part</small>
-                                        <input type="number" step="0.1" class="form-control glass-input mb-2" placeholder="cm" id="calves-measurement">
+                                        <input type="number" step="any" min="10" max="200" class="form-control glass-input mb-2" placeholder="cm" id="calves-measurement">
                                         <small class="text-muted d-block mb-2 input-date-text" id="calves-date"></small>
                                         <div class="d-flex gap-2">
                                             <button class="btn secondary-btn btn-sm toggle-back" style="flex: 0 0 40%;">←</button>
@@ -291,7 +291,7 @@
                                     </div>
                                     <div class="card-edit-body">
                                         <small class="text-muted d-block mb-2" data-eng="Unflexed midpoint" data-spa="Punto medio relajado" data-fre="Point médian non fléchi" data-ger="Entspannter Mittelpunkt">Unflexed midpoint</small>
-                                        <input type="number" step="0.1" class="form-control glass-input mb-2" placeholder="cm" id="arms-measurement">
+                                        <input type="number" step="any" min="10" max="200" class="form-control glass-input mb-2" placeholder="cm" id="arms-measurement">
                                         <small class="text-muted d-block mb-2 input-date-text" id="arms-date"></small>
                                         <div class="d-flex gap-2">
                                             <button class="btn secondary-btn btn-sm toggle-back" style="flex: 0 0 40%;">←</button>
@@ -338,7 +338,7 @@
                                     </div>
                                     <div class="card-edit-body">
                                         <small class="text-muted d-block mb-2" data-eng="Diagonal fold armpit-nipple" data-spa="Pliegue diagonal axila-pezón" data-fre="Pli diagonal aisselle-mamelon" data-ger="Diagonale Falte Achsel-Brustwarze">Diagonal fold armpit-nipple</small>
-                                        <input type="number" step="0.1" class="form-control glass-input mb-2" placeholder="mm" id="caliper-chest">
+                                        <input type="number" step="any" min="1" max="50" class="form-control glass-input mb-2" placeholder="mm" id="caliper-chest">
                                         <small class="text-muted d-block mb-2 input-date-text" id="caliper-chest-date"></small>
                                         <div class="d-flex gap-2">
                                             <button class="btn secondary-btn btn-sm toggle-back" style="flex: 0 0 40%;">←</button>
@@ -361,7 +361,7 @@
                                     </div>
                                     <div class="card-edit-body">
                                         <small class="text-muted d-block mb-2" data-eng="Vertical fold below armpit" data-spa="Pliegue vertical bajo axila" data-fre="Pli vertical sous l'aisselle" data-ger="Vertikale Falte unter Achsel">Vertical fold below armpit</small>
-                                        <input type="number" step="0.1" class="form-control glass-input mb-2" placeholder="mm" id="caliper-axilla">
+                                        <input type="number" step="any" min="1" max="50" class="form-control glass-input mb-2" placeholder="mm" id="caliper-axilla">
                                         <small class="text-muted d-block mb-2 input-date-text" id="caliper-axilla-date"></small>
                                         <div class="d-flex gap-2">
                                             <button class="btn secondary-btn btn-sm toggle-back" style="flex: 0 0 40%;">←</button>
@@ -384,7 +384,7 @@
                                     </div>
                                     <div class="card-edit-body">
                                         <small class="text-muted d-block mb-2" data-eng="2cm right of belly button" data-spa="2cm a la derecha del ombligo" data-fre="2cm à droite du nombril" data-ger="2cm rechts vom Bauchnabel">2cm right of belly button</small>
-                                        <input type="number" step="0.1" class="form-control glass-input mb-2" placeholder="mm" id="caliper-abdomen">
+                                        <input type="number" step="any" min="1" max="50" class="form-control glass-input mb-2" placeholder="mm" id="caliper-abdomen">
                                         <small class="text-muted d-block mb-2 input-date-text" id="caliper-abdomen-date"></small>
                                         <div class="d-flex gap-2">
                                             <button class="btn secondary-btn btn-sm toggle-back" style="flex: 0 0 40%;">←</button>
@@ -409,7 +409,7 @@
                                     </div>
                                     <div class="card-edit-body">
                                         <small class="text-muted d-block mb-2" data-eng="Above hip bone" data-spa="Sobre el hueso de la cadera" data-fre="Au-dessus de l'os de la hanche" data-ger="Über dem Hüftknochen">Above hip bone</small>
-                                        <input type="number" step="0.1" class="form-control glass-input mb-2" placeholder="mm" id="caliper-suprailiac">
+                                        <input type="number" step="any" min="1" max="50" class="form-control glass-input mb-2" placeholder="mm" id="caliper-suprailiac">
                                         <small class="text-muted d-block mb-2 input-date-text" id="caliper-suprailiac-date"></small>
                                         <div class="d-flex gap-2">
                                             <button class="btn secondary-btn btn-sm toggle-back" style="flex: 0 0 40%;">←</button>
@@ -432,7 +432,7 @@
                                     </div>
                                     <div class="card-edit-body">
                                         <small class="text-muted d-block mb-2" data-eng="Vertical fold hip-knee" data-spa="Pliegue vertical cadera-rodilla" data-fre="Pli vertical hanche-genou" data-ger="Vertikale Falte Hüfte-Knie">Vertical fold hip-knee</small>
-                                        <input type="number" step="0.1" class="form-control glass-input mb-2" placeholder="mm" id="caliper-thigh">
+                                        <input type="number" step="any" min="1" max="50" class="form-control glass-input mb-2" placeholder="mm" id="caliper-thigh">
                                         <small class="text-muted d-block mb-2 input-date-text" id="caliper-thigh-date"></small>
                                         <div class="d-flex gap-2">
                                             <button class="btn secondary-btn btn-sm toggle-back" style="flex: 0 0 40%;">←</button>
@@ -495,11 +495,12 @@
                                                                     <th data-eng="Date" data-spa="Fecha" data-fre="Date" data-ger="Datum">Date</th>
                                                                     <th data-eng="Muscle Mass %" data-spa="Masa Muscular %" data-fre="Masse Musculaire %" data-ger="Muskelmasse %">Muscle Mass %</th>
                                                                     <th data-eng="Change" data-spa="Cambio" data-fre="Changement" data-ger="Änderung">Change</th>
+                                                                    <th data-eng="Actions" data-spa="Acciones" data-fre="Actions" data-ger="Aktionen">Actions</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody id="muscle-history-body">
                                                                 <tr>
-                                                                    <td colspan="3" class="text-muted text-center" data-eng="No muscle mass data recorded yet" data-spa="No hay datos de masa muscular registrados" data-fre="Aucune donnée de masse musculaire enregistrée" data-ger="Noch keine Muskelmassendaten erfasst">No muscle mass data recorded yet</td>
+                                                                    <td colspan="4" class="text-muted text-center" data-eng="No muscle mass data recorded yet" data-spa="No hay datos de masa muscular registrados" data-fre="Aucune donnée de masse musculaire enregistrée" data-ger="Noch keine Muskelmassendaten erfasst">No muscle mass data recorded yet</td>
                                                                 </tr>
                                                             </tbody>
                                                         </table>
@@ -518,11 +519,12 @@
                                                                     <th data-eng="Date" data-spa="Fecha" data-fre="Date" data-ger="Datum">Date</th>
                                                                     <th data-eng="Fat %" data-spa="Grasa %" data-fre="Graisse %" data-ger="Fett %">Fat %</th>
                                                                     <th data-eng="Change" data-spa="Cambio" data-fre="Changement" data-ger="Änderung">Change</th>
+                                                                    <th data-eng="Actions" data-spa="Acciones" data-fre="Actions" data-ger="Aktionen">Actions</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody id="fat-history-body">
                                                                 <tr>
-                                                                    <td colspan="3" class="text-muted text-center" data-eng="No fat percentage data recorded yet" data-spa="No hay datos de porcentaje de grasa registrados" data-fre="Aucune donnée de pourcentage de graisse enregistrée" data-ger="Noch keine Fettprozentsatzdaten erfasst">No fat percentage data recorded yet</td>
+                                                                    <td colspan="4" class="text-muted text-center" data-eng="No fat percentage data recorded yet" data-spa="No hay datos de porcentaje de grasa registrados" data-fre="Aucune donnée de pourcentage de graisse enregistrée" data-ger="Noch keine Fettprozentsatzdaten erfasst">No fat percentage data recorded yet</td>
                                                                 </tr>
                                                             </tbody>
                                                         </table>
@@ -541,11 +543,12 @@
                                                                     <th data-eng="Date" data-spa="Fecha" data-fre="Date" data-ger="Datum">Date</th>
                                                                     <th data-eng="Water %" data-spa="Agua %" data-fre="Eau %" data-ger="Wasser %">Water %</th>
                                                                     <th data-eng="Change" data-spa="Cambio" data-fre="Changement" data-ger="Änderung">Change</th>
+                                                                    <th data-eng="Actions" data-spa="Acciones" data-fre="Actions" data-ger="Aktionen">Actions</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody id="water-history-body">
                                                                 <tr>
-                                                                    <td colspan="3" class="text-muted text-center" data-eng="No water percentage data recorded yet" data-spa="No hay datos de porcentaje de agua registrados" data-fre="Aucune donnée de pourcentage d'eau enregistrée" data-ger="Noch keine Wasserprozentsatzdaten erfasst">No water percentage data recorded yet</td>
+                                                                    <td colspan="4" class="text-muted text-center" data-eng="No water percentage data recorded yet" data-spa="No hay datos de porcentaje de agua registrados" data-fre="Aucune donnée de pourcentage d'eau enregistrée" data-ger="Noch keine Wasserprozentsatzdaten erfasst">No water percentage data recorded yet</td>
                                                                 </tr>
                                                             </tbody>
                                                         </table>
@@ -564,17 +567,18 @@
                                                                     <th data-eng="Date" data-spa="Fecha" data-fre="Date" data-ger="Datum">Date</th>
                                                                     <th data-eng="Bone Mass %" data-spa="Masa Ósea %" data-fre="Masse Osseuse %" data-ger="Knochenmasse %">Bone Mass %</th>
                                                                     <th data-eng="Change" data-spa="Cambio" data-fre="Changement" data-ger="Änderung">Change</th>
+                                                                    <th data-eng="Actions" data-spa="Acciones" data-fre="Actions" data-ger="Aktionen">Actions</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody id="bone-history-body">
                                                                 <tr>
-                                                                    <td colspan="3" class="text-muted text-center" data-eng="No bone mass data recorded yet" data-spa="No hay datos de masa ósea registrados" data-fre="Aucune donnée de masse osseuse enregistrée" data-ger="Noch keine Knochenmassendaten erfasst">No bone mass data recorded yet</td>
+                                                                    <td colspan="4" class="text-muted text-center" data-eng="No bone mass data recorded yet" data-spa="No hay datos de masa ósea registrados" data-fre="Aucune donnée de masse osseuse enregistrée" data-ger="Noch keine Knochenmassendaten erfasst">No bone mass data recorded yet</td>
                                                                 </tr>
                                                             </tbody>
                                                         </table>
                                                     </div>
                                                     <div class="text-right">
-                                                        <button class="btn primary-btn btn-sm mt-2 btn-add-historical-entry" data-metric-type="bone_mass" data-unit="kg" data-eng="+ Add Entry" data-spa="+ Agregar Entrada" data-fre="+ Ajouter Entrée" data-ger="+ Eintrag Hinzufügen">+ Add Entry</button>
+                                                        <button class="btn primary-btn btn-sm mt-2 btn-add-historical-entry" data-metric-type="bone_mass" data-unit="%" data-eng="+ Add Entry" data-spa="+ Agregar Entrada" data-fre="+ Ajouter Entrée" data-ger="+ Eintrag Hinzufügen">+ Add Entry</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -642,11 +646,12 @@
                                                                     <th data-eng="Date" data-spa="Fecha" data-fre="Date" data-ger="Datum">Date</th>
                                                                     <th data-eng="Neck (cm)" data-spa="Cuello (cm)" data-fre="Cou (cm)" data-ger="Hals (cm)">Neck (cm)</th>
                                                                     <th data-eng="Change" data-spa="Cambio" data-fre="Changement" data-ger="Änderung">Change</th>
+                                                                    <th data-eng="Actions" data-spa="Acciones" data-fre="Actions" data-ger="Aktionen">Actions</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody id="neck-history-body">
                                                                 <tr>
-                                                                    <td colspan="3" class="text-muted text-center" data-eng="No neck measurements recorded yet" data-spa="No hay mediciones de cuello registradas" data-fre="Aucune mesure du cou enregistrée" data-ger="Noch keine Halsmessungen erfasst">No neck measurements recorded yet</td>
+                                                                    <td colspan="4" class="text-muted text-center" data-eng="No neck measurements recorded yet" data-spa="No hay mediciones de cuello registradas" data-fre="Aucune mesure du cou enregistrée" data-ger="Noch keine Halsmessungen erfasst">No neck measurements recorded yet</td>
                                                                 </tr>
                                                             </tbody>
                                                         </table>
@@ -665,11 +670,12 @@
                                                                     <th data-eng="Date" data-spa="Fecha" data-fre="Date" data-ger="Datum">Date</th>
                                                                     <th data-eng="Breast (cm)" data-spa="Busto (cm)" data-fre="Poitrine (cm)" data-ger="Brust (cm)">Breast (cm)</th>
                                                                     <th data-eng="Change" data-spa="Cambio" data-fre="Changement" data-ger="Änderung">Change</th>
+                                                                    <th data-eng="Actions" data-spa="Acciones" data-fre="Actions" data-ger="Aktionen">Actions</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody id="breast-history-body">
                                                                 <tr>
-                                                                    <td colspan="3" class="text-muted text-center" data-eng="No breast measurements recorded yet" data-spa="No hay mediciones de busto registradas" data-fre="Aucune mesure de poitrine enregistrée" data-ger="Noch keine Brustmessungen erfasst">No breast measurements recorded yet</td>
+                                                                    <td colspan="4" class="text-muted text-center" data-eng="No breast measurements recorded yet" data-spa="No hay mediciones de busto registradas" data-fre="Aucune mesure de poitrine enregistrée" data-ger="Noch keine Brustmessungen erfasst">No breast measurements recorded yet</td>
                                                                 </tr>
                                                             </tbody>
                                                         </table>
@@ -688,11 +694,12 @@
                                                                     <th data-eng="Date" data-spa="Fecha" data-fre="Date" data-ger="Datum">Date</th>
                                                                     <th data-eng="Waist (cm)" data-spa="Cintura (cm)" data-fre="Taille (cm)" data-ger="Taille (cm)">Waist (cm)</th>
                                                                     <th data-eng="Change" data-spa="Cambio" data-fre="Changement" data-ger="Änderung">Change</th>
+                                                                    <th data-eng="Actions" data-spa="Acciones" data-fre="Actions" data-ger="Aktionen">Actions</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody id="waist-history-body">
                                                                 <tr>
-                                                                    <td colspan="3" class="text-muted text-center" data-eng="No waist measurements recorded yet" data-spa="No hay mediciones de cintura registradas" data-fre="Aucune mesure de taille enregistrée" data-ger="Noch keine Tailenmessungen erfasst">No waist measurements recorded yet</td>
+                                                                    <td colspan="4" class="text-muted text-center" data-eng="No waist measurements recorded yet" data-spa="No hay mediciones de cintura registradas" data-fre="Aucune mesure de taille enregistrée" data-ger="Noch keine Tailenmessungen erfasst">No waist measurements recorded yet</td>
                                                                 </tr>
                                                             </tbody>
                                                         </table>
@@ -711,11 +718,12 @@
                                                                     <th data-eng="Date" data-spa="Fecha" data-fre="Date" data-ger="Datum">Date</th>
                                                                     <th data-eng="Hips (cm)" data-spa="Caderas (cm)" data-fre="Hanches (cm)" data-ger="Hüften (cm)">Hips (cm)</th>
                                                                     <th data-eng="Change" data-spa="Cambio" data-fre="Changement" data-ger="Änderung">Change</th>
+                                                                    <th data-eng="Actions" data-spa="Acciones" data-fre="Actions" data-ger="Aktionen">Actions</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody id="hips-history-body">
                                                                 <tr>
-                                                                    <td colspan="3" class="text-muted text-center" data-eng="No hips measurements recorded yet" data-spa="No hay mediciones de caderas registradas" data-fre="Aucune mesure de hanches enregistrée" data-ger="Noch keine Hüftmessungen erfasst">No hips measurements recorded yet</td>
+                                                                    <td colspan="4" class="text-muted text-center" data-eng="No hips measurements recorded yet" data-spa="No hay mediciones de caderas registradas" data-fre="Aucune mesure de hanches enregistrée" data-ger="Noch keine Hüftmessungen erfasst">No hips measurements recorded yet</td>
                                                                 </tr>
                                                             </tbody>
                                                         </table>
@@ -734,11 +742,12 @@
                                                                     <th data-eng="Date" data-spa="Fecha" data-fre="Date" data-ger="Datum">Date</th>
                                                                     <th data-eng="Thighs (cm)" data-spa="Muslos (cm)" data-fre="Cuisses (cm)" data-ger="Oberschenkel (cm)">Thighs (cm)</th>
                                                                     <th data-eng="Change" data-spa="Cambio" data-fre="Changement" data-ger="Änderung">Change</th>
+                                                                    <th data-eng="Actions" data-spa="Acciones" data-fre="Actions" data-ger="Aktionen">Actions</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody id="thighs-history-body">
                                                                 <tr>
-                                                                    <td colspan="3" class="text-muted text-center" data-eng="No thighs measurements recorded yet" data-spa="No hay mediciones de muslos registradas" data-fre="Aucune mesure de cuisses enregistrée" data-ger="Noch keine Oberschenkelmessungen erfasst">No thighs measurements recorded yet</td>
+                                                                    <td colspan="4" class="text-muted text-center" data-eng="No thighs measurements recorded yet" data-spa="No hay mediciones de muslos registradas" data-fre="Aucune mesure de cuisses enregistrée" data-ger="Noch keine Oberschenkelmessungen erfasst">No thighs measurements recorded yet</td>
                                                                 </tr>
                                                             </tbody>
                                                         </table>
@@ -757,11 +766,12 @@
                                                                     <th data-eng="Date" data-spa="Fecha" data-fre="Date" data-ger="Datum">Date</th>
                                                                     <th data-eng="Calves (cm)" data-spa="Pantorrillas (cm)" data-fre="Mollets (cm)" data-ger="Waden (cm)">Calves (cm)</th>
                                                                     <th data-eng="Change" data-spa="Cambio" data-fre="Changement" data-ger="Änderung">Change</th>
+                                                                    <th data-eng="Actions" data-spa="Acciones" data-fre="Actions" data-ger="Aktionen">Actions</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody id="calves-history-body">
                                                                 <tr>
-                                                                    <td colspan="3" class="text-muted text-center" data-eng="No calves measurements recorded yet" data-spa="No hay mediciones de pantorrillas registradas" data-fre="Aucune mesure de mollets enregistrée" data-ger="Noch keine Wadenmessungen erfasst">No calves measurements recorded yet</td>
+                                                                    <td colspan="4" class="text-muted text-center" data-eng="No calves measurements recorded yet" data-spa="No hay mediciones de pantorrillas registradas" data-fre="Aucune mesure de mollets enregistrée" data-ger="Noch keine Wadenmessungen erfasst">No calves measurements recorded yet</td>
                                                                 </tr>
                                                             </tbody>
                                                         </table>
@@ -780,11 +790,12 @@
                                                                     <th data-eng="Date" data-spa="Fecha" data-fre="Date" data-ger="Datum">Date</th>
                                                                     <th data-eng="Arms (cm)" data-spa="Brazos (cm)" data-fre="Bras (cm)" data-ger="Arme (cm)">Arms (cm)</th>
                                                                     <th data-eng="Change" data-spa="Cambio" data-fre="Changement" data-ger="Änderung">Change</th>
+                                                                    <th data-eng="Actions" data-spa="Acciones" data-fre="Actions" data-ger="Aktionen">Actions</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody id="arms-history-body">
                                                                 <tr>
-                                                                    <td colspan="3" class="text-muted text-center" data-eng="No arms measurements recorded yet" data-spa="No hay mediciones de brazos registradas" data-fre="Aucune mesure de bras enregistrée" data-ger="Noch keine Armmessungen erfasst">No arms measurements recorded yet</td>
+                                                                    <td colspan="4" class="text-muted text-center" data-eng="No arms measurements recorded yet" data-spa="No hay mediciones de brazos registradas" data-fre="Aucune mesure de bras enregistrée" data-ger="Noch keine Armmessungen erfasst">No arms measurements recorded yet</td>
                                                                 </tr>
                                                             </tbody>
                                                         </table>
@@ -797,6 +808,7 @@
 
                                             <!-- Add Historical Entry Form 2 - Measurements (hidden by default) -->
                                             <div id="add-historical-entry-form-2" class="mt-3 hidden">
+                                                <small class="text-muted d-block mb-2" id="historical-entry-instruction-2"></small>
                                                 <div class="row">
                                                     <div class="col-12 col-md-5">
                                                         <label for="historical-entry-value-2" class="form-label" id="historical-entry-label-2">Value</label>
@@ -852,11 +864,12 @@
                                                                     <th data-eng="Date" data-spa="Fecha" data-fre="Date" data-ger="Datum">Date</th>
                                                                     <th data-eng="Chest (mm)" data-spa="Pecho (mm)" data-fre="Poitrine (mm)" data-ger="Brust (mm)">Chest (mm)</th>
                                                                     <th data-eng="Change" data-spa="Cambio" data-fre="Changement" data-ger="Änderung">Change</th>
+                                                                    <th data-eng="Actions" data-spa="Acciones" data-fre="Actions" data-ger="Aktionen">Actions</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody id="caliper-chest-history-body">
                                                                 <tr>
-                                                                    <td colspan="3" class="text-muted text-center" data-eng="No chest caliper measurements recorded yet" data-spa="No hay mediciones de calibrador de pecho registradas" data-fre="Aucune mesure de caliper de poitrine enregistrée" data-ger="Noch keine Brust-Messungen erfasst">No chest caliper measurements recorded yet</td>
+                                                                    <td colspan="4" class="text-muted text-center" data-eng="No chest caliper measurements recorded yet" data-spa="No hay mediciones de calibrador de pecho registradas" data-fre="Aucune mesure de caliper de poitrine enregistrée" data-ger="Noch keine Brust-Messungen erfasst">No chest caliper measurements recorded yet</td>
                                                                 </tr>
                                                             </tbody>
                                                         </table>
@@ -875,11 +888,12 @@
                                                                     <th data-eng="Date" data-spa="Fecha" data-fre="Date" data-ger="Datum">Date</th>
                                                                     <th data-eng="Armpit (mm)" data-spa="Axila (mm)" data-fre="Aisselle (mm)" data-ger="Achselhöhle (mm)">Armpit (mm)</th>
                                                                     <th data-eng="Change" data-spa="Cambio" data-fre="Changement" data-ger="Änderung">Change</th>
+                                                                    <th data-eng="Actions" data-spa="Acciones" data-fre="Actions" data-ger="Aktionen">Actions</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody id="caliper-armpit-history-body">
                                                                 <tr>
-                                                                    <td colspan="3" class="text-muted text-center" data-eng="No armpit caliper measurements recorded yet" data-spa="No hay mediciones de calibrador de axila registradas" data-fre="Aucune mesure de caliper d'aisselle enregistrée" data-ger="Noch keine Achsel-Messungen erfasst">No armpit caliper measurements recorded yet</td>
+                                                                    <td colspan="4" class="text-muted text-center" data-eng="No armpit caliper measurements recorded yet" data-spa="No hay mediciones de calibrador de axila registradas" data-fre="Aucune mesure de caliper d'aisselle enregistrée" data-ger="Noch keine Achsel-Messungen erfasst">No armpit caliper measurements recorded yet</td>
                                                                 </tr>
                                                             </tbody>
                                                         </table>
@@ -898,11 +912,12 @@
                                                                     <th data-eng="Date" data-spa="Fecha" data-fre="Date" data-ger="Datum">Date</th>
                                                                     <th data-eng="Belly (mm)" data-spa="Vientre (mm)" data-fre="Ventre (mm)" data-ger="Bauch (mm)">Belly (mm)</th>
                                                                     <th data-eng="Change" data-spa="Cambio" data-fre="Changement" data-ger="Änderung">Change</th>
+                                                                    <th data-eng="Actions" data-spa="Acciones" data-fre="Actions" data-ger="Aktionen">Actions</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody id="caliper-belly-history-body">
                                                                 <tr>
-                                                                    <td colspan="3" class="text-muted text-center" data-eng="No belly caliper measurements recorded yet" data-spa="No hay mediciones de calibrador de vientre registradas" data-fre="Aucune mesure de caliper de ventre enregistrée" data-ger="Noch keine Bauch-Messungen erfasst">No belly caliper measurements recorded yet</td>
+                                                                    <td colspan="4" class="text-muted text-center" data-eng="No belly caliper measurements recorded yet" data-spa="No hay mediciones de calibrador de vientre registradas" data-fre="Aucune mesure de caliper de ventre enregistrée" data-ger="Noch keine Bauch-Messungen erfasst">No belly caliper measurements recorded yet</td>
                                                                 </tr>
                                                             </tbody>
                                                         </table>
@@ -921,11 +936,12 @@
                                                                     <th data-eng="Date" data-spa="Fecha" data-fre="Date" data-ger="Datum">Date</th>
                                                                     <th data-eng="Hip (mm)" data-spa="Cadera (mm)" data-fre="Hanche (mm)" data-ger="Hüfte (mm)">Hip (mm)</th>
                                                                     <th data-eng="Change" data-spa="Cambio" data-fre="Changement" data-ger="Änderung">Change</th>
+                                                                    <th data-eng="Actions" data-spa="Acciones" data-fre="Actions" data-ger="Aktionen">Actions</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody id="caliper-hip-history-body">
                                                                 <tr>
-                                                                    <td colspan="3" class="text-muted text-center" data-eng="No hip caliper measurements recorded yet" data-spa="No hay mediciones de calibrador de cadera registradas" data-fre="Aucune mesure de caliper de hanche enregistrée" data-ger="Noch keine Hüft-Messungen erfasst">No hip caliper measurements recorded yet</td>
+                                                                    <td colspan="4" class="text-muted text-center" data-eng="No hip caliper measurements recorded yet" data-spa="No hay mediciones de calibrador de cadera registradas" data-fre="Aucune mesure de caliper de hanche enregistrée" data-ger="Noch keine Hüft-Messungen erfasst">No hip caliper measurements recorded yet</td>
                                                                 </tr>
                                                             </tbody>
                                                         </table>
@@ -944,11 +960,12 @@
                                                                     <th data-eng="Date" data-spa="Fecha" data-fre="Date" data-ger="Datum">Date</th>
                                                                     <th data-eng="Thigh (mm)" data-spa="Muslo (mm)" data-fre="Cuisse (mm)" data-ger="Oberschenkel (mm)">Thigh (mm)</th>
                                                                     <th data-eng="Change" data-spa="Cambio" data-fre="Changement" data-ger="Änderung">Change</th>
+                                                                    <th data-eng="Actions" data-spa="Acciones" data-fre="Actions" data-ger="Aktionen">Actions</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody id="caliper-thigh-history-body">
                                                                 <tr>
-                                                                    <td colspan="3" class="text-muted text-center" data-eng="No thigh caliper measurements recorded yet" data-spa="No hay mediciones de calibrador de muslo registradas" data-fre="Aucune mesure de caliper de cuisse enregistrée" data-ger="Noch keine Oberschenkel-Messungen erfasst">No thigh caliper measurements recorded yet</td>
+                                                                    <td colspan="4" class="text-muted text-center" data-eng="No thigh caliper measurements recorded yet" data-spa="No hay mediciones de calibrador de muslo registradas" data-fre="Aucune mesure de caliper de cuisse enregistrée" data-ger="Noch keine Oberschenkel-Messungen erfasst">No thigh caliper measurements recorded yet</td>
                                                                 </tr>
                                                             </tbody>
                                                         </table>
@@ -961,6 +978,7 @@
 
                                             <!-- Add Historical Entry Form 3 - Calipers (hidden by default) -->
                                             <div id="add-historical-entry-form-3" class="mt-3 hidden">
+                                                <small class="text-muted d-block mb-2" id="historical-entry-instruction-3"></small>
                                                 <div class="row">
                                                     <div class="col-12 col-md-5">
                                                         <label for="historical-entry-value-3" class="form-label" id="historical-entry-label-3">Value</label>
