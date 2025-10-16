@@ -366,7 +366,7 @@ select.form-control.glass-input {
 }
 
 .tab-content {
-    min-height: 400px;
+    min-height: 200px;
 }
 
 #btn-save-historical-entry-1 {
