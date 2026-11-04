@@ -73,6 +73,28 @@ try {
 ob_end_clean();
 $add('Database reachable', $dbOk, 'could not run SELECT 1');
 
+// Email settings: present, and the Scaleway key is accepted (a read-only call; no email is sent, no value is shown).
+$envv = function (string $n): string { $v = $_ENV[$n] ?? getenv($n); return is_string($v) ? trim($v) : ''; };
+$missing = array_values(array_filter(['SCW_SECRET_KEY', 'SCW_PROJECT_ID', 'MAIL_FROM_EMAIL'], fn ($n) => $envv($n) === ''));
+$add('Email settings present', !$missing, 'missing ' . implode(', ', $missing));
+if (!$missing) {
+    $ch = curl_init('https://api.scaleway.com/transactional-email/v1alpha1/regions/fr-par/domains?project_id=' . rawurlencode($envv('SCW_PROJECT_ID')));
+    curl_setopt_array($ch, [CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => 10, CURLOPT_HTTPHEADER => ['X-Auth-Token: ' . $envv('SCW_SECRET_KEY')]]);
+    $body = (string) curl_exec($ch);
+    $code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+    $from = strtolower($envv('MAIL_FROM_EMAIL'));
+    $domain = substr($from, strpos($from, '@') + 1);
+    $found = '';
+    foreach ((json_decode($body, true)['domains'] ?? []) as $d) {
+        if (strtolower($d['name'] ?? '') === $domain) { $found = (string) ($d['status'] ?? ''); }
+    }
+    $add('Email service accepts the key', $code === 200, 'Scaleway answered HTTP ' . $code);
+    if ($code === 200) {
+        $add('Sender domain ' . $domain . ' verified', $found === 'checked', $found === '' ? 'domain not in this project' : 'status ' . $found);
+    }
+}
+
 foreach ($lines as $line) {
     echo $line, "\n";
 }
