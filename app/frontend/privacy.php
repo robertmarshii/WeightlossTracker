@@ -91,7 +91,7 @@ $assetVersion = function ($path) { $t = @filemtime(__DIR__ . '/' . $path); retur
 
         <section class="info-section" aria-labelledby="cookies">
             <h2 id="cookies">Cookies and browser storage</h2>
-            <p>This is our cookie policy. The cookies and storage in the first table keep you signed in and remember your display choices. They are strictly necessary for the service you asked for, so they do not need consent under the Privacy and Electronic Communications Regulations (PECR). The Google Ads tag below is not strictly necessary.</p>
+            <p>This is our cookie policy. The cookies and storage in the first table keep you signed in and remember your display choices. They are strictly necessary for the service you asked for, so they do not need consent under the Privacy and Electronic Communications Regulations (PECR). We do not use advertising, analytics or tracking cookies.</p>
             <div class="table-wrap" tabindex="0" role="region" aria-label="Cookies and storage set by Weightloss Tracker">
                 <table>
                     <thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Purpose</th><th scope="col">How long</th></tr></thead>
@@ -102,19 +102,6 @@ $assetVersion = function ($path) { $t = @filemtime(__DIR__ . '/' . $path); retur
                     </tbody>
                 </table>
             </div>
-            <h3 id="google-ads">Google Ads tag</h3>
-            <p>The home page and the dashboard load Google&rsquo;s advertising tag (gtag.js, ID AW-17636245354) from googletagmanager.com. We use it to measure whether people arrive from our Google adverts. It is not needed for the tracker to work. At present it loads as soon as the page opens and the site does not ask for your consent first. When it loads, Google receives your IP address, the page address and browser details, and the tag can set these cookies:</p>
-            <div class="table-wrap" tabindex="0" role="region" aria-label="Cookies the Google Ads tag can set">
-                <table>
-                    <thead><tr><th scope="col">Name</th><th scope="col">Set by</th><th scope="col">Purpose</th><th scope="col">How long</th></tr></thead>
-                    <tbody>
-                        <tr><td data-label="Name"><code>_gcl_au</code></td><td data-label="Set by">Google Ads tag, on weightloss-tracker.com</td><td data-label="Purpose">Links visits to Google advert clicks to measure our adverts</td><td data-label="How long">3 months</td></tr>
-                        <tr><td data-label="Name"><code>_gcl_aw</code>, <code>_gcl_gs</code></td><td data-label="Set by">Google Ads tag, on weightloss-tracker.com</td><td data-label="Purpose">Only when you arrive by clicking one of our Google adverts: records that click</td><td data-label="How long">3 months</td></tr>
-                        <tr><td data-label="Name">Google&rsquo;s own cookies (for example <code>IDE</code>, <code>NID</code>)</td><td data-label="Set by">Google, on its own domains</td><td data-label="Purpose">Google&rsquo;s advertising and measurement, under Google&rsquo;s own policy</td><td data-label="How long">Set by Google, typically up to 13 months</td></tr>
-                    </tbody>
-                </table>
-            </div>
-            <p>You can block the tag with your browser&rsquo;s tracking protection or an ad blocker, and delete these cookies in your browser settings; the tracker works the same without them. See <a href="https://policies.google.com/technologies/ads" rel="noopener noreferrer">how Google uses data from advertising</a>.</p>
         </section>
 
         <section class="info-section" aria-labelledby="services">
@@ -123,7 +110,6 @@ $assetVersion = function ($path) { $t = @filemtime(__DIR__ . '/' . $path); retur
             <ul>
                 <li><strong>Scaleway</strong> (Transactional Email, Paris region) sends our emails: sign-in codes, and the weekly reminder and monthly report if you turn them on. It receives your email address and the email content.</li>
                 <li><strong>Google and Microsoft</strong>, only if you choose &ldquo;Continue with Google&rdquo; or &ldquo;Continue with Microsoft&rdquo;. We ask for your basic profile only (Google: openid, email and profile; Microsoft: User.Read) and receive your email address and name.</li>
-                <li><strong>Google Ads</strong>: the advertising tag described above.</li>
                 <li><strong>Code and style libraries</strong>: pages load jQuery from cdnjs (Cloudflare), Bootstrap from StackPath&rsquo;s BootstrapCDN and, on the dashboard, Chart.js from jsDelivr. These services receive your IP address and browser details when the files load.</li>
             </ul>
             <p>We may also share data if the law requires it.</p>

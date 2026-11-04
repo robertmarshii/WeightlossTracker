@@ -41,16 +41,6 @@ $ld = str_replace('</', '<\/', json_encode(['@context' => 'https://schema.org', 
 <!DOCTYPE html>
 <html lang="<?= $s->htmlLang() ?>">
 <head>
-<?php if ($s->page === 'home'): ?>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17636245354"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'AW-17636245354');
-    </script>
-<?php endif; ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $title ?></title>
