@@ -18,7 +18,7 @@ class NotificationScheduler {
 
     public function __construct($testMode = false, $testEmail = null) {
         $this->db = Database::getInstance()->getdbConnection();
-        $this->logFile = __DIR__ . '/../../logs/notifications.log';
+        $this->logFile = __DIR__ . '/../logs/notifications.log';
         $this->testMode = $testMode;
         $this->testEmail = $testEmail;
 

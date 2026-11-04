@@ -26,6 +26,8 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Copy application
 COPY app/backend /var/app/backend
 COPY app/frontend /var/www
+# Test pages and editor backup copies never ship in the production image
+RUN rm -rf /var/www/test && find /var/www -type f \( -name '*.bak' -o -name '*.backup' -o -name '*.old' -o -name '*.orig' -o -name '*.swp' \) -delete
 
 # Copy composer files and install dependencies
 COPY composer.json composer.lock /var/app/project/
@@ -39,14 +41,16 @@ COPY supervisord.conf /etc/supervisord.conf
 # Custom PHP config
 COPY /php-fpm/php.ini /usr/local/etc/php/conf.d/custom.ini
 
-# Set up cron for notification scheduler
-RUN mkdir -p /var/app/logs && chmod 777 /var/app/logs
-COPY php-fpm/notification-cron /etc/cron.d/notification-cron
-RUN chmod 0644 /etc/cron.d/notification-cron
+# Set up cron for notification scheduler: runs as www-data (dcron per-user crontab), logs dir owned by www-data
+RUN mkdir -p /var/app/logs /var/app/data && \
+    chown www-data:www-data /var/app/logs /var/app/data && \
+    chmod 750 /var/app/logs && chmod 700 /var/app/data
+COPY php-fpm/notification-crontab /etc/crontabs/www-data
+RUN chown root:root /etc/crontabs/www-data && chmod 0600 /etc/crontabs/www-data
 
-# Set proper permissions
-RUN chown -R www-data:www-data /var/www /var/app/backend && \
-    chmod -R 755 /var/www /var/app/backend
+# Set proper permissions: code is owned by root and read-only for php-fpm (www-data)
+RUN chown -R root:root /var/www /var/app/backend && \
+    chmod -R u=rwX,go=rX /var/www /var/app/backend
 
 # Set PHP configurations
 RUN echo "pm.max_children = 50" >> /usr/local/etc/php-fpm.d/www.conf && \

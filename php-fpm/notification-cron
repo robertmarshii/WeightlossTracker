@@ -1,6 +1,8 @@
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 SHELL=/bin/sh
 
+# Local dev (Debian cron) system crontab: the user field (www-data) is required here.
+# Production uses php-fpm/notification-crontab instead.
 # Run notification scheduler every 5 minutes
-*/5 * * * * /usr/local/bin/php /var/app/backend/NotificationScheduler.php >> /var/app/logs/cron.log 2>&1
+*/5 * * * * www-data /usr/local/bin/php /var/app/backend/NotificationScheduler.php >> /var/app/logs/cron.log 2>&1
 

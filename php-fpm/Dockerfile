@@ -17,7 +17,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 COPY uploads.ini /usr/local/etc/php/conf.d/uploads.ini
 
 # Set up cron for notification scheduler
-RUN mkdir -p /var/app/logs && chmod 777 /var/app/logs
+RUN mkdir -p /var/app/logs /var/app/data && chown www-data:www-data /var/app/logs /var/app/data && chmod 750 /var/app/logs && chmod 700 /var/app/data
 COPY notification-cron /etc/cron.d/notification-cron
 RUN chmod 0644 /etc/cron.d/notification-cron
 

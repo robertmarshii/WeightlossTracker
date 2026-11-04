@@ -1,0 +1,4 @@
+# Production (Alpine dcron) per-user crontab, installed as /etc/crontabs/www-data so the job runs as www-data.
+# dcron does not accept VAR=value lines here, so use absolute paths. The job inherits the container environment.
+# Run notification scheduler every 5 minutes
+*/5 * * * * /usr/local/bin/php /var/app/backend/NotificationScheduler.php >> /var/app/logs/cron.log 2>&1
