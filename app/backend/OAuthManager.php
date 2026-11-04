@@ -182,6 +182,12 @@ class OAuthManager {
         if ($provider === 'google') {
             return $userDetails['email'] ?? null;
         } elseif ($provider === 'microsoft') {
+            // SECURITY NOTE (nOAuth): Graph's "mail" is set by the tenant admin and is not verified by
+            // Microsoft. With a multi-tenant app (MICROSOFT_TENANT=common/organizations), an admin of any
+            // Azure AD tenant could set mail to someone else's address and sign in as that user here.
+            // Behaviour is unchanged for now (keeps MICROSOFT_TENANT as configured). Safer later: link
+            // accounts by the token's immutable "oid"+"tid" claims, or only trust "email" when the
+            // ID token's "xms_edov" (email domain owner verified) claim is true.
             return $userDetails['mail'] ?? $userDetails['userPrincipalName'] ?? null;
         }
         return null;
@@ -216,11 +222,8 @@ class OAuthManager {
             }
 
             // Create session (similar to AuthManager::verifyLoginCode)
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['email'] = $email;
-            $_SESSION['first_name'] = $user['first_name'];
-            $_SESSION['last_name'] = $user['last_name'];
-            $_SESSION['login_time'] = time();
+            require_once('/var/app/backend/AuthManager.php');
+            AuthManager::startUserSession($user['id'], $email, $user['first_name'], $user['last_name']);
 
             // Set remember me token
             $tokenResult = self::setRememberToken($user['id']);
@@ -269,8 +272,9 @@ class OAuthManager {
             $stmt->execute([$token, $expires, $userId]);
 
             // Set cookies (30 days)
-            setcookie('remember_token', $token, time() + (30 * 24 * 60 * 60), '/', '', false, true);
-            setcookie('user_id', $userId, time() + (30 * 24 * 60 * 60), '/', '', false, false);
+            require_once('/var/app/backend/Security.php');
+            Security::setAuthCookie('remember_token', $token, time() + (30 * 24 * 60 * 60));
+            Security::setAuthCookie('user_id', (string)$userId, time() + (30 * 24 * 60 * 60));
 
             return true;
         } catch (Exception $e) {

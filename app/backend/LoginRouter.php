@@ -13,6 +13,8 @@ function AuthController() {
     require_once ('/var/app/backend/AuthManager.php');
     require_once ('/var/app/backend/OAuthManager.php');
     require_once ('/var/app/backend/Config.php');
+    require_once ('/var/app/backend/Security.php');
+    header('Content-Type: application/json');
 
     // Handle OAuth callback via GET parameters
     if (isset($_GET['action']) && $_GET['action'] === 'oauth_callback') {
@@ -70,10 +72,8 @@ function AuthController() {
             $result = AuthManager::logout();
             echo json_encode($result);
         } elseif ($action === 'peek_code' && isset($_POST['email'])) {
-            // Test-only: expose latest code in local/test environment for the given email
-            $httpHost = $_SERVER['HTTP_HOST'] ?? '';
-            $isLocal = ($httpHost === '127.0.0.1:8111' || strpos($httpHost, 'localhost') === 0);
-            if (!$isLocal) {
+            // Test-only: expose latest code, only when the server runs with APP_ENV=test
+            if (!Security::isTestEnv()) {
                 echo json_encode(['success' => false, 'message' => 'Not available']);
                 return;
             }

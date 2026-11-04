@@ -176,7 +176,7 @@ describe('Comprehensive Security and Access Control Tests', () => {
         sendAuthRequest('send_login_code', testEmail).then((response) => {
           expect(response.status).to.eq(200);
           expect(response.body.success).to.be.true;
-          expect(response.body.message).to.contain('Login code sent successfully');
+          expect(response.body.message).to.contain('a login code has been sent');
         });
       }
     });
@@ -214,7 +214,7 @@ describe('Comprehensive Security and Access Control Tests', () => {
       sendAuthRequest('send_login_code', anotherEmail).then((response) => {
         expect(response.status).to.eq(200);
         expect(response.body.success).to.be.true;
-        expect(response.body.message).to.contain('Login code sent successfully');
+        expect(response.body.message).to.contain('a login code has been sent');
       });
 
       // Cleanup

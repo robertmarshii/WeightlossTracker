@@ -784,7 +784,7 @@ describe('API & Backend Testing', () => {
                     const body = typeof xhr.response.body === 'string' ?
                         JSON.parse(xhr.response.body) : xhr.response.body;
                     expect(body.success).to.be.true;
-                    expect(body.message).to.contain('Login code sent successfully');
+                    expect(body.message).to.contain('a login code has been sent');
                 });
 
                 // Verify form switched to code entry
@@ -793,7 +793,7 @@ describe('API & Backend Testing', () => {
 
                 // Verify success message appears
                 cy.get('.alert-success').should('be.visible');
-                cy.get('.alert-success').should('contain', 'Login code sent successfully');
+                cy.get('.alert-success').should('contain', 'login code is on its way');
 
                 // Verify tip message eventually appears
                 cy.get('.alert-info', { timeout: 12000 }).should('be.visible');
@@ -820,13 +820,13 @@ describe('API & Backend Testing', () => {
                     const body = typeof xhr.response.body === 'string' ?
                         JSON.parse(xhr.response.body) : xhr.response.body;
                     expect(body.success).to.be.true;
-                    expect(body.message).to.contain('Login code sent successfully');
+                    expect(body.message).to.contain('a login code has been sent');
                 });
 
                 // Verify UI feedback
                 cy.get('#verifyLoginForm').should('be.visible');
                 cy.get('.alert-success').should('be.visible');
-                cy.get('.alert-success').should('contain', 'Login code sent successfully');
+                cy.get('.alert-success').should('contain', 'login code is on its way');
 
                 // Restore cypress_testing cookie for other tests
                 cy.setCookie('cypress_testing', 'true');
@@ -858,7 +858,7 @@ describe('API & Backend Testing', () => {
 
                 // Verify success message replaces loading message
                 cy.get('.alert-success').should('be.visible');
-                cy.get('.alert-success').should('contain', 'Login code sent successfully');
+                cy.get('.alert-success').should('contain', 'login code is on its way');
             });
         });
 
