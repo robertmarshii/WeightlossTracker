@@ -23,6 +23,7 @@ for ($try = 1; !$db instanceof PDO && $try <= 12; $try++) {
         );
     } catch (Throwable $e) {
         $db = null;
+        Migrations::$connectError = preg_replace('/\s+/', ' ', substr($e->getMessage(), 0, 200));
     }
 }
 // If this fails, signed-in requests try again, at most once every few minutes

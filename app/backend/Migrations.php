@@ -16,6 +16,9 @@
  */
 class Migrations
 {
+    /** Set by run-migrations.php when it can't connect (message only, no password). */
+    public static $connectError = null;
+
     const MARKER_DIR = '/var/app/data';
     const MODE_STARTUP = 'startup';
     const MODE_REQUEST = 'request';
@@ -59,8 +62,13 @@ class Migrations
      */
     public static function run($db, string $schema, string $mode = self::MODE_REQUEST): array
     {
-        if (!$db instanceof PDO || !preg_match('/^[a-z_][a-z0-9_]*$/', $schema)) {
-            return ['skipped: no database connection or bad schema name'];
+        if (!preg_match('/^[a-z_][a-z0-9_]*$/', $schema)) {
+            return ['skipped: bad schema name'];
+        }
+        if (!$db instanceof PDO) {
+            @file_put_contents(self::stateDir() . '/migrations-' . $schema . '.last',
+                date('c') . ' ' . $mode . ': skipped, no database connection' . (self::$connectError ? ' (' . self::$connectError . ')' : '') . "\n");
+            return ['skipped: no database connection'];
         }
         $marker = self::markerFile($schema);
         if (is_file($marker)) {
