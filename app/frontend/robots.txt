@@ -8,6 +8,7 @@ Disallow: /login_router.php
 Disallow: /oauth-callback-microsoft.php
 Disallow: /status
 Disallow: /test/
+Disallow: /site/
 
 User-agent: OAI-SearchBot
 User-agent: Claude-SearchBot

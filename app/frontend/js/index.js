@@ -1,3 +1,8 @@
+// Message in the page's language (window.WT_MSG is written by the website layout), else the English text.
+function wtMsg(key, fallback) {
+    return (window.WT_MSG && window.WT_MSG[key]) || fallback;
+}
+
 // Helper function for standardized fetch requests
 function postRequest(url, data) {
     const params = new URLSearchParams();
@@ -31,12 +36,12 @@ $(document).ready(function() {
         if (window.coverage) window.coverage.logFunction('if', 'index.js');
         // Only fixed messages are shown; the URL text itself is never displayed
         const knownOAuthErrors = {
-            'Please try logging in again': 'Please try logging in again.',
-            'Session expired, please try logging in again': 'Your sign-in took too long. Please try again.',
-            'Unable to get email from Google': 'We could not get your email address from Google.',
-            'Unable to get email from Microsoft': 'We could not get your email address from Microsoft.'
+            'Please try logging in again': wtMsg('msg.oauth.retry', 'Please try logging in again.'),
+            'Session expired, please try logging in again': wtMsg('msg.oauth.expired', 'Your sign-in took too long. Please try again.'),
+            'Unable to get email from Google': wtMsg('msg.oauth.google', 'We could not get your email address from Google.'),
+            'Unable to get email from Microsoft': wtMsg('msg.oauth.microsoft', 'We could not get your email address from Microsoft.')
         };
-        const oauthMessage = knownOAuthErrors[oauthError] || 'Sign-in did not complete. Please try again.';
+        const oauthMessage = knownOAuthErrors[oauthError] || wtMsg('msg.oauth.other', 'Sign-in did not complete. Please try again.');
         showAlert('❌ ' + oauthMessage, 'danger');
         // Clean up URL without reloading
         const newUrl = window.location.pathname;
@@ -95,9 +100,9 @@ function isValidEmail(email) {
 
 function continueWithGoogle() {
     if (window.coverage) window.coverage.logFunction('continueWithGoogle', 'index.js');
-    showAlert('🔄 Redirecting to Google...', 'info');
+    showAlert('🔄 ' + wtMsg('msg.google', 'Redirecting to Google...'), 'info');
 
-    postRequest('login_router.php?controller=auth', {
+    postRequest('/login_router.php?controller=auth', {
         action: 'oauth_start',
         provider: 'google'
     })
@@ -108,18 +113,18 @@ function continueWithGoogle() {
             // Redirect to Google OAuth
             window.location.href = data.authorization_url;
         } else {
-            showAlert('❌ ' + (data.message || 'Failed to start Google authentication'), 'danger');
+            showAlert('❌ ' + (data.message || wtMsg('msg.google.fail', 'Failed to start Google authentication')), 'danger');
         }
     }).catch(function() {
-        showAlert('🔌 Network error. Please check your connection and try again.', 'danger');
+        showAlert('🔌 ' + wtMsg('msg.network', 'Network error. Please check your connection and try again.'), 'danger');
     });
 }
 
 function continueWithMicrosoft() {
     if (window.coverage) window.coverage.logFunction('continueWithMicrosoft', 'index.js');
-    showAlert('🔄 Redirecting to Microsoft...', 'info');
+    showAlert('🔄 ' + wtMsg('msg.microsoft', 'Redirecting to Microsoft...'), 'info');
 
-    postRequest('login_router.php?controller=auth', {
+    postRequest('/login_router.php?controller=auth', {
         action: 'oauth_start',
         provider: 'microsoft'
     })
@@ -130,10 +135,10 @@ function continueWithMicrosoft() {
             // Redirect to Microsoft OAuth
             window.location.href = data.authorization_url;
         } else {
-            showAlert('❌ ' + (data.message || 'Failed to start Microsoft authentication'), 'danger');
+            showAlert('❌ ' + (data.message || wtMsg('msg.microsoft.fail', 'Failed to start Microsoft authentication')), 'danger');
         }
     }).catch(function() {
-        showAlert('🔌 Network error. Please check your connection and try again.', 'danger');
+        showAlert('🔌 ' + wtMsg('msg.network', 'Network error. Please check your connection and try again.'), 'danger');
     });
 }
 
@@ -143,19 +148,19 @@ function sendLoginCode() {
 
     // Validate email format
     if (!isValidEmail(email)) {
-        showAlert('❌ Please enter a valid email address', 'danger');
+        showAlert('❌ ' + wtMsg('msg.invalid', 'Please enter a valid email address'), 'danger');
         return;
     }
 
     // Show loading message
-    showAlert('📧 Sending your login code via email...', 'info');
+    showAlert('📧 ' + wtMsg('msg.sending', 'Sending your login code via email...'), 'info');
 
     // Use native fetch instead of jQuery
     const formData = new FormData();
     formData.append('action', 'send_login_code');
     formData.append('email', email);
 
-    fetch('login_router.php?controller=auth', {
+    fetch('/login_router.php?controller=auth', {
         method: 'POST',
         body: formData,
         credentials: 'same-origin'
@@ -165,7 +170,7 @@ function sendLoginCode() {
         const data = typeof responseText === 'string' ? JSON.parse(responseText) : responseText;
         if (data.success) {
             if (window.coverage) window.coverage.logFunction('if', 'index.js');
-            showAlert('✅ If this email has an account, a login code is on its way. Check your inbox (and spam folder). The code is also in the subject line.', 'success');
+            showAlert('✅ ' + wtMsg('msg.sent', 'If this email has an account, a login code is on its way. Check your inbox (and spam folder). The code is also in the subject line.'), 'success');
             document.getElementById('loginForm').style.display = 'none';
             document.getElementById('loginSocialSection').style.display = 'none';
             document.getElementById('loginWelcomeSection').style.display = 'none';
@@ -173,7 +178,7 @@ function sendLoginCode() {
 
             // Show tip after success message finishes (10s + 1s buffer)
             setTimeout(() => {
-                showAlert('💡 Tip: Your 6-digit code is included in the email subject line for easy access!', 'info');
+                showAlert('💡 ' + wtMsg('msg.tip', 'Tip: Your 6-digit code is included in the email subject line for easy access!'), 'info');
             }, 11000);
         } else {
             showAlert('❌ ' + data.message, 'danger');
@@ -181,7 +186,7 @@ function sendLoginCode() {
     })
     .catch(error => {
         console.error('Fetch error:', error);
-        showAlert('🔌 Network error. Please check your connection and try again.', 'danger');
+        showAlert('🔌 ' + wtMsg('msg.network', 'Network error. Please check your connection and try again.'), 'danger');
     });
 }
 
@@ -191,17 +196,17 @@ function createAccount() {
 
     // Validate email format
     if (!isValidEmail(email)) {
-        showAlert('❌ Please enter a valid email address', 'danger');
+        showAlert('❌ ' + wtMsg('msg.invalid', 'Please enter a valid email address'), 'danger');
         return;
     }
 
-    showAlert('🔄 Creating your account and sending verification code...', 'info');
+    showAlert('🔄 ' + wtMsg('msg.creating', 'Creating your account and sending verification code...'), 'info');
 
     const formData = new FormData();
     formData.append('action', 'create_account');
     formData.append('email', email);
 
-    fetch('login_router.php?controller=auth', {
+    fetch('/login_router.php?controller=auth', {
         method: 'POST',
         body: formData,
         credentials: 'same-origin'
@@ -211,7 +216,7 @@ function createAccount() {
         const data = typeof responseText === 'string' ? JSON.parse(responseText) : responseText;
         if (data.success) {
             if (window.coverage) window.coverage.logFunction('if', 'index.js');
-            showAlert('✅ Account created! Verification code sent to your email. Check your inbox (and spam folder).', 'success');
+            showAlert('✅ ' + wtMsg('msg.created', 'Account created! Verification code sent to your email. Check your inbox (and spam folder).'), 'success');
             document.getElementById('signupForm').style.display = 'none';
             document.getElementById('signupSocialSection').style.display = 'none';
             document.getElementById('signupWelcomeSection').style.display = 'none';
@@ -219,7 +224,7 @@ function createAccount() {
 
             // Show tip after success message finishes (10s + 1s buffer)
             setTimeout(() => {
-                showAlert('💡 Your verification code is in the email subject line!', 'info');
+                showAlert('💡 ' + wtMsg('msg.tip', 'Your verification code is in the email subject line!'), 'info');
             }, 11000);
         } else {
             showAlert('❌ ' + data.message, 'danger');
@@ -227,7 +232,7 @@ function createAccount() {
     })
     .catch(error => {
         console.error('Fetch error:', error);
-        showAlert('🔌 Network error. Please check your connection and try again.', 'danger');
+        showAlert('🔌 ' + wtMsg('msg.network', 'Network error. Please check your connection and try again.'), 'danger');
     });
 }
 
@@ -236,14 +241,14 @@ function verifyLoginCode() {
     const email = document.getElementById('loginEmail').value;
     const code = document.getElementById('loginCode').value;
 
-    showAlert('Verifying code...', 'info');
+    showAlert(wtMsg('msg.verifying', 'Verifying code...'), 'info');
 
     const formData = new FormData();
     formData.append('action', 'verify_login');
     formData.append('email', email);
     formData.append('code', code);
 
-    fetch('login_router.php?controller=auth', {
+    fetch('/login_router.php?controller=auth', {
         method: 'POST',
         body: formData,
         credentials: 'same-origin'
@@ -253,9 +258,9 @@ function verifyLoginCode() {
         const data = typeof responseText === 'string' ? JSON.parse(responseText) : responseText;
         if (data.success) {
             if (window.coverage) window.coverage.logFunction('if', 'index.js');
-            showAlert('Login successful! Redirecting...', 'success');
+            showAlert(wtMsg('msg.ok', 'Login successful! Redirecting...'), 'success');
             setTimeout(() => {
-                window.location.href = 'dashboard.php';
+                window.location.href = '/dashboard.php';
             }, 1500);
         } else {
             showAlert(data.message, 'danger');
@@ -263,7 +268,7 @@ function verifyLoginCode() {
     })
     .catch(error => {
         console.error('Fetch error:', error);
-        showAlert('Network error. Please try again.', 'danger');
+        showAlert(wtMsg('msg.network', 'Network error. Please try again.'), 'danger');
     });
 }
 
@@ -272,14 +277,14 @@ function verifySignupCode() {
     const email = document.getElementById('signupEmail').value;
     const code = document.getElementById('signupCode').value;
 
-    showAlert('Verifying account...', 'info');
+    showAlert(wtMsg('msg.verifying', 'Verifying account...'), 'info');
 
     const formData = new FormData();
     formData.append('action', 'verify_signup');
     formData.append('email', email);
     formData.append('code', code);
 
-    fetch('login_router.php?controller=auth', {
+    fetch('/login_router.php?controller=auth', {
         method: 'POST',
         body: formData,
         credentials: 'same-origin'
@@ -289,9 +294,9 @@ function verifySignupCode() {
         const data = typeof responseText === 'string' ? JSON.parse(responseText) : responseText;
         if (data.success) {
             if (window.coverage) window.coverage.logFunction('if', 'index.js');
-            showAlert('Account created successfully! Redirecting...', 'success');
+            showAlert(wtMsg('msg.created.ok', 'Account created successfully! Redirecting...'), 'success');
             setTimeout(() => {
-                window.location.href = 'dashboard.php';
+                window.location.href = '/dashboard.php';
             }, 1500);
         } else {
             showAlert(data.message, 'danger');
@@ -299,7 +304,7 @@ function verifySignupCode() {
     })
     .catch(error => {
         console.error('Fetch error:', error);
-        showAlert('Network error. Please try again.', 'danger');
+        showAlert(wtMsg('msg.network', 'Network error. Please try again.'), 'danger');
     });
 }
 

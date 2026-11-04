@@ -1,9 +1,24 @@
 # Weightloss Tracker
 
-> Free web app to track weight loss: log your weight, see BMI and body fat trends, set goals, earn achievements and get email reminders. Sign in with an email code, Google or Microsoft.
+> Free web app for steady weight loss, made for people who want to track progress rather than food: log your weight and see weekly and all-time charts, BMI, an estimated body fat percentage and estimated fat loss, your goal with an estimated date, milestones, body measurements and smart-scale readings you record yourself, with optional weekly reminder and monthly report emails. No food or calorie logging. Built by someone on GLP-1 medication who has lost over 20 kg. Sign in with an email code, Google or Microsoft. English, German, Spanish and French.
+
+The app's figures are estimates worked out from what you enter; it does not connect to scales or other devices.
 
 ## Pages
 
-- [Weightloss Tracker](https://weightloss-tracker.com/): what the app does, questions and answers, sign up or sign in
+- [Home](https://weightloss-tracker.com/): what it does, who it is for (including people on GLP-1 medication), screenshots, questions, sign up or sign in
+- [Features](https://weightloss-tracker.com/features): every feature with screenshots, and published sources on weight loss and health
+- [How it works](https://weightloss-tracker.com/how-it-works): getting started step by step
+- [About](https://weightloss-tracker.com/about): why the app was built and how it grew, feature by feature
+- [Questions and answers](https://weightloss-tracker.com/faq): cost, sign-in, units, languages, GLP-1, emails, body fat estimate, smart scales, your data
+- [BMI calculator](https://weightloss-tracker.com/bmi-calculator): free, runs in the browser, metric or imperial
 - [Privacy and cookies](https://weightloss-tracker.com/privacy): what is stored, cookies, outside services and your rights
 - [Terms of use](https://weightloss-tracker.com/terms): the rules for using the service; not medical advice; governed by the law of England and Wales
+
+## Other languages
+
+- Deutsch: https://weightloss-tracker.com/de/
+- Español: https://weightloss-tracker.com/es/
+- Français: https://weightloss-tracker.com/fr/
+
+Contact: support@weightloss-tracker.com
