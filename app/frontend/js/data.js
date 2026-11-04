@@ -49,13 +49,13 @@ function renderWeightHistoryRows(history) {
         const id = parseInt(entry.id, 10);
         html += `
             <tr data-id="${id}">
-                <td>${formatDate(date)}</td>
+                <td>${escapeHtml(formatDate(date))}</td>
                 <td><strong>${formatWeight(weightKg)}</strong></td>
                 <td>${changeHtml}</td>
                 <td>
                     <div class="table-actions">
-                        <button class="btn btn-sm edit-btn" data-id="${id}" data-kg="${weightKg}" data-date="${$('<div>').text(date).html()}" aria-label="${t('Edit')}">✎</button>
-                        <button class="btn btn-sm delete-btn" data-id="${id}" aria-label="${t('Delete')}">✖</button>
+                        <button class="btn btn-sm edit-btn" data-id="${id}" data-kg="${weightKg}" data-date="${escapeHtml(date)}" aria-label="${escapeHtml(t('Edit'))}">✎</button>
+                        <button class="btn btn-sm delete-btn" data-id="${id}" aria-label="${escapeHtml(t('Delete'))}">✖</button>
                     </div>
                 </td>
             </tr>

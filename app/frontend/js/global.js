@@ -260,6 +260,11 @@ function stoneInputHint(text) {
     return isNaN(kg) ? tr('Type e.g. 13 st 5 lb') : '= ' + formatWeight(kg, 'st');
 }
 
+// Text made safe for HTML element content and quoted attribute values
+function escapeHtml(value) {
+    return String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
 // A date as YYYY-MM-DD in the browser's own time zone (toISOString() gives the UTC date, which is the day
 // before or after for much of the day east or west of UTC)
 function localISODate(d = new Date()) {
