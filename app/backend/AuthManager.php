@@ -470,7 +470,9 @@ class AuthManager {
      * - per account and IP: VERIFY_ACCT_MAX_HOUR / VERIFY_ACCT_MAX_DAY wrong guesses against live
      *   codes. Guesses when no code is live do not count, and other IPs are not affected, so nobody
      *   can lock an address out from their own connection. Once reached, a guess from that IP is
-     *   still checked (so a fresh, correct code signs in), but a wrong one deletes the code at once.
+     *   still checked (so a fresh, correct code signs in); a wrong one gets the "please wait" answer and
+     *   leaves the code in place (its own CODE_MAX_ATTEMPTS cap still applies), so a guesser who has hit
+     *   the limit can't delete the owner's fresh code.
      * Every answer is the same whether or not the email has an account or a code: emails without an
      * account get an unsent code too (deliverLoginCode), and when no code is live at all the
      * CODE_MAX_ATTEMPTS-th wrong guess gives the same "request a new code" answer as a used-up code.
@@ -561,9 +563,8 @@ class AuthManager {
                 return ['success' => true, 'message' => 'Login successful'];
             }
 
-            // Wrong code. Delete it once it has had CODE_MAX_ATTEMPTS guesses, or straight away when
-            // this account has had too many wrong guesses from this IP.
-            $usedUp = !$acctOk;
+            // Wrong code. Delete it once it has had CODE_MAX_ATTEMPTS guesses.
+            $usedUp = false;
             foreach ($rows as $row) {
                 if ((int)$row['attempts'] >= self::CODE_MAX_ATTEMPTS) {
                     $usedUp = true;
@@ -572,9 +573,13 @@ class AuthManager {
             if ($usedUp) {
                 $db->prepare("DELETE FROM {$schema}.auth_codes WHERE email = ?")->execute([$email]);
                 Security::throttleHit('verify_lock', $email);
-                error_log("Login code for " . self::maskEmail($email) . " deleted after too many wrong attempts"
-                    . ($acctOk ? '' : ' (account limit for this IP)'));
+                error_log("Login code for " . self::maskEmail($email) . " deleted after too many wrong attempts");
                 return $locked;
+            }
+            // Too many wrong guesses for this account from this IP: tell this IP to wait, but keep the code
+            // (deleting it here would let anyone who reached the limit wipe the owner's fresh code)
+            if (!$acctOk) {
+                return $wait;
             }
             return $invalid;
 
