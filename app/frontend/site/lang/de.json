@@ -124,7 +124,7 @@
   "features.health.p": "Aus Ihrer Größe, Ihrem Alter und Ihrem letzten Gewicht berechnet der Tab „Gesundheit“:",
   "features.health.l1": "<strong>BMI</strong> und seine Kategorie, dazu einen an Ihren Körpertyp angepassten Wert",
   "features.health.l2": "<strong>Körperfett-Schätzung</strong>, als Bereich angezeigt",
-  "features.health.l3": "<strong>Idealer Gewichtsbereich</strong> für Ihre Größe und Ihren Körpertyp",
+  "features.health.l3": "<strong>Idealer Gewichtsbereich</strong> für Ihre Größe",
   "features.health.l4": "Allgemeine, forschungsbasierte Schätzungen, wie sich die Gesundheit beim Abnehmen typischerweise verbessert, jeweils mit der zugrunde liegenden Studie",
   "features.est.h": "Geschätztes Körperfett und geschätzter Fettabbau: keine intelligente Waage nötig",
   "features.est.p": "Sie brauchen keine besonderen Geräte, um mehr als Ihr Gewicht zu sehen. Aus Gewicht, Größe und Alter schätzt die App:",

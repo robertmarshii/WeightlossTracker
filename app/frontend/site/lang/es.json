@@ -124,7 +124,7 @@
   "features.health.p": "A partir de tu altura, tu edad y tu último peso, la pestaña Salud calcula:",
   "features.health.l1": "<strong>IMC</strong> y su categoría, además de un valor ajustado a tu constitución corporal",
   "features.health.l2": "<strong>Estimación de grasa corporal</strong>, mostrada como un rango",
-  "features.health.l3": "<strong>Rango de peso ideal</strong> para tu altura y tu constitución",
+  "features.health.l3": "<strong>Rango de peso ideal</strong> para tu altura",
   "features.health.l4": "Estimaciones generales, basadas en investigaciones, de cómo suele mejorar la salud al bajar de peso, cada una con el estudio en el que se basa",
   "features.est.h": "Grasa corporal y pérdida de grasa estimadas, sin báscula inteligente",
   "features.est.p": "No necesitas un equipo especial para ver algo más que tu peso. A partir de tu peso, tu altura y tu edad, la app estima:",

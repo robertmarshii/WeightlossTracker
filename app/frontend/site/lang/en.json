@@ -124,7 +124,7 @@
   "features.health.p": "From your height, age and latest weight the Health tab works out:",
   "features.health.l1": "<strong>BMI</strong> and its category, plus a figure adjusted for your body frame",
   "features.health.l2": "<strong>Body fat estimate</strong>, shown as a range",
-  "features.health.l3": "<strong>Ideal weight range</strong> for your height and frame",
+  "features.health.l3": "<strong>Ideal weight range</strong> for your height",
   "features.health.l4": "General, research-based estimates of how health typically improves with weight loss, each with the study it draws on",
   "features.est.h": "Estimated body fat and fat loss: no smart scale needed",
   "features.est.p": "You don't need special equipment to see more than your weight. From your weight, height and age the app estimates:",

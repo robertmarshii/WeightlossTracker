@@ -124,7 +124,7 @@
   "features.health.p": "À partir de votre taille, de votre âge et de votre dernier poids, l'onglet Santé calcule :",
   "features.health.l1": "<strong>L'IMC</strong> et sa catégorie, ainsi qu'une valeur ajustée à votre corpulence",
   "features.health.l2": "<strong>Une estimation de la masse grasse</strong>, présentée sous forme de fourchette",
-  "features.health.l3": "<strong>Une plage de poids idéale</strong> pour votre taille et votre corpulence",
+  "features.health.l3": "<strong>Une plage de poids idéale</strong> pour votre taille",
   "features.health.l4": "Des estimations générales, fondées sur la recherche, de l'amélioration habituelle de la santé avec la perte de poids, chacune accompagnée de l'étude dont elle s'inspire",
   "features.est.h": "Masse grasse et perte de graisse estimées : pas besoin de balance connectée",
   "features.est.p": "Pas besoin d'équipement spécial pour voir plus que votre poids. À partir de votre poids, de votre taille et de votre âge, l'application estime :",
