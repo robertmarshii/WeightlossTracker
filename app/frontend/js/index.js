@@ -29,7 +29,15 @@ $(document).ready(function() {
     const oauthError = urlParams.get('error');
     if (oauthError) {
         if (window.coverage) window.coverage.logFunction('if', 'index.js');
-        showAlert('❌ OAuth Error: ' + decodeURIComponent(oauthError), 'danger');
+        // Only fixed messages are shown; the URL text itself is never displayed
+        const knownOAuthErrors = {
+            'Please try logging in again': 'Please try logging in again.',
+            'Session expired, please try logging in again': 'Your sign-in took too long. Please try again.',
+            'Unable to get email from Google': 'We could not get your email address from Google.',
+            'Unable to get email from Microsoft': 'We could not get your email address from Microsoft.'
+        };
+        const oauthMessage = knownOAuthErrors[oauthError] || 'Sign-in did not complete. Please try again.';
+        showAlert('❌ ' + oauthMessage, 'danger');
         // Clean up URL without reloading
         const newUrl = window.location.pathname;
         window.history.replaceState(null, '', newUrl);
@@ -157,7 +165,7 @@ function sendLoginCode() {
         const data = typeof responseText === 'string' ? JSON.parse(responseText) : responseText;
         if (data.success) {
             if (window.coverage) window.coverage.logFunction('if', 'index.js');
-            showAlert('✅ Login code sent successfully! Check your email inbox (and spam folder). The code is also in the subject line.', 'success');
+            showAlert('✅ If this email has an account, a login code is on its way. Check your inbox (and spam folder). The code is also in the subject line.', 'success');
             document.getElementById('loginForm').style.display = 'none';
             document.getElementById('loginSocialSection').style.display = 'none';
             document.getElementById('loginWelcomeSection').style.display = 'none';
