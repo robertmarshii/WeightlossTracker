@@ -131,7 +131,7 @@
         } catch (Exception $e) {
             error_log("ProfileController ERROR: " . $e->getMessage());
             http_response_code(500);
-            echo json_encode(['success' => false, 'message' => 'Server error: ' . $e->getMessage()]);
+            echo json_encode(['success' => false, 'message' => 'Server error']);
             return;
         }
 
@@ -171,6 +171,10 @@
                 if (!isset($_POST['weight_kg'])) { echo json_encode(['success'=>false,'message'=>'weight_kg required']); return; }
                 $w = (float)$_POST['weight_kg'];
                 $date = isset($_POST['entry_date']) ? $_POST['entry_date'] : date('Y-m-d');
+                if (!isValidEntryDate($date)) {
+                    echo json_encode(['success' => false, 'message' => 'Invalid date']);
+                    return;
+                }
                 $stmt = $db->prepare("INSERT INTO {$schema}.weight_entries (user_id, weight_kg, entry_date, notes) VALUES (?, ?, ?, NULL)");
                 $stmt->execute([$userId, $w, $date]);
 
@@ -487,6 +491,22 @@
                 $emailDay = isset($_POST['email_day']) ? $_POST['email_day'] : 'monday';
                 $emailTime = isset($_POST['email_time']) ? $_POST['email_time'] : '09:00';
                 $weeklyReports = isset($_POST['weekly_reports']) && ($_POST['weekly_reports'] === 'true' || $_POST['weekly_reports'] === true) ? 1 : 0;
+
+                // Only known values are stored; anything else falls back to the default
+                $pick = function ($value, array $allowed, $default) {
+                    return (is_string($value) && in_array($value, $allowed, true)) ? $value : $default;
+                };
+                $weightUnit = $pick($weightUnit, ['kg', 'lbs', 'st'], 'kg');
+                $heightUnit = $pick($heightUnit, ['cm', 'ft', 'm'], 'cm');
+                $temperatureUnit = $pick($temperatureUnit, ['c', 'f'], 'c');
+                $dateFormat = $pick($dateFormat, ['uk', 'us', 'iso', 'euro'], 'uk');
+                $timeFormat = $pick($timeFormat, ['24', '12'], '24');
+                $timezone = $pick($timezone, DateTimeZone::listIdentifiers(), 'Europe/London');
+                $theme = $pick($theme, ['glassmorphism', 'neumorphism', 'skeuomorphism', 'minimalism', 'retro', 'material'], 'glassmorphism');
+                $language = $pick($language, ['en', 'es', 'fr', 'de'], 'en');
+                $startOfWeek = $pick($startOfWeek, ['monday', 'sunday'], 'monday');
+                $emailDay = $pick($emailDay, ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'], 'monday');
+                $emailTime = (is_string($emailTime) && preg_match('/^([01]\d|2[0-3]):[0-5]\d$/', $emailTime)) ? $emailTime : '09:00';
 
                 $sql = "INSERT INTO {$schema}.user_settings (
                     user_id, weight_unit, height_unit, temperature_unit, date_format, time_format,
@@ -933,6 +953,24 @@
                     return;
                 }
 
+                // Only known metrics, each with its own unit
+                $metricUnits = [
+                    'muscle_mass' => '%', 'fat_percent' => '%', 'water_percent' => '%', 'bone_mass' => '%',
+                    'measurement_neck' => 'cm', 'measurement_chest' => 'cm', 'measurement_waist' => 'cm',
+                    'measurement_hips' => 'cm', 'measurement_thigh' => 'cm', 'measurement_calf' => 'cm',
+                    'measurement_arm' => 'cm',
+                    'caliper_chest' => 'mm', 'caliper_abdomen' => 'mm', 'caliper_thigh' => 'mm',
+                    'caliper_midaxillary' => 'mm', 'caliper_suprailiac' => 'mm',
+                ];
+                if (!is_string($metricType) || !isset($metricUnits[$metricType]) || $unit !== $metricUnits[$metricType]) {
+                    echo json_encode(['success' => false, 'message' => 'Invalid metric or unit']);
+                    return;
+                }
+                if (!isValidEntryDate($entryDate)) {
+                    echo json_encode(['success' => false, 'message' => 'Invalid date']);
+                    return;
+                }
+
                 if (!is_numeric($value) || $value <= 0) {
                     echo json_encode(['success' => false, 'message' => 'Invalid value']);
                     return;
@@ -953,7 +991,8 @@
                         'message' => 'Body data saved successfully'
                     ]);
                 } catch (Exception $e) {
-                    echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
+                    error_log("save_body_data error: " . $e->getMessage());
+                    echo json_encode(['success' => false, 'message' => 'Could not save. Please try again.']);
                 }
                 return;
             }
@@ -992,6 +1031,18 @@
         $womenLb = 100 + 5 * $inchesOver5ft;
         $menLb = 106 + 6 * $inchesOver5ft;
         return [round($womenLb / 2.20462, 1), round($menLb / 2.20462, 1)];
+    }
+
+    /** A real calendar date in YYYY-MM-DD form, between 1900 and one year from today. */
+    function isValidEntryDate($date) {
+        if (!is_string($date) || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
+            return false;
+        }
+        $d = DateTime::createFromFormat('!Y-m-d', $date);
+        if (!$d || $d->format('Y-m-d') !== $date) {
+            return false;
+        }
+        return $date >= '1900-01-01' && $date <= date('Y-m-d', strtotime('+1 year'));
     }
 
     // ==================== Quick Look Helper Functions (Phase 1) ====================

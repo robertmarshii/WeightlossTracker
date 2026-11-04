@@ -40,9 +40,8 @@ window.populateBodyDataCards = function() {
         const ids = metricMap[metricType];
 
         if (metric) {
-            // Display current value with unit in smaller span
-            const displayValue = `${metric.value}<span style="font-size: 1rem;">${metric.unit}</span>`;
-            $(`#${ids.valueId}`).html(displayValue);
+            // Display current value with unit in smaller span (stored values are set as text, never as HTML)
+            $(`#${ids.valueId}`).text(String(metric.value)).append($('<span style="font-size: 1rem;"></span>').text(String(metric.unit)));
 
             // Calculate change if we have history
             const history = bodyDataHistory[metricType];
@@ -145,8 +144,9 @@ window.populateBodyDataHistoryTables = function() {
         // Add rows for each entry
         history.forEach((entry, index) => {
             const value = parseFloat(entry.value);
-            const unit = entry.unit;
-            const date = entry.entry_date;
+            // Both are used in the HTML and onclick attribute below: only known units and plain dates
+            const unit = ['%', 'cm', 'mm', 'kg'].includes(entry.unit) ? entry.unit : '';
+            const date = /^\d{4}-\d{2}-\d{2}$/.test(String(entry.entry_date)) ? entry.entry_date : '';
 
             // Calculate change from previous entry
             let changeHtml = '<span class="text-muted">-</span>';
