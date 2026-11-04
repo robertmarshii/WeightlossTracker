@@ -266,7 +266,7 @@ $assetVersion = function ($path) { $t = @filemtime(__DIR__ . '/' . $path); retur
                                     <div class="form-check mb-3" id="termsCheck">
                                         <input type="checkbox" class="form-check-input" id="agreeTerms" required>
                                         <label class="form-check-label small" id="agreeTermsLabel" for="agreeTerms">
-                                            <span data-eng="I agree to the " data-spa="Acepto los " data-fre="J'accepte les " data-ger="Ich stimme den ">I agree to the </span><a href="#" onclick="openModal('termsModal'); return false;" data-eng="Terms and Conditions" data-spa="Términos y Condiciones" data-fre="Conditions Générales" data-ger="Allgemeinen Geschäftsbedingungen">Terms and Conditions</a><span data-eng=", " data-spa=", " data-fre=", " data-ger=", ">, </span>
+                                            <span data-eng="I agree to the " data-spa="Acepto los " data-fre="J'accepte les " data-ger="Ich stimme den ">I agree to the </span><a href="/terms" target="_blank" data-eng="Terms and Conditions" data-spa="Términos y Condiciones" data-fre="Conditions Générales" data-ger="Allgemeinen Geschäftsbedingungen">Terms and Conditions</a><span data-eng=", " data-spa=", " data-fre=", " data-ger=", ">, </span>
                                             <a href="/privacy" target="_blank" data-eng="Privacy Policy" data-spa="Política de Privacidad" data-fre="Politique de Confidentialité" data-ger="Datenschutzrichtlinie">Privacy Policy</a><span data-eng=", and " data-spa=", y " data-fre=", et " data-ger=", und ">, and </span>
                                             <a href="/privacy#cookies" target="_blank" data-eng="Cookie Policy" data-spa="Política de Cookies" data-fre="Politique des Cookies" data-ger="Cookie-Richtlinie">Cookie Policy</a>
                                         </label>
@@ -368,48 +368,13 @@ $assetVersion = function ($path) { $t = @filemtime(__DIR__ . '/' . $path); retur
 
     <footer class="site-footer">
         <nav aria-label="Footer">
-            <a href="/privacy">Privacy &amp; cookies</a>
-            <button type="button" class="footer-btn" onclick="openModal('termsModal')">Terms</button>
+            <a href="/privacy">Privacy</a>
+            <a href="/privacy#cookies">Cookies</a>
+            <a href="/terms">Terms</a>
             <a href="#signin">Sign in</a>
         </nav>
         <p>&copy; <?php echo date('Y'); ?> Weightloss Tracker</p>
     </footer>
-
-    <!-- Terms and Conditions Modal -->
-    <div class="modal fade" id="termsModal" tabindex="-1" role="dialog" aria-labelledby="termsModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="termsModalLabel" data-eng="Terms and Conditions" data-spa="Términos y Condiciones" data-fre="Conditions Générales" data-ger="Allgemeinen Geschäftsbedingungen">Terms and Conditions</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <h6 data-eng="1. Acceptance of Terms" data-spa="1. Aceptación de Términos" data-fre="1. Acceptation des Conditions" data-ger="1. Akzeptanz der Bedingungen">1. Acceptance of Terms</h6>
-                    <p data-eng="By using the Weightloss Tracker application, you agree to be bound by these Terms and Conditions." data-spa="Al usar la aplicación Rastreador de Pérdida de Peso, aceptas estar sujeto a estos Términos y Condiciones." data-fre="En utilisant l'application Suivi de Perte de Poids, vous acceptez d'être lié par ces Conditions Générales." data-ger="Durch die Nutzung der Gewichtsverlust-Tracker-Anwendung stimmen Sie zu, an diese Allgemeinen Geschäftsbedingungen gebunden zu sein.">By using the Weightloss Tracker application, you agree to be bound by these Terms and Conditions.</p>
-                    
-                    <h6 data-eng="2. Description of Service" data-spa="2. Descripción del Servicio" data-fre="2. Description du Service" data-ger="2. Beschreibung des Dienstes">2. Description of Service</h6>
-                    <p data-eng="Weightloss Tracker is a personal fitness tracking application that helps users monitor their weight loss journey and fitness goals." data-spa="Rastreador de Pérdida de Peso es una aplicación personal de seguimiento de fitness que ayuda a los usuarios a monitorear su viaje de pérdida de peso y objetivos de fitness." data-fre="Suivi de Perte de Poids est une application personnelle de suivi de fitness qui aide les utilisateurs à surveiller leur parcours de perte de poids et leurs objectifs de fitness." data-ger="Gewichtsverlust-Tracker ist eine persönliche Fitness-Tracking-Anwendung, die Benutzern hilft, ihren Gewichtsverlust-Weg und ihre Fitnessziele zu überwachen.">Weightloss Tracker is a personal fitness tracking application that helps users monitor their weight loss journey and fitness goals.</p>
-                    
-                    <h6 data-eng="3. User Responsibilities" data-spa="3. Responsabilidades del Usuario" data-fre="3. Responsabilités de l'Utilisateur" data-ger="3. Benutzerpflichten">3. User Responsibilities</h6>
-                    <p data-eng="You are responsible for maintaining the confidentiality of your account and for all activities that occur under your account." data-spa="Eres responsable de mantener la confidencialidad de tu cuenta y de todas las actividades que ocurran bajo tu cuenta." data-fre="Vous êtes responsable de maintenir la confidentialité de votre compte et de toutes les activités qui se produisent sous votre compte." data-ger="Sie sind verantwortlich für die Wahrung der Vertraulichkeit Ihres Kontos und für alle Aktivitäten, die unter Ihrem Konto stattfinden.">You are responsible for maintaining the confidentiality of your account and for all activities that occur under your account.</p>
-
-                    <h6 data-eng="4. Privacy" data-spa="4. Privacidad" data-fre="4. Confidentialité" data-ger="4. Datenschutz">4. Privacy</h6>
-                    <p data-eng="Your privacy is important to us. Please review our Privacy Policy to understand how we collect and use your information." data-spa="Tu privacidad es importante para nosotros. Por favor revisa nuestra Política de Privacidad para entender cómo recolectamos y usamos tu información." data-fre="Votre confidentialité est importante pour nous. Veuillez consulter notre Politique de Confidentialité pour comprendre comment nous collectons et utilisons vos informations." data-ger="Ihre Privatsphäre ist uns wichtig. Bitte lesen Sie unsere Datenschutzrichtlinie, um zu verstehen, wie wir Ihre Informationen sammeln und verwenden.">Your privacy is important to us. Please review our Privacy Policy to understand how we collect and use your information.</p>
-
-                    <h6 data-eng="5. Disclaimer" data-spa="5. Descargo de Responsabilidad" data-fre="5. Avertissement" data-ger="5. Haftungsausschluss">5. Disclaimer</h6>
-                    <p data-eng="This application is for informational purposes only and should not replace professional medical advice. Always consult with healthcare professionals for medical guidance." data-spa="Esta aplicación es solo para propósitos informativos y no debe reemplazar el consejo médico profesional. Siempre consulta con profesionales de la salud para orientación médica." data-fre="Cette application est à des fins d'information uniquement et ne doit pas remplacer les conseils médicaux professionnels. Consultez toujours des professionnels de la santé pour des conseils médicaux." data-ger="Diese Anwendung dient nur zu Informationszwecken und sollte professionelle medizinische Beratung nicht ersetzen. Konsultieren Sie immer Gesundheitsfachkräfte für medizinische Beratung.">This application is for informational purposes only and should not replace professional medical advice. Always consult with healthcare professionals for medical guidance.</p>
-
-                    <h6 data-eng="6. Modifications" data-spa="6. Modificaciones" data-fre="6. Modifications" data-ger="6. Änderungen">6. Modifications</h6>
-                    <p data-eng="We reserve the right to modify these terms at any time. Continued use of the service constitutes acceptance of any changes." data-spa="Nos reservamos el derecho de modificar estos términos en cualquier momento. El uso continuado del servicio constituye la aceptación de cualquier cambio." data-fre="Nous nous réservons le droit de modifier ces conditions à tout moment. L'utilisation continue du service constitue l'acceptation de tout changement." data-ger="Wir behalten uns das Recht vor, diese Bedingungen jederzeit zu ändern. Die fortgesetzte Nutzung des Dienstes stellt die Annahme aller Änderungen dar.">We reserve the right to modify these terms at any time. Continued use of the service constitutes acceptance of any changes.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" data-eng="Close" data-spa="Cerrar" data-fre="Fermer" data-ger="Schließen">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Coverage Logging (Development only) -->
     <script src="js/coverage.js?v=<?php echo $assetVersion('js/coverage.js'); ?>"></script>

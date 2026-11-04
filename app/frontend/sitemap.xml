@@ -2,5 +2,6 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://weightloss-tracker.com/</loc><lastmod>2026-11-04</lastmod></url>
   <url><loc>https://weightloss-tracker.com/privacy</loc><lastmod>2026-11-04</lastmod></url>
-  <!-- Add /terms and any public tool pages (e.g. /bmi-calculator) here once they exist. -->
+  <url><loc>https://weightloss-tracker.com/terms</loc><lastmod>2026-11-04</lastmod></url>
+  <!-- Add any public tool pages (e.g. /bmi-calculator) here once they exist. -->
 </urlset>

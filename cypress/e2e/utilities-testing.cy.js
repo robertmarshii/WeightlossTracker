@@ -1199,32 +1199,13 @@ describe('Integration & Example Tests', () => {
         });
 
         /**
-         * COVERAGE: This test covers the following functions:
-         * - openModal (global.js) - Modal display system
-         *
-         * Test Purpose: Test modal functionality for terms and conditions
-         * Functions Expected: 1
-         * Last Updated: 2025-09-14
+         * Test Purpose: the signup terms link goes to the /terms page (the terms modal was replaced by a page)
+         * Last Updated: 2026-11-04
          */
-        it('should test modal functionality', () => {
-            const expectedFunctions = ['openModal'];
-
+        it('should link the signup terms to the terms page', () => {
             cy.visit('/');
-
-            // Switch to signup tab to access terms link
             cy.get('#signup-tab').click();
-
-            // Click terms link (should trigger openModal)
-            cy.get('a[onclick*="termsModal"]').click({ force: true });
-
-            // Modal should be visible
-            cy.get('#termsModal').should('be.visible');
-
-            // Close modal
-            cy.get('#termsModal .close').click();
-
-            // Verify expected coverage
-            cy.verifyCoverage(expectedFunctions, 'Modal Functionality Test');
+            cy.get('#termsCheck a[href="/terms"]').should('have.attr', 'target', '_blank');
         });
 
         /**

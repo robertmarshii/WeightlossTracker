@@ -740,33 +740,13 @@ describe('Failing Tests', () => {
             // No manual collection needed!
         });
 
-        it('should test modal functionality', () => {
-            // Clear authentication cookies to go back to login page where Terms modal exists
+        it('should link the signup terms to the terms page', () => {
+            // The terms are a page (/terms) now, not a modal
             cy.clearCookies();
             cy.visit('http://127.0.0.1:8111/');
-
-            // Switch to signup tab first to make Terms link visible
             cy.contains('Sign Up').click();
-
-            // Click on Terms and Conditions link to test openModal function
-            cy.get('a[onclick*="termsModal"]').click();
-
-            // Modal should be visible
-            cy.get('#termsModal').should('be.visible');
-
-            // Try multiple ways to close modal
-            cy.get('body').type('{esc}');
-
-            // Or try clicking backdrop
-            cy.get('#termsModal').click();
-
-            // Wait for modal animation to complete
-            cy.wait(500);
-
-            // Modal should be hidden (or just verify it opened successfully)
-            cy.get('#termsModal').should('have.class', 'show');
-
-            // Coverage for openModal function is automatically collected
+            cy.get('#termsCheck a[href="/terms"]').should('have.attr', 'target', '_blank');
+            cy.get('#termsCheck a[href="/privacy"]').should('exist');
         });
 
         it('should verify coverage collection works', () => {

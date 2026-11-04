@@ -131,6 +131,13 @@ $csrfToken = Security::csrfToken();
                     <?php include_once 'pages/settings.php'; ?>
             </div>
         </div>
+            <footer class="glass-card dashboard-footer">
+                <nav aria-label="Footer">
+                    <a href="/privacy" data-eng="Privacy" data-spa="Privacidad" data-fre="Confidentialité" data-ger="Datenschutz">Privacy</a>
+                    <a href="/privacy#cookies" data-eng="Cookies" data-spa="Cookies" data-fre="Cookies" data-ger="Cookies">Cookies</a>
+                    <a href="/terms" data-eng="Terms" data-spa="Términos" data-fre="Conditions" data-ger="Nutzungsbedingungen">Terms</a>
+                </nav>
+            </footer>
     </div>
 </div>
 

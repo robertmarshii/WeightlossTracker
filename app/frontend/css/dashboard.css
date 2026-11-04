@@ -1943,3 +1943,26 @@ select.form-control.glass-input {
         font-size: 0.7rem !important;
     }
 }
+
+/* Footer with links to the privacy, cookie and terms pages */
+.dashboard-footer {
+    display: block;
+    width: 100%;
+    text-align: center;
+    font-size: 0.9rem;
+    padding: 0.75rem 1rem;
+}
+
+.dashboard-footer nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.25rem 1.5rem;
+}
+
+.dashboard-footer a {
+    color: inherit;
+    text-decoration: underline;
+    display: inline-block;
+    padding: 0.4rem 0.25rem;
+}

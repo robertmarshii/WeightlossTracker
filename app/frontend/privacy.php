@@ -20,6 +20,7 @@ $assetVersion = function ($path) { $t = @filemtime(__DIR__ . '/' . $path); retur
     <style>
         .policy h1 { color: white; font-size: 2rem; font-weight: 700; margin: 2rem 0 0.5rem; }
         .policy .updated { color: rgba(255, 255, 255, 0.8); }
+        .policy h3 { color: white; font-size: 1.1rem; margin-top: 1.25rem; }
         .policy .info-section { margin-top: 1.5rem; }
         .policy .info-section ul { padding-left: 1.3rem; }
         .policy .info-section li { margin-bottom: 0.4rem; line-height: 1.6; }
@@ -31,6 +32,15 @@ $assetVersion = function ($path) { $t = @filemtime(__DIR__ . '/' . $path); retur
         .policy th { color: white; background: rgba(20, 40, 60, 0.6); }
         .policy code { color: #ffd7a8; }
         .back-link { display: inline-block; margin-top: 1.5rem; }
+        .policy code { overflow-wrap: anywhere; }
+        @media (max-width: 600px) {
+            .policy thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+            .policy table, .policy tbody, .policy tr, .policy td { display: block; width: 100%; }
+            .policy tr { border: 1px solid rgba(100, 150, 200, 0.35); margin-bottom: 0.75rem; }
+            .policy td { border: 0; border-bottom: 1px solid rgba(100, 150, 200, 0.2); }
+            .policy td:last-child { border-bottom: 0; }
+            .policy td::before { content: attr(data-label); display: block; font-weight: 700; color: white; }
+        }
     </style>
 </head>
 <body>
@@ -40,8 +50,9 @@ $assetVersion = function ($path) { $t = @filemtime(__DIR__ . '/' . $path); retur
 
         <section class="info-section" aria-labelledby="who">
             <h2 id="who">Who runs Weightloss Tracker</h2>
-            <p>Weightloss Tracker (weightloss-tracker.com) is run by Robert Marsh II, an individual based in Manchester, UK. He decides how your data is used and is the &ldquo;data controller&rdquo; under UK data protection law.</p>
-            <p>Contact for privacy questions and requests: <strong>[CONTACT EMAIL]</strong></p>
+            <p>Weightloss Tracker (weightloss-tracker.com) is a free weight tracking service run from the UK. In this notice &ldquo;we&rdquo; and &ldquo;us&rdquo; means the people who run it. We decide how your data is used, so we are the &ldquo;data controller&rdquo; under UK data protection law (the UK GDPR and the Data Protection Act 2018).</p>
+            <p>Contact for privacy questions and requests: <a href="mailto:support@weightloss-tracker.com">support@weightloss-tracker.com</a></p>
+            <p>Using the service is also covered by our <a href="/terms">terms of use</a>.</p>
         </section>
 
         <section class="info-section" aria-labelledby="what">
@@ -80,18 +91,30 @@ $assetVersion = function ($path) { $t = @filemtime(__DIR__ . '/' . $path); retur
 
         <section class="info-section" aria-labelledby="cookies">
             <h2 id="cookies">Cookies and browser storage</h2>
-            <p>These keep you signed in and remember your display choices. They are strictly necessary for the service you asked for, so they do not need consent under the Privacy and Electronic Communications Regulations (PECR).</p>
+            <p>This is our cookie policy. The cookies and storage in the first table keep you signed in and remember your display choices. They are strictly necessary for the service you asked for, so they do not need consent under the Privacy and Electronic Communications Regulations (PECR). The Google Ads tag below is not strictly necessary.</p>
             <div class="table-wrap" tabindex="0" role="region" aria-label="Cookies and storage set by Weightloss Tracker">
                 <table>
                     <thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Purpose</th><th scope="col">How long</th></tr></thead>
                     <tbody>
-                        <tr><td><code>PHPSESSID</code></td><td>Cookie</td><td>Your signed-in session (also holds a security token for forms)</td><td>Until you close the browser; a sign-in session is ended after 24 hours</td></tr>
-                        <tr><td><code>remember_token</code>, <code>user_id</code></td><td>Cookies (secure, not readable by scripts)</td><td>Keep you signed in on this device</td><td>30 days from your last visit, or until you sign out</td></tr>
-                        <tr><td><code>weightUnit</code>, <code>heightUnit</code>, <code>language</code></td><td>Local storage</td><td>Remember your units and language on this device</td><td>Until you clear your browser data</td></tr>
+                        <tr><td data-label="Name"><code>PHPSESSID</code></td><td data-label="Type">Cookie</td><td data-label="Purpose">Your signed-in session (also holds a security token for forms)</td><td data-label="How long">Until you close the browser; a sign-in session is ended after 24 hours</td></tr>
+                        <tr><td data-label="Name"><code>remember_token</code>, <code>user_id</code></td><td data-label="Type">Cookies (secure, not readable by scripts)</td><td data-label="Purpose">Keep you signed in on this device</td><td data-label="How long">30 days from your last visit, or until you sign out</td></tr>
+                        <tr><td data-label="Name"><code>weightUnit</code>, <code>heightUnit</code>, <code>language</code></td><td data-label="Type">Local storage</td><td data-label="Purpose">Remember your units and language on this device</td><td data-label="How long">Until you clear your browser data</td></tr>
                     </tbody>
                 </table>
             </div>
-            <p><strong>Google Ads tag.</strong> The home page and the dashboard load Google&rsquo;s advertising tag (gtag.js, ID AW-17636245354) from googletagmanager.com. We use it to measure whether people arrive from our Google adverts. Google receives your IP address and browser details and may set its own cookies. You can block it with your browser&rsquo;s tracking protection or an ad blocker; the tracker works the same without it. See <a href="https://policies.google.com/technologies/ads" rel="noopener noreferrer">how Google uses data from advertising</a>.</p>
+            <h3 id="google-ads">Google Ads tag</h3>
+            <p>The home page and the dashboard load Google&rsquo;s advertising tag (gtag.js, ID AW-17636245354) from googletagmanager.com. We use it to measure whether people arrive from our Google adverts. It is not needed for the tracker to work. At present it loads as soon as the page opens and the site does not ask for your consent first. When it loads, Google receives your IP address, the page address and browser details, and the tag can set these cookies:</p>
+            <div class="table-wrap" tabindex="0" role="region" aria-label="Cookies the Google Ads tag can set">
+                <table>
+                    <thead><tr><th scope="col">Name</th><th scope="col">Set by</th><th scope="col">Purpose</th><th scope="col">How long</th></tr></thead>
+                    <tbody>
+                        <tr><td data-label="Name"><code>_gcl_au</code></td><td data-label="Set by">Google Ads tag, on weightloss-tracker.com</td><td data-label="Purpose">Links visits to Google advert clicks to measure our adverts</td><td data-label="How long">3 months</td></tr>
+                        <tr><td data-label="Name"><code>_gcl_aw</code>, <code>_gcl_gs</code></td><td data-label="Set by">Google Ads tag, on weightloss-tracker.com</td><td data-label="Purpose">Only when you arrive by clicking one of our Google adverts: records that click</td><td data-label="How long">3 months</td></tr>
+                        <tr><td data-label="Name">Google&rsquo;s own cookies (for example <code>IDE</code>, <code>NID</code>)</td><td data-label="Set by">Google, on its own domains</td><td data-label="Purpose">Google&rsquo;s advertising and measurement, under Google&rsquo;s own policy</td><td data-label="How long">Set by Google, typically up to 13 months</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>You can block the tag with your browser&rsquo;s tracking protection or an ad blocker, and delete these cookies in your browser settings; the tracker works the same without them. See <a href="https://policies.google.com/technologies/ads" rel="noopener noreferrer">how Google uses data from advertising</a>.</p>
         </section>
 
         <section class="info-section" aria-labelledby="services">
@@ -109,7 +132,7 @@ $assetVersion = function ($path) { $t = @filemtime(__DIR__ . '/' . $path); retur
         <section class="info-section" aria-labelledby="rights">
             <h2 id="rights">Your rights and deleting your data</h2>
             <p>You have the right to ask for a copy of your data, to have it corrected, to have it deleted, to restrict or object to how we use it, and to receive the data you gave us in a reusable format. Where we rely on consent, you can withdraw it at any time.</p>
-            <p>There is no &ldquo;delete my account&rdquo; button yet. To delete your account and all its data, or to use any other right, email <strong>[CONTACT EMAIL]</strong> from the address you sign in with. We will reply within one month.</p>
+            <p>There is no &ldquo;delete my account&rdquo; button yet. To delete your account and all its data, or to use any other right, email <a href="mailto:support@weightloss-tracker.com">support@weightloss-tracker.com</a> from the address you sign in with. We will reply within one month.</p>
             <p>To stop reminder or report emails, turn them off in Settings.</p>
         </section>
 
@@ -129,7 +152,9 @@ $assetVersion = function ($path) { $t = @filemtime(__DIR__ . '/' . $path); retur
     <footer class="site-footer">
         <nav aria-label="Footer">
             <a href="/">Home</a>
-            <a href="/privacy">Privacy &amp; cookies</a>
+            <a href="/privacy">Privacy</a>
+            <a href="/privacy#cookies">Cookies</a>
+            <a href="/terms">Terms</a>
             <a href="/#signin">Sign in</a>
         </nav>
         <p>&copy; <?php echo date('Y'); ?> Weightloss Tracker</p>
