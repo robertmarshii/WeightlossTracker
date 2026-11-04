@@ -150,6 +150,15 @@ if ($dbOk) {
         : 'pending: ' . implode(', ', $pending) . ' (last error: ' . ($lastFailure ?? 'none recorded yet') . '; ' . $diag . ')');
 }
 
+// Body fat estimates that could not be updated after a weight change (Router.php syncBodyFatForDate). A warning
+// only: the weight itself was saved, and that day's estimate may be out of date until the weight is saved again.
+if (is_file('/var/app/backend/BodyFatSyncLog.php')) {
+    require_once '/var/app/backend/BodyFatSyncLog.php';
+    $bfFails = BodyFatSyncLog::countSince(86400);
+    $lines[] = 'Body fat estimate updates (last 24 h)  Result: '
+        . ($bfFails === 0 ? 'OK' : 'WARNING, ' . $bfFails . ' failed; those days\' estimates may be out of date (see the server log)');
+}
+
 // Email settings: present, and the Scaleway key is accepted (a read-only call; no email is sent, no value is shown).
 $envv = function (string $n): string { $v = $_ENV[$n] ?? getenv($n); return is_string($v) ? trim($v) : ''; };
 $missing = array_values(array_filter(['SCW_SECRET_KEY', 'SCW_PROJECT_ID', 'MAIL_FROM_EMAIL'], fn ($n) => $envv($n) === ''));

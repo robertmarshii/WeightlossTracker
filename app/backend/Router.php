@@ -1156,15 +1156,15 @@
                 $db->exec('ROLLBACK TO SAVEPOINT body_fat_sync');
                 $db->exec('RELEASE SAVEPOINT body_fat_sync');
             }
-            error_log('Body fat sync error: ' . $e->getMessage());
+            // The weight change is kept; this day's body fat estimate may now be out of date (stale).
+            // Counted for /status (BodyFatSyncLog: times only).
+            error_log("Body fat sync FAILED for user {$userId} on {$date}: the weight was saved but that day's body fat estimate may be out of date. "
+                . get_class($e) . ': ' . $e->getMessage());
+            require_once('/var/app/backend/BodyFatSyncLog.php');
+            BodyFatSyncLog::record();
         }
     }
 
-    /** A real calendar date in YYYY-MM-DD form, between 1900 and one year from today. */
-    function isValidEntryDate($date) {
-        if (!is_string($date) || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
-            return false;
-        }
     /**
      * Why a goal's target date cannot be saved, or null if it can: a real date in YYYY-MM-DD form, no earlier
      * than today anywhere on Earth (today in UTC-12, the zone furthest behind, so a user's own "today" is always
@@ -1186,6 +1186,11 @@
         return null;
     }
 
+    /** A real calendar date in YYYY-MM-DD form, between 1900 and one year from today. */
+    function isValidEntryDate($date) {
+        if (!is_string($date) || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
+            return false;
+        }
         $d = DateTime::createFromFormat('!Y-m-d', $date);
         if (!$d || $d->format('Y-m-d') !== $date) {
             return false;
