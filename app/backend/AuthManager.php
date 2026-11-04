@@ -469,10 +469,10 @@ class AuthManager {
      * - per IP: VERIFY_IP_MAX_FAILS wrong guesses per 15 minutes ("wait a few minutes");
      * - per account and IP: VERIFY_ACCT_MAX_HOUR / VERIFY_ACCT_MAX_DAY wrong guesses against live
      *   codes. Guesses when no code is live do not count, and other IPs are not affected, so nobody
-     *   can lock an address out from their own connection. Once reached, a guess from that IP is
-     *   still checked (so a fresh, correct code signs in); a wrong one gets the "please wait" answer and
-     *   leaves the code in place (its own CODE_MAX_ATTEMPTS cap still applies), so a guesser who has hit
-     *   the limit can't delete the owner's fresh code.
+     *   can lock an address out from their own connection. Once reached, every guess from that IP for
+     *   that account gets the "please wait" answer before it is counted against the code or compared,
+     *   so a guesser who has hit the limit can't use up (and so delete) the owner's fresh code. The
+     *   trade-off: a correct code typed from that IP also has to wait until the limit has passed.
      * Every answer is the same whether or not the email has an account or a code: emails without an
      * account get an unsent code too (deliverLoginCode), and when no code is live at all the
      * CODE_MAX_ATTEMPTS-th wrong guess gives the same "request a new code" answer as a used-up code.
@@ -500,6 +500,15 @@ class AuthManager {
             $schema = Database::getSchema();
             $upgraded = self::ensureSchema($db, $schema);
 
+            // Per account and IP: over the limit, answer "please wait" before this guess is counted against
+            // the code or compared, so it can't use up the owner's code. Checked the same way whether or not
+            // the email has an account (those without one have an unsent code, see deliverLoginCode).
+            $acctKey = Security::foldKey($email) . '|' . $ip;
+            if (Security::throttleCount('verify_acct', $acctKey, 3600) >= self::VERIFY_ACCT_MAX_HOUR
+                || Security::throttleCount('verify_acct', $acctKey, 86400) >= self::VERIFY_ACCT_MAX_DAY) {
+                return $wait;
+            }
+
             // Count this guess against the live code(s) before comparing. A code that already had
             // CODE_MAX_ATTEMPTS guesses is not compared at all.
             $rows = $upgraded ? self::countGuess($db, $schema, $email) : self::countGuessOlderMode($db, $schema, $email);
@@ -526,8 +535,9 @@ class AuthManager {
                 return $invalid;
             }
 
-            // Per account and IP; only guesses against a live code count
-            [$acctOk, $acctHit] = Security::throttleTake('verify_acct', Security::foldKey($email) . '|' . $ip, [
+            // Per account and IP; only guesses against a live code count. (Normally the check above already
+            // stopped an IP over the limit; this catches parallel requests that passed it together.)
+            [$acctOk, $acctHit] = Security::throttleTake('verify_acct', $acctKey, [
                 3600 => self::VERIFY_ACCT_MAX_HOUR,
                 86400 => self::VERIFY_ACCT_MAX_DAY,
             ]);
