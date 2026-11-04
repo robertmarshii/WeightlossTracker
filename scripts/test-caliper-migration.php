@@ -46,7 +46,9 @@ foreach ($rows as $r) {
     $ins->execute($r);
 }
 
-$first = Migrations::run($db, $s);
+@unlink(Migrations::markerFile($s));
+@unlink(Migrations::backoffFile($s));
+$first = Migrations::run($db, $s, Migrations::MODE_STARTUP);
 check('first run applies', $first, ['2026-11-04-caliper-metric-names: applied (renamed 1 armpit, 2 belly, 2 thigh rows)']);
 
 $got = $db->query("SELECT user_id || ' ' || metric_type || ' ' || entry_date || ' ' || value::int FROM {$s}.body_data_entries ORDER BY user_id, entry_date, value")
@@ -58,14 +60,61 @@ check('rows renamed by site', $got, [
 ]);
 
 // Runs once only: even without the marker file, a second run must not rename again
-@unlink(Migrations::MARKER_DIR . "/migrations-{$s}-1.done");
+@unlink(Migrations::markerFile($s));
 $db->exec("INSERT INTO {$s}.body_data_entries (user_id, metric_type, value, unit, entry_date) VALUES (3, 'caliper_abdomen', 40, 'mm', '2026-11-05')");
 $second = Migrations::run($db, $s);
 check('second run does nothing', $second, ['2026-11-04-caliper-metric-names: already applied']);
 check('new rows after the fix keep their name',
     $db->query("SELECT metric_type FROM {$s}.body_data_entries WHERE user_id = 3")->fetchColumn(), 'caliper_abdomen');
 
+// ---- Refuses (and alerts) when the fixed page has already saved new-style rows: renaming would mix them up
+$db->exec("DROP SCHEMA {$s} CASCADE; CREATE SCHEMA {$s}");
+$db->exec("CREATE TABLE {$s}.body_data_entries (
+    id SERIAL PRIMARY KEY, user_id INTEGER NOT NULL, metric_type VARCHAR(50) NOT NULL,
+    value DECIMAL(6,2) NOT NULL, unit VARCHAR(10) NOT NULL, entry_date DATE NOT NULL,
+    CONSTRAINT unique_body_metric_per_day UNIQUE (user_id, metric_type, entry_date))");
+$db->exec("INSERT INTO {$s}.body_data_entries (user_id, metric_type, value, unit, entry_date) VALUES
+    (1, 'caliper_abdomen', 12, 'mm', '2026-10-01'), (1, 'caliper_midaxillary', 9, 'mm', '2026-11-05'), (1, 'caliper_thigh', 13, 'mm', '2026-11-05')");
+@unlink(Migrations::markerFile($s));
+@unlink(Migrations::backoffFile($s));
+$refused = Migrations::run($db, $s, Migrations::MODE_STARTUP);
+check('refuses when new-style rows exist', (bool)preg_match('/not applied: ALERT caliper rename refused: 1 caliper_midaxillary/', $refused[0] ?? ''), true);
+check('nothing renamed after refusal',
+    $db->query("SELECT string_agg(metric_type, ',' ORDER BY id) FROM {$s}.body_data_entries")->fetchColumn(),
+    'caliper_abdomen,caliper_midaxillary,caliper_thigh');
+$hasTable = $db->query("SELECT to_regclass('{$s}.app_migrations') IS NOT NULL")->fetchColumn();
+check('not recorded as applied', $hasTable ? (int)$db->query("SELECT COUNT(*) FROM {$s}.app_migrations")->fetchColumn() : 0, 0);
+check('no marker file after refusal', is_file(Migrations::markerFile($s)), false);
+check('back-off file written', is_file(Migrations::backoffFile($s)), true);
+
+// ---- Back-off: request-time calls do not retry (or log) for a few minutes after a failure
+$t = microtime(true);
+$again = Migrations::run($db, $s, Migrations::MODE_REQUEST);
+check('request call within back-off does nothing', $again, ['waiting before trying again (last attempt failed)']);
+check('request call within back-off is quick (< 50 ms)', (microtime(true) - $t) < 0.05, true);
+touch(Migrations::backoffFile($s), time() - Migrations::RETRY_AFTER_SECONDS - 1);
+$later = Migrations::run($db, $s, Migrations::MODE_REQUEST);
+check('request call after back-off tries again', (bool)preg_match('/not applied: ALERT/', $later[0] ?? ''), true);
+
+// ---- Request-time call waits only briefly while another process holds the migration lock
+$db->exec("DELETE FROM {$s}.body_data_entries WHERE metric_type = 'caliper_midaxillary'");
+@unlink(Migrations::backoffFile($s));
+$other = new PDO('pgsql:host=' . $_ENV['PG_HOST'] . ';dbname=' . $_ENV['PG_DATABASE'] . ';port=' . $_ENV['PG_PORT'], $_ENV['PG_USER'], $_ENV['PG_PASSWORD']);
+$other->beginTransaction();
+$other->query('SELECT pg_advisory_xact_lock(' . crc32('weightloss-tracker-migrations:' . $s) . ')');
+$t = microtime(true);
+$busy = Migrations::run($db, $s, Migrations::MODE_REQUEST);
+$waited = microtime(true) - $t;
+check('request call gives up while locked', $busy, ['2026-11-04-caliper-metric-names: busy (another process is applying fixes)']);
+check('request call waited about 2 s (1.5-4 s)', $waited > 1.5 && $waited < 4, true);
+check('busy is not a failure (no back-off file)', is_file(Migrations::backoffFile($s)), false);
+$other->rollBack();
+$ok = Migrations::run($db, $s, Migrations::MODE_REQUEST);
+check('applies once the lock is free', $ok, ['2026-11-04-caliper-metric-names: applied (renamed 1 armpit, 1 belly, 0 thigh rows)']);
+check('marker written after success', is_file(Migrations::markerFile($s)), true);
+
 $db->exec("DROP SCHEMA {$s} CASCADE");
-@unlink(Migrations::MARKER_DIR . "/migrations-{$s}-1.done");
+@unlink(Migrations::markerFile($s));
+@unlink(Migrations::backoffFile($s));
 echo $fails ? "\n{$fails} check(s) failed\n" : "\nAll checks passed\n";
 exit($fails ? 1 : 0);
