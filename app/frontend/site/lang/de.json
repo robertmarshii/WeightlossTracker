@@ -82,7 +82,7 @@
   "faq.food.q": "Muss ich Mahlzeiten oder Kalorien protokollieren?",
   "faq.food.a": "Nein. Weightloss Tracker hat kein Ernährungstagebuch und keinen Kalorienzähler. Sie tragen Ihr Gewicht ein und, wenn Sie möchten, Körpermaße und Werte Ihrer intelligenten Waage.",
   "faq.signin.q": "Wie melde ich mich an?",
-  "faq.signin.a": "Es gibt kein Passwort. Geben Sie Ihre E-Mail-Adresse ein, und wir senden Ihnen einen 6-stelligen Code, der 15 Minuten gültig ist. Oder melden Sie sich mit Ihrem Google- oder Microsoft-Konto an. Sie bleiben auf diesem Gerät angemeldet, bis Sie sich abmelden oder die Website 30 Tage lang nicht besucht haben.",
+  "faq.signin.a": "Es gibt kein Passwort. Geben Sie Ihre E-Mail-Adresse ein, und wir senden Ihnen einen 6-stelligen Code, der 15 Minuten gültig ist. Oder melden Sie sich mit Ihrem Google- oder Microsoft-Konto an. Sie bleiben auf diesem Gerät angemeldet, bis Sie sich abmelden – solange zwischen zwei Besuchen höchstens 30 Tage liegen, insgesamt aber höchstens 90 Tage.",
   "faq.units.q": "Welche Einheiten kann ich verwenden?",
   "faq.units.a": "Gewicht in Kilogramm, Pfund oder Stone (als Dezimalwert, zum Beispiel 12,5 st) und Größe in Zentimetern, Metern oder Fuß und Zoll. Körpermaße werden in Zentimetern erfasst. Die Einheiten können Sie jederzeit unter „Einstellungen“ ändern.",
   "faq.lang.q": "Welche Sprachen gibt es?",

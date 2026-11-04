@@ -82,7 +82,7 @@
   "faq.food.q": "Dois-je noter mes repas ou mes calories ?",
   "faq.food.a": "Non. Weightloss Tracker n'a ni journal alimentaire ni comptage de calories. Vous enregistrez votre poids et, si vous le souhaitez, vos mesures corporelles et les relevés de votre balance connectée.",
   "faq.signin.q": "Comment me connecter ?",
-  "faq.signin.a": "Il n'y a pas de mot de passe. Saisissez votre adresse e-mail et nous vous envoyons un code à 6 chiffres valable 15 minutes, ou continuez avec votre compte Google ou Microsoft. Vous restez connecté sur cet appareil jusqu'à ce que vous vous déconnectiez ou que 30 jours s'écoulent sans visite.",
+  "faq.signin.a": "Il n'y a pas de mot de passe. Saisissez votre adresse e-mail et nous vous envoyons un code à 6 chiffres valable 15 minutes, ou continuez avec votre compte Google ou Microsoft. Vous restez connecté sur cet appareil jusqu'à ce que vous vous déconnectiez, à condition de ne pas laisser passer plus de 30 jours entre deux visites, et pendant 90 jours au maximum.",
   "faq.units.q": "Quelles unités puis-je utiliser ?",
   "faq.units.a": "Le poids en kilogrammes, en livres ou en stone (affiché en stone décimal, par exemple 12,5 st), et la taille en centimètres, en mètres ou en pieds et pouces. Les mesures corporelles sont en centimètres. Vous pouvez changer d'unités à tout moment dans les Paramètres.",
   "faq.lang.q": "Quelles langues sont disponibles ?",
