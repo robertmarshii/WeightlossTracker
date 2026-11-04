@@ -276,7 +276,7 @@ describe('Body Insights - Comprehensive Tests', () => {
             cy.get('#caliper-insights-content').should('contain', 'Fat Loss');
         });
 
-        it('should detect excellent visceral fat reduction (belly site, caliper_abdomen)', () => {
+        it('should report a smaller belly skinfold (caliper_abdomen) without claiming visceral fat', () => {
             cy.window().then((win) => {
                 win.globalDashboardData = {
                     body_data_history: {
@@ -299,7 +299,8 @@ describe('Body Insights - Comprehensive Tests', () => {
             });
 
             cy.get('#caliper-insights-card .card-header-collapsible').click();
-            cy.get('#caliper-insights-content').should('contain', 'Visceral Fat');
+            cy.get('#caliper-insights-content').should('contain', 'Belly Skinfold Down');
+            cy.get('#caliper-insights-content').should('contain', 'rough indicator');
         });
 
         it('should identify upper body vs lower body fat loss pattern', () => {

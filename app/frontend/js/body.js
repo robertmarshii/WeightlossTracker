@@ -824,6 +824,28 @@ function saveBodyMetricHistorical(metricType, value, unit, entryDate, formNum) {
     }
 }
 
+// Translate a text with {placeholders} (body tab insights)
+function bt(key, values) {
+    let s = t(key);
+    Object.keys(values || {}).forEach(k => { s = s.split('{' + k + '}').join(values[k]); });
+    return s;
+}
+
+// A number with one decimal, written the way the page's language writes it (53.2 / 53,2)
+function bnum(x) {
+    const locale = (typeof getLanguageLocale === 'function') ? getLanguageLocale() : undefined;
+    return Number(x).toLocaleString(locale, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+}
+
+// Body fat ranges that Gallagher et al. (Am J Clin Nutr 2000;72:694-701) linked with a healthy BMI (18.5-25),
+// white adults, rounded to whole percent. Null outside the ages the study covered (20-79).
+function bodyFatReferenceBand(age) {
+    if (!(age >= 20 && age < 80)) return null;
+    if (age < 40) return { ages: '20–39', men: [8, 20], women: [21, 33] };
+    if (age < 60) return { ages: '40–59', men: [11, 22], women: [23, 34] };
+    return { ages: '60–79', men: [13, 25], women: [24, 36] };
+}
+
 // Function to generate insights from body composition data
 window.generateBodyInsights = function() {
     // Check if we have global dashboard data
@@ -992,54 +1014,58 @@ window.generateBodyInsights = function() {
         }
     }
 
-    // Water percentage insight - comprehensive coverage
+    // Water percentage insight. Scales estimate body water by bioelectrical impedance (BIA); there is no
+    // agreed healthy range. The ranges below are the typical ones a scale maker quotes (Tanita: about 45-60%
+    // for women, 50-65% for men), and readings move with the device and with recent eating, drinking or exercise.
     if (waterPercent.length > 0) {
         const currentWater = parseFloat(waterPercent[0].value);
+        const w = bnum(currentWater);
+        const note = ' ' + t("Smart-scale makers such as Tanita quote about 45–60% for women and 50–65% for men as typical. Readings vary between devices and with when you last ate, drank or exercised.");
 
         if (waterTrend !== null) {
             // Water trend available
             if (waterTrend > 0 && muscleTrend !== null && muscleTrend > 0) {
                 insights.push({
-                    title: t("Hydration looks solid."),
-                    description: t("The combination of muscle ↑ and water ↑ is normal — muscle retains more intracellular water than fat. A") + ` ${currentWater.toFixed(1)}` + t("% water level is healthy.")
+                    title: t("Water and muscle both up."),
+                    description: bt("Muscle holds more water than fat, so the two often rise together. Your water reading is {w}%.", { w }) + note
                 });
             } else if (waterTrend > 0) {
                 insights.push({
-                    title: t("Hydration is improving."),
-                    description: `Your water percentage increased to ${currentWater.toFixed(1)}%. This may indicate better hydration or increased muscle mass.`
+                    title: t("Water percentage up."),
+                    description: bt("Your water reading rose to {w}%. This can come from more muscle, less fat, or from when you last drank or exercised before weighing.", { w }) + note
                 });
             } else if (waterTrend < 0 && currentWater < 50) {
                 insights.push({
-                    title: t("Hydration declining."),
-                    description: `Your water percentage dropped to ${currentWater.toFixed(1)}%. Ensure adequate water intake, especially around training.`
+                    title: t("Water percentage down."),
+                    description: bt("Your water reading fell to {w}%. It changes with when you last ate, drank or exercised, so weighing at the same time of day makes readings easier to compare.", { w }) + note
                 });
             } else if (waterTrend < 0 && fatTrend !== null && fatTrend > 0) {
                 insights.push({
                     title: t("Water percentage decreasing."),
-                    description: `Water ↓ combined with fat ↑ is expected — fat tissue contains less water than muscle. Current: ${currentWater.toFixed(1)}%.`
+                    description: bt("Water down with fat up is expected: fat holds less water than muscle. Current: {w}%.", { w })
                 });
             } else if (waterTrend === 0) {
                 insights.push({
-                    title: t("Hydration is stable."),
-                    description: `Your water percentage is maintaining at ${currentWater.toFixed(1)}%.`
+                    title: t("Water percentage stable."),
+                    description: bt("Your water reading is steady at {w}%.", { w })
                 });
             }
         } else {
-            // No trend, just current value assessment
-            if (currentWater >= 50 && currentWater <= 65) {
+            // No trend, just the current reading against the typical ranges
+            if (currentWater >= 45 && currentWater <= 65) {
                 insights.push({
-                    title: t("Hydration is within healthy range."),
-                    description: `Your ${currentWater.toFixed(1)}% water level indicates good hydration status.`
+                    title: t("Water percentage in the typical range."),
+                    description: bt("Your water reading is {w}%.", { w }) + note
                 });
-            } else if (currentWater < 50) {
+            } else if (currentWater < 45) {
                 insights.push({
-                    title: t("Hydration may be low."),
-                    description: `At ${currentWater.toFixed(1)}%, consider increasing water intake for optimal performance and recovery.`
+                    title: t("Water percentage below the typical range."),
+                    description: bt("Your water reading is {w}%. More body fat lowers this reading, and so can when you last drank or exercised.", { w }) + note
                 });
-            } else if (currentWater > 65) {
+            } else {
                 insights.push({
-                    title: t("Hydration is high."),
-                    description: `Your ${currentWater.toFixed(1)}% water level is above typical range. This could indicate high muscle mass or recent hydration.`
+                    title: t("Water percentage above the typical range."),
+                    description: bt("Your water reading is {w}%. More muscle raises this reading, and so can drinking shortly before weighing.", { w }) + note
                 });
             }
         }
@@ -1098,26 +1124,17 @@ window.generateBodyInsights = function() {
             description: t("You have") + ` ${muscleMassKg}` + t("kg of muscle") + `, ${fatMassKg}` + t("kg of fat") + `, ` + t("and") + ` ${leanBodyMass}` + t("kg of lean mass") + `. ` + t("This gives you a strong foundation for recomposition.")
         });
 
-        // Body fat category insight (for men age 40)
-        if (profile.age >= 30 && profile.age <= 50) {
-            if (currentFat >= 18 && currentFat <= 24) {
-                insights.push({
-                    title: t("Body Fat in Healthy Range"),
-                    description: `Your ${currentFat.toFixed(1)}% body fat is within the healthy range (18-24%) for men aged ${profile.age}.`
-                });
-            } else if (currentFat > 24 && currentFat <= 30) {
-                const toHealthy = (currentFat - 24).toFixed(1);
-                insights.push({
-                    title: t("Mild Excess Body Fat"),
-                    description: `At ${currentFat.toFixed(1)}%, you're ${toHealthy}% above the healthy range. Your high muscle % shows a strong frame with room for recomposition rather than strict weight loss.`
-                });
-            } else if (currentFat > 30) {
-                const toHealthy = (currentFat - 24).toFixed(1);
-                insights.push({
-                    title: t("Body Fat Above Healthy Range"),
-                    description: `Reducing body fat by ${toHealthy}% would bring you into the healthy range (18-24%) while preserving your muscle mass.`
-                });
-            }
+        // Body fat compared with reference ranges for both sexes (the app does not ask for sex). Gallagher et al.,
+        // Am J Clin Nutr 2000;72:694-701, linked BMI 18.5-25 with these body fat ranges (white adults, rounded).
+        const fatBand = bodyFatReferenceBand(parseFloat(profile.age));
+        if (fatBand) {
+            insights.push({
+                title: t("Body Fat and Reference Ranges"),
+                description: bt("Your body fat reading is {fat}%. For ages {ages}, a 2000 study (Gallagher et al., American Journal of Clinical Nutrition) linked a healthy BMI with about {m1}–{m2}% body fat for men and {w1}–{w2}% for women. This app does not ask your sex, so both are shown. The ranges differ somewhat by ethnic background, and home scales can differ from a lab measurement by several percentage points.", {
+                    fat: bnum(currentFat), ages: fatBand.ages,
+                    m1: fatBand.men[0], m2: fatBand.men[1], w1: fatBand.women[0], w2: fatBand.women[1]
+                })
+            });
         }
 
         // Muscle-to-Fat Ratio
@@ -1144,13 +1161,17 @@ window.generateBodyInsights = function() {
             }
             const avgFatChange = fatChanges.reduce((a, b) => a + b, 0) / fatChanges.length;
 
-            if (avgFatChange < 0) {
-                const targetFat = 22; // Healthy target
-                const weeksToTarget = Math.ceil((currentFat - targetFat) / Math.abs(avgFatChange));
-                if (weeksToTarget > 0 && weeksToTarget < 52) {
+            // Arithmetic only, worded as an "if". The only target is a reference value shown above (the top of the
+            // men's range for the user's age), not a goal; the app does not know the user's sex.
+            if (avgFatChange < 0 && fatBand && currentFat > fatBand.men[1]) {
+                const targetFat = fatBand.men[1];
+                const entriesToTarget = Math.ceil((currentFat - targetFat) / Math.abs(avgFatChange));
+                if (entriesToTarget > 0 && entriesToTarget < 52) {
                     insights.push({
-                        title: t("Fat Loss Forecast"),
-                        description: t("At your current rate of") + ` ${Math.abs(avgFatChange).toFixed(1)}` + t("% fat loss per entry, you could reach") + ` ${targetFat}` + t("% body fat in approximately") + ` ${weeksToTarget}` + ` ` + t("weeks") + `.`
+                        title: t("Body Fat Trend"),
+                        description: bt("If your body fat reading kept falling by {r} percentage points per entry, it would reach {target}% in about {n} more entries. {target}% is the top of the men's reference range above. This is simple arithmetic, not a prediction.", {
+                            r: bnum(Math.abs(avgFatChange)), target: targetFat, n: entriesToTarget
+                        })
                     });
                 }
             }
@@ -1585,17 +1606,18 @@ window.generateCaliperInsights = function() {
         }
     }
 
-    // Insight 2: Visceral fat indicator (abdomen) - both good and bad
+    // Insight 2: belly (abdominal) skinfold. A skinfold measures fat under the skin (subcutaneous), not the fat
+    // around the organs (visceral), so it is shown as at most a rough indicator of abdominal fat.
     if (abdomenChange !== null) {
         if (abdomenChange < -2.0) {
             insights.push({
-                title: t("Excellent Visceral Fat Reduction"),
-                description: t("Abdomen skinfold dropped") + ` ${Math.abs(abdomenChange).toFixed(1)}` + t("mm — a strong indicator of reduced visceral fat, which significantly improves metabolic health.")
+                title: t("Belly Skinfold Down"),
+                description: bt("Your belly (abdominal) skinfold dropped {n} mm. A skinfold measures the fat just under the skin, so it is at most a rough indicator of the fat inside your abdomen around the organs (visceral fat).", { n: bnum(Math.abs(abdomenChange)) })
             });
         } else if (abdomenChange > 2.0) {
             insights.push({
-                title: t("Increased Abdominal Fat"),
-                description: `Abdomen skinfold increased ${abdomenChange.toFixed(1)}mm — this may indicate increased visceral fat. Focus on nutrition and core exercises.`
+                title: t("Belly Skinfold Up"),
+                description: bt("Your belly (abdominal) skinfold rose {n} mm. A skinfold measures the fat just under the skin, so it is at most a rough indicator of the fat inside your abdomen around the organs (visceral fat).", { n: bnum(abdomenChange) })
             });
         }
     }

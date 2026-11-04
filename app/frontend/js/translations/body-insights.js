@@ -819,5 +819,149 @@ window.bodyInsightsTranslations = {
         "es": "La ecuación para mujeres necesita el pliegue del tríceps, que esta aplicación no registra. Es una estimación general, no una medición.",
         "fr": "L'équation pour les femmes nécessite le pli cutané du triceps, que cette application n'enregistre pas. Il s'agit d'une estimation générale, pas d'une mesure.",
         "de": "Die Formel für Frauen benötigt eine Trizeps-Hautfalte, die diese App nicht erfasst. Dies ist eine allgemeine Schätzung, keine Messung."
+    },
+    "Smart-scale makers such as Tanita quote about 45–60% for women and 50–65% for men as typical. Readings vary between devices and with when you last ate, drank or exercised.": {
+        "en": "Smart-scale makers such as Tanita quote about 45–60% for women and 50–65% for men as typical. Readings vary between devices and with when you last ate, drank or exercised.",
+        "es": "Los fabricantes de básculas inteligentes, como Tanita, indican como habitual alrededor de un 45–60 % en mujeres y un 50–65 % en hombres. Las lecturas varían según el aparato y según cuándo comiste, bebiste o hiciste ejercicio por última vez.",
+        "fr": "Les fabricants de balances connectées, comme Tanita, indiquent comme habituel environ 45–60 % chez les femmes et 50–65 % chez les hommes. Les mesures varient selon l'appareil et selon le moment de votre dernier repas, de votre dernière boisson ou de votre dernier effort.",
+        "de": "Hersteller smarter Waagen wie Tanita nennen etwa 45–60 % bei Frauen und 50–65 % bei Männern als üblich. Die Werte schwanken je nach Gerät und je nachdem, wann Sie zuletzt gegessen, getrunken oder trainiert haben."
+    },
+    "Water and muscle both up.": {
+        "en": "Water and muscle both up.",
+        "es": "Agua y músculo, ambos en aumento.",
+        "fr": "Eau et muscle en hausse.",
+        "de": "Wasser und Muskeln beide gestiegen."
+    },
+    "Muscle holds more water than fat, so the two often rise together. Your water reading is {w}%.": {
+        "en": "Muscle holds more water than fat, so the two often rise together. Your water reading is {w}%.",
+        "es": "El músculo retiene más agua que la grasa, así que ambos suelen subir a la vez. Tu lectura de agua es del {w} %.",
+        "fr": "Le muscle contient plus d'eau que la graisse, les deux augmentent donc souvent ensemble. Votre mesure d'eau est de {w} %.",
+        "de": "Muskeln enthalten mehr Wasser als Fett, daher steigen beide oft gemeinsam. Ihr Wasserwert liegt bei {w} %."
+    },
+    "Water percentage up.": {
+        "en": "Water percentage up.",
+        "es": "Porcentaje de agua en aumento.",
+        "fr": "Pourcentage d'eau en hausse.",
+        "de": "Wasseranteil gestiegen."
+    },
+    "Your water reading rose to {w}%. This can come from more muscle, less fat, or from when you last drank or exercised before weighing.": {
+        "en": "Your water reading rose to {w}%. This can come from more muscle, less fat, or from when you last drank or exercised before weighing.",
+        "es": "Tu lectura de agua subió al {w} %. Puede deberse a más músculo, menos grasa o a cuándo bebiste o hiciste ejercicio antes de pesarte.",
+        "fr": "Votre mesure d'eau est passée à {w} %. Cela peut venir d'un peu plus de muscle, d'un peu moins de graisse, ou du moment où vous avez bu ou fait de l'exercice avant la pesée.",
+        "de": "Ihr Wasserwert ist auf {w} % gestiegen. Das kann an mehr Muskeln, weniger Fett oder daran liegen, wann Sie vor dem Wiegen zuletzt getrunken oder trainiert haben."
+    },
+    "Water percentage down.": {
+        "en": "Water percentage down.",
+        "es": "Porcentaje de agua en descenso.",
+        "fr": "Pourcentage d'eau en baisse.",
+        "de": "Wasseranteil gesunken."
+    },
+    "Your water reading fell to {w}%. It changes with when you last ate, drank or exercised, so weighing at the same time of day makes readings easier to compare.": {
+        "en": "Your water reading fell to {w}%. It changes with when you last ate, drank or exercised, so weighing at the same time of day makes readings easier to compare.",
+        "es": "Tu lectura de agua bajó al {w} %. Cambia según cuándo comiste, bebiste o hiciste ejercicio por última vez, así que pesarte a la misma hora del día hace que las lecturas sean más fáciles de comparar.",
+        "fr": "Votre mesure d'eau est descendue à {w} %. Elle varie selon le moment de votre dernier repas, de votre dernière boisson ou de votre dernier effort ; se peser à la même heure de la journée rend les mesures plus faciles à comparer.",
+        "de": "Ihr Wasserwert ist auf {w} % gesunken. Er hängt davon ab, wann Sie zuletzt gegessen, getrunken oder trainiert haben; wer sich immer zur gleichen Tageszeit wiegt, kann die Werte besser vergleichen."
+    },
+    "Water down with fat up is expected: fat holds less water than muscle. Current: {w}%.": {
+        "en": "Water down with fat up is expected: fat holds less water than muscle. Current: {w}%.",
+        "es": "Que el agua baje mientras la grasa sube es lo esperable: la grasa contiene menos agua que el músculo. Actual: {w} %.",
+        "fr": "Une baisse de l'eau avec une hausse de la graisse est attendue : la graisse contient moins d'eau que le muscle. Actuel : {w} %.",
+        "de": "Weniger Wasser bei mehr Fett ist zu erwarten: Fett enthält weniger Wasser als Muskeln. Aktuell: {w} %."
+    },
+    "Water percentage stable.": {
+        "en": "Water percentage stable.",
+        "es": "Porcentaje de agua estable.",
+        "fr": "Pourcentage d'eau stable.",
+        "de": "Wasseranteil stabil."
+    },
+    "Your water reading is steady at {w}%.": {
+        "en": "Your water reading is steady at {w}%.",
+        "es": "Tu lectura de agua se mantiene en el {w} %.",
+        "fr": "Votre mesure d'eau reste stable à {w} %.",
+        "de": "Ihr Wasserwert bleibt stabil bei {w} %."
+    },
+    "Water percentage in the typical range.": {
+        "en": "Water percentage in the typical range.",
+        "es": "Porcentaje de agua dentro del rango habitual.",
+        "fr": "Pourcentage d'eau dans la fourchette habituelle.",
+        "de": "Wasseranteil im üblichen Bereich."
+    },
+    "Your water reading is {w}%.": {
+        "en": "Your water reading is {w}%.",
+        "es": "Tu lectura de agua es del {w} %.",
+        "fr": "Votre mesure d'eau est de {w} %.",
+        "de": "Ihr Wasserwert liegt bei {w} %."
+    },
+    "Water percentage below the typical range.": {
+        "en": "Water percentage below the typical range.",
+        "es": "Porcentaje de agua por debajo del rango habitual.",
+        "fr": "Pourcentage d'eau sous la fourchette habituelle.",
+        "de": "Wasseranteil unter dem üblichen Bereich."
+    },
+    "Your water reading is {w}%. More body fat lowers this reading, and so can when you last drank or exercised.": {
+        "en": "Your water reading is {w}%. More body fat lowers this reading, and so can when you last drank or exercised.",
+        "es": "Tu lectura de agua es del {w} %. Tener más grasa corporal baja esta lectura, y también puede influir cuándo bebiste o hiciste ejercicio por última vez.",
+        "fr": "Votre mesure d'eau est de {w} %. Plus de masse grasse fait baisser cette mesure, tout comme le moment où vous avez bu ou fait de l'exercice pour la dernière fois.",
+        "de": "Ihr Wasserwert liegt bei {w} %. Mehr Körperfett senkt diesen Wert, ebenso kann es eine Rolle spielen, wann Sie zuletzt getrunken oder trainiert haben."
+    },
+    "Water percentage above the typical range.": {
+        "en": "Water percentage above the typical range.",
+        "es": "Porcentaje de agua por encima del rango habitual.",
+        "fr": "Pourcentage d'eau au-dessus de la fourchette habituelle.",
+        "de": "Wasseranteil über dem üblichen Bereich."
+    },
+    "Your water reading is {w}%. More muscle raises this reading, and so can drinking shortly before weighing.": {
+        "en": "Your water reading is {w}%. More muscle raises this reading, and so can drinking shortly before weighing.",
+        "es": "Tu lectura de agua es del {w} %. Tener más músculo sube esta lectura, y también beber poco antes de pesarte.",
+        "fr": "Votre mesure d'eau est de {w} %. Plus de muscle fait monter cette mesure, tout comme le fait de boire peu avant la pesée.",
+        "de": "Ihr Wasserwert liegt bei {w} %. Mehr Muskeln erhöhen diesen Wert, ebenso Trinken kurz vor dem Wiegen."
+    },
+    "Body Fat and Reference Ranges": {
+        "en": "Body Fat and Reference Ranges",
+        "es": "Grasa corporal y rangos de referencia",
+        "fr": "Masse grasse et fourchettes de référence",
+        "de": "Körperfett und Referenzbereiche"
+    },
+    "Your body fat reading is {fat}%. For ages {ages}, a 2000 study (Gallagher et al., American Journal of Clinical Nutrition) linked a healthy BMI with about {m1}–{m2}% body fat for men and {w1}–{w2}% for women. This app does not ask your sex, so both are shown. The ranges differ somewhat by ethnic background, and home scales can differ from a lab measurement by several percentage points.": {
+        "en": "Your body fat reading is {fat}%. For ages {ages}, a 2000 study (Gallagher et al., American Journal of Clinical Nutrition) linked a healthy BMI with about {m1}–{m2}% body fat for men and {w1}–{w2}% for women. This app does not ask your sex, so both are shown. The ranges differ somewhat by ethnic background, and home scales can differ from a lab measurement by several percentage points.",
+        "es": "Tu lectura de grasa corporal es del {fat} %. Para edades de {ages} años, un estudio de 2000 (Gallagher y cols., American Journal of Clinical Nutrition) relacionó un IMC saludable con alrededor de un {m1}–{m2} % de grasa corporal en hombres y un {w1}–{w2} % en mujeres. Esta aplicación no pregunta tu sexo, así que se muestran ambos. Los rangos varían algo según el origen étnico, y las básculas domésticas pueden diferir varios puntos porcentuales de una medición de laboratorio.",
+        "fr": "Votre mesure de masse grasse est de {fat} %. Pour les {ages} ans, une étude de 2000 (Gallagher et al., American Journal of Clinical Nutrition) a associé un IMC normal à environ {m1}–{m2} % de masse grasse chez les hommes et {w1}–{w2} % chez les femmes. Cette application ne demande pas votre sexe, les deux sont donc indiqués. Ces fourchettes varient un peu selon l'origine ethnique, et les balances domestiques peuvent s'écarter de plusieurs points de pourcentage d'une mesure en laboratoire.",
+        "de": "Ihr Körperfettwert liegt bei {fat} %. Für das Alter von {ages} Jahren verband eine Studie aus dem Jahr 2000 (Gallagher et al., American Journal of Clinical Nutrition) einen gesunden BMI mit etwa {m1}–{m2} % Körperfett bei Männern und {w1}–{w2} % bei Frauen. Diese App fragt nicht nach Ihrem Geschlecht, daher werden beide gezeigt. Die Bereiche unterscheiden sich etwas je nach ethnischer Herkunft, und Haushaltswaagen können um mehrere Prozentpunkte von einer Labormessung abweichen."
+    },
+    "Belly Skinfold Down": {
+        "en": "Belly Skinfold Down",
+        "es": "Pliegue abdominal más fino",
+        "fr": "Pli cutané du ventre en baisse",
+        "de": "Bauch-Hautfalte dünner"
+    },
+    "Belly Skinfold Up": {
+        "en": "Belly Skinfold Up",
+        "es": "Pliegue abdominal más grueso",
+        "fr": "Pli cutané du ventre en hausse",
+        "de": "Bauch-Hautfalte dicker"
+    },
+    "Your belly (abdominal) skinfold dropped {n} mm. A skinfold measures the fat just under the skin, so it is at most a rough indicator of the fat inside your abdomen around the organs (visceral fat).": {
+        "en": "Your belly (abdominal) skinfold dropped {n} mm. A skinfold measures the fat just under the skin, so it is at most a rough indicator of the fat inside your abdomen around the organs (visceral fat).",
+        "es": "Tu pliegue del vientre (abdominal) bajó {n} mm. Un pliegue mide la grasa que está justo bajo la piel, así que como mucho es un indicador aproximado de la grasa dentro del abdomen, alrededor de los órganos (grasa visceral).",
+        "fr": "Votre pli cutané du ventre (abdominal) a diminué de {n} mm. Un pli cutané mesure la graisse située juste sous la peau : c'est donc au mieux un indicateur approximatif de la graisse à l'intérieur de l'abdomen, autour des organes (graisse viscérale).",
+        "de": "Ihre Bauch-Hautfalte (abdominal) ist um {n} mm dünner geworden. Eine Hautfalte misst das Fett direkt unter der Haut und ist daher höchstens ein grober Hinweis auf das Fett im Bauchraum rund um die Organe (viszerales Fett)."
+    },
+    "Your belly (abdominal) skinfold rose {n} mm. A skinfold measures the fat just under the skin, so it is at most a rough indicator of the fat inside your abdomen around the organs (visceral fat).": {
+        "en": "Your belly (abdominal) skinfold rose {n} mm. A skinfold measures the fat just under the skin, so it is at most a rough indicator of the fat inside your abdomen around the organs (visceral fat).",
+        "es": "Tu pliegue del vientre (abdominal) subió {n} mm. Un pliegue mide la grasa que está justo bajo la piel, así que como mucho es un indicador aproximado de la grasa dentro del abdomen, alrededor de los órganos (grasa visceral).",
+        "fr": "Votre pli cutané du ventre (abdominal) a augmenté de {n} mm. Un pli cutané mesure la graisse située juste sous la peau : c'est donc au mieux un indicateur approximatif de la graisse à l'intérieur de l'abdomen, autour des organes (graisse viscérale).",
+        "de": "Ihre Bauch-Hautfalte (abdominal) ist um {n} mm dicker geworden. Eine Hautfalte misst das Fett direkt unter der Haut und ist daher höchstens ein grober Hinweis auf das Fett im Bauchraum rund um die Organe (viszerales Fett)."
+    },
+    "Body Fat Trend": {
+        "en": "Body Fat Trend",
+        "es": "Tendencia de la grasa corporal",
+        "fr": "Tendance de la masse grasse",
+        "de": "Körperfett-Trend"
+    },
+    "If your body fat reading kept falling by {r} percentage points per entry, it would reach {target}% in about {n} more entries. {target}% is the top of the men's reference range above. This is simple arithmetic, not a prediction.": {
+        "en": "If your body fat reading kept falling by {r} percentage points per entry, it would reach {target}% in about {n} more entries. {target}% is the top of the men's reference range above. This is simple arithmetic, not a prediction.",
+        "es": "Si tu lectura de grasa corporal siguiera bajando {r} puntos porcentuales por registro, llegaría al {target} % en unos {n} registros más. El {target} % es el límite superior del rango de referencia para hombres indicado arriba. Es un simple cálculo, no una predicción.",
+        "fr": "Si votre mesure de masse grasse continuait à baisser de {r} points de pourcentage par pesée, elle atteindrait {target} % dans environ {n} pesées. {target} % est le haut de la fourchette de référence pour les hommes indiquée plus haut. C'est un simple calcul, pas une prévision.",
+        "de": "Wenn Ihr Körperfettwert weiter um {r} Prozentpunkte pro Eintrag sinken würde, läge er in etwa {n} weiteren Einträgen bei {target} %. {target} % ist die Obergrenze des oben genannten Referenzbereichs für Männer. Das ist eine einfache Rechnung, keine Vorhersage."
     }
 };
