@@ -1,0 +1,21 @@
+# Tells Easypanel to rebuild and redeploy this app after every push to main, or by hand from the Actions tab.
+# The deploy address is the repository secret EASYPANEL_DEPLOY_HOOK. Never put it in this file.
+name: Deploy
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Trigger Easypanel
+        env:
+          HOOK: ${{ secrets.EASYPANEL_DEPLOY_HOOK }}
+        run: |
+          if [ -z "$HOOK" ]; then echo "EASYPANEL_DEPLOY_HOOK is not set"; exit 1; fi
+          curl -fsS -m 30 -o /dev/null -X POST "$HOOK"
+          echo "Deploy triggered"
