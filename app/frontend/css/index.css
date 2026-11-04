@@ -255,3 +255,57 @@
     margin-bottom: 0;
 }
 
+
+/* ===== Public intro beside the sign-in card ===== */
+.intro {
+    color: rgba(255, 255, 255, 0.9);
+    padding: 1.5rem 1rem;
+}
+
+.intro h1 {
+    color: white;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.intro h2 {
+    color: white;
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin: 1.5rem 0 0.75rem;
+}
+
+.intro ul {
+    padding-left: 1.2rem;
+    margin-bottom: 0;
+}
+
+.intro li {
+    margin-bottom: 0.35rem;
+}
+
+@media (max-width: 775px) {
+    .intro {
+        padding: 1.5rem 0.5rem 2rem;
+    }
+
+    .intro h1 {
+        font-size: 1.5rem;
+    }
+
+    /* Comfortable tap targets on phones (at least 44px high) */
+    .nav-tabs .nav-link,
+    .primary-btn,
+    .social-btn {
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .bottom-link a {
+        display: inline-block;
+        padding: 0.6rem 0.5rem;
+    }
+}

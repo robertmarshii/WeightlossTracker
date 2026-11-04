@@ -1,13 +1,16 @@
 <?php
-// Auto-redirect logged-in users to dashboard
+// Auto-redirect logged-in users to dashboard.
+// Only check when the visitor already has a session or remember-me cookie, so first-time visitors
+// (and crawlers) get no session cookie and a cacheable page.
 require_once('/var/app/backend/AuthManager.php');
-if (AuthManager::isLoggedIn()) {
+if ((isset($_COOKIE[session_name()]) || isset($_COOKIE['remember_token'])) && AuthManager::isLoggedIn()) {
     header('Location: dashboard.php');
     exit;
 }
+$assetVersion = function ($path) { $t = @filemtime(__DIR__ . '/' . $path); return $t ? $t : '1'; };
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
 <head>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17636245354"></script>
@@ -22,55 +25,83 @@ if (AuthManager::isLoggedIn()) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+    <!-- Icons and manifest -->
+    <link rel="icon" href="/favicon.ico" sizes="48x48">
+    <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
 
     <!-- SEO Meta Tags -->
     <title>Weightloss Tracker - Free Weight Loss & Health Tracking App</title>
     <meta name="description" content="Track your weight loss journey with our free, science-based tracker. Monitor BMI, body fat, health risks, and achieve your goals with personalized insights and progress charts.">
-    <meta name="keywords" content="weight loss tracker, BMI calculator, body fat tracker, health tracker, diet tracker, fitness goals, weight management, health monitoring">
     <meta name="author" content="Weightloss Tracker">
     <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://www.weightloss-tracker.com/">
+    <link rel="canonical" href="https://weightloss-tracker.com/">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://www.weightloss-tracker.com/">
+    <meta property="og:url" content="https://weightloss-tracker.com/">
     <meta property="og:title" content="Weightloss Tracker - Free Weight Loss & Health Tracking App">
     <meta property="og:description" content="Track your weight loss journey with our free, science-based tracker. Monitor BMI, body fat, health risks, and achieve your goals with personalized insights.">
-    <meta property="og:image" content="https://www.weightloss-tracker.com/images/favicon.svg">
+    <meta property="og:image" content="https://weightloss-tracker.com/images/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:site_name" content="Weightloss Tracker">
 
     <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://www.weightloss-tracker.com/">
-    <meta property="twitter:title" content="Weightloss Tracker - Free Weight Loss & Health Tracking App">
-    <meta property="twitter:description" content="Track your weight loss journey with our free, science-based tracker. Monitor BMI, body fat, health risks, and achieve your goals.">
-    <meta property="twitter:image" content="https://www.weightloss-tracker.com/images/favicon.svg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://weightloss-tracker.com/">
+    <meta name="twitter:title" content="Weightloss Tracker - Free Weight Loss & Health Tracking App">
+    <meta name="twitter:description" content="Track your weight loss journey with our free, science-based tracker. Monitor BMI, body fat, health risks, and achieve your goals.">
+    <meta name="twitter:image" content="https://weightloss-tracker.com/images/og-image.png">
 
     <!-- Additional SEO -->
     <meta name="theme-color" content="#4A90E2">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Weightloss Tracker">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Weightloss Tracker",
+      "url": "https://weightloss-tracker.com/",
+      "description": "Free weight loss tracker: log your weight, see BMI and body fat trends, set goals and get email reminders.",
+      "applicationCategory": "HealthApplication",
+      "operatingSystem": "Any (web browser)",
+      "isAccessibleForFree": true,
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "GBP" }
+    }
+    </script>
     <!-- jQuery (upgraded for better compatibility) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <!-- Bootstrap -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <!-- Schema Logger -->
-    <script src="schema-logger.js"></script>
     <!-- Global Styles -->
-    <link rel="stylesheet" href="css/global.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="css/global.css?v=<?php echo $assetVersion('css/global.css'); ?>">
     <!-- Page-specific Styles -->
-    <link rel="stylesheet" href="css/index.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="css/index.css?v=<?php echo $assetVersion('css/index.css'); ?>">
 </head>
 <body>
     <!-- Fixed Alert Container -->
     <div id="alert-container"></div>
 
-    <div class="container">
+    <main class="container">
         <div class="row justify-content-center align-items-center min-vh-90">
-            <div class="col-md-6">
+            <!-- What the app does: shown beside the sign-in card on wide screens, below it on phones -->
+            <section class="col-md-6 col-lg-5 order-2 order-md-1 intro">
+                <h1>Free weight loss tracker</h1>
+                <p>Log your weight in seconds and see your progress: weight trend, BMI, body fat and goal tracking, with reminders by email. Free, no app to install. Sign in with an email code, Google or Microsoft.</p>
+                <h2>What you can track</h2>
+                <ul>
+                    <li>Weight over time, with your trend and progress to goal</li>
+                    <li>BMI and body fat estimates</li>
+                    <li>Goals and achievements</li>
+                    <li>Reminders so you keep logging</li>
+                </ul>
+            </section>
+            <div class="col-md-6 order-1 order-md-2">
                 <!-- Login/Signup Form -->
                 <div class="glass-card">
                     <div class="logo-section">
@@ -103,6 +134,7 @@ if (AuthManager::isLoggedIn()) {
                                 
                                 <form id="loginForm">
                                     <div class="form-group">
+                                        <label for="loginEmail" class="sr-only">Email address</label>
                                         <input type="email" class="form-control glass-input" id="loginEmail" placeholder="Enter your email" data-eng="Enter your email" data-spa="Ingresa tu correo electrónico" data-fre="Saisissez votre e-mail" data-ger="E-Mail eingeben" required>
                                     </div>
                                     <button type="submit" class="btn primary-btn" id="sendLoginCodeBtn" data-eng="Send Login Code →" data-spa="Enviar Código de Acceso →" data-fre="Envoyer le Code de Connexion →" data-ger="Anmeldecode senden →">Send Login Code →</button>
@@ -140,6 +172,7 @@ if (AuthManager::isLoggedIn()) {
                                     <div class="welcome-subtitle" data-eng="Enter the 6-digit code sent to your email." data-spa="Ingresa el código de 6 dígitos enviado a tu correo." data-fre="Saisissez le code à 6 chiffres envoyé à votre e-mail." data-ger="Geben Sie den 6-stelligen Code ein, der an Ihre E-Mail gesendet wurde.">Enter the 6-digit code sent to your email.</div>
                                     
                                     <div class="form-group">
+                                        <label for="loginCode" class="sr-only">6-digit code</label>
                                         <input type="text" class="form-control glass-input" id="loginCode" placeholder="Enter 6-digit code" data-eng="Enter 6-digit code" data-spa="Ingresa código de 6 dígitos" data-fre="Saisissez le code à 6 chiffres" data-ger="6-stelligen Code eingeben" maxlength="6" pattern="[0-9]{6}" required>
                                     </div>
                                     <button type="submit" class="btn primary-btn" data-eng="Verify & Login" data-spa="Verificar e Iniciar Sesión" data-fre="Vérifier et Se Connecter" data-ger="Verifizieren & Anmelden">Verify & Login</button>
@@ -158,6 +191,7 @@ if (AuthManager::isLoggedIn()) {
                                 
                                 <form id="signupForm">
                                     <div class="form-group">
+                                        <label for="signupEmail" class="sr-only">Email address</label>
                                         <input type="email" class="form-control glass-input" id="signupEmail" placeholder="Enter your email" data-eng="Enter your email" data-spa="Ingresa tu correo electrónico" data-fre="Saisissez votre e-mail" data-ger="E-Mail eingeben" required>
                                     </div>
                                     <div class="form-check mb-3" id="termsCheck">
@@ -203,6 +237,7 @@ if (AuthManager::isLoggedIn()) {
                                     <div class="welcome-subtitle" data-eng="Enter the 6-digit verification code sent to your email." data-spa="Ingresa el código de verificación de 6 dígitos enviado a tu correo." data-fre="Saisissez le code de vérification à 6 chiffres envoyé à votre e-mail." data-ger="Geben Sie den 6-stelligen Verifizierungscode ein, der an Ihre E-Mail gesendet wurde.">Enter the 6-digit verification code sent to your email.</div>
                                     
                                     <div class="form-group">
+                                        <label for="signupCode" class="sr-only">6-digit code</label>
                                         <input type="text" class="form-control glass-input" id="signupCode" placeholder="Enter 6-digit code" data-eng="Enter 6-digit code" data-spa="Ingresa código de 6 dígitos" data-fre="Saisissez le code à 6 chiffres" data-ger="6-stelligen Code eingeben" maxlength="6" pattern="[0-9]{6}" required>
                                     </div>
                                     <button type="submit" class="btn primary-btn" data-eng="Verify & Complete Signup" data-spa="Verificar y Completar Registro" data-fre="Vérifier et Terminer l'Inscription" data-ger="Verifizieren & Registrierung abschließen">Verify & Complete Signup</button>
@@ -225,9 +260,8 @@ if (AuthManager::isLoggedIn()) {
                         </div>
                     </div>
                 </div>
-            </div>
         </div>
-    </div>
+    </main>
 
     <!-- Terms and Conditions Modal -->
     <div class="modal fade" id="termsModal" tabindex="-1" role="dialog" aria-labelledby="termsModalLabel" aria-hidden="true">
@@ -346,10 +380,10 @@ if (AuthManager::isLoggedIn()) {
     </div>
 
     <!-- Coverage Logging (Development only) -->
-    <script src="js/coverage.js?v=<?php echo time(); ?>"></script>
+    <script src="js/coverage.js?v=<?php echo $assetVersion('js/coverage.js'); ?>"></script>
     <!-- Global Scripts -->
-    <script src="js/global.js?v=<?php echo time(); ?>"></script>
+    <script src="js/global.js?v=<?php echo $assetVersion('js/global.js'); ?>"></script>
     <!-- Page-specific Scripts -->
-    <script src="js/index.js?v=<?php echo time(); ?>"></script>
+    <script src="js/index.js?v=<?php echo $assetVersion('js/index.js'); ?>"></script>
 </body>
 </html>
