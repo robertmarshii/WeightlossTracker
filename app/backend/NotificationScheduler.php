@@ -9,6 +9,7 @@
 
 require_once __DIR__ . '/Config.php';
 require_once __DIR__ . '/AuthManager.php';
+require_once __DIR__ . '/WeightUnits.php';
 
 class NotificationScheduler {
     private $db;
@@ -159,33 +160,26 @@ class NotificationScheduler {
     }
 
     /**
-     * Send reminder email to user
+     * Subject, plain text and HTML of the weekly reminder. Weights in $weightData are kg;
+     * they are shown in the user's unit ('kg', 'lbs' or 'st').
      */
-    private function sendReminderEmail($user, $weightData) {
-        // Use test email if in test mode
-        $email = $this->testMode && $this->testEmail ? $this->testEmail : $user['email'];
-        $weightUnit = $user['weight_unit'] ?? 'kg';
+    public static function buildReminderEmail($weightUnit, $weightData) {
+        $currentKg = $weightData['current_weight'] !== null && $weightData['current_weight'] !== '' ? (float)$weightData['current_weight'] : null;
+        $goalKg = $weightData['goal_weight'] !== null && $weightData['goal_weight'] !== '' ? (float)$weightData['goal_weight'] : null;
+        $weekAgoKg = $weightData['week_ago_weight'] !== null && $weightData['week_ago_weight'] !== '' ? (float)$weightData['week_ago_weight'] : null;
 
-        // Convert weights to user's preferred unit
-        $currentWeight = $weightData['current_weight'];
-        $goalWeight = $weightData['goal_weight'];
-        $weekAgoWeight = $weightData['week_ago_weight'];
+        $currentWeight = $currentKg ? WeightUnits::format($currentKg, $weightUnit) : null;
+        $goalWeight = $goalKg ? WeightUnits::format($goalKg, $weightUnit) : null;
 
-        if ($weightUnit === 'lb' && $currentWeight) {
-            $currentWeight = round($currentWeight * 2.20462, 1);
-            $goalWeight = $goalWeight ? round($goalWeight * 2.20462, 1) : null;
-            $weekAgoWeight = $weekAgoWeight ? round($weekAgoWeight * 2.20462, 1) : null;
-        }
-
-        // Calculate weekly progress
-        $weeklyProgress = null;
+        // Weekly progress, worked out in kg and then shown in the user's unit
         $progressMessage = '';
-        if ($currentWeight && $weekAgoWeight) {
-            $weeklyProgress = $weekAgoWeight - $currentWeight;
-            if ($weeklyProgress > 0) {
-                $progressMessage = "Great job! You lost {$weeklyProgress} {$weightUnit} last week! 🎉";
-            } elseif ($weeklyProgress < 0) {
-                $progressMessage = "You gained " . abs($weeklyProgress) . " {$weightUnit} last week. Keep going! 💪";
+        if ($currentKg && $weekAgoKg) {
+            $changeKg = round($weekAgoKg - $currentKg, 2);
+            $change = WeightUnits::format(abs($changeKg), $weightUnit);
+            if ($changeKg > 0) {
+                $progressMessage = "Great job! You lost {$change} last week! 🎉";
+            } elseif ($changeKg < 0) {
+                $progressMessage = "You gained {$change} last week. Keep going! 💪";
             } else {
                 $progressMessage = "Your weight stayed the same last week. Stay consistent! 🎯";
             }
@@ -202,11 +196,11 @@ class NotificationScheduler {
             <div style='background: #F7FAFC; padding: 20px; border-radius: 8px; margin: 20px 0;'>
                 <h3 style='color: #2D3748; margin-top: 0;'>Your Progress</h3>
                 <p style='font-size: 18px; color: #4A5568;'>
-                    <strong>Current Weight:</strong> {$currentWeight} {$weightUnit}
+                    <strong>Current Weight:</strong> {$currentWeight}
                 </p>
                 " . ($goalWeight ? "
                 <p style='font-size: 16px; color: #4A5568;'>
-                    <strong>Goal Weight:</strong> {$goalWeight} {$weightUnit}
+                    <strong>Goal Weight:</strong> {$goalWeight}
                 </p>
                 " : "") . "
                 " . ($progressMessage ? "
@@ -240,14 +234,28 @@ class NotificationScheduler {
         $plainContent = "Weekly Weight Tracking Reminder\n\n" .
             ($currentWeight ?
                 "Your Progress:\n" .
-                "Current Weight: {$currentWeight} {$weightUnit}\n" .
-                ($goalWeight ? "Goal Weight: {$goalWeight} {$weightUnit}\n" : "") .
+                "Current Weight: {$currentWeight}\n" .
+                ($goalWeight ? "Goal Weight: {$goalWeight}\n" : "") .
                 ($progressMessage ? "\n{$progressMessage}\n" : "") :
                 "We noticed you haven't logged your weight recently. Don't forget to track your progress!\n"
             ) . "\n\n" .
             "Log your weight now: https://www.weightloss-tracker.com/dashboard.php\n\n" .
             "You're receiving this email because you enabled weekly weight tracking reminders.\n" .
             "To change your notification preferences, visit: https://www.weightloss-tracker.com/dashboard.php#settings";
+
+        return ['subject' => $subject, 'text' => $plainContent, 'html' => $htmlContent];
+    }
+
+    /**
+     * Send reminder email to user
+     */
+    private function sendReminderEmail($user, $weightData) {
+        // Use test email if in test mode
+        $email = $this->testMode && $this->testEmail ? $this->testEmail : $user['email'];
+        $content = self::buildReminderEmail($user['weight_unit'] ?? 'kg', $weightData);
+        $subject = $content['subject'];
+        $plainContent = $content['text'];
+        $htmlContent = $content['html'];
 
         try {
             $result = AuthManager::sendEmail($email, $subject, $plainContent, $htmlContent);
@@ -297,11 +305,10 @@ class NotificationScheduler {
     }
 
     /**
-     * Send monthly progress report email
+     * Subject, plain text and HTML of the monthly report. Weights in $monthlyData are kg;
+     * they are shown in the user's unit ('kg', 'lbs' or 'st').
      */
-    private function sendMonthlyReport($user, $monthlyData) {
-        $email = $this->testMode && $this->testEmail ? $this->testEmail : $user['email'];
-        $weightUnit = $user['weight_unit'] ?? 'kg';
+    public static function buildMonthlyReport($weightUnit, $monthlyData) {
         $monthName = $monthlyData['month_name'];
         $weights = $monthlyData['weights'];
         $entriesCount = $monthlyData['entries_count'];
@@ -314,22 +321,22 @@ class NotificationScheduler {
         $monthProgress = null;
         $progressMessage = '';
 
+        $monthChange = '';
         if ($entriesCount > 0) {
-            $startWeight = $weights[0]['weight_kg'];
-            $endWeight = $weights[$entriesCount - 1]['weight_kg'];
+            $startKg = (float)$weights[0]['weight_kg'];
+            $endKg = (float)$weights[$entriesCount - 1]['weight_kg'];
+            $startWeight = WeightUnits::format($startKg, $weightUnit);
+            $endWeight = WeightUnits::format($endKg, $weightUnit);
 
-            // Convert to user's preferred unit
-            if ($weightUnit === 'lb') {
-                $startWeight = round($startWeight * 2.20462, 1);
-                $endWeight = round($endWeight * 2.20462, 1);
-            }
-
-            $monthProgress = $startWeight - $endWeight;
+            // Worked out in kg, then shown in the user's unit
+            $monthProgress = round($startKg - $endKg, 2);
+            $change = WeightUnits::format(abs($monthProgress), $weightUnit);
+            $monthChange = ($monthProgress > 0 ? "-" : "+") . $change;
 
             if ($monthProgress > 0) {
-                $progressMessage = "Amazing! You lost {$monthProgress} {$weightUnit} this month! 🎉";
+                $progressMessage = "Amazing! You lost {$change} this month! 🎉";
             } elseif ($monthProgress < 0) {
-                $progressMessage = "You gained " . abs($monthProgress) . " {$weightUnit} this month. Keep pushing! 💪";
+                $progressMessage = "You gained {$change} this month. Keep pushing! 💪";
             } else {
                 $progressMessage = "Your weight stayed stable this month. 🎯";
             }
@@ -338,23 +345,17 @@ class NotificationScheduler {
         // Build weight entries list for HTML
         $entriesHtml = '';
         foreach ($weights as $entry) {
-            $weight = $entry['weight_kg'];
-            if ($weightUnit === 'lb') {
-                $weight = round($weight * 2.20462, 1);
-            }
+            $weight = WeightUnits::format($entry['weight_kg'], $weightUnit);
             $date = date('M j', strtotime($entry['entry_date']));
-            $entriesHtml .= "<li style='padding: 5px 0;'>{$date}: <strong>{$weight} {$weightUnit}</strong></li>";
+            $entriesHtml .= "<li style='padding: 5px 0;'>{$date}: <strong>{$weight}</strong></li>";
         }
 
         // Build weight entries list for plain text
         $entriesText = '';
         foreach ($weights as $entry) {
-            $weight = $entry['weight_kg'];
-            if ($weightUnit === 'lb') {
-                $weight = round($weight * 2.20462, 1);
-            }
+            $weight = WeightUnits::format($entry['weight_kg'], $weightUnit);
             $date = date('M j', strtotime($entry['entry_date']));
-            $entriesText .= "  • {$date}: {$weight} {$weightUnit}\n";
+            $entriesText .= "  • {$date}: {$weight}\n";
         }
 
         // Build HTML content
@@ -367,9 +368,9 @@ class NotificationScheduler {
                 <h3 style='color: #2D3748; margin-top: 0;'>Your Summary</h3>
                 <p style='font-size: 16px; color: #4A5568;'>
                     <strong>Entries logged:</strong> {$entriesCount}<br>
-                    <strong>Starting weight:</strong> {$startWeight} {$weightUnit}<br>
-                    <strong>Ending weight:</strong> {$endWeight} {$weightUnit}<br>
-                    <strong>Monthly change:</strong> " . ($monthProgress > 0 ? "-" : "+") . abs($monthProgress) . " {$weightUnit}
+                    <strong>Starting weight:</strong> {$startWeight}<br>
+                    <strong>Ending weight:</strong> {$endWeight}<br>
+                    <strong>Monthly change:</strong> {$monthChange}
                 </p>
                 " . ($progressMessage ? "
                 <p style='font-size: 16px; color: #2C7A7B; background: #E6FFFA; padding: 10px; border-radius: 4px; margin-top: 15px;'>
@@ -410,9 +411,9 @@ class NotificationScheduler {
             ($entriesCount > 0 ?
                 "Your Summary:\n" .
                 "Entries logged: {$entriesCount}\n" .
-                "Starting weight: {$startWeight} {$weightUnit}\n" .
-                "Ending weight: {$endWeight} {$weightUnit}\n" .
-                "Monthly change: " . ($monthProgress > 0 ? "-" : "+") . abs($monthProgress) . " {$weightUnit}\n\n" .
+                "Starting weight: {$startWeight}\n" .
+                "Ending weight: {$endWeight}\n" .
+                "Monthly change: {$monthChange}\n\n" .
                 ($progressMessage ? "{$progressMessage}\n\n" : "") .
                 "Your Entries:\n{$entriesText}\n" :
                 "No entries logged this month. Start tracking your progress!\n\n"
@@ -420,6 +421,19 @@ class NotificationScheduler {
             "View your full progress: https://www.weightloss-tracker.com/dashboard.php\n\n" .
             "You're receiving this email because you enabled monthly progress reports.\n" .
             "To change your notification preferences, visit: https://www.weightloss-tracker.com/dashboard.php#settings";
+
+        return ['subject' => $subject, 'text' => $plainContent, 'html' => $htmlContent];
+    }
+
+    /**
+     * Send monthly progress report email
+     */
+    private function sendMonthlyReport($user, $monthlyData) {
+        $email = $this->testMode && $this->testEmail ? $this->testEmail : $user['email'];
+        $content = self::buildMonthlyReport($user['weight_unit'] ?? 'kg', $monthlyData);
+        $subject = $content['subject'];
+        $plainContent = $content['text'];
+        $htmlContent = $content['html'];
 
         try {
             $result = AuthManager::sendEmail($email, $subject, $plainContent, $htmlContent);
@@ -590,8 +604,8 @@ class NotificationScheduler {
     }
 }
 
-// Run scheduler if called directly
-if (php_sapi_name() === 'cli') {
+// Run scheduler if called directly (not when another script includes this file, e.g. a test)
+if (php_sapi_name() === 'cli' && realpath($_SERVER['SCRIPT_FILENAME'] ?? '') === __FILE__) {
     $scheduler = new NotificationScheduler();
     $scheduler->processNotifications();
 }
