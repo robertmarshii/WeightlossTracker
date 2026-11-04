@@ -55,6 +55,10 @@ RUN echo "pm.max_children = 50" >> /usr/local/etc/php-fpm.d/www.conf && \
     echo "pm.max_spare_servers = 15" >> /usr/local/etc/php-fpm.d/www.conf
 RUN echo "max_input_vars = 11000" > /usr/local/etc/php/conf.d/custom-php.ini
 
+# Version for /status: Easypanel passes the commit being built as the GIT_SHA build argument.
+ARG GIT_SHA=""
+RUN mkdir -p /srv && printf '%s\n' "${GIT_SHA:-unknown}" > /srv/git-sha
+
 # Expose port 80
 EXPOSE 80
 
