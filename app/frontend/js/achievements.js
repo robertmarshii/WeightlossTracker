@@ -5,7 +5,7 @@ function updateAchievementCards(weightData) {
     if (weightData.length === 0) return;
 
     // Sort by date for calculations
-    const sortedData = [...weightData].sort((a, b) => new Date(a.entry_date) - new Date(b.entry_date));
+    const sortedData = [...weightData].sort(compareEntriesByDate);
     const firstWeight = parseFloat(sortedData[0].weight_kg);
     const lastWeight = parseFloat(sortedData[sortedData.length - 1].weight_kg);
     const totalLoss = firstWeight - lastWeight;

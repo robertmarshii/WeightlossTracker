@@ -25,137 +25,65 @@ function postRequest(url, data) {
     });
 }
 
+// Rows of the weight history table (newest first). The change column is worked out in the user's unit
+// and shows "-" when it rounds to zero there.
+function renderWeightHistoryRows(history) {
+    const tbody = $('#weight-history-body');
+    if (!history || history.length === 0) {
+        tbody.html(`<tr><td colspan="4" class="no-data">${t('No weight entries found. Add your first entry above!')}</td></tr>`);
+        return;
+    }
+    let html = '';
+    history.forEach((entry, index) => {
+        const weightKg = parseFloat(entry.weight_kg);
+        const date = String(entry.entry_date);
+        let changeHtml = '<span class="text-muted">-</span>';
+        if (index < history.length - 1) {
+            // Previous chronological entry is next in the newest-first array
+            const diffKg = weightKg - parseFloat(history[index + 1].weight_kg);
+            const change = formatWeightChange(diffKg);
+            if (change) {
+                changeHtml = `<span class="${diffKg > 0 ? 'text-danger' : 'text-success'}">${change}</span>`;
+            }
+        }
+        const id = parseInt(entry.id, 10);
+        html += `
+            <tr data-id="${id}">
+                <td>${formatDate(date)}</td>
+                <td><strong>${formatWeight(weightKg)}</strong></td>
+                <td>${changeHtml}</td>
+                <td>
+                    <div class="table-actions">
+                        <button class="btn btn-sm edit-btn" data-id="${id}" data-kg="${weightKg}" data-date="${$('<div>').text(date).html()}" aria-label="${t('Edit')}">✎</button>
+                        <button class="btn btn-sm delete-btn" data-id="${id}" aria-label="${t('Delete')}">✖</button>
+                    </div>
+                </td>
+            </tr>
+        `;
+    });
+    tbody.html(html);
+}
+
+$(document).on('click', '#weight-history-body .edit-btn', function () {
+    editWeight($(this).data('id'), $(this).data('kg'), String($(this).data('date')));
+});
+$(document).on('click', '#weight-history-body .delete-btn', function () {
+    deleteWeight($(this).data('id'));
+});
+
 function loadWeightHistory() {
     if (window.coverage) window.coverage.logFunction('loadWeightHistory', 'data.js');
 
-    // Check if we have global data first
-    debugLog('🔍 loadWeightHistory - has global data:', !!window.globalDashboardData, 'has weight_history:', !!window.globalDashboardData?.weight_history);
-
     if (window.globalDashboardData && window.globalDashboardData.weight_history) {
-        debugLog('📊 Using global data for weight history');
-        const tbody = $('#weight-history-body');
-        const history = window.globalDashboardData.weight_history;
-
-        if (!history || history.length === 0) {
-            if (window.coverage) window.coverage.logFunction('if', 'data.js');
-            tbody.html(`<tr><td colspan="4" class="no-data">${t('No weight entries found. Add your first entry above!')}</td></tr>`);
-            return;
-        }
-
-        let html = '';
-        const unit = getWeightUnitLabel();
-        const threshold = unit === 'st' ? 0.05 : 0.1;
-
-        history.forEach((entry, index) => {
-            const weight = parseFloat(entry.weight_kg);
-            const date = entry.entry_date;
-            const bmi = entry.bmi || 'N/A';
-            const displayWeight = convertFromKg(weight);
-
-            // Calculate change from previous chronological entry (which is next in newest-first array)
-            let changeHtml = '<span class="text-muted">-</span>';
-            if (index < history.length - 1) {
-                if (window.coverage) window.coverage.logFunction('if', 'data.js');
-                const previousEntry = history[index + 1];
-                const previousWeight = parseFloat(previousEntry.weight_kg);
-
-                // Convert both weights to display unit first, then calculate difference
-                const currentDisplayWeight = parseFloat(displayWeight);
-                const previousDisplayWeight = parseFloat(convertFromKg(previousWeight));
-                const change = currentDisplayWeight - previousDisplayWeight;
-
-                if (Math.abs(change) >= threshold) { // Only show if change is meaningful
-                    const changeClass = change > 0 ? 'text-danger' : change < 0 ? 'text-success' : 'text-muted';
-                    const changeSymbol = change > 0 ? '+' : '';
-                    changeHtml = `<span class="${changeClass}">${changeSymbol}${change.toFixed(1)} ${unit}</span>`;
-                } else {
-                    changeHtml = '<span class="text-muted">-</span>';
-                }
-            }
-
-            html += `
-                <tr data-id="${entry.id}">
-                    <td>${formatDate(date)}</td>
-                    <td><strong>${displayWeight} ${unit}</strong></td>
-                    <td>${changeHtml}</td>
-                    <td>
-                        <div class="table-actions">
-                            <button class="btn btn-sm edit-btn" onclick="editWeight(${entry.id}, ${displayWeight}, '${date}')">✎</button>
-                            <button class="btn btn-sm delete-btn" onclick="deleteWeight(${entry.id})">✖</button>
-                        </div>
-                    </td>
-                </tr>
-            `;
-        });
-
-        tbody.html(html);
+        renderWeightHistoryRows(window.globalDashboardData.weight_history);
         return;
     }
 
     // Fallback to API call if global data not available
-    debugLog('🌐 Making API call for weight history (global data not available)');
     postRequest('router.php?controller=profile', { action: 'get_weight_history' })
     .then(resp => {
         const data = parseJson(resp);
-        const tbody = $('#weight-history-body');
-
-        if (!data.success || !data.history || data.history.length === 0) {
-            if (window.coverage) window.coverage.logFunction('if', 'data.js');
-            tbody.html(`<tr><td colspan="4" class="no-data">${t('No weight entries found. Add your first entry above!')}</td></tr>`);
-            return;
-        }
-
-        let html = '';
-
-        // Data already comes sorted newest first from backend
-        const history = data.history;
-
-        const unit = getWeightUnitLabel();
-        const threshold = unit === 'st' ? 0.05 : 0.1;
-
-        history.forEach((entry, index) => {
-            const weight = parseFloat(entry.weight_kg);
-            const date = entry.entry_date;
-            const bmi = entry.bmi || 'N/A';
-            const displayWeight = convertFromKg(weight);
-
-            // Calculate change from previous chronological entry (which is next in newest-first array)
-            let changeHtml = '<span class="text-muted">-</span>';
-            if (index < history.length - 1) {
-                if (window.coverage) window.coverage.logFunction('if', 'data.js');
-                const previousEntry = history[index + 1];
-                const previousWeight = parseFloat(previousEntry.weight_kg);
-
-                // Convert both weights to display unit first, then calculate difference
-                const currentDisplayWeight = parseFloat(displayWeight);
-                const previousDisplayWeight = parseFloat(convertFromKg(previousWeight));
-                const change = currentDisplayWeight - previousDisplayWeight;
-
-                if (Math.abs(change) >= threshold) { // Only show if change is meaningful
-                    const changeClass = change > 0 ? 'text-danger' : change < 0 ? 'text-success' : 'text-muted';
-                    const changeSymbol = change > 0 ? '+' : '';
-                    changeHtml = `<span class="${changeClass}">${changeSymbol}${change.toFixed(1)} ${unit}</span>`;
-                } else {
-                    changeHtml = '<span class="text-muted">-</span>';
-                }
-            }
-
-            html += `
-                <tr data-id="${entry.id}">
-                    <td>${formatDate(date)}</td>
-                    <td><strong>${displayWeight} ${unit}</strong></td>
-                    <td>${changeHtml}</td>
-                    <td>
-                        <div class="table-actions">
-                            <button class="btn btn-sm edit-btn" onclick="editWeight(${entry.id}, ${displayWeight}, '${date}')">✎</button>
-                            <button class="btn btn-sm delete-btn" onclick="deleteWeight(${entry.id})">✖</button>
-                        </div>
-                    </td>
-                </tr>
-            `;
-        });
-
-        tbody.html(html);
+        renderWeightHistoryRows(data.success ? data.history : []);
     }).catch(function() {
         $('#weight-history-body').html(`<tr><td colspan="4" class="no-data text-danger">${t('Failed to load weight history')}</td></tr>`);
     });
@@ -177,14 +105,20 @@ function formatDate(dateString) {
     return result;
 }
 
-function editWeight(id, weight, date) {
+// The weight as the edit field shows it: "13 st 5.4 lb" for stone, else the number with one decimal
+function weightInputText(weightKg) {
+    return getWeightUnit() === 'st' ? formatWeight(weightKg, 'st') : convertFromKg(weightKg);
+}
+
+function editWeight(id, weightKg, date) {
     if (window.coverage) window.coverage.logFunction('editWeight', 'data.js');
 
-    // Remember which entry is being edited: Save then updates it instead of adding a new one
-    $('#add-entry-form').data('editId', id);
+    // Remember which entry is being edited and its stored kg: Save sends that kg unchanged unless the
+    // weight field was edited (the field shows a rounded value, so converting it back would drift).
+    const prefill = weightInputText(weightKg);
+    $('#add-entry-form').data('editId', id).data('editKg', String(weightKg)).data('editPrefill', prefill);
 
-    // Pre-fill weight (already in display units)
-    $('#newWeight').val(weight);
+    $('#newWeight').val(prefill);
 
     // Format date to user's preferred format before pre-filling
     const formattedDate = formatDateBySettings(date);
@@ -235,4 +169,6 @@ function deleteWeight(id) {
 window.dataLoadWeightHistory = loadWeightHistory;
 window.dataFormatDate = formatDate;
 window.dataEditWeight = editWeight;
+window.dataWeightInputText = weightInputText;
+window.dataRenderWeightHistoryRows = renderWeightHistoryRows;
 window.dataDeleteWeight = deleteWeight;

@@ -44,9 +44,15 @@ function num(x, digits = 1) {
     return n.toLocaleString(getLanguageLocale(), { minimumFractionDigits: digits, maximumFractionDigits: digits });
 }
 
-// A weight stored in kg, in the user's unit
+// A weight stored in kg, in the user's unit ("83,6 kg", "184.3 lbs", "13 st 2.3 lb")
 function healthWeight(kg) {
-    return `${num(convertFromKg(kg))} ${getWeightUnitLabel()}`;
+    return formatWeight(kg, null, x => num(x));
+}
+
+// A range of weights in the user's unit: "60.1–75.3 kg", or "9 st 6.5 lb – 11 st 12.0 lb" for stone
+function healthWeightRange(minKg, maxKg) {
+    if (getWeightUnit() === 'st') return `${healthWeight(minKg)} – ${healthWeight(maxKg)}`;
+    return `${num(convertFromKg(minKg))}–${num(convertFromKg(maxKg))} ${getWeightUnitLabel()}`;
 }
 
 // "[n]" link to an entry of the Sources list on this page
@@ -87,7 +93,7 @@ function renderProgressCard(startKg, currentKg, heightCm) {
             diff: `<strong class="text-success">${healthWeight(changeKg)}</strong>`, pct: `<strong>${num(pct)}</strong>`
         }));
         if (pct >= 5) {
-            lines.push(`<span class="text-success">${t('You have lost more than 5% of your starting weight.')}</span>`);
+            lines.push(`<span class="text-success">${t('You have lost at least 5% of your starting weight.')}</span>`);
         } else {
             lines.push(tf('{diff} more to reach 5% of your starting weight.', { diff: healthWeight(startKg * 0.05 - changeKg) }));
         }
@@ -185,11 +191,12 @@ function renderBodyFat(data, startKg) {
         const [stMin, stMax] = deurenbergRange(startKg / (h * h), data.age);
         const change = (stMin + stMax) / 2 - (curMin + curMax) / 2;
         if (change > 0.1) {
-            lines.push(`${t('Change:')} <strong class="text-success">-${num(change)}%</strong>`);
+            // A difference between two percentages: percentage points, not percent
+            lines.push(`${t('Change:')} <strong class="text-success">${tf('-{n} percentage points', { n: num(change) })}</strong>`);
             lines.push(`${t('Started:')} <strong>${num(stMin)}–${num(stMax)}%</strong>`);
         }
     }
-    lines.push(`<small class="text-muted">${t('Deurenberg formula (BMI and age). The range runs from the result for men to the result for women. For adults it is usually within about 4 percentage points of a lab measurement, and it slightly overestimates body fat in people with obesity.')} ${srcRef('deur')}</small>`);
+    lines.push(`<small class="text-muted">${t('Deurenberg formula (BMI and age). The range runs from the result for men to the result for women. Compared with a lab measurement, its typical error is about 4 percentage points, and it slightly overestimates body fat in people with obesity.')} ${srcRef('deur')}</small>`);
     el.html(lines.join('<br>')).removeClass('text-muted').removeAttr('data-eng data-spa data-fre data-ger');
 }
 
@@ -214,11 +221,13 @@ function refreshHealth() {
 function renderIdealWeight(data) {
     const el = $('#ideal-weight-block');
     if (!data.success) return;
-    const lines = [`<strong>${num(convertFromKg(data.min_weight_kg))}–${num(convertFromKg(data.max_weight_kg))} ${getWeightUnitLabel()}</strong>`];
+    const lines = [`<strong>${healthWeightRange(data.min_weight_kg, data.max_weight_kg)}</strong>`];
     if (data.timeline && data.timeline.target_date) {
+        // Arithmetic on the user's recent rate, not a prediction
         const targetMonth = new Date(data.timeline.target_date + '-01').toLocaleDateString(getLanguageLocale(), { year: 'numeric', month: 'long' });
-        lines.push(`<small class="text-success">${t('Projected to reach upper limit by')} ${targetMonth}</small>`);
-        lines.push(`<small class="text-muted">${t('Based on current rate of')} ${num(convertFromKg(data.timeline.current_rate_kg_per_week))} ${getWeightUnitLabel()}/${t('week')}</small>`);
+        lines.push(`<small class="text-muted">${tf('If your recent rate ({rate} per week) continued, you would reach the top of this range around {month}.', {
+            rate: healthWeight(data.timeline.current_rate_kg_per_week), month: targetMonth
+        })}</small>`);
     }
     lines.push(`<small class="text-muted">${t("Hamwi's 1964 rule of thumb, from the value for women to the value for men of your height. A rough guide, not a health target.")} ${srcRef('hamwi')}</small>`);
     el.html(lines.join('<br>')).removeClass('text-muted').removeAttr('data-eng data-spa data-fre data-ger');

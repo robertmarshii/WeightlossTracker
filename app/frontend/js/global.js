@@ -10,14 +10,45 @@
     function sameOrigin(url) {
         try { return new URL(url, window.location.href).origin === window.location.origin; } catch (e) { return false; }
     }
+    // Version of this page's code (dashboard.php). Sent with every request; the server answers with the
+    // live version. If the live one is newer (a deploy happened while this tab was open), ask for a reload.
+    function appVersion() {
+        const m = document.querySelector('meta[name="app-version"]');
+        return m ? m.getAttribute('content') : '';
+    }
+    function checkAppVersion(serverVersion) {
+        const mine = parseInt(appVersion(), 10);
+        const live = parseInt(serverVersion, 10);
+        if (!isNaN(mine) && !isNaN(live) && live > mine) showReloadNotice();
+    }
+    function showReloadNotice() {
+        if (document.getElementById('app-reload-notice') || !document.body) return;
+        const tr = (s) => (typeof window.t === 'function' ? window.t(s) : s);
+        const box = document.createElement('div');
+        box.id = 'app-reload-notice';
+        box.setAttribute('role', 'alert');
+        box.style.cssText = 'position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%);z-index:10000;max-width:calc(100% - 32px);background:#1f2937;color:#fff;padding:12px 16px;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.3);display:flex;gap:12px;align-items:center;flex-wrap:wrap;';
+        const text = document.createElement('span');
+        text.textContent = tr('A newer version of this page is available. Please reload it before you save anything else.');
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'btn btn-sm btn-light';
+        btn.textContent = tr('Reload');
+        btn.addEventListener('click', () => window.location.reload());
+        box.appendChild(text);
+        box.appendChild(btn);
+        document.body.appendChild(box);
+    }
     function withToken(init) {
         const opts = Object.assign({}, init || {});
         const headers = new Headers(opts.headers || {});
         headers.set('X-CSRF-Token', csrfToken());
+        if (appVersion()) headers.set('X-App-Version', appVersion());
         opts.headers = headers;
         return opts;
     }
     window.getCsrfToken = csrfToken;
+    window.checkAppVersion = checkAppVersion;
 
     if (window.fetch) {
         const originalFetch = window.fetch.bind(window);
@@ -25,6 +56,7 @@
             const url = typeof input === 'string' ? input : (input && input.url) || '';
             if (!sameOrigin(url) || !csrfToken()) return originalFetch(input, init);
             return originalFetch(input, withToken(init)).then(function (resp) {
+                if (resp.headers && resp.headers.get('X-App-Version')) checkAppVersion(resp.headers.get('X-App-Version'));
                 if (resp.status !== 403 || url.indexOf('controller=profile') === -1) return resp;
                 return resp.clone().json().then(function (data) {
                     if (!data || data.csrf !== false) return resp;
@@ -46,7 +78,12 @@
         window.jQuery.ajaxSetup({
             beforeSend: function (xhr, settings) {
                 if (sameOrigin(settings.url) && csrfToken()) xhr.setRequestHeader('X-CSRF-Token', csrfToken());
+                if (sameOrigin(settings.url) && appVersion()) xhr.setRequestHeader('X-App-Version', appVersion());
             }
+        });
+        window.jQuery(document).ajaxComplete(function (event, xhr) {
+            const v = xhr && xhr.getResponseHeader ? xhr.getResponseHeader('X-App-Version') : null;
+            if (v) checkAppVersion(v);
         });
     }
 })();
@@ -131,12 +168,76 @@ function convertToKg(weightInput, sourceUnit = null) {
     } else if (unit === 'lbs') {
         return parseFloat(weightInput) / 2.20462;
     } else if (unit === 'st') {
-        // Handle decimal stones (e.g., "18.7" or "18.7st")
-        const cleanInput = weightInput.toString().replace(/st$/i, '').trim();
-        return parseFloat(cleanInput) / 0.157473;
+        // "13 st 5.4 lb", "13 5.4" or decimal stones ("13.4")
+        return parseStoneInput(weightInput);
     }
 
     return parseFloat(weightInput);
+}
+
+// A weight in kg as whole stones and pounds, rounded to 0.1 lb first (same as the emails, WeightUnits.php)
+function kgToStonesPounds(weightKg) {
+    const kg = parseFloat(weightKg);
+    const tenthsOfLb = Math.round(Math.abs(kg) * 2.20462 * 10);
+    const stones = Math.floor(tenthsOfLb / 140);
+    return { negative: kg < 0 && tenthsOfLb > 0, stones: stones, pounds: (tenthsOfLb - stones * 140) / 10 };
+}
+
+// A weight stored in kg, shown in the user's unit with its label: "83.6 kg", "184.3 lbs", "13 st 2.3 lb".
+// fmt formats the number part (default one decimal, e.g. pass a locale formatter for 83,6).
+function formatWeight(weightKg, unit = null, fmt = null) {
+    const u = unit || getWeightUnit();
+    const kg = parseFloat(weightKg);
+    if (isNaN(kg)) return '';
+    const f = fmt || (x => x.toFixed(1));
+    if (u === 'st') {
+        const p = kgToStonesPounds(kg);
+        const sign = p.negative ? '-' : '';
+        return p.stones ? `${sign}${p.stones} st ${f(p.pounds)} lb` : `${sign}${f(p.pounds)} lb`;
+    }
+    return `${f(parseFloat(convertFromKg(kg, u)))} ${getWeightUnitLabel(u)}`;
+}
+
+// A change between two weights (kg), rounded in the user's unit first: "+1.2 kg", "-2.6 lb", "-1 st 0.4 lb".
+// Returns '' when it rounds to zero in that unit, so callers can show "no change" instead of "0.0".
+function formatWeightChange(diffKg, unit = null, fmt = null) {
+    const u = unit || getWeightUnit();
+    const d = parseFloat(diffKg);
+    if (isNaN(d) || weightChangeIsZero(d, u)) return '';
+    return (d > 0 ? '+' : '-') + formatWeight(Math.abs(d), u, fmt);
+}
+
+// True when a change in kg shows as 0.0 in the user's unit (0.1 kg, 0.1 lb)
+function weightChangeIsZero(diffKg, unit = null) {
+    const u = unit || getWeightUnit();
+    const d = Math.abs(parseFloat(diffKg) || 0);
+    return Math.round(d * (u === 'kg' ? 1 : 2.20462) * 10) === 0;
+}
+
+// A value in decimal stones (chart axis) as stones and pounds, e.g. 13.25 -> "13 st 3.5 lb"
+function formatStoneValue(stones, fmt = null) {
+    return formatWeight(parseFloat(stones) / 0.157473, 'st', fmt);
+}
+
+// Text the user typed for a stone weight, in kg. Accepts "13 st 5.4 lb", "13st 5.4", "13 5.4",
+// "13.4" (decimal stones) and "5.4 lb" (pounds only). Commas work as decimal points. NaN if not understood.
+function parseStoneInput(text) {
+    const s = String(text).trim().toLowerCase().replace(/,/g, '.');
+    let m = s.match(/^(\d+(?:\.\d+)?)\s*(?:st|stone|stones)?\s*(?:(\d+(?:\.\d+)?)\s*(?:lb|lbs|pounds?)?)?$/);
+    if (m) {
+        if (m[2] !== undefined) {
+            return (parseFloat(m[1]) * 14 + parseFloat(m[2])) / 2.20462;
+        }
+        return parseFloat(m[1]) / 0.157473;
+    }
+    m = s.match(/^(\d+(?:\.\d+)?)\s*(?:lb|lbs|pounds?)$/);
+    return m ? parseFloat(m[1]) / 2.20462 : NaN;
+}
+
+// Oldest first by date; entries on the same date by id (the later-saved one counts as the latest, as on the server)
+function compareEntriesByDate(a, b) {
+    const d = String(a.entry_date).localeCompare(String(b.entry_date));
+    return d || ((parseInt(a.id, 10) || 0) - (parseInt(b.id, 10) || 0));
 }
 
 // Get weight unit label for display

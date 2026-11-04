@@ -59,7 +59,10 @@ window.populateBodyDataCards = function() {
                     const colorClass = isGoodChange ? 'up' : 'down';
 
                     $(`#${ids.changeIconId}`).text(icon).removeClass('up down').addClass(colorClass);
-                    $(`#${ids.changeTextId}`).text(`${Math.abs(change).toFixed(1)}${metric.unit} ${t('from last entry')}`);
+                    // For % readings the change is a difference of two percentages: percentage points
+                    $(`#${ids.changeTextId}`).text(metric.unit === '%'
+                        ? tf('{n} percentage points from last entry', { n: Math.abs(change).toFixed(1) })
+                        : `${Math.abs(change).toFixed(1)}${metric.unit} ${t('from last entry')}`);
                 } else {
                     $(`#${ids.changeIconId}`).text('');
                     $(`#${ids.changeTextId}`).text(t('No change'));

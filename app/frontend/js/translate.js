@@ -79,18 +79,6 @@ const translations = {
         "fr": "(Élevé)",
         "de": "(Hoch)"
     },
-    "Projected to reach upper limit by": {
-        "en": "Projected to reach upper limit by",
-        "es": "Se proyecta alcanzar el límite superior para",
-        "fr": "Projection d'atteindre la limite supérieure d'ici",
-        "de": "Voraussichtliche Erreichung der Obergrenze bis"
-    },
-    "Based on current rate of": {
-        "en": "Based on current rate of",
-        "es": "Basado en ritmo actual de",
-        "fr": "Basé sur un rythme actuel de",
-        "de": "Basierend auf aktuellem Tempo von"
-    },
     "kg/week": {
         "en": "kg/week",
         "es": "kg/semana",
@@ -753,12 +741,6 @@ const translations = {
         "fr": "IMC : {start} au départ, {now} aujourd'hui.",
         "de": "BMI: {start} zu Beginn, jetzt {now}."
     },
-    "You have lost more than 5% of your starting weight.": {
-        "en": "You have lost more than 5% of your starting weight.",
-        "es": "Has perdido más del 5 % de tu peso inicial.",
-        "fr": "Vous avez perdu plus de 5 % de votre poids de départ.",
-        "de": "Sie haben mehr als 5 % Ihres Startgewichts verloren."
-    },
     "{diff} more to reach 5% of your starting weight.": {
         "en": "{diff} more to reach 5% of your starting weight.",
         "es": "Te faltan {diff} para haber perdido el 5 % de tu peso inicial.",
@@ -813,12 +795,6 @@ const translations = {
         "fr": "Obésité",
         "de": "Adipositas"
     },
-    "Deurenberg formula (BMI and age). The range runs from the result for men to the result for women. For adults it is usually within about 4 percentage points of a lab measurement, and it slightly overestimates body fat in people with obesity.": {
-        "en": "Deurenberg formula (BMI and age). The range runs from the result for men to the result for women. For adults it is usually within about 4 percentage points of a lab measurement, and it slightly overestimates body fat in people with obesity.",
-        "es": "Fórmula de Deurenberg (IMC y edad). El rango va del resultado para hombres al resultado para mujeres. En adultos, suele diferir como máximo unos 4 puntos porcentuales de una medición de laboratorio, y sobrestima ligeramente la grasa corporal en personas con obesidad.",
-        "fr": "Formule de Deurenberg (IMC et âge). La fourchette va du résultat pour les hommes au résultat pour les femmes. Chez l'adulte, l'écart avec une mesure en laboratoire ne dépasse généralement pas 4 points de pourcentage environ, et la formule surestime légèrement la masse grasse en cas d'obésité.",
-        "de": "Deurenberg-Formel (BMI und Alter). Der Bereich reicht vom Ergebnis für Männer bis zum Ergebnis für Frauen. Bei Erwachsenen weicht sie meist um höchstens etwa 4 Prozentpunkte von einer Labormessung ab und überschätzt das Körperfett bei Menschen mit Adipositas leicht."
-    },
     "Add your age on the Data tab to estimate body fat.": {
         "en": "Add your age on the Data tab to estimate body fat.",
         "es": "Añade tu edad en la pestaña Datos para estimar la grasa corporal.",
@@ -860,6 +836,102 @@ const translations = {
         "es": "No se pudo actualizar el registro de peso",
         "fr": "Impossible de mettre à jour la pesée",
         "de": "Gewichtseintrag konnte nicht aktualisiert werden"
+    },
+    "You have lost at least 5% of your starting weight.": {
+        "en": "You have lost at least 5% of your starting weight.",
+        "es": "Has perdido al menos el 5 % de tu peso inicial.",
+        "fr": "Vous avez perdu au moins 5 % de votre poids de départ.",
+        "de": "Sie haben mindestens 5 % Ihres Startgewichts verloren."
+    },
+    "-{n} percentage points": {
+        "en": "-{n} percentage points",
+        "es": "-{n} puntos porcentuales",
+        "fr": "-{n} points de pourcentage",
+        "de": "-{n} Prozentpunkte"
+    },
+    "{n} percentage points from last entry": {
+        "en": "{n} percentage points from last entry",
+        "es": "{n} puntos porcentuales desde el último registro",
+        "fr": "{n} points de pourcentage depuis la dernière mesure",
+        "de": "{n} Prozentpunkte seit dem letzten Eintrag"
+    },
+    "Deurenberg formula (BMI and age). The range runs from the result for men to the result for women. Compared with a lab measurement, its typical error is about 4 percentage points, and it slightly overestimates body fat in people with obesity.": {
+        "en": "Deurenberg formula (BMI and age). The range runs from the result for men to the result for women. Compared with a lab measurement, its typical error is about 4 percentage points, and it slightly overestimates body fat in people with obesity.",
+        "es": "Fórmula de Deurenberg (IMC y edad). El rango va del resultado para hombres al resultado para mujeres. Frente a una medición de laboratorio, su error típico es de unos 4 puntos porcentuales, y sobrestima ligeramente la grasa corporal en personas con obesidad.",
+        "fr": "Formule de Deurenberg (IMC et âge). La fourchette va du résultat pour les hommes au résultat pour les femmes. Par rapport à une mesure en laboratoire, son erreur type est d'environ 4 points de pourcentage, et elle surestime légèrement la masse grasse en cas d'obésité.",
+        "de": "Deurenberg-Formel (BMI und Alter). Der Bereich reicht vom Ergebnis für Männer bis zum Ergebnis für Frauen. Im Vergleich zu einer Labormessung liegt ihr typischer Fehler bei etwa 4 Prozentpunkten, und sie überschätzt das Körperfett bei Menschen mit Adipositas leicht."
+    },
+    "If your recent rate ({rate} per week) continued, you would reach the top of this range around {month}.": {
+        "en": "If your recent rate ({rate} per week) continued, you would reach the top of this range around {month}.",
+        "es": "Si mantuvieras tu ritmo reciente ({rate} por semana), llegarías al límite superior de este rango hacia {month}.",
+        "fr": "Si votre rythme récent ({rate} par semaine) se maintenait, vous atteindriez le haut de cette fourchette vers {month}.",
+        "de": "Wenn Ihr jüngstes Tempo ({rate} pro Woche) anhielte, würden Sie die Obergrenze dieses Bereichs etwa im {month} erreichen."
+    },
+    "A newer version of this page is available. Please reload it before you save anything else.": {
+        "en": "A newer version of this page is available. Please reload it before you save anything else.",
+        "es": "Hay una versión más reciente de esta página. Recárgala antes de guardar nada más.",
+        "fr": "Une version plus récente de cette page est disponible. Rechargez-la avant d'enregistrer quoi que ce soit d'autre.",
+        "de": "Eine neuere Version dieser Seite ist verfügbar. Bitte laden Sie sie neu, bevor Sie weitere Daten speichern."
+    },
+    "Reload": {
+        "en": "Reload",
+        "es": "Recargar",
+        "fr": "Recharger",
+        "de": "Neu laden"
+    },
+    "Edit": {
+        "en": "Edit",
+        "es": "Editar",
+        "fr": "Modifier",
+        "de": "Bearbeiten"
+    },
+    "Delete": {
+        "en": "Delete",
+        "es": "Eliminar",
+        "fr": "Supprimer",
+        "de": "Löschen"
+    },
+    "Please enter a weight between {min} and {max}.": {
+        "en": "Please enter a weight between {min} and {max}.",
+        "es": "Introduce un peso entre {min} y {max}.",
+        "fr": "Saisissez un poids compris entre {min} et {max}.",
+        "de": "Bitte geben Sie ein Gewicht zwischen {min} und {max} ein."
+    },
+    "The date cannot be later than tomorrow.": {
+        "en": "The date cannot be later than tomorrow.",
+        "es": "La fecha no puede ser posterior a mañana.",
+        "fr": "La date ne peut pas être postérieure à demain.",
+        "de": "Das Datum darf nicht nach morgen liegen."
+    },
+    "Please enter a valid weight": {
+        "en": "Please enter a valid weight",
+        "es": "Introduce un peso válido",
+        "fr": "Saisissez un poids valide",
+        "de": "Bitte geben Sie ein gültiges Gewicht ein"
+    },
+    "Weight entry saved": {
+        "en": "Weight entry saved",
+        "es": "Registro de peso guardado",
+        "fr": "Pesée enregistrée",
+        "de": "Gewichtseintrag gespeichert"
+    },
+    "Failed to save weight entry": {
+        "en": "Failed to save weight entry",
+        "es": "No se pudo guardar el registro de peso",
+        "fr": "Impossible d'enregistrer la pesée",
+        "de": "Gewichtseintrag konnte nicht gespeichert werden"
+    },
+    "Failed to save weight": {
+        "en": "Failed to save weight",
+        "es": "No se pudo guardar el peso",
+        "fr": "Impossible d'enregistrer le poids",
+        "de": "Gewicht konnte nicht gespeichert werden"
+    },
+    "e.g. {example}": {
+        "en": "e.g. {example}",
+        "es": "p. ej., {example}",
+        "fr": "ex. : {example}",
+        "de": "z. B. {example}"
     }
 };
 
