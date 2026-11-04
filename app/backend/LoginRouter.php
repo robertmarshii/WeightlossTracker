@@ -5,7 +5,11 @@ session_start();
 
 if(isset($_GET["controller"])) {
     $controller = htmlspecialchars($_GET["controller"]);
-    if($controller === "auth") { AuthController(); }
+    if($controller === "auth") {
+        AuthController();
+        // Code emails go out after the answer has been sent (same answer and speed for every email)
+        AuthManager::runDeferred();
+    }
 }
 
 function AuthController() {
@@ -15,6 +19,13 @@ function AuthController() {
     require_once ('/var/app/backend/Config.php');
     require_once ('/var/app/backend/Security.php');
     header('Content-Type: application/json');
+
+    // Login CSRF: POSTs must come from our own pages. OAuth callbacks are GETs from the provider and are not affected.
+    if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && !Security::sameOriginRequest()) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'message' => 'Request refused']);
+        return;
+    }
 
     // Handle OAuth callback via GET parameters
     if (isset($_GET['action']) && $_GET['action'] === 'oauth_callback') {

@@ -11,11 +11,28 @@ use Stevenmaguire\OAuth2\Client\Provider\Microsoft;
 
 class OAuthManager {
 
+    /**
+     * Microsoft sign-in is only safe here with the "consumers" tenant (personal Microsoft accounts):
+     * with "common"/"organizations"/a tenant id, a work-account admin can set any address as "mail"
+     * and sign in as that person (nOAuth). Accounts are matched by email, so any other tenant is refused.
+     */
+    private static function microsoftTenantAllowed() {
+        $tenant = strtolower(trim((string)(OAuthConfig::getMicrosoftConfig()['tenant'] ?? '')));
+        if ($tenant !== 'consumers') {
+            error_log("OAuthManager: Microsoft sign-in refused - MICROSOFT_TENANT must be 'consumers' (accounts are matched by email; other tenants allow unverified emails)");
+            return false;
+        }
+        return true;
+    }
+
     public static function getAuthorizationUrl($provider) {
         COVERAGE_LOG('getAuthorizationUrl', __CLASS__, __FILE__, __LINE__);
 
         if (!OAuthConfig::isConfigured($provider)) {
             return ['success' => false, 'message' => ucfirst($provider) . ' OAuth is not configured'];
+        }
+        if ($provider === 'microsoft' && !self::microsoftTenantAllowed()) {
+            return ['success' => false, 'message' => 'Microsoft sign-in is not available at the moment'];
         }
 
         try {
@@ -77,6 +94,9 @@ class OAuthManager {
         // Verify provider matches
         if (!isset($_SESSION['oauth_provider']) || $provider !== $_SESSION['oauth_provider']) {
             return ['success' => false, 'message' => 'Provider mismatch'];
+        }
+        if ($provider === 'microsoft' && !self::microsoftTenantAllowed()) {
+            return ['success' => false, 'message' => 'Microsoft sign-in is not available at the moment'];
         }
 
         try {
@@ -180,14 +200,20 @@ class OAuthManager {
         COVERAGE_LOG('extractEmail', __CLASS__, __FILE__, __LINE__);
 
         if ($provider === 'google') {
+            // Only an address Google has verified may sign in to the account with that email
+            $verified = $userDetails['email_verified'] ?? false;
+            if ($verified !== true && $verified !== 'true') {
+                error_log("OAuthManager: Google sign-in refused - email not verified by Google");
+                return null;
+            }
             return $userDetails['email'] ?? null;
         } elseif ($provider === 'microsoft') {
-            // SECURITY NOTE (nOAuth): Graph's "mail" is set by the tenant admin and is not verified by
-            // Microsoft. With a multi-tenant app (MICROSOFT_TENANT=common/organizations), an admin of any
-            // Azure AD tenant could set mail to someone else's address and sign in as that user here.
-            // Behaviour is unchanged for now (keeps MICROSOFT_TENANT as configured). Safer later: link
-            // accounts by the token's immutable "oid"+"tid" claims, or only trust "email" when the
-            // ID token's "xms_edov" (email domain owner verified) claim is true.
+            // nOAuth: Graph's "mail" is set by a work tenant's admin and is not verified by Microsoft.
+            // Safe only because microsoftTenantAllowed() limits sign-in to the "consumers" tenant
+            // (personal Microsoft accounts, where the address belongs to the account).
+            if (!self::microsoftTenantAllowed()) {
+                return null;
+            }
             return $userDetails['mail'] ?? $userDetails['userPrincipalName'] ?? null;
         }
         return null;
@@ -225,8 +251,8 @@ class OAuthManager {
             require_once('/var/app/backend/AuthManager.php');
             AuthManager::startUserSession($user['id'], $email, $user['first_name'], $user['last_name']);
 
-            // Set remember me token
-            $tokenResult = self::setRememberToken($user['id']);
+            // Set remember me token (stored hashed; see AuthManager)
+            AuthManager::setRememberToken($user['id']);
 
             return ['success' => true, 'message' => 'Login successful'];
 
@@ -255,30 +281,5 @@ class OAuthManager {
             return $userDetails['surname'] ?? '';
         }
         return '';
-    }
-
-    private static function setRememberToken($userId) {
-        COVERAGE_LOG('setRememberToken', __CLASS__, __FILE__, __LINE__);
-
-        try {
-            // Generate secure random token
-            $token = bin2hex(random_bytes(32));
-            $expires = date('Y-m-d H:i:s', time() + (30 * 24 * 60 * 60)); // 30 days
-
-            // Store token in database
-            $db = Database::getInstance()->getDbConnection();
-            $schema = Database::getSchema();
-            $stmt = $db->prepare("UPDATE {$schema}.users SET remember_token = ?, remember_token_expires = ? WHERE id = ?");
-            $stmt->execute([$token, $expires, $userId]);
-
-            // Set cookies (30 days)
-            require_once('/var/app/backend/Security.php');
-            Security::setAuthCookie('remember_token', $token, time() + (30 * 24 * 60 * 60));
-            Security::setAuthCookie('user_id', (string)$userId, time() + (30 * 24 * 60 * 60));
-
-            return true;
-        } catch (Exception $e) {
-            return false;
-        }
     }
 }

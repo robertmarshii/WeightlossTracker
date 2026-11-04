@@ -14,6 +14,15 @@ class AuthManager {
     private const VERIFY_IP_WINDOW = 900;        // ... per 15 minutes
     private const SEND_IP_MAX = 20;              // code emails per IP ...
     private const SEND_IP_WINDOW = 3600;         // ... per hour
+    private const SEND_ACCT_MAX_15M = 3;         // code emails per account per 15 minutes
+    private const SEND_ACCT_MAX_DAY = 10;        // code emails per account per day
+    private const VERIFY_ACCT_MAX_HOUR = 10;     // wrong guesses per account per hour (new codes do not reset this)
+    private const VERIFY_ACCT_MAX_DAY = 20;      // wrong guesses per account per day
+    private const REMEMBER_DAYS = 30;            // remember-me lasts 30 days from the last visit ...
+    private const REMEMBER_MAX_DAYS = 90;        // ... and never more than 90 days after sign-in
+
+    /** Work to do after the answer has been sent to the browser (see runDeferred). */
+    private static $deferred = [];
 
     private static function generateCode() {
         COVERAGE_LOG('generateCode', __CLASS__, __FILE__, __LINE__);
@@ -91,8 +100,10 @@ class AuthManager {
     }
 
     /**
-     * Rate limit for sending code emails: max 3 per minute per email (then blocked for 30 minutes),
-     * and max SEND_IP_MAX per hour per IP. State is kept in the database (Security::throttle*).
+     * Rate limit for sending code emails. Per account (the email, stored hashed): SEND_ACCT_MAX_15M per
+     * 15 minutes and SEND_ACCT_MAX_DAY per day, for login and sign-up codes together. Per IP: SEND_IP_MAX
+     * per hour. State is kept in the database (Security::throttle*). Applies the same way whether or not
+     * the email has an account.
      */
     private static function checkRateLimit($email, $action) {
         COVERAGE_LOG('checkRateLimit', __CLASS__, __FILE__, __LINE__);
@@ -101,23 +112,19 @@ class AuthManager {
             return ['allowed' => true];
         }
 
-        $email = strtolower(trim($email));
+        $email = strtolower(trim((string)$email));
         $ip = Security::clientIp();
-        $blockMessage = 'Too many requests. Please wait 30 minutes before requesting another code.';
+        $tooMany = ['allowed' => false, 'message' => 'Too many requests. Please try again later.'];
 
-        if (Security::throttleCount('send_block:' . $action, $email, 1800) > 0) {
-            return ['allowed' => false, 'message' => $blockMessage];
+        [$ipOk, $ipHit] = Security::throttleTake('send_ip', $ip, [self::SEND_IP_WINDOW => self::SEND_IP_MAX]);
+        if (!$ipOk) {
+            return $tooMany;
         }
-        if (Security::throttleCount('send_ip', $ip, self::SEND_IP_WINDOW) >= self::SEND_IP_MAX) {
-            return ['allowed' => false, 'message' => 'Too many requests. Please try again later.'];
+        [$acctOk] = Security::throttleTake('send_acct', $email, [900 => self::SEND_ACCT_MAX_15M, 86400 => self::SEND_ACCT_MAX_DAY]);
+        if (!$acctOk) {
+            Security::throttleRemove($ipHit);
+            return $tooMany;
         }
-        if (Security::throttleCount('send:' . $action, $email, 60) >= 3) {
-            Security::throttleHit('send_block:' . $action, $email);
-            return ['allowed' => false, 'message' => 'Too many login code requests. Account temporarily blocked for 30 minutes.'];
-        }
-
-        Security::throttleHit('send:' . $action, $email);
-        Security::throttleHit('send_ip', $ip);
         return ['allowed' => true];
     }
 
@@ -131,12 +138,13 @@ class AuthManager {
     }
 
     private static function storeCode($db, $schema, $email, $type) {
+        self::ensureSchema($db, $schema);
         $code = self::codeFor($email);
         $expiresAt = date('Y-m-d H:i:s', time() + self::CODE_LIFETIME_SECONDS);
         // One active code per email
         $stmt = $db->prepare("DELETE FROM {$schema}.auth_codes WHERE email = ?");
         $stmt->execute([$email]);
-        $stmt = $db->prepare("INSERT INTO {$schema}.auth_codes (email, code, code_type, expires_at, created_at) VALUES (?, ?, ?, ?, NOW())");
+        $stmt = $db->prepare("INSERT INTO {$schema}.auth_codes (email, code, code_type, expires_at, created_at, attempts) VALUES (?, ?, ?, ?, NOW(), 0)");
         $stmt->execute([$email, $code, $type, $expiresAt]);
         Security::throttleClear('verify_lock', $email);
         return $code;
@@ -168,66 +176,98 @@ class AuthManager {
         return self::sendEmail($email, $subject, $message, $htmlContent);
     }
 
+    /**
+     * Run queued work after the answer has gone to the browser. The answer is the same, and is sent
+     * at the same speed, whether or not the email has an account: the account lookup, the code and
+     * the email all happen here. Called by LoginRouter after it has printed the answer.
+     */
+    public static function runDeferred() {
+        if (!self::$deferred) {
+            return;
+        }
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            session_write_close(); // don't hold the session lock while the email is sent
+        }
+        if (function_exists('fastcgi_finish_request')) {
+            fastcgi_finish_request();
+        }
+        ignore_user_abort(true);
+        $jobs = self::$deferred;
+        self::$deferred = [];
+        foreach ($jobs as $job) {
+            try {
+                $job();
+            } catch (Throwable $e) {
+                error_log("AuthManager deferred job error: " . $e->getMessage());
+            }
+        }
+    }
+
+    private static function defer(callable $job) {
+        self::$deferred[] = $job;
+    }
+
+    /** Log the result of sending a code email (never the code, and only a masked address). */
+    private static function logSend($what, $email, $ok) {
+        error_log("AuthManager: $what email " . ($ok ? 'sent' : 'FAILED') . " for " . self::maskEmail($email));
+    }
+
     public static function sendLoginCode($email) {
         COVERAGE_LOG('sendLoginCode', __CLASS__, __FILE__, __LINE__);
-        // Same answer whether or not the email has an account
+        // Same answer whether or not the email has an account, and whether or not the email goes out
         $sentMessage = 'If an account exists for this email, a login code has been sent.';
+        $rateLimitResult = self::checkRateLimit($email, 'login_code');
+        if (!$rateLimitResult['allowed']) {
+            return ['success' => false, 'message' => $rateLimitResult['message']];
+        }
+        self::defer(function () use ($email) {
+            self::deliverLoginCode($email);
+        });
+        return ['success' => true, 'message' => $sentMessage];
+    }
+
+    private static function deliverLoginCode($email) {
         try {
-            // Rate limiting check
-            $rateLimitResult = self::checkRateLimit($email, 'login_code');
-            if (!$rateLimitResult['allowed']) {
-                return ['success' => false, 'message' => $rateLimitResult['message']];
-            }
-            require_once('/var/app/backend/Config.php');
             $db = Database::getInstance()->getDbConnection();
             $schema = Database::getSchema();
-
-            // Check if user exists
             $stmt = $db->prepare("SELECT id FROM {$schema}.users WHERE email = ?");
             $stmt->execute([$email]);
-            $user = $stmt->fetch();
-
-            if (!$user) {
-                return ['success' => true, 'message' => $sentMessage];
+            if (!$stmt->fetch()) {
+                return;
             }
-
             $code = self::storeCode($db, $schema, $email, 'login');
-
-            if (self::sendLoginCodeEmail($email, $code)) {
-                return ['success' => true, 'message' => $sentMessage];
-            } else {
-                return ['success' => false, 'message' => 'Failed to send email'];
-            }
-
-        } catch (Exception $e) {
+            self::logSend('login code', $email, self::sendLoginCodeEmail($email, $code));
+        } catch (Throwable $e) {
             error_log("AuthManager::sendLoginCode error: " . $e->getMessage());
-            return ['success' => false, 'message' => 'An error occurred while sending login code'];
         }
     }
 
     public static function createAccount($email) {
         COVERAGE_LOG('createAccount', __CLASS__, __FILE__, __LINE__);
         $createdMessage = 'Account created successfully. Check your email for verification code.';
+        $rateLimitResult = self::checkRateLimit($email, 'signup_code');
+        if (!$rateLimitResult['allowed']) {
+            return ['success' => false, 'message' => $rateLimitResult['message']];
+        }
+        self::defer(function () use ($email) {
+            self::deliverSignup($email);
+        });
+        return ['success' => true, 'message' => $createdMessage];
+    }
+
+    private static function deliverSignup($email) {
         try {
-            // Rate limiting check
-            $rateLimitResult = self::checkRateLimit($email, 'signup_code');
-            if (!$rateLimitResult['allowed']) {
-                return ['success' => false, 'message' => $rateLimitResult['message']];
-            }
-            require_once('/var/app/backend/Config.php');
             $db = Database::getInstance()->getDbConnection();
             $schema = Database::getSchema();
 
-            // If the account already exists, email a normal login code and give the same answer,
+            // If the account already exists, email a normal login code (same answer to the browser),
             // so this form cannot be used to find out which emails have accounts.
             $stmt = $db->prepare("SELECT id FROM {$schema}.users WHERE email = ?");
             $stmt->execute([$email]);
             if ($stmt->fetch()) {
                 $code = self::storeCode($db, $schema, $email, 'login');
-                if (self::sendLoginCodeEmail($email, $code)) {
-                    return ['success' => true, 'message' => $createdMessage];
-                }
-                return ['success' => false, 'message' => 'Failed to send email'];
+                self::logSend('login code (sign-up form)', $email, self::sendLoginCodeEmail($email, $code));
+                return;
             }
 
             // Create user account with empty first_name and last_name
@@ -259,16 +299,67 @@ class AuthManager {
 
             $message = "Welcome to Weightloss Tracker!\n\nYour verification code is: $code\n\nThis code will expire in 15 minutes.\n\nPlease enter this code to complete your account setup.";
 
-            if (self::sendEmail($email, $subject, $message, $htmlContent)) {
-                return ['success' => true, 'message' => $createdMessage];
-            } else {
-                return ['success' => false, 'message' => 'Account created but failed to send verification email'];
-            }
-
-        } catch (Exception $e) {
+            self::logSend('sign-up code', $email, self::sendEmail($email, $subject, $message, $htmlContent));
+        } catch (Throwable $e) {
             error_log("AuthManager::createAccount error: " . $e->getMessage());
-            return ['success' => false, 'message' => 'An error occurred while creating account'];
         }
+    }
+
+    /**
+     * Bring the auth tables up to date once per schema (the result is remembered in a flag file):
+     * - users.session_version: bumped on sign-out so sessions on other devices end too
+     * - users.remember_token_issued_at: remember-me never lasts more than 90 days after sign-in
+     * - users.remember_token now holds sha256(token), never the token; existing tokens are hashed
+     *   in the same transaction, so people who are signed in stay signed in
+     * - auth_codes.attempts: wrong guesses per code, counted atomically
+     * The same SQL is in seeders/add_auth_hardening.sql for running by hand.
+     */
+    public static function ensureSchema($db, $schema) {
+        if (!preg_match('/^[A-Za-z_][A-Za-z0-9_]*$/', (string)$schema)) {
+            throw new RuntimeException('bad schema name');
+        }
+        $flag = '/var/app/data/auth-schema-v2-' . $schema;
+        if (is_file($flag)) {
+            return;
+        }
+        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $db->beginTransaction();
+        try {
+            // Serialise concurrent first requests; the check below runs after the lock is held
+            $db->exec("LOCK TABLE {$schema}.users IN SHARE ROW EXCLUSIVE MODE");
+            $stmt = $db->prepare("SELECT 1 FROM information_schema.columns WHERE table_schema = ? AND table_name = 'users' AND column_name = 'session_version'");
+            $stmt->execute([$schema]);
+            if (!$stmt->fetchColumn()) {
+                $db->exec("ALTER TABLE {$schema}.users
+                    ADD COLUMN session_version INTEGER NOT NULL DEFAULT 0,
+                    ADD COLUMN remember_token_issued_at TIMESTAMP NULL");
+                $db->exec("UPDATE {$schema}.users
+                    SET remember_token = encode(sha256(convert_to(remember_token, 'UTF8')), 'hex'),
+                        remember_token_issued_at = NOW()
+                    WHERE remember_token IS NOT NULL");
+                error_log("AuthManager: upgraded {$schema}.users (hashed remember tokens, session_version)");
+            }
+            $db->exec("ALTER TABLE {$schema}.auth_codes ADD COLUMN IF NOT EXISTS attempts INTEGER NOT NULL DEFAULT 0");
+            $db->commit();
+        } catch (Throwable $e) {
+            $db->rollBack();
+            throw $e;
+        }
+        @file_put_contents($flag, date('c') . "\n");
+    }
+
+    private static function hashToken($token) {
+        return hash('sha256', (string)$token);
+    }
+
+    private static function sessionVersion($userId) {
+        $db = Database::getInstance()->getDbConnection();
+        $schema = Database::getSchema();
+        self::ensureSchema($db, $schema);
+        $stmt = $db->prepare("SELECT session_version FROM {$schema}.users WHERE id = ?");
+        $stmt->execute([$userId]);
+        $v = $stmt->fetchColumn();
+        return $v === false ? null : (int)$v;
     }
 
     /** Start a fresh session id for a newly signed-in user (prevents session fixation). */
@@ -282,6 +373,12 @@ class AuthManager {
         $_SESSION['first_name'] = $firstName;
         $_SESSION['last_name'] = $lastName;
         $_SESSION['login_time'] = time();
+        try {
+            $_SESSION['session_version'] = self::sessionVersion($userId) ?? 0;
+        } catch (Throwable $e) {
+            error_log("AuthManager::startUserSession session_version error: " . $e->getMessage());
+            $_SESSION['session_version'] = 0;
+        }
         unset($_SESSION['csrf_token']);
     }
 
@@ -289,78 +386,100 @@ class AuthManager {
         COVERAGE_LOG('verifyLoginCode', __CLASS__, __FILE__, __LINE__);
         $invalid = ['success' => false, 'message' => 'Invalid or expired code'];
         $locked = ['success' => false, 'message' => 'Too many incorrect attempts. Please request a new code.'];
+        $wait = ['success' => false, 'message' => 'Too many attempts. Please wait a few minutes and try again.'];
         try {
             require_once('/var/app/backend/Config.php');
             $email = (string)$email;
             $code = trim((string)$code);
             $ip = Security::clientIp();
 
-            // Per-IP throttle on wrong guesses
-            if (Security::throttleCount('verify_ip', $ip, self::VERIFY_IP_WINDOW) >= self::VERIFY_IP_MAX_FAILS) {
-                return ['success' => false, 'message' => 'Too many attempts. Please wait a few minutes and try again.'];
+            // Each attempt is recorded before it is checked (so parallel requests can't all slip under
+            // the limit) and taken back if the code turns out to be right.
+            // Per IP: VERIFY_IP_MAX_FAILS per 15 minutes.
+            [$ipOk, $ipHit] = Security::throttleTake('verify_ip', $ip, [self::VERIFY_IP_WINDOW => self::VERIFY_IP_MAX_FAILS]);
+            if (!$ipOk) {
+                return $wait;
+            }
+            // Per account: new codes do not reset this. Same answer as the IP limit.
+            [$acctOk, $acctHit] = Security::throttleTake('verify_acct', $email, [
+                3600 => self::VERIFY_ACCT_MAX_HOUR,
+                86400 => self::VERIFY_ACCT_MAX_DAY,
+            ]);
+            if (!$acctOk) {
+                Security::throttleRemove($ipHit);
+                error_log("Login code checks paused for " . self::maskEmail($email) . " after too many wrong attempts");
+                return $wait;
             }
 
             $db = Database::getInstance()->getDbConnection();
             $schema = Database::getSchema();
+            self::ensureSchema($db, $schema);
 
-            // Active codes for this email (normally exactly one)
+            // Count this guess against the active code(s) atomically, before comparing. A code that
+            // already had CODE_MAX_ATTEMPTS guesses is not compared at all.
             $stmt = $db->prepare("
-                SELECT ac.id, ac.code, u.id as user_id, u.first_name, u.last_name
-                FROM {$schema}.auth_codes ac
-                JOIN {$schema}.users u ON u.email = ac.email
-                WHERE ac.email = ? AND ac.expires_at > NOW()
-                ORDER BY ac.id DESC
+                UPDATE {$schema}.auth_codes SET attempts = attempts + 1
+                WHERE email = ? AND expires_at > NOW() AND attempts < ?
+                RETURNING id, code, attempts
             ");
-            $stmt->execute([$email]);
+            $stmt->execute([$email, self::CODE_MAX_ATTEMPTS]);
             $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             if (!$rows) {
-                Security::throttleHit('verify_ip', $ip);
-                // The code was deleted after too many wrong guesses: keep saying so until a new one is requested
+                // No active code, or its guesses are used up
                 if (Security::throttleCount('verify_lock', $email, self::CODE_LIFETIME_SECONDS) > 0) {
                     return $locked;
                 }
-                return $invalid;
+                $exhausted = $db->prepare("SELECT 1 FROM {$schema}.auth_codes WHERE email = ? AND expires_at > NOW() LIMIT 1");
+                $exhausted->execute([$email]);
+                return $exhausted->fetchColumn() ? $locked : $invalid;
             }
 
             $match = null;
             foreach ($rows as $row) {
-                if (preg_match('/^\d{6}$/', $code) && hash_equals((string)$row['code'], $code)) {
+                Security::throttleHit('verify_code', (string)$row['id']); // record of guesses compared (monitoring)
+                if ($match === null && preg_match('/^\d{6}$/', $code) && hash_equals((string)$row['code'], $code)) {
                     $match = $row;
-                    break;
                 }
             }
 
-            if (!$match) {
-                Security::throttleHit('verify_ip', $ip);
-                $tooMany = false;
-                foreach ($rows as $row) {
-                    Security::throttleHit('verify_code', (string)$row['id']);
-                    if (Security::throttleCount('verify_code', (string)$row['id'], self::CODE_LIFETIME_SECONDS) >= self::CODE_MAX_ATTEMPTS) {
-                        $tooMany = true;
-                    }
+            if ($match) {
+                // Single use: only the request that deletes the code signs in
+                $del = $db->prepare("DELETE FROM {$schema}.auth_codes WHERE id = ? RETURNING id");
+                $del->execute([$match['id']]);
+                if (!$del->fetchColumn()) {
+                    return $invalid;
                 }
-                if ($tooMany) {
-                    $stmt = $db->prepare("DELETE FROM {$schema}.auth_codes WHERE email = ?");
-                    $stmt->execute([$email]);
-                    Security::throttleHit('verify_lock', $email);
-                    error_log("Login code for " . self::maskEmail($email) . " deleted after too many wrong attempts");
-                    return $locked;
+                $db->prepare("DELETE FROM {$schema}.auth_codes WHERE email = ?")->execute([$email]);
+                Security::throttleRemove($ipHit);
+                Security::throttleRemove($acctHit);
+
+                $stmt = $db->prepare("SELECT id, first_name, last_name FROM {$schema}.users WHERE email = ?");
+                $stmt->execute([$email]);
+                $user = $stmt->fetch(PDO::FETCH_ASSOC);
+                if (!$user) {
+                    return $invalid;
                 }
-                return $invalid;
+
+                self::startUserSession($user['id'], $email, $user['first_name'], $user['last_name']);
+                self::setRememberToken($user['id']);
+                return ['success' => true, 'message' => 'Login successful'];
             }
 
-            // Delete the used code (and any other code for this email)
-            $stmt = $db->prepare("DELETE FROM {$schema}.auth_codes WHERE email = ?");
-            $stmt->execute([$email]);
-
-            // Create a fresh session
-            self::startUserSession($match['user_id'], $email, $match['first_name'], $match['last_name']);
-
-            // Set remember me token for 30 days
-            self::setRememberToken($match['user_id']);
-
-            return ['success' => true, 'message' => 'Login successful'];
+            // Wrong code: once a code has had CODE_MAX_ATTEMPTS guesses, delete it
+            $usedUp = false;
+            foreach ($rows as $row) {
+                if ((int)$row['attempts'] >= self::CODE_MAX_ATTEMPTS) {
+                    $usedUp = true;
+                }
+            }
+            if ($usedUp) {
+                $db->prepare("DELETE FROM {$schema}.auth_codes WHERE email = ? AND attempts >= ?")->execute([$email, self::CODE_MAX_ATTEMPTS]);
+                Security::throttleHit('verify_lock', $email);
+                error_log("Login code for " . self::maskEmail($email) . " deleted after too many wrong attempts");
+                return $locked;
+            }
+            return $invalid;
 
         } catch (Exception $e) {
             error_log("AuthManager::verifyLoginCode error: " . $e->getMessage());
@@ -379,8 +498,21 @@ class AuthManager {
             session_start();
         }
 
-        // Clear remember me token
+        $userId = $_SESSION['user_id'] ?? null;
+        // Clear remember me token (database and cookies)
         self::clearRememberToken();
+
+        // End sessions on every other device too
+        if ($userId) {
+            try {
+                $db = Database::getInstance()->getDbConnection();
+                $schema = Database::getSchema();
+                self::ensureSchema($db, $schema);
+                $db->prepare("UPDATE {$schema}.users SET session_version = session_version + 1 WHERE id = ?")->execute([$userId]);
+            } catch (Throwable $e) {
+                error_log("AuthManager::logout session_version error: " . $e->getMessage());
+            }
+        }
 
         $_SESSION = [];
         session_destroy();
@@ -397,14 +529,25 @@ class AuthManager {
         // First check active session
         if (isset($_SESSION['user_id']) && isset($_SESSION['login_time'])) {
             $session_age = time() - $_SESSION['login_time'];
-            // Sessions last 24 hours; after that fall back to the remember-me token
-            if ($session_age > 86400) {
-                $_SESSION = [];
-                session_destroy();
-                session_start();
-            } else {
+            $valid = $session_age <= 86400; // Sessions last 24 hours; then fall back to the remember-me token
+            if ($valid) {
+                // Signed out elsewhere (or account gone): the session's version no longer matches
+                try {
+                    $current = self::sessionVersion($_SESSION['user_id']);
+                    if ($current === null || $current !== (int)($_SESSION['session_version'] ?? 0)) {
+                        $valid = false;
+                    }
+                } catch (Throwable $e) {
+                    // Database trouble: keep the existing server-side session rather than sign everyone out
+                    error_log("AuthManager::isLoggedIn session_version check error: " . $e->getMessage());
+                }
+            }
+            if ($valid) {
                 return true;
             }
+            $_SESSION = [];
+            session_destroy();
+            session_start();
         }
 
         // Check remember me token if no active session
@@ -415,19 +558,24 @@ class AuthManager {
                 set_time_limit(5); // Max 5 seconds for this operation
                 $db = Database::getInstance()->getDbConnection();
                 $schema = Database::getSchema();
+                self::ensureSchema($db, $schema);
 
-                $stmt = $db->prepare("SELECT * FROM {$schema}.users WHERE id = ? AND remember_token = ? AND remember_token_expires > NOW()");
-                $stmt->execute([$_COOKIE['user_id'], $_COOKIE['remember_token']]);
+                // Only a hash of the token is stored. Valid for 30 days from the last visit, and
+                // never more than REMEMBER_MAX_DAYS after it was issued at sign-in.
+                $stmt = $db->prepare("SELECT id, email, first_name, last_name FROM {$schema}.users
+                    WHERE id = ? AND remember_token = ? AND remember_token_expires > NOW()
+                      AND remember_token_issued_at > NOW() - (? * INTERVAL '1 day')");
+                $stmt->execute([$_COOKIE['user_id'], self::hashToken($_COOKIE['remember_token']), self::REMEMBER_MAX_DAYS]);
                 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
                 if ($user) {
                     // Restore session from remember token (new session id)
                     self::startUserSession($user['id'], $user['email'], $user['first_name'], $user['last_name']);
 
-                    // Extend the same token for another 30 days. The token is not rotated here: the
-                    // nginx auth check (auth_gatekeeper.php) runs this too and nginx drops the cookies
-                    // it sets, so a rotated token would never reach the browser and the page itself
-                    // would then see an invalid token.
+                    // Extend the same token for another 30 days (up to the 90-day cap). The token is not
+                    // rotated here: the nginx auth check (auth_gatekeeper.php) runs this too and nginx drops
+                    // the cookies it sets, so a rotated token would never reach the browser and the page
+                    // itself would then see an invalid token.
                     self::extendRememberToken($user['id'], $_COOKIE['remember_token']);
                     return true;
                 } else {
@@ -442,39 +590,49 @@ class AuthManager {
         return false;
     }
 
-    private static function setRememberToken($userId) {
+    /**
+     * Issue a new remember-me token at sign-in. One token per user: signing in on another device
+     * replaces it. The database keeps only sha256(token).
+     */
+    public static function setRememberToken($userId) {
         COVERAGE_LOG('setRememberToken', __CLASS__, __FILE__, __LINE__);
 
         try {
-            // Generate secure random token
             $token = bin2hex(random_bytes(32));
-            $expiresTs = time() + (30 * 24 * 60 * 60); // 30 days
-            $expires = date('Y-m-d H:i:s', $expiresTs);
+            $expiresTs = time() + self::REMEMBER_DAYS * 86400;
 
-            // Store token in database
             $db = Database::getInstance()->getDbConnection();
             $schema = Database::getSchema();
-            $stmt = $db->prepare("UPDATE {$schema}.users SET remember_token = ?, remember_token_expires = ? WHERE id = ?");
-            $stmt->execute([$token, $expires, $userId]);
+            self::ensureSchema($db, $schema);
+            $stmt = $db->prepare("UPDATE {$schema}.users SET remember_token = ?, remember_token_expires = ?, remember_token_issued_at = NOW() WHERE id = ?");
+            $stmt->execute([self::hashToken($token), date('Y-m-d H:i:s', $expiresTs), $userId]);
 
             // Set cookies (30 days): Secure, HttpOnly, SameSite=Lax
             Security::setAuthCookie('remember_token', $token, $expiresTs);
             Security::setAuthCookie('user_id', (string)$userId, $expiresTs);
+            return true;
         } catch (Exception $e) {
             // Don't fail the login if remember token fails, just log the error
             error_log("AuthManager::setRememberToken error: " . $e->getMessage());
+            return false;
         }
     }
 
     private static function extendRememberToken($userId, $token) {
         try {
-            $expiresTs = time() + (30 * 24 * 60 * 60); // 30 days
             $db = Database::getInstance()->getDbConnection();
             $schema = Database::getSchema();
-            $stmt = $db->prepare("UPDATE {$schema}.users SET remember_token_expires = ? WHERE id = ? AND remember_token = ?");
-            $stmt->execute([date('Y-m-d H:i:s', $expiresTs), $userId, $token]);
-            Security::setAuthCookie('remember_token', $token, $expiresTs);
-            Security::setAuthCookie('user_id', (string)$userId, $expiresTs);
+            $stmt = $db->prepare("UPDATE {$schema}.users
+                SET remember_token_expires = LEAST(NOW() + (? * INTERVAL '1 day'), remember_token_issued_at + (? * INTERVAL '1 day'))
+                WHERE id = ? AND remember_token = ?
+                RETURNING EXTRACT(EPOCH FROM remember_token_expires - NOW())::bigint");
+            $stmt->execute([self::REMEMBER_DAYS, self::REMEMBER_MAX_DAYS, $userId, self::hashToken($token)]);
+            $left = $stmt->fetchColumn();
+            if ($left !== false && (int)$left > 0) {
+                $expiresTs = time() + (int)$left;
+                Security::setAuthCookie('remember_token', $token, $expiresTs);
+                Security::setAuthCookie('user_id', (string)$userId, $expiresTs);
+            }
         } catch (Exception $e) {
             error_log("AuthManager::extendRememberToken error: " . $e->getMessage());
         }

@@ -70,23 +70,62 @@ class Security
         return $kind . ':' . hash('sha256', strtolower(trim($subject)));
     }
 
-    /** Record one event for (kind, subject). */
-    public static function throttleHit(string $kind, string $subject): void
+    /**
+     * Record one event for (kind, subject). Returns the row id (database store) so a caller that
+     * records an attempt before checking it can take it back with throttleRemove(); null for the file store.
+     */
+    public static function throttleHit(string $kind, string $subject): ?int
     {
         $bucket = self::bucketKey($kind, $subject);
         try {
             [$db, $table] = self::throttleTable();
-            $db->prepare("INSERT INTO {$table} (bucket, created_at) VALUES (?, NOW())")->execute([$bucket]);
+            $stmt = $db->prepare("INSERT INTO {$table} (bucket, created_at) VALUES (?, NOW()) RETURNING id");
+            $stmt->execute([$bucket]);
+            $id = (int)$stmt->fetchColumn();
             if (random_int(1, 100) === 1) {
-                $db->exec("DELETE FROM {$table} WHERE created_at < NOW() - INTERVAL '1 day'");
+                // Keep 2 days: the longest window in use is 24 hours
+                $db->exec("DELETE FROM {$table} WHERE created_at < NOW() - INTERVAL '2 days'");
             }
+            return $id;
         } catch (Throwable $e) {
             error_log('Security throttle (db) unavailable, using file store: ' . $e->getMessage());
             self::fileUpdate(function (array $data) use ($bucket) {
                 $data[$bucket][] = time();
                 return $data;
             });
+            return null;
         }
+    }
+
+    /** Take back one event recorded by throttleHit(). */
+    public static function throttleRemove(?int $id): void
+    {
+        if (!$id) {
+            return;
+        }
+        try {
+            [$db, $table] = self::throttleTable();
+            $db->prepare("DELETE FROM {$table} WHERE id = ?")->execute([$id]);
+        } catch (Throwable $e) {
+            error_log('Security throttle remove failed: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Record an attempt first, then count, so parallel requests cannot all pass a check that each
+     * made before the others were recorded. $limits maps window seconds => max events allowed in it.
+     * Returns [allowed, rowId]. When not allowed the attempt is not kept.
+     */
+    public static function throttleTake(string $kind, string $subject, array $limits): array
+    {
+        $id = self::throttleHit($kind, $subject);
+        foreach ($limits as $seconds => $max) {
+            if (self::throttleCount($kind, $subject, (int)$seconds) > $max) {
+                self::throttleRemove($id);
+                return [false, null];
+            }
+        }
+        return [true, $id];
     }
 
     /** Number of events for (kind, subject) in the last $seconds. */
@@ -186,7 +225,7 @@ class Security
         $data = json_decode((string)$raw, true);
         $data = is_array($data) ? $data : [];
         $data = $change($data);
-        $cutoff = time() - 86400;
+        $cutoff = time() - 2 * 86400;
         foreach ($data as $bucket => $times) {
             $data[$bucket] = array_values(array_filter((array)$times, function ($t) use ($cutoff) { return $t > $cutoff; }));
             if (!$data[$bucket]) {
@@ -199,6 +238,42 @@ class Security
         fflush($fh);
         flock($fh, LOCK_UN);
         fclose($fh);
+    }
+
+    // ---------------- Same-origin check (login CSRF) ----------------
+
+    /** Origins allowed to POST to the login router. Extra local origins can be added with ALLOWED_ORIGINS (comma separated). */
+    public static function allowedOrigins(): array
+    {
+        $origins = [
+            'https://weightloss-tracker.com',
+            'http://localhost:8111',
+            'http://127.0.0.1:8111',
+        ];
+        $extra = getenv('ALLOWED_ORIGINS');
+        if ($extra === false || $extra === '') {
+            $extra = $_ENV['ALLOWED_ORIGINS'] ?? '';
+        }
+        foreach (explode(',', (string)$extra) as $o) {
+            $o = rtrim(trim($o), '/');
+            if ($o !== '') {
+                $origins[] = $o;
+            }
+        }
+        return $origins;
+    }
+
+    /**
+     * True when a POST comes from one of our own pages: the Origin header is one of ours, or, when the
+     * browser sent no Origin, Sec-Fetch-Site says same-origin. Requests with neither are refused.
+     */
+    public static function sameOriginRequest(): bool
+    {
+        $origin = $_SERVER['HTTP_ORIGIN'] ?? null;
+        if (is_string($origin) && $origin !== '') {
+            return in_array(rtrim($origin, '/'), self::allowedOrigins(), true);
+        }
+        return strtolower((string)($_SERVER['HTTP_SEC_FETCH_SITE'] ?? '')) === 'same-origin';
     }
 
     // ---------------- CSRF ----------------

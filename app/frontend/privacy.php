@@ -96,7 +96,7 @@ $assetVersion = function ($path) { $t = @filemtime(__DIR__ . '/' . $path); retur
                     <thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Purpose</th><th scope="col">How long</th></tr></thead>
                     <tbody>
                         <tr><td data-label="Name"><code>PHPSESSID</code></td><td data-label="Type">Cookie</td><td data-label="Purpose">Your signed-in session (also holds a security token for forms)</td><td data-label="How long">Until you close the browser; a sign-in session is ended after 24 hours</td></tr>
-                        <tr><td data-label="Name"><code>remember_token</code>, <code>user_id</code></td><td data-label="Type">Cookies (secure, not readable by scripts)</td><td data-label="Purpose">Keep you signed in on this device</td><td data-label="How long">30 days from your last visit, or until you sign out</td></tr>
+                        <tr><td data-label="Name"><code>remember_token</code>, <code>user_id</code></td><td data-label="Type">Cookies (secure, not readable by scripts)</td><td data-label="Purpose">Keep you signed in on this device</td><td data-label="How long">30 days from your last visit (never more than 90 days after you sign in), or until you sign out</td></tr>
                         <tr><td data-label="Name"><code>weightUnit</code>, <code>heightUnit</code>, <code>language</code></td><td data-label="Type">Local storage</td><td data-label="Purpose">Remember your units and language on this device</td><td data-label="How long">Until you clear your browser data</td></tr>
                     </tbody>
                 </table>

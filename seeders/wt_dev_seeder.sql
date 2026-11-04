@@ -12,8 +12,10 @@ CREATE TABLE wt_dev.users (
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
     is_verified BOOLEAN DEFAULT false,
-    remember_token VARCHAR(64) NULL,
+    remember_token VARCHAR(64) NULL, -- sha256 of the cookie token, never the token
     remember_token_expires TIMESTAMP NULL,
+    remember_token_issued_at TIMESTAMP NULL,
+    session_version INTEGER NOT NULL DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -26,7 +28,8 @@ CREATE TABLE wt_dev.auth_codes (
     code_type VARCHAR(20) NOT NULL, -- 'login' or 'signup'
     expires_at TIMESTAMP NOT NULL,
     used_at TIMESTAMP NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    attempts INTEGER NOT NULL DEFAULT 0
 );
 
 -- Create test_table for wt_dev
