@@ -23,7 +23,9 @@ for ($try = 1; !$db instanceof PDO && $try <= 12; $try++) {
         );
     } catch (Throwable $e) {
         $db = null;
-        Migrations::$connectError = preg_replace('/\s+/', ' ', substr($e->getMessage(), 0, 200));
+        // Full message (host, IP, port, user) in the server log only; /status gets the SQLSTATE and a fixed text
+        error_log('[migrations] connection attempt ' . $try . ' failed: ' . $e->getMessage());
+        Migrations::$connectError = Migrations::safeError($e);
     }
 }
 // If this fails, signed-in requests try again, at most once every few minutes

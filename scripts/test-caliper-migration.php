@@ -96,6 +96,35 @@ touch(Migrations::backoffFile($s), time() - Migrations::RETRY_AFTER_SECONDS - 1)
 $later = Migrations::run($db, $s, Migrations::MODE_REQUEST);
 check('request call after back-off tries again', (bool)preg_match('/not applied: ALERT/', $later[0] ?? ''), true);
 
+// ---- A failing fix: the state files and /status get only the SQLSTATE and a fixed description, never the
+// database's message (DETAIL with the row's contents)
+$db->exec("DELETE FROM {$s}.body_data_entries WHERE metric_type = 'caliper_midaxillary'");
+@unlink(Migrations::backoffFile($s));
+$db->exec("ALTER TABLE {$s}.body_data_entries ADD CONSTRAINT probe_chk CHECK (metric_type NOT LIKE 'tmpfix%')");
+$failedRun = Migrations::run($db, $s, Migrations::MODE_STARTUP);
+check('failing fix reported as SQLSTATE and fixed text', $failedRun, ['2026-11-04-caliper-metric-names: not applied: SQLSTATE 23514 (check violation)']);
+$shown = (string)Migrations::lastFailure($s) . ' ' . Migrations::diagnostics($db, $s);
+check('status text holds the SQLSTATE', strpos($shown, 'SQLSTATE 23514 (check violation)') !== false, true);
+check('status text has no DETAIL, row contents or constraint name', (bool)preg_match('/DETAIL|Failing row|tmpfix|probe_chk|body_data_entries/i', $shown), false);
+$db->exec("ALTER TABLE {$s}.body_data_entries DROP CONSTRAINT probe_chk");
+@unlink(Migrations::backoffFile($s));
+
+// ---- A failed connection: only the SQLSTATE, never the host, IP address, port or user name
+try {
+    new PDO('pgsql:host=' . $_ENV['PG_HOST'] . ';dbname=' . $_ENV['PG_DATABASE'] . ';port=' . $_ENV['PG_PORT'], $_ENV['PG_USER'], 'not-the-password');
+    $connErr = 'connected';
+} catch (Throwable $e) {
+    $connErr = Migrations::safeError($e);
+}
+check('connection failure as SQLSTATE and fixed text', (bool)preg_match('/^SQLSTATE 08006 \(connection failure\)$|^SQLSTATE 28P01 \(password not accepted\)$/', $connErr), true);
+Migrations::$connectError = $connErr;
+Migrations::run(null, $s, Migrations::MODE_STARTUP);
+Migrations::$connectError = null;
+$diag = Migrations::diagnostics($db, $s);
+check('no-connection note in diagnostics', strpos($diag, 'skipped, no database connection (' . $connErr . ')') !== false, true);
+$secrets = array_filter([$_ENV['PG_HOST'], $_ENV['PG_USER'], gethostbyname($_ENV['PG_HOST']), 'port ' . $_ENV['PG_PORT']]);
+check('diagnostics hold no host, IP, port or user', array_values(array_filter($secrets, fn ($x) => stripos($diag, $x) !== false)), []);
+
 // ---- Request-time call does not wait while another process holds the migration lock, then backs off briefly
 $db->exec("DELETE FROM {$s}.body_data_entries WHERE metric_type = 'caliper_midaxillary'");
 @unlink(Migrations::backoffFile($s));

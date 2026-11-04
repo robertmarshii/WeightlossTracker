@@ -16,9 +16,14 @@
  * fixes at the same time; the second one sees the first one's app_migrations row once it gets the lock and
  * does nothing.
  */
+/** A fix that decides not to run. Its message is written in this file (counts only, no data), so it may be shown. */
+class MigrationRefused extends RuntimeException
+{
+}
+
 class Migrations
 {
-    /** Set by run-migrations.php when it can't connect (message only, no password). */
+    /** Set by run-migrations.php when it can't connect: safeError() text only (SQLSTATE and a fixed description). */
     public static $connectError = null;
 
     const MARKER_DIR = '/var/app/data';
@@ -35,6 +40,51 @@ class Migrations
         return [
             '2026-11-04-caliper-metric-names' => [self::class, 'fixCaliperNames'],
         ];
+    }
+
+    /** Fixed short descriptions by SQLSTATE (exact code first, then its two-character class). */
+    private const SQLSTATE_TEXT = [
+        '08006' => 'connection failure', '08001' => 'could not connect', '28P01' => 'password not accepted',
+        '28000' => 'login not accepted', '3D000' => 'database does not exist', '3F000' => 'schema does not exist',
+        '23505' => 'unique violation', '23514' => 'check violation', '23503' => 'foreign key violation',
+        '23502' => 'not-null violation', '42501' => 'insufficient privilege', '42P01' => 'table does not exist',
+        '42703' => 'column does not exist', '40001' => 'serialization failure', '40P01' => 'deadlock detected',
+        '55P03' => 'lock not available', '57014' => 'statement cancelled', '53100' => 'disk full',
+        '53300' => 'too many connections',
+        '08' => 'connection problem', '22' => 'data exception', '23' => 'constraint violation',
+        '25' => 'invalid transaction state', '28' => 'login not accepted', '40' => 'transaction rolled back',
+        '42' => 'syntax error or access rule violation', '53' => 'insufficient resources',
+        '54' => 'program limit exceeded', '55' => 'object not in prerequisite state', '57' => 'operator intervention',
+        '58' => 'system error', 'XX' => 'internal error',
+    ];
+
+    /**
+     * A failure as safe, fixed text for the state files and /status: only the SQLSTATE and a fixed description
+     * ("SQLSTATE 23514 (check violation)"), never the database's message, which can contain row contents
+     * (DETAIL), host, IP address, port or user names. A fix's own refusal (MigrationRefused) keeps its message,
+     * which is written in this file and holds counts only. The full error goes to the server log only.
+     */
+    public static function safeError(Throwable $e): string
+    {
+        if ($e instanceof MigrationRefused) {
+            return $e->getMessage();
+        }
+        $state = '';
+        if ($e instanceof PDOException) {
+            $info = $e->errorInfo;
+            if (is_array($info) && isset($info[0]) && preg_match('/^[0-9A-Z]{5}$/', (string)$info[0])) {
+                $state = (string)$info[0];
+            } elseif (preg_match('/^[0-9A-Z]{5}$/', (string)$e->getCode())) {
+                $state = (string)$e->getCode();
+            } elseif (preg_match('/SQLSTATE\[([0-9A-Z]{5})\]/', $e->getMessage(), $m)) {
+                $state = $m[1];
+            }
+        }
+        if ($state === '') {
+            return 'error (' . get_class($e) . ', see the server log)';
+        }
+        $text = self::SQLSTATE_TEXT[$state] ?? self::SQLSTATE_TEXT[substr($state, 0, 2)] ?? 'database error';
+        return "SQLSTATE {$state} ({$text})";
     }
 
     /** Folder for the marker and back-off files: /var/app/data in the image, else the temp folder. */
@@ -141,8 +191,10 @@ class Migrations
                     }
                     break;
                 }
-                $failed = "{$name}: " . $e->getMessage();
-                $out[] = "{$name}: not applied: " . $e->getMessage();
+                // Full error in the server log only; files and /status get the SQLSTATE and a fixed description
+                error_log("Migrations: {$name} failed in {$schema}: " . get_class($e) . ': ' . $e->getMessage());
+                $failed = "{$name}: " . self::safeError($e);
+                $out[] = "{$name}: not applied: " . self::safeError($e);
                 break;
             }
         }
@@ -151,7 +203,7 @@ class Migrations
         if ($failed !== null) {
             // One log line per attempt; the back-off file keeps request-time attempts to one every few minutes
             error_log("Migrations: not applied in {$schema}, next try in " . self::RETRY_AFTER_SECONDS . "s: {$failed}");
-            // Keep the reason (counts and SQL errors only, no user data) so /status can show it
+            // Keep the reason (SQLSTATE and a fixed description only) so /status can show it
             $reason = preg_replace('/\s+/', ' ', substr($failed, 0, 300));
             if (@file_put_contents($backoff, date('c') . ' ' . $reason . "\n") === false) {
                 @touch($backoff);
@@ -236,7 +288,7 @@ class Migrations
         $newStyle = (int)$db->query("SELECT COUNT(*) FROM {$t} WHERE metric_type = 'caliper_midaxillary'")->fetchColumn();
         if ($newStyle > 0) {
             // run() writes this to the error log (one line per attempt, at most every few minutes)
-            throw new RuntimeException("ALERT caliper rename refused: {$newStyle} caliper_midaxillary rows already exist, "
+            throw new MigrationRefused("ALERT caliper rename refused: {$newStyle} caliper_midaxillary rows already exist, "
                 . "so caliper_abdomen/caliper_thigh rows may mix old and new meanings. Needs a manual check.");
         }
         $counts = $db->query("SELECT metric_type, COUNT(*) FROM {$t}
