@@ -125,6 +125,9 @@ class Migrations
                 @touch($backoff);
             }
         }
+        // Last result of any attempt (startup or request), for /status. No user data in these lines.
+        @file_put_contents(self::stateDir() . '/migrations-' . $schema . '.last',
+            date('c') . ' ' . $mode . ': ' . preg_replace('/\s+/', ' ', substr(implode('; ', $out), 0, 400)) . "\n");
         if ($allDone) {
             @file_put_contents($marker, date('c') . "\n");
             @unlink($backoff);
@@ -140,6 +143,25 @@ class Migrations
         }
         $text = @file_get_contents(self::backoffFile($schema));
         return ($text === false || trim($text) === '') ? null : trim($text);
+    }
+
+    /** Diagnostics for /status: last attempt, marker and table presence. */
+    public static function diagnostics($db, string $schema): string
+    {
+        if (!preg_match('/^[a-z_][a-z0-9_]*$/', $schema)) {
+            return 'bad schema name';
+        }
+        $last = @file_get_contents(self::stateDir() . '/migrations-' . $schema . '.last');
+        $table = 'unknown';
+        try {
+            $q = $db->prepare("SELECT to_regclass(?) IS NOT NULL");
+            $q->execute(["{$schema}.app_migrations"]);
+            $table = $q->fetchColumn() ? 'yes' : 'no';
+        } catch (Throwable $e) {
+        }
+        return 'last attempt: ' . ($last === false ? 'none recorded' : trim($last))
+            . '; marker file: ' . (is_file(self::markerFile($schema)) ? 'yes' : 'no')
+            . '; app_migrations table: ' . $table;
     }
 
     /** Names of fixes not applied yet (read-only, for /status). Null if the database can't be read. */

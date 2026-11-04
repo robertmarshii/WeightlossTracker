@@ -123,13 +123,15 @@ if ($dbOk) {
         require_once '/var/app/backend/Migrations.php';
         $pending = Migrations::pending($pdo, Database::getSchema());
         $lastFailure = $pending ? Migrations::lastFailure(Database::getSchema()) : null;
+        $diag = $pending ? Migrations::diagnostics($pdo, Database::getSchema()) : '';
     } catch (Throwable $e) {
         $pending = null;
         $lastFailure = null;
+        $diag = '';
     }
     ob_end_clean();
     $add('Data fixes applied', $pending === [], $pending === null ? 'could not read app_migrations'
-        : 'pending: ' . implode(', ', $pending) . ' (last error: ' . ($lastFailure ?? 'none recorded yet') . ')');
+        : 'pending: ' . implode(', ', $pending) . ' (last error: ' . ($lastFailure ?? 'none recorded yet') . '; ' . $diag . ')');
 }
 
 // Email settings: present, and the Scaleway key is accepted (a read-only call; no email is sent, no value is shown).
