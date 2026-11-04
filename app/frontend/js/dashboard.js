@@ -357,8 +357,11 @@ $(function() {
             if (data.success) {
                 if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
                 showToast('Goal saved');
-                refreshGoal();
-                refreshPersonalHealthBenefits();
+                // The goal card reads the cached dashboard data: reload it so the new goal shows
+                reloadGlobalDashboardData(function() {
+                    refreshGoal();
+                    refreshPersonalHealthBenefits();
+                });
             } else {
                 showAlert('Failed to save goal', 'warning');
             }

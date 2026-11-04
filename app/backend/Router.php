@@ -203,7 +203,14 @@
             if ($action === 'save_goal') {
                 if (!isset($_POST['target_weight_kg'])) { echo json_encode(['success'=>false,'message'=>'target_weight_kg required']); return; }
                 $tw = (float)$_POST['target_weight_kg'];
-                $td = isset($_POST['target_date']) ? $_POST['target_date'] : null;
+                // No date: the dashboard sends "null" (or nothing, or ""); any other value must be a real date
+                $td = isset($_POST['target_date']) && is_string($_POST['target_date']) ? trim($_POST['target_date']) : '';
+                if ($td === '' || $td === 'null') {
+                    $td = null;
+                } elseif (!isValidEntryDate($td)) {
+                    echo json_encode(['success' => false, 'code' => 'invalid_date', 'message' => 'Invalid date']);
+                    return;
+                }
                 // Deactivate existing active goals
                 $db->prepare("UPDATE {$schema}.goals SET is_active = false WHERE user_id = ? AND is_active = true")->execute([$userId]);
                 // Insert new active goal
