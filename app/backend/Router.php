@@ -1106,16 +1106,30 @@
      * weight (highest id, the same entry the "latest" queries pick), or removed if no weight is left.
      */
     function syncBodyFatForDate($userId, $date, $db, $schema) {
+        // A failed statement aborts a Postgres transaction. Inside one (update_weight), run the sync under a
+        // savepoint and roll back only to it on failure, so the weight change still commits; the estimate is
+        // extra and a failure here must never undo the user's edit.
+        $inTx = $db->inTransaction();
+        if ($inTx) {
+            $db->exec('SAVEPOINT body_fat_sync');
+        }
         try {
             $stmt = $db->prepare("SELECT weight_kg FROM {$schema}.weight_entries WHERE user_id = ? AND entry_date = ? ORDER BY id DESC LIMIT 1");
             $stmt->execute([$userId, $date]);
             $kg = $stmt->fetchColumn();
             if ($kg === false) {
                 $db->prepare("DELETE FROM {$schema}.body_fat_entries WHERE user_id = ? AND entry_date = ?")->execute([$userId, $date]);
-                return;
+            } else {
+                autoCalculateAndStoreBodyFat($userId, (float)$kg, $date, $db, $schema);
             }
-            autoCalculateAndStoreBodyFat($userId, (float)$kg, $date, $db, $schema);
-        } catch (Exception $e) {
+            if ($inTx) {
+                $db->exec('RELEASE SAVEPOINT body_fat_sync');
+            }
+        } catch (Throwable $e) {
+            if ($inTx) {
+                $db->exec('ROLLBACK TO SAVEPOINT body_fat_sync');
+                $db->exec('RELEASE SAVEPOINT body_fat_sync');
+            }
             error_log('Body fat sync error: ' . $e->getMessage());
         }
     }
@@ -2186,49 +2200,45 @@
      * @param string $schema
      */
     function autoCalculateAndStoreBodyFat($userId, $weightKg, $date, $db, $schema) {
-        try {
-            // Get user height and age
-            $stmt = $db->prepare("SELECT height_cm, age FROM {$schema}.user_profiles WHERE user_id = ?");
-            $stmt->execute([$userId]);
-            $profile = $stmt->fetch(PDO::FETCH_ASSOC);
+        // Errors go to syncBodyFatForDate (the only caller), which logs them and, inside a transaction, rolls
+        // back to its savepoint so the weight entry is not lost.
+        // Get user height and age
+        $stmt = $db->prepare("SELECT height_cm, age FROM {$schema}.user_profiles WHERE user_id = ?");
+        $stmt->execute([$userId]);
+        $profile = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            if (!$profile || !$profile['height_cm'] || !$profile['age']) {
-                // Can't calculate without height and age
-                return;
-            }
-
-            $heightCm = floatval($profile['height_cm']);
-            $age = intval($profile['age']);
-
-            // Calculate BMI
-            $heightM = $heightCm / 100.0;
-            $bmi = $weightKg / ($heightM * $heightM);
-
-            // Deurenberg formula - use average of male/female estimates
-            $bfpMale = 1.2 * $bmi + 0.23 * $age - 16.2;
-            $bfpFemale = 1.2 * $bmi + 0.23 * $age - 5.4;
-            $bodyFatPercent = ($bfpMale + $bfpFemale) / 2.0; // Average
-
-            // Outside what the table allows (0-60%): keep no estimate for that day rather than fail
-            $bodyFatPercent = round($bodyFatPercent, 1);
-            if ($bodyFatPercent <= 0 || $bodyFatPercent > 60) {
-                $db->prepare("DELETE FROM {$schema}.body_fat_entries WHERE user_id = ? AND entry_date = ?")->execute([$userId, $date]);
-                return;
-            }
-
-            // Store it
-            $stmt = $db->prepare("
-                INSERT INTO {$schema}.body_fat_entries (user_id, body_fat_percent, entry_date)
-                VALUES (?, ?, ?)
-                ON CONFLICT (user_id, entry_date)
-                DO UPDATE SET body_fat_percent = ?
-            ");
-            $stmt->execute([$userId, round($bodyFatPercent, 1), $date, round($bodyFatPercent, 1)]);
-
-        } catch (Exception $e) {
-            error_log("Auto body fat calculation error: " . $e->getMessage());
-            // Don't fail the weight entry if body fat calculation fails
+        if (!$profile || !$profile['height_cm'] || !$profile['age']) {
+            // Can't calculate without height and age
+            return;
         }
+
+        $heightCm = floatval($profile['height_cm']);
+        $age = intval($profile['age']);
+
+        // Calculate BMI
+        $heightM = $heightCm / 100.0;
+        $bmi = $weightKg / ($heightM * $heightM);
+
+        // Deurenberg formula - use average of male/female estimates
+        $bfpMale = 1.2 * $bmi + 0.23 * $age - 16.2;
+        $bfpFemale = 1.2 * $bmi + 0.23 * $age - 5.4;
+        $bodyFatPercent = ($bfpMale + $bfpFemale) / 2.0; // Average
+
+        // Outside what the table allows (0-60%): keep no estimate for that day rather than fail
+        $bodyFatPercent = round($bodyFatPercent, 1);
+        if ($bodyFatPercent <= 0 || $bodyFatPercent > 60) {
+            $db->prepare("DELETE FROM {$schema}.body_fat_entries WHERE user_id = ? AND entry_date = ?")->execute([$userId, $date]);
+            return;
+        }
+
+        // Store it
+        $stmt = $db->prepare("
+            INSERT INTO {$schema}.body_fat_entries (user_id, body_fat_percent, entry_date)
+            VALUES (?, ?, ?)
+            ON CONFLICT (user_id, entry_date)
+            DO UPDATE SET body_fat_percent = ?
+        ");
+        $stmt->execute([$userId, round($bodyFatPercent, 1), $date, round($bodyFatPercent, 1)]);
     }
 
     // ==================== END PHASE 4 ====================
