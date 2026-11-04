@@ -11,7 +11,7 @@
                                         <select id="weightUnit" class="form-control glass-input">
                                             <option value="kg" data-eng="Kilograms (kg)" data-spa="Kilogramos (kg)" data-fre="Kilogrammes (kg)" data-ger="Kilogramm (kg)">Kilograms (kg)</option>
                                             <option value="lbs" data-eng="Pounds (lbs)" data-spa="Libras (lbs)" data-fre="Livres (lbs)" data-ger="Pfund (lbs)">Pounds (lbs)</option>
-                                            <option value="st" data-eng="Stones (st)" data-spa="Piedras (st)" data-fre="Pierres (st)" data-ger="Steine (st)">Stones (st)</option>
+                                            <option value="st" data-eng="Stones (st)" data-spa="Piedras (st)" data-fre="Stone (st)" data-ger="Stone (st)">Stones (st)</option>
                                         </select>
                                     </div>
 
