@@ -43,6 +43,17 @@ class WeightUnits
         }
     }
 
+    /**
+     * A change in kg rounded the way format() shows it in that unit, in tenths of the unit's smallest
+     * shown step (0.1 kg, or 0.1 lb for 'lbs' and 'st'). 0 means it shows as "0.0": call it steady.
+     */
+    public static function roundedTenths($kg, $unit): int
+    {
+        $kg = (float)$kg;
+        $factor = self::normalise($unit) === 'kg' ? 1.0 : self::LB_PER_KG;
+        return (int)round($kg * $factor * 10);
+    }
+
     /** One decimal place, without a trailing ".0" noise problem from floats (e.g. 1.2000000000000028 -> "1.2"). */
     private static function number(float $value): string
     {

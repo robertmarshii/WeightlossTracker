@@ -14,6 +14,20 @@
 
 class Security
 {
+    /**
+     * Version of the dashboard's JavaScript/API contract. dashboard.php puts it in <meta name="app-version">,
+     * js/global.js sends it as X-App-Version and the API sends it back. Raise it when an older open tab
+     * would save data wrongly (2: caliper readings saved under their real site names, Nov 2026).
+     */
+    const CLIENT_VERSION = 2;
+
+    /** The X-App-Version an open dashboard sent (0 for pages loaded before the header existed). */
+    public static function clientVersion(): int
+    {
+        $v = $_SERVER['HTTP_X_APP_VERSION'] ?? '';
+        return (is_string($v) && ctype_digit($v)) ? (int)$v : 0;
+    }
+
     private static $throttleReady = [];
     private const FALLBACK_FILE = '/var/app/data/throttle.json';
 

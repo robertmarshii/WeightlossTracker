@@ -81,5 +81,37 @@ foreach ($expect as $unit => $e) {
     }
 }
 
+// A change that rounds to 0.0 in the user's unit reads as steady, never "lost 0.0" / "gained 0.0"
+function notContains($label, $haystack, $needle)
+{
+    global $fails;
+    if (strpos($haystack, $needle) === false) {
+        echo "ok   {$label} does not contain '{$needle}'\n";
+    } else {
+        $fails++;
+        echo "FAIL {$label} contains '{$needle}'\n";
+    }
+}
+check('roundedTenths kg 0.04', WeightUnits::roundedTenths(0.04, 'kg'), 0);
+check('roundedTenths lbs 0.04 kg', WeightUnits::roundedTenths(0.04, 'lbs'), 1);
+check('roundedTenths st -0.02 kg', WeightUnits::roundedTenths(-0.02, 'st'), 0);
+// 0.04 kg: 0.0 kg (steady), but 0.1 lb in lbs/st (a real, shown change)
+$tiny = ['current_weight' => '83.60', 'goal_weight' => '80.0', 'week_ago_weight' => '83.64', 'current_date' => '2026-11-03', 'goal_date' => null];
+$tinyMonth = ['weights' => [['weight_kg' => '84.22', 'entry_date' => '2026-10-02'], ['weight_kg' => '84.20', 'entry_date' => '2026-10-30']],
+    'previous_month_weight' => null, 'entries_count' => 2, 'month_name' => 'October 2026'];
+foreach (['kg', 'lbs', 'st'] as $unit) {
+    $r = NotificationScheduler::buildReminderEmail($unit, $tiny);
+    $m = NotificationScheduler::buildMonthlyReport($unit, $tinyMonth);
+    foreach (['lost 0.0', 'gained 0.0', '-0.0', '+0.0'] as $bad) {
+        notContains("reminder[{$unit}] tiny change", $r['text'], $bad);
+        notContains("monthly[{$unit}] 0.02 kg change", $m['text'], $bad);
+    }
+    // 0.02 kg is 0.0 in every unit
+    contains("monthly[{$unit}] 0.02 kg change is stable", $m['text'], 'stayed stable');
+}
+contains('reminder[kg] 0.04 kg is the same', NotificationScheduler::buildReminderEmail('kg', $tiny)['text'], 'stayed the same');
+contains('reminder[lbs] 0.04 kg is 0.1 lbs', NotificationScheduler::buildReminderEmail('lbs', $tiny)['text'], 'lost 0.1 lbs');
+contains('reminder[st] 0.04 kg is 0.1 lb', NotificationScheduler::buildReminderEmail('st', $tiny)['text'], 'lost 0.1 lb');
+
 echo $fails ? "\n{$fails} check(s) failed\n" : "\nAll checks passed\n";
 exit($fails ? 1 : 0);

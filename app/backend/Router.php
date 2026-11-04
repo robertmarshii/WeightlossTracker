@@ -3,6 +3,10 @@
    require_once '/var/app/backend/CoverageLogger.php';
    require_once '/var/app/backend/Security.php';
 
+    // Plausible weights for an adult, in kg (js/dashboard.js checks the same limits)
+    const WEIGHT_MIN_KG = 20;
+    const WEIGHT_MAX_KG = 500;
+
     if(isset($_GET["controller"])) {
         $controller = htmlspecialchars($_GET["controller"]);
         if($controller === "profile") {
@@ -116,6 +120,9 @@
                 return;
             }
 
+            // Lets an open dashboard notice that a newer version is live (js/global.js asks the user to reload)
+            header('X-App-Version: ' . (int)Security::CLIENT_VERSION);
+
             $userId = (int)$_SESSION['user_id'];
             $db = Database::getInstance()->getdbConnection();
             $schema = Database::getSchema();
@@ -124,9 +131,10 @@
                 throw new Exception('Database connection failed');
             }
 
-            // Pending one-off data fixes (normally already applied at container start; then just a file check)
+            // Pending one-off data fixes: applied at container start (run-migrations.php). Here only a cheap
+            // check: a marker file once applied, a back-off file after a failure, a short wait for the lock.
             require_once('/var/app/backend/Migrations.php');
-            Migrations::run($db, $schema);
+            Migrations::run($db, $schema, Migrations::MODE_REQUEST);
 
         } catch (Exception $e) {
             error_log("ProfileController ERROR: " . $e->getMessage());
@@ -168,18 +176,17 @@
             }
 
             if ($action === 'add_weight') {
-                if (!isset($_POST['weight_kg'])) { echo json_encode(['success'=>false,'message'=>'weight_kg required']); return; }
-                $w = (float)$_POST['weight_kg'];
-                $date = isset($_POST['entry_date']) ? $_POST['entry_date'] : date('Y-m-d');
-                if (!isValidEntryDate($date)) {
-                    echo json_encode(['success' => false, 'message' => 'Invalid date']);
+                $w = isset($_POST['weight_kg']) && is_numeric($_POST['weight_kg']) ? (float)$_POST['weight_kg'] : null;
+                $date = isset($_POST['entry_date']) ? (string)$_POST['entry_date'] : date('Y-m-d');
+                if ($err = weightEntryError($w, $date)) {
+                    echo json_encode(['success' => false] + $err);
                     return;
                 }
                 $stmt = $db->prepare("INSERT INTO {$schema}.weight_entries (user_id, weight_kg, entry_date, notes) VALUES (?, ?, ?, NULL)");
                 $stmt->execute([$userId, $w, $date]);
 
-                // Automatically calculate and store body fat % using Deurenberg formula
-                autoCalculateAndStoreBodyFat($userId, $w, $date, $db, $schema);
+                // Body fat estimate (Deurenberg) for that day, from its latest weight
+                syncBodyFatForDate($userId, $date, $db, $schema);
 
                 echo json_encode(['success' => true, 'message' => 'Weight entry added']);
                 return;
@@ -340,12 +347,15 @@
                     echo json_encode(['success' => false, 'message' => 'Entry ID required']);
                     return;
                 }
-                
+
                 $entryId = (int)$_POST['id'];
-                $stmt = $db->prepare("DELETE FROM {$schema}.weight_entries WHERE id = ? AND user_id = ?");
+                $stmt = $db->prepare("DELETE FROM {$schema}.weight_entries WHERE id = ? AND user_id = ? RETURNING entry_date");
                 $stmt->execute([$entryId, $userId]);
-                
-                if ($stmt->rowCount() > 0) {
+                $deletedDate = $stmt->fetchColumn();
+
+                if ($deletedDate !== false) {
+                    // That day's body fat estimate now comes from its remaining weight, or goes
+                    syncBodyFatForDate($userId, $deletedDate, $db, $schema);
                     echo json_encode(['success' => true, 'message' => 'Weight entry deleted']);
                 } else {
                     echo json_encode(['success' => false, 'message' => 'Entry not found or not authorized']);
@@ -355,21 +365,41 @@
 
             if ($action === 'update_weight') {
                 // Edit an existing entry in place (the Data tab's ✎ button)
-                $entryId = isset($_POST['id']) ? (int)$_POST['id'] : 0;
-                $w = isset($_POST['weight_kg']) && is_numeric($_POST['weight_kg']) ? (float)$_POST['weight_kg'] : 0.0;
-                $date = isset($_POST['entry_date']) ? (string)$_POST['entry_date'] : '';
-                $d = DateTime::createFromFormat('Y-m-d', $date);
-                if ($entryId <= 0 || $w <= 0 || !$d || $d->format('Y-m-d') !== $date) {
-                    echo json_encode(['success' => false, 'message' => 'Entry ID, weight and date (YYYY-MM-DD) required']);
+                $entryId = isset($_POST['id']) && is_scalar($_POST['id']) ? (int)$_POST['id'] : 0;
+                $w = isset($_POST['weight_kg']) && is_numeric($_POST['weight_kg']) ? (float)$_POST['weight_kg'] : null;
+                $date = isset($_POST['entry_date']) && is_string($_POST['entry_date']) ? $_POST['entry_date'] : '';
+                if ($entryId <= 0) {
+                    echo json_encode(['success' => false, 'message' => 'Entry ID required']);
                     return;
                 }
-                $stmt = $db->prepare("UPDATE {$schema}.weight_entries SET weight_kg = ?, entry_date = ? WHERE id = ? AND user_id = ?");
-                $stmt->execute([$w, $date, $entryId, $userId]);
-                if ($stmt->rowCount() === 0) {
-                    echo json_encode(['success' => false, 'message' => 'Entry not found or not authorized']);
+                if ($err = weightEntryError($w, $date)) {
+                    echo json_encode(['success' => false] + $err);
                     return;
                 }
-                autoCalculateAndStoreBodyFat($userId, $w, $date, $db, $schema);
+                $db->beginTransaction();
+                try {
+                    $stmt = $db->prepare("SELECT entry_date FROM {$schema}.weight_entries WHERE id = ? AND user_id = ? FOR UPDATE");
+                    $stmt->execute([$entryId, $userId]);
+                    $oldDate = $stmt->fetchColumn();
+                    if ($oldDate === false) {
+                        $db->rollBack();
+                        echo json_encode(['success' => false, 'message' => 'Entry not found or not authorized']);
+                        return;
+                    }
+                    $stmt = $db->prepare("UPDATE {$schema}.weight_entries SET weight_kg = ?, entry_date = ? WHERE id = ? AND user_id = ?");
+                    $stmt->execute([$w, $date, $entryId, $userId]);
+                    // Body fat estimates follow the weights: the new day's, and the old day's if the date moved
+                    syncBodyFatForDate($userId, $date, $db, $schema);
+                    if ($oldDate !== $date) {
+                        syncBodyFatForDate($userId, $oldDate, $db, $schema);
+                    }
+                    $db->commit();
+                } catch (Throwable $e) {
+                    if ($db->inTransaction()) {
+                        $db->rollBack();
+                    }
+                    throw $e;
+                }
                 echo json_encode(['success' => true, 'message' => 'Weight entry updated']);
                 return;
             }
@@ -651,8 +681,8 @@
                     'estimated_fat_loss_kg' => round($estimatedFatLoss, 1),
                     'estimated_muscle_water_loss_kg' => round($estimatedMuscleWaterLoss, 1),
                     'fat_loss_percentage' => round($fatLossPercentage * 100),
-                    'start_weight_kg' => round($oldestWeight, 1),
-                    'current_weight_kg' => round($newestWeight, 1),
+                    'start_weight_kg' => round($oldestWeight, 2),
+                    'current_weight_kg' => round($newestWeight, 2),
                     'start_date' => $weights[0]['entry_date'],
                     'current_date' => $weights[count($weights) - 1]['entry_date'],
                     'weeks_elapsed' => $weeksDiff,
@@ -865,8 +895,8 @@
                     $allData['weight_progress'] = [
                         'success' => true,
                         'total_weight_lost_kg' => round($totalWeightLost, 1),
-                        'start_weight_kg' => round($oldestWeight, 1),
-                        'current_weight_kg' => round($newestWeight, 1),
+                        'start_weight_kg' => round($oldestWeight, 2),
+                        'current_weight_kg' => round($newestWeight, 2),
                         'estimated_fat_loss_kg' => round($estimatedFatLoss, 1),
                         'fat_loss_percentage' => round($fatLossPercentage * 100, 1),
                         'weeks_elapsed' => round($weeksDiff, 1),
@@ -953,6 +983,27 @@
                     return;
                 }
 
+                // Pages loaded before the caliper fix (Nov 2026) saved the thigh card as caliper_tricep: that
+                // one is unambiguous, so store it under its real name. Their armpit and belly cards used
+                // caliper_abdomen and caliper_thigh, which now mean belly and thigh: refuse those and ask
+                // for a reload, so a stale tab cannot file a reading under the wrong site.
+                if ($metricType === 'caliper_tricep') {
+                    $metricType = 'caliper_thigh';
+                } elseif (in_array($metricType, ['caliper_abdomen', 'caliper_thigh'], true) && Security::clientVersion() < 2) {
+                    // The old page shows this message as it is, so it is sent in the user's language
+                    $stmt = $db->prepare("SELECT language FROM {$schema}.user_settings WHERE user_id = ?");
+                    $stmt->execute([$userId]);
+                    $reloadMessages = [
+                        'en' => 'This page is out of date. Please reload the page, then save again.',
+                        'es' => 'Esta página no está actualizada. Recarga la página y vuelve a guardar.',
+                        'fr' => 'Cette page n\'est plus à jour. Rechargez la page, puis enregistrez de nouveau.',
+                        'de' => 'Diese Seite ist nicht mehr aktuell. Bitte laden Sie die Seite neu und speichern Sie dann erneut.',
+                    ];
+                    $lang = (string)($stmt->fetchColumn() ?: 'en');
+                    echo json_encode(['success' => false, 'reload' => true, 'message' => $reloadMessages[$lang] ?? $reloadMessages['en']]);
+                    return;
+                }
+
                 // Only known metrics, each with its own unit
                 $metricUnits = [
                     'muscle_mass' => '%', 'fat_percent' => '%', 'water_percent' => '%', 'bone_mass' => '%',
@@ -1033,6 +1084,42 @@
         return [round($womenLb / 2.20462, 1), round($menLb / 2.20462, 1)];
     }
 
+    /**
+     * Why a weight entry cannot be saved, or null if it can: weight 20-500 kg and a real date that is
+     * no later than tomorrow (allows for time zones ahead of the server's).
+     */
+    function weightEntryError($weightKg, $date) {
+        if ($weightKg === null || !is_finite((float)$weightKg) || $weightKg < WEIGHT_MIN_KG || $weightKg > WEIGHT_MAX_KG) {
+            return ['code' => 'weight_out_of_range', 'message' => 'Weight must be between ' . WEIGHT_MIN_KG . ' and ' . WEIGHT_MAX_KG . ' kg'];
+        }
+        if (!isValidEntryDate($date)) {
+            return ['code' => 'invalid_date', 'message' => 'Invalid date'];
+        }
+        if ($date > date('Y-m-d', strtotime('+1 day'))) {
+            return ['code' => 'date_out_of_range', 'message' => 'Date cannot be later than tomorrow'];
+        }
+        return null;
+    }
+
+    /**
+     * Keeps a day's body fat estimate in step with that day's weights: worked out from the day's latest
+     * weight (highest id, the same entry the "latest" queries pick), or removed if no weight is left.
+     */
+    function syncBodyFatForDate($userId, $date, $db, $schema) {
+        try {
+            $stmt = $db->prepare("SELECT weight_kg FROM {$schema}.weight_entries WHERE user_id = ? AND entry_date = ? ORDER BY id DESC LIMIT 1");
+            $stmt->execute([$userId, $date]);
+            $kg = $stmt->fetchColumn();
+            if ($kg === false) {
+                $db->prepare("DELETE FROM {$schema}.body_fat_entries WHERE user_id = ? AND entry_date = ?")->execute([$userId, $date]);
+                return;
+            }
+            autoCalculateAndStoreBodyFat($userId, (float)$kg, $date, $db, $schema);
+        } catch (Exception $e) {
+            error_log('Body fat sync error: ' . $e->getMessage());
+        }
+    }
+
     /** A real calendar date in YYYY-MM-DD form, between 1900 and one year from today. */
     function isValidEntryDate($date) {
         if (!is_string($date) || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
@@ -1064,7 +1151,7 @@
                 FROM {$schema}.weight_entries
                 WHERE user_id = ?
                 AND entry_date >= CURRENT_DATE - INTERVAL '90 days'
-                ORDER BY entry_date DESC
+                ORDER BY entry_date DESC, id DESC
             ");
             $stmt->execute([$userId]);
             $weights = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -1247,7 +1334,7 @@
                 SELECT entry_date, weight_kg
                 FROM {$schema}.weight_entries
                 WHERE user_id = ?
-                ORDER BY entry_date DESC
+                ORDER BY entry_date DESC, id DESC
             ");
             $stmt->execute([$userId]);
             $weights = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -1401,7 +1488,7 @@
                 FROM {$schema}.weight_entries
                 WHERE user_id = ?
                 AND entry_date >= CURRENT_DATE - INTERVAL '90 days'
-                ORDER BY entry_date DESC
+                ORDER BY entry_date DESC, id DESC
             ");
             $stmt->execute([$userId]);
             $entries = $stmt->fetchAll(PDO::FETCH_COLUMN);
@@ -1800,7 +1887,7 @@
                 SELECT entry_date, weight_kg
                 FROM {$schema}.weight_entries
                 WHERE user_id = ?
-                ORDER BY entry_date ASC
+                ORDER BY entry_date ASC, id ASC
             ");
             $stmt->execute([$userId]);
             $weights = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -2121,6 +2208,13 @@
             $bfpMale = 1.2 * $bmi + 0.23 * $age - 16.2;
             $bfpFemale = 1.2 * $bmi + 0.23 * $age - 5.4;
             $bodyFatPercent = ($bfpMale + $bfpFemale) / 2.0; // Average
+
+            // Outside what the table allows (0-60%): keep no estimate for that day rather than fail
+            $bodyFatPercent = round($bodyFatPercent, 1);
+            if ($bodyFatPercent <= 0 || $bodyFatPercent > 60) {
+                $db->prepare("DELETE FROM {$schema}.body_fat_entries WHERE user_id = ? AND entry_date = ?")->execute([$userId, $date]);
+                return;
+            }
 
             // Store it
             $stmt = $db->prepare("

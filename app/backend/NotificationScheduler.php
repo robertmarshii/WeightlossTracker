@@ -129,7 +129,7 @@ class NotificationScheduler {
         $latestWeight = $this->query(
             "SELECT weight_kg, entry_date FROM weight_entries
              WHERE user_id = ?
-             ORDER BY entry_date DESC LIMIT 1",
+             ORDER BY entry_date DESC, id DESC LIMIT 1",
             [$userId]
         );
 
@@ -146,7 +146,7 @@ class NotificationScheduler {
         $weekAgoWeight = $this->query(
             "SELECT weight_kg FROM weight_entries
              WHERE user_id = ? AND entry_date <= ?
-             ORDER BY entry_date DESC LIMIT 1",
+             ORDER BY entry_date DESC, id DESC LIMIT 1",
             [$userId, $weekAgo]
         );
 
@@ -174,11 +174,13 @@ class NotificationScheduler {
         // Weekly progress, worked out in kg and then shown in the user's unit
         $progressMessage = '';
         if ($currentKg && $weekAgoKg) {
-            $changeKg = round($weekAgoKg - $currentKg, 2);
+            // Rounded in the user's unit first, so a change that shows as 0.0 reads as "stayed the same"
+            $changeKg = $weekAgoKg - $currentKg;
+            $tenths = WeightUnits::roundedTenths($changeKg, $weightUnit);
             $change = WeightUnits::format(abs($changeKg), $weightUnit);
-            if ($changeKg > 0) {
+            if ($tenths > 0) {
                 $progressMessage = "Great job! You lost {$change} last week! 🎉";
-            } elseif ($changeKg < 0) {
+            } elseif ($tenths < 0) {
                 $progressMessage = "You gained {$change} last week. Keep going! 💪";
             } else {
                 $progressMessage = "Your weight stayed the same last week. Stay consistent! 🎯";
@@ -284,7 +286,7 @@ class NotificationScheduler {
         $weights = $this->query(
             "SELECT weight_kg, entry_date FROM weight_entries
              WHERE user_id = ? AND entry_date >= ? AND entry_date <= ?
-             ORDER BY entry_date ASC",
+             ORDER BY entry_date ASC, id ASC",
             [$userId, $firstDay, $lastDay]
         );
 
@@ -292,7 +294,7 @@ class NotificationScheduler {
         $twoMonthsAgoLast = $this->query(
             "SELECT weight_kg FROM weight_entries
              WHERE user_id = ? AND entry_date < ?
-             ORDER BY entry_date DESC LIMIT 1",
+             ORDER BY entry_date DESC, id DESC LIMIT 1",
             [$userId, $firstDay]
         );
 
@@ -329,13 +331,15 @@ class NotificationScheduler {
             $endWeight = WeightUnits::format($endKg, $weightUnit);
 
             // Worked out in kg, then shown in the user's unit
-            $monthProgress = round($startKg - $endKg, 2);
+            // Rounded in the user's unit first, so a change that shows as 0.0 reads as "stable"
+            $monthProgress = $startKg - $endKg;
+            $tenths = WeightUnits::roundedTenths($monthProgress, $weightUnit);
             $change = WeightUnits::format(abs($monthProgress), $weightUnit);
-            $monthChange = ($monthProgress > 0 ? "-" : "+") . $change;
+            $monthChange = $tenths === 0 ? $change : (($tenths > 0 ? "-" : "+") . $change);
 
-            if ($monthProgress > 0) {
+            if ($tenths > 0) {
                 $progressMessage = "Amazing! You lost {$change} this month! 🎉";
-            } elseif ($monthProgress < 0) {
+            } elseif ($tenths < 0) {
                 $progressMessage = "You gained {$change} this month. Keep pushing! 💪";
             } else {
                 $progressMessage = "Your weight stayed stable this month. 🎯";
