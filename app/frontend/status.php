@@ -28,7 +28,8 @@ function status_given_password(): ?string
     return null;
 }
 
-function status_password_hash(): string
+/** The bcrypt hash from STATUS_PASSWORD_HASH, or null when it is missing or not a bcrypt hash. */
+function status_env_password_hash(): ?string
 {
     $isBcrypt = fn ($h): bool => is_string($h) && (bool) preg_match('/^\$2[aby]\$\d\d\$[.\/A-Za-z0-9]{53}$/', $h);
     $v = getenv('STATUS_PASSWORD_HASH');
@@ -46,7 +47,12 @@ function status_password_hash(): string
     if ($v !== '') {
         error_log('status.php: STATUS_PASSWORD_HASH is set but is not a bcrypt hash; using the built-in fallback');
     }
-    return STATUS_PASSWORD_HASH_FALLBACK;
+    return null;
+}
+
+function status_password_hash(): string
+{
+    return status_env_password_hash() ?? STATUS_PASSWORD_HASH_FALLBACK;
 }
 
 $given = status_given_password();
@@ -68,6 +74,10 @@ $add = function (string $check, bool $ok, string $why = '') use (&$lines, &$allO
 };
 
 $add('App: ' . STATUS_APP_NAME, true);
+
+// The built-in fallback hash is in the public repository, so the password must come from the environment
+$add('Status password from environment', status_env_password_hash() !== null,
+    'STATUS_PASSWORD_HASH is missing or not a bcrypt hash, so the built-in fallback is in use');
 
 $sha = is_readable(STATUS_VERSION_FILE) ? trim((string) file_get_contents(STATUS_VERSION_FILE)) : '';
 $shaOk = (bool) preg_match('/^[0-9a-f]{7,40}$/i', $sha);
@@ -97,19 +107,19 @@ ob_end_clean();
 $add('Database reachable', $dbOk, 'could not run SELECT 1');
 
 // Sign-in tables up to date (hashed remember-me tokens, session_version, code attempt counter).
-// Runs the one-off upgrade if it has not happened yet; shows no details.
+// Runs the one-off upgrade if it has not happened yet; shows no details. When the upgrade cannot
+// run (e.g. the database user may not ALTER the tables) sign-in keeps working in the older mode.
 if ($dbOk) {
     $authOk = false;
     ob_start();
     try {
         require_once '/var/app/backend/AuthManager.php';
-        AuthManager::ensureSchema($pdo, Database::getSchema());
-        $authOk = true;
+        $authOk = AuthManager::ensureSchema($pdo, Database::getSchema());
     } catch (Throwable $e) {
-        error_log('status.php: auth table upgrade failed: ' . $e->getMessage());
+        error_log('status.php: auth table check failed: ' . $e->getMessage());
     }
     ob_end_clean();
-    $add('Sign-in tables up to date', $authOk, 'upgrade failed, see the server log');
+    $add('Sign-in tables up to date', $authOk, 'upgrade could not run, sign-in is in the older mode (see the server log)');
 }
 
 // Email settings: present, and the Scaleway key is accepted (a read-only call; no email is sent, no value is shown).

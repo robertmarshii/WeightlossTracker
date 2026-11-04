@@ -79,9 +79,19 @@ class Security
         return $remote !== '' ? $remote : 'unknown';
     }
 
+    /**
+     * Throttle subjects are compared case-insensitively, Unicode included (so "Ä@x" and "ä@x" share
+     * one bucket), after trimming. Only a hash of the subject is stored.
+     */
+    public static function foldKey(string $subject): string
+    {
+        $subject = trim($subject);
+        return function_exists('mb_strtolower') ? mb_strtolower($subject, 'UTF-8') : strtolower($subject);
+    }
+
     private static function bucketKey(string $kind, string $subject): string
     {
-        return $kind . ':' . hash('sha256', strtolower(trim($subject)));
+        return $kind . ':' . hash('sha256', self::foldKey($subject));
     }
 
     /**
@@ -256,14 +266,18 @@ class Security
 
     // ---------------- Same-origin check (login CSRF) ----------------
 
-    /** Origins allowed to POST to the login router. Extra local origins can be added with ALLOWED_ORIGINS (comma separated). */
+    /**
+     * Origins allowed to POST to the login router. The local dev origins (localhost:8111) are allowed
+     * only on test servers (APP_ENV=test); anywhere else, list them in ALLOWED_ORIGINS (comma separated)
+     * together with any other extra origin.
+     */
     public static function allowedOrigins(): array
     {
-        $origins = [
-            'https://weightloss-tracker.com',
-            'http://localhost:8111',
-            'http://127.0.0.1:8111',
-        ];
+        $origins = ['https://weightloss-tracker.com'];
+        if (self::isTestEnv()) {
+            $origins[] = 'http://localhost:8111';
+            $origins[] = 'http://127.0.0.1:8111';
+        }
         $extra = getenv('ALLOWED_ORIGINS');
         if ($extra === false || $extra === '') {
             $extra = $_ENV['ALLOWED_ORIGINS'] ?? '';

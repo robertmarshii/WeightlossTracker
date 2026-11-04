@@ -14,15 +14,22 @@ class AuthManager {
     private const VERIFY_IP_WINDOW = 900;        // ... per 15 minutes
     private const SEND_IP_MAX = 20;              // code emails per IP ...
     private const SEND_IP_WINDOW = 3600;         // ... per hour
-    private const SEND_ACCT_MAX_15M = 3;         // code emails per account per 15 minutes
-    private const SEND_ACCT_MAX_DAY = 10;        // code emails per account per day
-    private const VERIFY_ACCT_MAX_HOUR = 10;     // wrong guesses per account per hour (new codes do not reset this)
-    private const VERIFY_ACCT_MAX_DAY = 20;      // wrong guesses per account per day
+    private const SEND_ACCT_IP_MAX_15M = 3;      // code emails per account from one IP per 15 minutes
+    private const SEND_ACCT_IP_MAX_DAY = 10;     // code emails per account from one IP per day
+    private const SEND_ACCT_MAX_DAY = 20;        // code emails per account per day, all IPs together
+    private const VERIFY_ACCT_MAX_HOUR = 10;     // wrong guesses against live codes per account from one IP per hour
+    private const VERIFY_ACCT_MAX_DAY = 20;      // ... and per day (new codes do not reset this)
+    private const SCHEMA_RETRY_SECONDS = 300;    // when the auth-table upgrade failed, try it again after this long
     private const REMEMBER_DAYS = 30;            // remember-me lasts 30 days from the last visit ...
     private const REMEMBER_MAX_DAYS = 90;        // ... and never more than 90 days after sign-in
 
     /** Work to do after the answer has been sent to the browser (see runDeferred). */
     private static $deferred = [];
+
+    /** Per process: schema => true once the auth columns are known to exist. */
+    private static $schemaReady = [];
+    /** Per process: schema => time of the last failed upgrade attempt. */
+    private static $schemaFailedAt = [];
 
     private static function generateCode() {
         COVERAGE_LOG('generateCode', __CLASS__, __FILE__, __LINE__);
@@ -100,10 +107,16 @@ class AuthManager {
     }
 
     /**
-     * Rate limit for sending code emails. Per account (the email, stored hashed): SEND_ACCT_MAX_15M per
-     * 15 minutes and SEND_ACCT_MAX_DAY per day, for login and sign-up codes together. Per IP: SEND_IP_MAX
-     * per hour. State is kept in the database (Security::throttle*). Applies the same way whether or not
-     * the email has an account.
+     * Rate limit for sending code emails, for login and sign-up codes together. State is kept in the
+     * database (Security::throttle*; emails are stored hashed). Applies the same way whether or not the
+     * email has an account.
+     * - Per IP: SEND_IP_MAX per hour.
+     * - Per account and IP: SEND_ACCT_IP_MAX_15M per 15 minutes and SEND_ACCT_IP_MAX_DAY per day.
+     * - Per account, all IPs together: SEND_ACCT_MAX_DAY per day.
+     * Trade-off: keying the tight limit on (account, IP) means one attacker IP cannot stop the owner
+     * asking for codes from their own connection. The price is that someone with many IPs can send
+     * more code emails to one address than before (up to SEND_ACCT_MAX_DAY a day), and someone with
+     * enough IPs can still use up that daily cap and block the address for the rest of the day.
      */
     private static function checkRateLimit($email, $action) {
         COVERAGE_LOG('checkRateLimit', __CLASS__, __FILE__, __LINE__);
@@ -112,7 +125,7 @@ class AuthManager {
             return ['allowed' => true];
         }
 
-        $email = strtolower(trim((string)$email));
+        $email = Security::foldKey((string)$email);
         $ip = Security::clientIp();
         $tooMany = ['allowed' => false, 'message' => 'Too many requests. Please try again later.'];
 
@@ -120,9 +133,18 @@ class AuthManager {
         if (!$ipOk) {
             return $tooMany;
         }
-        [$acctOk] = Security::throttleTake('send_acct', $email, [900 => self::SEND_ACCT_MAX_15M, 86400 => self::SEND_ACCT_MAX_DAY]);
+        [$acctIpOk, $acctIpHit] = Security::throttleTake('send_acct_ip', $email . '|' . $ip, [
+            900 => self::SEND_ACCT_IP_MAX_15M,
+            86400 => self::SEND_ACCT_IP_MAX_DAY,
+        ]);
+        if (!$acctIpOk) {
+            Security::throttleRemove($ipHit);
+            return $tooMany;
+        }
+        [$acctOk] = Security::throttleTake('send_acct', $email, [86400 => self::SEND_ACCT_MAX_DAY]);
         if (!$acctOk) {
             Security::throttleRemove($ipHit);
+            Security::throttleRemove($acctIpHit);
             return $tooMany;
         }
         return ['allowed' => true];
@@ -138,16 +160,29 @@ class AuthManager {
     }
 
     private static function storeCode($db, $schema, $email, $type) {
-        self::ensureSchema($db, $schema);
+        $upgraded = self::ensureSchema($db, $schema);
         $code = self::codeFor($email);
         $expiresAt = date('Y-m-d H:i:s', time() + self::CODE_LIFETIME_SECONDS);
         // One active code per email
         $stmt = $db->prepare("DELETE FROM {$schema}.auth_codes WHERE email = ?");
         $stmt->execute([$email]);
-        $stmt = $db->prepare("INSERT INTO {$schema}.auth_codes (email, code, code_type, expires_at, created_at, attempts) VALUES (?, ?, ?, ?, NOW(), 0)");
+        $stmt = $upgraded
+            ? $db->prepare("INSERT INTO {$schema}.auth_codes (email, code, code_type, expires_at, created_at, attempts) VALUES (?, ?, ?, ?, NOW(), 0)")
+            : $db->prepare("INSERT INTO {$schema}.auth_codes (email, code, code_type, expires_at, created_at) VALUES (?, ?, ?, ?, NOW())");
         $stmt->execute([$email, $code, $type, $expiresAt]);
-        Security::throttleClear('verify_lock', $email);
+        // Codes that expired over an hour ago are of no further use (this also removes the unsent
+        // codes kept for emails without an account, see deliverLoginCode)
+        if (random_int(1, 20) === 1) {
+            $db->exec("DELETE FROM {$schema}.auth_codes WHERE expires_at < NOW() - INTERVAL '1 hour'");
+        }
+        self::resetCodeLocks($email);
         return $code;
+    }
+
+    /** A new code starts with a clean slate for "too many incorrect attempts". */
+    private static function resetCodeLocks($email) {
+        Security::throttleClear('verify_lock', $email);
+        Security::throttleClear('verify_nocode', $email);
     }
 
     private static function sendLoginCodeEmail($email, $code) {
@@ -233,6 +268,12 @@ class AuthManager {
             $stmt = $db->prepare("SELECT id FROM {$schema}.users WHERE email = ?");
             $stmt->execute([$email]);
             if (!$stmt->fetch()) {
+                // No account: keep a code that is never sent, so checking codes for this email behaves
+                // exactly as it would for an account (same answers, same limits), and the answers
+                // cannot be used to find out which emails have accounts.
+                if (strlen($email) <= 100) {
+                    self::storeCode($db, $schema, $email, 'login');
+                }
                 return;
             }
             $code = self::storeCode($db, $schema, $email, 'login');
@@ -306,25 +347,45 @@ class AuthManager {
     }
 
     /**
-     * Bring the auth tables up to date once per schema (the result is remembered in a flag file):
+     * Bring the auth tables up to date once per schema:
      * - users.session_version: bumped on sign-out so sessions on other devices end too
      * - users.remember_token_issued_at: remember-me never lasts more than 90 days after sign-in
      * - users.remember_token now holds sha256(token), never the token; existing tokens are hashed
      *   in the same transaction, so people who are signed in stay signed in
      * - auth_codes.attempts: wrong guesses per code, counted atomically
      * The same SQL is in seeders/add_auth_hardening.sql for running by hand.
+     *
+     * Returns true when the new columns are in place. Returns false ("older mode") when they are
+     * missing and could not be added, for example because the database user may not ALTER the
+     * tables: sign-in then keeps working the way it did before these columns (see the callers),
+     * the failure is logged, and /status shows it. Nothing is locked unless the columns are missing:
+     * the check is a plain information_schema read, and its result is remembered per process.
      */
-    public static function ensureSchema($db, $schema) {
+    public static function ensureSchema($db, $schema): bool {
         if (!preg_match('/^[A-Za-z_][A-Za-z0-9_]*$/', (string)$schema)) {
             throw new RuntimeException('bad schema name');
         }
-        $flag = '/var/app/data/auth-schema-v2-' . $schema;
-        if (is_file($flag)) {
-            return;
+        if (!empty(self::$schemaReady[$schema])) {
+            return true;
         }
+        $flag = '/var/app/data/auth-schema-v2-' . $schema;
+        if (is_file($flag) || self::authColumnsPresent($db, $schema)) {
+            self::$schemaReady[$schema] = true;
+            if (!is_file($flag)) {
+                @file_put_contents($flag, date('c') . "\n");
+            }
+            return true;
+        }
+        // The upgrade failed recently in this process: stay in the older mode until it is worth trying again
+        if (isset(self::$schemaFailedAt[$schema]) && time() - self::$schemaFailedAt[$schema] < self::SCHEMA_RETRY_SECONDS) {
+            return false;
+        }
+
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $db->beginTransaction();
         try {
+            // Never hold up sign-in for long behind other work on the users table
+            $db->exec("SET LOCAL lock_timeout = '3s'");
             // Serialise concurrent first requests; the check below runs after the lock is held
             $db->exec("LOCK TABLE {$schema}.users IN SHARE ROW EXCLUSIVE MODE");
             $stmt = $db->prepare("SELECT 1 FROM information_schema.columns WHERE table_schema = ? AND table_name = 'users' AND column_name = 'session_version'");
@@ -342,10 +403,28 @@ class AuthManager {
             $db->exec("ALTER TABLE {$schema}.auth_codes ADD COLUMN IF NOT EXISTS attempts INTEGER NOT NULL DEFAULT 0");
             $db->commit();
         } catch (Throwable $e) {
-            $db->rollBack();
-            throw $e;
+            if ($db->inTransaction()) {
+                $db->rollBack();
+            }
+            self::$schemaFailedAt[$schema] = time();
+            error_log("AuthManager: SIGN-IN TABLE UPGRADE FAILED for schema {$schema}: " . $e->getMessage()
+                . " -- sign-in keeps working in the OLDER MODE (remember-me tokens stored as before, no 90-day cap,"
+                . " sign-out does not end other devices' sessions). Fix: let the database user ALTER the tables,"
+                . " or run seeders/add_auth_hardening.sql by hand. /status shows this as a FAIL.");
+            return false;
         }
+        self::$schemaReady[$schema] = true;
         @file_put_contents($flag, date('c') . "\n");
+        return true;
+    }
+
+    /** True when every column the upgrade adds is there (a read of information_schema; takes no lock). */
+    private static function authColumnsPresent($db, $schema): bool {
+        $stmt = $db->prepare("SELECT COUNT(*) FROM information_schema.columns WHERE table_schema = ?
+            AND ((table_name = 'users' AND column_name IN ('session_version', 'remember_token_issued_at'))
+              OR (table_name = 'auth_codes' AND column_name = 'attempts'))");
+        $stmt->execute([$schema]);
+        return (int)$stmt->fetchColumn() === 3;
     }
 
     private static function hashToken($token) {
@@ -355,8 +434,10 @@ class AuthManager {
     private static function sessionVersion($userId) {
         $db = Database::getInstance()->getDbConnection();
         $schema = Database::getSchema();
-        self::ensureSchema($db, $schema);
-        $stmt = $db->prepare("SELECT session_version FROM {$schema}.users WHERE id = ?");
+        // Older mode (no session_version column): every session counts as current, as before
+        $stmt = self::ensureSchema($db, $schema)
+            ? $db->prepare("SELECT session_version FROM {$schema}.users WHERE id = ?")
+            : $db->prepare("SELECT 0 FROM {$schema}.users WHERE id = ?");
         $stmt->execute([$userId]);
         $v = $stmt->fetchColumn();
         return $v === false ? null : (int)$v;
@@ -382,6 +463,18 @@ class AuthManager {
         unset($_SESSION['csrf_token']);
     }
 
+    /**
+     * Check a login or sign-up code. Limits:
+     * - per code: CODE_MAX_ATTEMPTS guesses, then the code is deleted ("request a new code");
+     * - per IP: VERIFY_IP_MAX_FAILS wrong guesses per 15 minutes ("wait a few minutes");
+     * - per account and IP: VERIFY_ACCT_MAX_HOUR / VERIFY_ACCT_MAX_DAY wrong guesses against live
+     *   codes. Guesses when no code is live do not count, and other IPs are not affected, so nobody
+     *   can lock an address out from their own connection. Once reached, a guess from that IP is
+     *   still checked (so a fresh, correct code signs in), but a wrong one deletes the code at once.
+     * Every answer is the same whether or not the email has an account or a code: emails without an
+     * account get an unsent code too (deliverLoginCode), and when no code is live at all the
+     * CODE_MAX_ATTEMPTS-th wrong guess gives the same "request a new code" answer as a used-up code.
+     */
     public static function verifyLoginCode($email, $code) {
         COVERAGE_LOG('verifyLoginCode', __CLASS__, __FILE__, __LINE__);
         $invalid = ['success' => false, 'message' => 'Invalid or expired code'];
@@ -400,40 +493,42 @@ class AuthManager {
             if (!$ipOk) {
                 return $wait;
             }
-            // Per account: new codes do not reset this. Same answer as the IP limit.
-            [$acctOk, $acctHit] = Security::throttleTake('verify_acct', $email, [
-                3600 => self::VERIFY_ACCT_MAX_HOUR,
-                86400 => self::VERIFY_ACCT_MAX_DAY,
-            ]);
-            if (!$acctOk) {
-                Security::throttleRemove($ipHit);
-                error_log("Login code checks paused for " . self::maskEmail($email) . " after too many wrong attempts");
-                return $wait;
-            }
 
             $db = Database::getInstance()->getDbConnection();
             $schema = Database::getSchema();
-            self::ensureSchema($db, $schema);
+            $upgraded = self::ensureSchema($db, $schema);
 
-            // Count this guess against the active code(s) atomically, before comparing. A code that
-            // already had CODE_MAX_ATTEMPTS guesses is not compared at all.
-            $stmt = $db->prepare("
-                UPDATE {$schema}.auth_codes SET attempts = attempts + 1
-                WHERE email = ? AND expires_at > NOW() AND attempts < ?
-                RETURNING id, code, attempts
-            ");
-            $stmt->execute([$email, self::CODE_MAX_ATTEMPTS]);
-            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            // Count this guess against the live code(s) before comparing. A code that already had
+            // CODE_MAX_ATTEMPTS guesses is not compared at all.
+            $rows = $upgraded ? self::countGuess($db, $schema, $email) : self::countGuessOlderMode($db, $schema, $email);
 
             if (!$rows) {
-                // No active code, or its guesses are used up
+                // No live code (never requested, expired, or its guesses are used up)
                 if (Security::throttleCount('verify_lock', $email, self::CODE_LIFETIME_SECONDS) > 0) {
                     return $locked;
                 }
-                $exhausted = $db->prepare("SELECT 1 FROM {$schema}.auth_codes WHERE email = ? AND expires_at > NOW() LIMIT 1");
-                $exhausted->execute([$email]);
-                return $exhausted->fetchColumn() ? $locked : $invalid;
+                if ($upgraded) {
+                    $exhausted = $db->prepare("SELECT 1 FROM {$schema}.auth_codes WHERE email = ? AND expires_at > NOW() LIMIT 1");
+                    $exhausted->execute([$email]);
+                    if ($exhausted->fetchColumn()) {
+                        return $locked;
+                    }
+                }
+                // Same as a code: the CODE_MAX_ATTEMPTS-th wrong guess gives "request a new code"
+                Security::throttleHit('verify_nocode', $email);
+                if (Security::throttleCount('verify_nocode', $email, self::CODE_LIFETIME_SECONDS) >= self::CODE_MAX_ATTEMPTS) {
+                    Security::throttleClear('verify_nocode', $email);
+                    Security::throttleHit('verify_lock', $email);
+                    return $locked;
+                }
+                return $invalid;
             }
+
+            // Per account and IP; only guesses against a live code count
+            [$acctOk, $acctHit] = Security::throttleTake('verify_acct', Security::foldKey($email) . '|' . $ip, [
+                3600 => self::VERIFY_ACCT_MAX_HOUR,
+                86400 => self::VERIFY_ACCT_MAX_DAY,
+            ]);
 
             $match = null;
             foreach ($rows as $row) {
@@ -466,17 +561,19 @@ class AuthManager {
                 return ['success' => true, 'message' => 'Login successful'];
             }
 
-            // Wrong code: once a code has had CODE_MAX_ATTEMPTS guesses, delete it
-            $usedUp = false;
+            // Wrong code. Delete it once it has had CODE_MAX_ATTEMPTS guesses, or straight away when
+            // this account has had too many wrong guesses from this IP.
+            $usedUp = !$acctOk;
             foreach ($rows as $row) {
                 if ((int)$row['attempts'] >= self::CODE_MAX_ATTEMPTS) {
                     $usedUp = true;
                 }
             }
             if ($usedUp) {
-                $db->prepare("DELETE FROM {$schema}.auth_codes WHERE email = ? AND attempts >= ?")->execute([$email, self::CODE_MAX_ATTEMPTS]);
+                $db->prepare("DELETE FROM {$schema}.auth_codes WHERE email = ?")->execute([$email]);
                 Security::throttleHit('verify_lock', $email);
-                error_log("Login code for " . self::maskEmail($email) . " deleted after too many wrong attempts");
+                error_log("Login code for " . self::maskEmail($email) . " deleted after too many wrong attempts"
+                    . ($acctOk ? '' : ' (account limit for this IP)'));
                 return $locked;
             }
             return $invalid;
@@ -485,6 +582,34 @@ class AuthManager {
             error_log("AuthManager::verifyLoginCode error: " . $e->getMessage());
             return ['success' => false, 'message' => 'An error occurred during verification'];
         }
+    }
+
+    /** Add one guess to each live code for this email, atomically; returns the codes still allowed a guess. */
+    private static function countGuess($db, $schema, $email) {
+        $stmt = $db->prepare("
+            UPDATE {$schema}.auth_codes SET attempts = attempts + 1
+            WHERE email = ? AND expires_at > NOW() AND attempts < ?
+            RETURNING id, code, attempts
+        ");
+        $stmt->execute([$email, self::CODE_MAX_ATTEMPTS]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /** Older mode (no auth_codes.attempts column): the guesses per code are counted in the throttle store. */
+    private static function countGuessOlderMode($db, $schema, $email) {
+        $stmt = $db->prepare("SELECT id, code FROM {$schema}.auth_codes WHERE email = ? AND expires_at > NOW()");
+        $stmt->execute([$email]);
+        $rows = [];
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
+            [$ok] = Security::throttleTake('code_guess', (string)$row['id'], [self::CODE_LIFETIME_SECONDS => self::CODE_MAX_ATTEMPTS]);
+            if ($ok) {
+                $row['attempts'] = Security::throttleCount('code_guess', (string)$row['id'], self::CODE_LIFETIME_SECONDS);
+                $rows[] = $row;
+            } else {
+                $db->prepare("DELETE FROM {$schema}.auth_codes WHERE id = ?")->execute([$row['id']]);
+            }
+        }
+        return $rows;
     }
 
     public static function verifySignupCode($email, $code) {
@@ -507,8 +632,11 @@ class AuthManager {
             try {
                 $db = Database::getInstance()->getDbConnection();
                 $schema = Database::getSchema();
-                self::ensureSchema($db, $schema);
-                $db->prepare("UPDATE {$schema}.users SET session_version = session_version + 1 WHERE id = ?")->execute([$userId]);
+                if (self::ensureSchema($db, $schema)) {
+                    $db->prepare("UPDATE {$schema}.users SET session_version = session_version + 1 WHERE id = ?")->execute([$userId]);
+                } else {
+                    error_log("AuthManager::logout: older mode (sign-in tables not upgraded), sessions on other devices are not ended");
+                }
             } catch (Throwable $e) {
                 error_log("AuthManager::logout session_version error: " . $e->getMessage());
             }
@@ -558,14 +686,19 @@ class AuthManager {
                 set_time_limit(5); // Max 5 seconds for this operation
                 $db = Database::getInstance()->getDbConnection();
                 $schema = Database::getSchema();
-                self::ensureSchema($db, $schema);
-
-                // Only a hash of the token is stored. Valid for 30 days from the last visit, and
-                // never more than REMEMBER_MAX_DAYS after it was issued at sign-in.
-                $stmt = $db->prepare("SELECT id, email, first_name, last_name FROM {$schema}.users
-                    WHERE id = ? AND remember_token = ? AND remember_token_expires > NOW()
-                      AND remember_token_issued_at > NOW() - (? * INTERVAL '1 day')");
-                $stmt->execute([$_COOKIE['user_id'], self::hashToken($_COOKIE['remember_token']), self::REMEMBER_MAX_DAYS]);
+                if (self::ensureSchema($db, $schema)) {
+                    // Only a hash of the token is stored. Valid for 30 days from the last visit, and
+                    // never more than REMEMBER_MAX_DAYS after it was issued at sign-in.
+                    $stmt = $db->prepare("SELECT id, email, first_name, last_name FROM {$schema}.users
+                        WHERE id = ? AND remember_token = ? AND remember_token_expires > NOW()
+                          AND remember_token_issued_at > NOW() - (? * INTERVAL '1 day')");
+                    $stmt->execute([$_COOKIE['user_id'], self::hashToken($_COOKIE['remember_token']), self::REMEMBER_MAX_DAYS]);
+                } else {
+                    // Older mode: the token is stored as it was before the upgrade (see ensureSchema)
+                    $stmt = $db->prepare("SELECT id, email, first_name, last_name FROM {$schema}.users
+                        WHERE id = ? AND remember_token = ? AND remember_token_expires > NOW()");
+                    $stmt->execute([$_COOKIE['user_id'], $_COOKIE['remember_token']]);
+                }
                 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
                 if ($user) {
@@ -603,9 +736,14 @@ class AuthManager {
 
             $db = Database::getInstance()->getDbConnection();
             $schema = Database::getSchema();
-            self::ensureSchema($db, $schema);
-            $stmt = $db->prepare("UPDATE {$schema}.users SET remember_token = ?, remember_token_expires = ?, remember_token_issued_at = NOW() WHERE id = ?");
-            $stmt->execute([self::hashToken($token), date('Y-m-d H:i:s', $expiresTs), $userId]);
+            if (self::ensureSchema($db, $schema)) {
+                $stmt = $db->prepare("UPDATE {$schema}.users SET remember_token = ?, remember_token_expires = ?, remember_token_issued_at = NOW() WHERE id = ?");
+                $stmt->execute([self::hashToken($token), date('Y-m-d H:i:s', $expiresTs), $userId]);
+            } else {
+                // Older mode: stored as before the upgrade, so the upgrade can still hash it later
+                $stmt = $db->prepare("UPDATE {$schema}.users SET remember_token = ?, remember_token_expires = ? WHERE id = ?");
+                $stmt->execute([$token, date('Y-m-d H:i:s', $expiresTs), $userId]);
+            }
 
             // Set cookies (30 days): Secure, HttpOnly, SameSite=Lax
             Security::setAuthCookie('remember_token', $token, $expiresTs);
@@ -622,11 +760,19 @@ class AuthManager {
         try {
             $db = Database::getInstance()->getDbConnection();
             $schema = Database::getSchema();
-            $stmt = $db->prepare("UPDATE {$schema}.users
-                SET remember_token_expires = LEAST(NOW() + (? * INTERVAL '1 day'), remember_token_issued_at + (? * INTERVAL '1 day'))
-                WHERE id = ? AND remember_token = ?
-                RETURNING EXTRACT(EPOCH FROM remember_token_expires - NOW())::bigint");
-            $stmt->execute([self::REMEMBER_DAYS, self::REMEMBER_MAX_DAYS, $userId, self::hashToken($token)]);
+            if (self::ensureSchema($db, $schema)) {
+                $stmt = $db->prepare("UPDATE {$schema}.users
+                    SET remember_token_expires = LEAST(NOW() + (? * INTERVAL '1 day'), remember_token_issued_at + (? * INTERVAL '1 day'))
+                    WHERE id = ? AND remember_token = ?
+                    RETURNING EXTRACT(EPOCH FROM remember_token_expires - NOW())::bigint");
+                $stmt->execute([self::REMEMBER_DAYS, self::REMEMBER_MAX_DAYS, $userId, self::hashToken($token)]);
+            } else {
+                $stmt = $db->prepare("UPDATE {$schema}.users
+                    SET remember_token_expires = NOW() + (? * INTERVAL '1 day')
+                    WHERE id = ? AND remember_token = ?
+                    RETURNING EXTRACT(EPOCH FROM remember_token_expires - NOW())::bigint");
+                $stmt->execute([self::REMEMBER_DAYS, $userId, $token]);
+            }
             $left = $stmt->fetchColumn();
             if ($left !== false && (int)$left > 0) {
                 $expiresTs = time() + (int)$left;
