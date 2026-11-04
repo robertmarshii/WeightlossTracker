@@ -897,7 +897,6 @@ function loadSettings(callback) {
         $('#theme').val(s.theme || 'glassmorphism');
         $('#language').val(s.language || 'en');
 
-        $('#shareData').prop('checked', s.share_data === true);
         $('#emailNotifications').prop('checked', s.email_notifications === true);
         $('#weeklyReports').prop('checked', s.weekly_reports === true);
         $('#emailDay').val(s.email_day || 'monday');
@@ -941,7 +940,6 @@ function loadSettings(callback) {
             $('#dateFormat').val(s.date_format || 'uk');
             $('#theme').val(s.theme || 'glassmorphism');
             $('#language').val(s.language || 'en');
-            $('#shareData').prop('checked', s.share_data === true);
             $('#emailNotifications').prop('checked', s.email_notifications === true);
             $('#weeklyReports').prop('checked', s.weekly_reports === true);
             $('#emailDay').val(s.email_day || 'monday');

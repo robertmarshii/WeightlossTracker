@@ -65,7 +65,6 @@ $assetVersion = function ($path) { $t = @filemtime(__DIR__ . '/' . $path); retur
                 <li><strong>Security counters:</strong> to stop abuse, we count sign-in attempts per email address and IP address. These are stored as one-way scrambled values (hashes), not as the address itself.</li>
                 <li><strong>Server logs:</strong> our web server records each request (IP address, time, page asked for and browser details), and keeps a log line each time a reminder or report email is sent, including the address it went to. We use logs to keep the service running and fix faults.</li>
             </ul>
-            <p>The settings page has a &ldquo;Share anonymous data for research&rdquo; switch. It is off unless you turn it on, and at present the app does not share any of your data with anyone, whichever way it is set.</p>
             <p>We do not sell your data, we do not show you adverts inside the app, and nobody else can see your tracking data.</p>
         </section>
 

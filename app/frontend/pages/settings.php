@@ -64,14 +64,6 @@
                                     <h5 class="card-title" data-eng="🔒 Privacy & Data" data-spa="🔒 Privacidad y Datos" data-fre="🔒 Confidentialité et Données" data-ger="🔒 Datenschutz und Daten">🔒 Privacy & Data</h5>
 
                                     <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="shareData">
-                                        <label class="form-check-label" for="shareData" data-eng="Share anonymous data for research" data-spa="Compartir datos anónimos para investigación" data-fre="Partager des données anonymes pour la recherche" data-ger="Anonyme Daten für Forschung teilen">
-                                            Share anonymous data for research
-                                        </label>
-                                        <small class="form-text text-muted" data-eng="Help improve the app by sharing anonymized usage statistics" data-spa="Ayuda a mejorar la aplicación compartiendo estadísticas de uso anonimizadas" data-fre="Aidez à améliorer l'application en partageant des statistiques d'utilisation anonymisées" data-ger="Helfen Sie, die App zu verbessern, indem Sie anonymisierte Nutzungsstatistiken teilen">Help improve the app by sharing anonymized usage statistics</small>
-                                    </div>
-
-                                    <div class="form-check mb-3">
                                         <input class="form-check-input" type="checkbox" id="emailNotifications">
                                         <label class="form-check-label" for="emailNotifications" data-eng="Weekly email notifications for weight tracking reminders" data-spa="Notificaciones semanales por correo electrónico para recordatorios de seguimiento de peso" data-fre="Notifications hebdomadaires par e-mail pour les rappels de suivi du poids" data-ger="Wöchentliche E-Mail-Benachrichtigungen für Gewichtserfassungs-Erinnerungen">
                                             Weekly email notifications for weight tracking reminders

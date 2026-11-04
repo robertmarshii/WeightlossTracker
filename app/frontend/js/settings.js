@@ -12,7 +12,6 @@ function saveSettings() {
         date_format: $('#dateFormat').val(),
         theme: $('#theme').val(),
         language: $('#language').val(),
-        share_data: $('#shareData').is(':checked'),
         email_notifications: $('#emailNotifications').is(':checked'),
         weekly_reports: $('#weeklyReports').is(':checked'),
         email_day: $('#emailDay').val(),
@@ -57,7 +56,6 @@ function saveSettings() {
                     date_format: settings.date_format,
                     theme: settings.theme,
                     language: settings.language,
-                    share_data: settings.share_data,
                     email_notifications: settings.email_notifications,
                     weekly_reports: settings.weekly_reports,
                     email_day: settings.email_day,
@@ -185,7 +183,6 @@ function resetSettings() {
     $('#dateFormat').val('uk');
     $('#theme').val('glassmorphism');
     $('#language').val('en');
-    $('#shareData').prop('checked', false);
     $('#emailNotifications').prop('checked', false);
     $('#weeklyReports').prop('checked', false);
     updateDateExample();
