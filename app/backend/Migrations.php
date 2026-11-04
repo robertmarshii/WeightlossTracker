@@ -119,13 +119,27 @@ class Migrations
         if ($failed !== null) {
             // One log line per attempt; the back-off file keeps request-time attempts to one every few minutes
             error_log("Migrations: not applied in {$schema}, next try in " . self::RETRY_AFTER_SECONDS . "s: {$failed}");
-            @touch($backoff);
+            // Keep the reason (counts and SQL errors only, no user data) so /status can show it
+            $reason = preg_replace('/\s+/', ' ', substr($failed, 0, 300));
+            if (@file_put_contents($backoff, date('c') . ' ' . $reason . "\n") === false) {
+                @touch($backoff);
+            }
         }
         if ($allDone) {
             @file_put_contents($marker, date('c') . "\n");
             @unlink($backoff);
         }
         return $out;
+    }
+
+    /** Last recorded failure reason (from the back-off file), or null if none. For /status. */
+    public static function lastFailure(string $schema): ?string
+    {
+        if (!preg_match('/^[a-z_][a-z0-9_]*$/', $schema)) {
+            return null;
+        }
+        $text = @file_get_contents(self::backoffFile($schema));
+        return ($text === false || trim($text) === '') ? null : trim($text);
     }
 
     /** Names of fixes not applied yet (read-only, for /status). Null if the database can't be read. */
