@@ -43,10 +43,26 @@ function status_env_password_hash(): ?string
     if ($isBcrypt($decoded)) {
         return trim((string) $decoded);
     }
-    error_log($v === ''
+    status_log_throttled($v === ''
         ? 'status.php: STATUS_PASSWORD_HASH is not set; /status refuses every request'
         : 'status.php: STATUS_PASSWORD_HASH is not a bcrypt hash; /status refuses every request');
     return null;
+}
+
+/**
+ * error_log, but at most once every STATUS_LOG_EVERY seconds for the whole container (a stamp file in the temp
+ * folder), so anonymous requests to /status can't fill the log while the hash is missing.
+ */
+const STATUS_LOG_EVERY = 300;
+function status_log_throttled(string $message): void
+{
+    $stamp = sys_get_temp_dir() . '/wlt-status-log-' . md5($message);
+    $last = @filemtime($stamp);
+    if ($last !== false && time() - $last < STATUS_LOG_EVERY) {
+        return;
+    }
+    @touch($stamp);
+    error_log($message . ' (logged at most once every ' . STATUS_LOG_EVERY . ' s)');
 }
 
 $given = status_given_password();
