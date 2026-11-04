@@ -1,9 +1,11 @@
 <?php
 // Password-protected status page: /status. HTTP Basic auth, any username.
-// Only a bcrypt hash of the password is stored here. Prints no environment, config or secrets.
+// The password's bcrypt hash comes from the STATUS_PASSWORD_HASH environment variable (the hash itself,
+// or the hash base64-encoded so it has no "$" characters). Prints no environment, config or secrets.
 declare(strict_types=1);
 
-const STATUS_PASSWORD_HASH = '$2y$12$jvH7lq./cZN8/MOQkDHG7Ocv6ap/iIpvEHB5EGDgqvDGUk0AX1hoq';
+// TODO: remove this fallback once STATUS_PASSWORD_HASH is set in Easypanel (it is used only while the variable is missing).
+const STATUS_PASSWORD_HASH_FALLBACK = '$2y$12$jvH7lq./cZN8/MOQkDHG7Ocv6ap/iIpvEHB5EGDgqvDGUk0AX1hoq';
 const STATUS_APP_NAME = 'WeightlossTracker';
 const STATUS_VERSION_FILE = '/srv/git-sha';
 
@@ -26,9 +28,30 @@ function status_given_password(): ?string
     return null;
 }
 
+function status_password_hash(): string
+{
+    $isBcrypt = fn ($h): bool => is_string($h) && (bool) preg_match('/^\$2[aby]\$\d\d\$[.\/A-Za-z0-9]{53}$/', $h);
+    $v = getenv('STATUS_PASSWORD_HASH');
+    if (!is_string($v) || $v === '') {
+        $v = $_ENV['STATUS_PASSWORD_HASH'] ?? '';
+    }
+    $v = trim((string) $v);
+    if ($isBcrypt($v)) {
+        return $v;
+    }
+    $decoded = base64_decode($v, true);
+    if ($isBcrypt($decoded)) {
+        return trim((string) $decoded);
+    }
+    if ($v !== '') {
+        error_log('status.php: STATUS_PASSWORD_HASH is set but is not a bcrypt hash; using the built-in fallback');
+    }
+    return STATUS_PASSWORD_HASH_FALLBACK;
+}
+
 $given = status_given_password();
 // password_verify compares in constant time.
-if ($given === null || !password_verify($given, STATUS_PASSWORD_HASH)) {
+if ($given === null || !password_verify($given, status_password_hash())) {
     http_response_code(401);
     header('WWW-Authenticate: Basic realm="status", charset="UTF-8"');
     echo "Unauthorized\n";
@@ -72,6 +95,22 @@ try {
 }
 ob_end_clean();
 $add('Database reachable', $dbOk, 'could not run SELECT 1');
+
+// Sign-in tables up to date (hashed remember-me tokens, session_version, code attempt counter).
+// Runs the one-off upgrade if it has not happened yet; shows no details.
+if ($dbOk) {
+    $authOk = false;
+    ob_start();
+    try {
+        require_once '/var/app/backend/AuthManager.php';
+        AuthManager::ensureSchema($pdo, Database::getSchema());
+        $authOk = true;
+    } catch (Throwable $e) {
+        error_log('status.php: auth table upgrade failed: ' . $e->getMessage());
+    }
+    ob_end_clean();
+    $add('Sign-in tables up to date', $authOk, 'upgrade failed, see the server log');
+}
 
 // Email settings: present, and the Scaleway key is accepted (a read-only call; no email is sent, no value is shown).
 $envv = function (string $n): string { $v = $_ENV[$n] ?? getenv($n); return is_string($v) ? trim($v) : ''; };
