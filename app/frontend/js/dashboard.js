@@ -1536,6 +1536,24 @@ function getActiveChartPeriod() {
     return active.length ? active.attr('id').replace('chart-', '') : 'all';
 }
 
+// The days a 30- or 90-day chart page covers, as local YYYY-MM-DD strings: page 0 ends today (and also takes any
+// entry dated later, e.g. tomorrow), page 1 is the period before it, and so on. Local calendar dates, so an
+// entry saved for today always shows, whatever the time zone.
+function chartPeriodRange(daysInPeriod, offset) {
+    const now = new Date();
+    const day = back => localISODate(new Date(now.getFullYear(), now.getMonth(), now.getDate() - back));
+    return {
+        startISO: day((offset + 1) * daysInPeriod - 1),
+        endISO: day(offset * daysInPeriod),
+        openEnded: offset === 0
+    };
+}
+
+function entryInRange(entry, range) {
+    const d = String(entry.entry_date).slice(0, 10);
+    return d >= range.startISO && (range.openEnded || d <= range.endISO);
+}
+
 function updateWeightChart(period) {
     if (window.coverage) window.coverage.logFunction('updateWeightChart', 'dashboard.js');
     // Called without a range (e.g. after saving settings): keep the highlighted one
@@ -1583,18 +1601,14 @@ function updateWeightChart(period) {
             $('#chart-navigation').show();
 
             const daysInPeriod = period === '30days' ? 30 : 90;
-            const now = new Date();
+            // Whole calendar days in the browser's own time zone, compared with the stored date strings
+            // (YYYY-MM-DD). new Date('YYYY-MM-DD') would be midnight UTC, which drops today's entry in zones
+            // ahead of UTC.
+            const range = chartPeriodRange(daysInPeriod, currentPeriodOffset);
+            filteredData = sortedData.filter(entry => entryInRange(entry, range));
 
-            const periodStart = new Date(now.getTime() - ((currentPeriodOffset + 1) * daysInPeriod * 24 * 60 * 60 * 1000));
-            const periodEnd = new Date(now.getTime() - (currentPeriodOffset * daysInPeriod * 24 * 60 * 60 * 1000));
-
-            filteredData = sortedData.filter(entry => {
-                const entryDate = new Date(entry.entry_date);
-                return entryDate >= periodStart && entryDate < periodEnd;
-            });
-
-            const startStr = formatDate(periodStart.toISOString().split('T')[0]);
-            const endStr = formatDate(periodEnd.toISOString().split('T')[0]);
+            const startStr = formatDate(range.startISO);
+            const endStr = formatDate(range.endISO);
 
             if (currentPeriodOffset === 0) {
                 periodInfo = `Current ${daysInPeriod} days (${startStr} - ${endStr})`;
@@ -1604,12 +1618,8 @@ function updateWeightChart(period) {
 
             $('#chart-next').prop('disabled', currentPeriodOffset === 0);
 
-            const prevPeriodStart = new Date(now.getTime() - ((currentPeriodOffset + 2) * daysInPeriod * 24 * 60 * 60 * 1000));
-            const prevPeriodEnd = new Date(now.getTime() - ((currentPeriodOffset + 1) * daysInPeriod * 24 * 60 * 60 * 1000));
-            const hasPreviousData = sortedData.some(entry => {
-                const entryDate = new Date(entry.entry_date);
-                return entryDate >= prevPeriodStart && entryDate < prevPeriodEnd;
-            });
+            const prevRange = chartPeriodRange(daysInPeriod, currentPeriodOffset + 1);
+            const hasPreviousData = sortedData.some(entry => entryInRange(entry, prevRange));
             $('#chart-prev').prop('disabled', !hasPreviousData);
         }
 
@@ -1689,39 +1699,25 @@ function updateWeightChart(period) {
             $('#chart-navigation').show();
             
             const daysInPeriod = period === '30days' ? 30 : 90;
-            const now = new Date();
-            
-            // Calculate the start and end dates for the current period offset
-            const periodStart = new Date(now.getTime() - ((currentPeriodOffset + 1) * daysInPeriod * 24 * 60 * 60 * 1000));
-            const periodEnd = new Date(now.getTime() - (currentPeriodOffset * daysInPeriod * 24 * 60 * 60 * 1000));
-            
-            // Filter data for this period
-            filteredData = sortedData.filter(entry => {
-                const entryDate = new Date(entry.entry_date);
-                return entryDate >= periodStart && entryDate < periodEnd;
-            });
-            
-            // Generate period info text
-            const startStr = formatDate(periodStart.toISOString().split('T')[0]);
-            const endStr = formatDate(periodEnd.toISOString().split('T')[0]);
-            
+            // Whole calendar days in the browser's own time zone, compared with the stored date strings
+            // (YYYY-MM-DD). new Date('YYYY-MM-DD') would be midnight UTC, which drops today's entry in zones
+            // ahead of UTC.
+            const range = chartPeriodRange(daysInPeriod, currentPeriodOffset);
+            filteredData = sortedData.filter(entry => entryInRange(entry, range));
+
+            const startStr = formatDate(range.startISO);
+            const endStr = formatDate(range.endISO);
+
             if (currentPeriodOffset === 0) {
-                if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
                 periodInfo = `Current ${daysInPeriod} days (${startStr} - ${endStr})`;
             } else {
                 periodInfo = `${currentPeriodOffset * daysInPeriod}-${(currentPeriodOffset + 1) * daysInPeriod} days ago (${startStr} - ${endStr})`;
             }
-            
-            // Update navigation buttons
+
             $('#chart-next').prop('disabled', currentPeriodOffset === 0);
-            
-            // Check if there's data for previous periods
-            const prevPeriodStart = new Date(now.getTime() - ((currentPeriodOffset + 2) * daysInPeriod * 24 * 60 * 60 * 1000));
-            const prevPeriodEnd = new Date(now.getTime() - ((currentPeriodOffset + 1) * daysInPeriod * 24 * 60 * 60 * 1000));
-            const hasPreviousData = sortedData.some(entry => {
-                const entryDate = new Date(entry.entry_date);
-                return entryDate >= prevPeriodStart && entryDate < prevPeriodEnd;
-            });
+
+            const prevRange = chartPeriodRange(daysInPeriod, currentPeriodOffset + 1);
+            const hasPreviousData = sortedData.some(entry => entryInRange(entry, prevRange));
             $('#chart-prev').prop('disabled', !hasPreviousData);
         }
         
