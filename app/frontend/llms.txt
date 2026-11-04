@@ -4,4 +4,5 @@
 
 ## Pages
 
-- [Weightloss Tracker](https://weightloss-tracker.com/): sign up or sign in
+- [Weightloss Tracker](https://weightloss-tracker.com/): what the app does, questions and answers, sign up or sign in
+- [Privacy and cookies](https://weightloss-tracker.com/privacy): what is stored, cookies, outside services and your rights

@@ -309,3 +309,129 @@
         padding: 0.6rem 0.5rem;
     }
 }
+
+/* ===== Public landing page: intro, how it works, questions, footer ===== */
+.intro .lead-text {
+    font-size: 1.05rem;
+    line-height: 1.6;
+}
+
+.intro-points {
+    margin-bottom: 1.25rem !important;
+}
+
+.intro .intro-cta {
+    width: auto;
+    display: inline-block;
+    padding: 10px 22px;
+    color: white;
+    background: #2b6a9e;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.intro .intro-cta:hover,
+.intro .intro-cta:focus {
+    background: #1f5480;
+    color: white;
+}
+
+.signin-title {
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0.75rem 0 0;
+}
+
+.info-section {
+    max-width: 820px;
+    margin: 2.5rem auto 0;
+    padding: 1.75rem 1.5rem;
+    color: rgba(255, 255, 255, 0.9);
+    background: rgba(30, 58, 95, 0.4);
+    border: 1px solid rgba(100, 150, 200, 0.3);
+    border-radius: 16px;
+}
+
+.info-section h2 {
+    color: white;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.info-section h3 {
+    color: white;
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 0.35rem;
+}
+
+.info-section p {
+    line-height: 1.6;
+}
+
+.steps {
+    padding-left: 1.3rem;
+}
+
+.steps li {
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+}
+
+.faq-item + .faq-item {
+    border-top: 1px solid rgba(100, 150, 200, 0.25);
+    padding-top: 1rem;
+}
+
+.site-footer {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    padding: 2rem 1rem 2.5rem;
+}
+
+.site-footer nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.25rem 1.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.site-footer a,
+.site-footer .footer-btn {
+    color: #9cc8ea;
+    background: none;
+    border: 0;
+    padding: 0.6rem 0.25rem;
+    font: inherit;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.site-footer a:hover,
+.site-footer .footer-btn:hover {
+    color: white;
+}
+
+@media (max-width: 775px) {
+    .info-section {
+        margin: 1.5rem 0.25rem 0;
+        padding: 1.25rem 1rem;
+    }
+
+    .info-section h2 {
+        font-size: 1.2rem;
+    }
+
+    .signin-title {
+        font-size: 0.95rem;
+        margin-top: 0.4rem;
+    }
+
+    .intro .intro-cta {
+        display: inline-flex;
+    }
+}

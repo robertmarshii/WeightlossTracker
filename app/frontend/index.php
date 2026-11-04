@@ -32,8 +32,8 @@ $assetVersion = function ($path) { $t = @filemtime(__DIR__ . '/' . $path); retur
     <link rel="manifest" href="/site.webmanifest">
 
     <!-- SEO Meta Tags -->
-    <title>Weightloss Tracker - Free Weight Loss & Health Tracking App</title>
-    <meta name="description" content="Track your weight loss journey with our free, science-based tracker. Monitor BMI, body fat, health risks, and achieve your goals with personalized insights and progress charts.">
+    <title>Free Weight Loss Tracker: Log Weight, BMI and Goals | Weightloss Tracker</title>
+    <meta name="description" content="Free online weight loss tracker. Log your weight in kg, lb or stone, see your trend, BMI and a body fat estimate, set a goal and choose email reminders. Sign in with an email code, Google or Microsoft.">
     <meta name="author" content="Weightloss Tracker">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://weightloss-tracker.com/">
@@ -41,8 +41,8 @@ $assetVersion = function ($path) { $t = @filemtime(__DIR__ . '/' . $path); retur
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://weightloss-tracker.com/">
-    <meta property="og:title" content="Weightloss Tracker - Free Weight Loss & Health Tracking App">
-    <meta property="og:description" content="Track your weight loss journey with our free, science-based tracker. Monitor BMI, body fat, health risks, and achieve your goals with personalized insights.">
+    <meta property="og:title" content="Free Weight Loss Tracker: Log Weight, BMI and Goals | Weightloss Tracker">
+    <meta property="og:description" content="Free online weight loss tracker. Log your weight in kg, lb or stone, see your trend, BMI and a body fat estimate, set a goal and choose email reminders. Sign in with an email code, Google or Microsoft.">
     <meta property="og:image" content="https://weightloss-tracker.com/images/og-image.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -51,8 +51,8 @@ $assetVersion = function ($path) { $t = @filemtime(__DIR__ . '/' . $path); retur
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="https://weightloss-tracker.com/">
-    <meta name="twitter:title" content="Weightloss Tracker - Free Weight Loss & Health Tracking App">
-    <meta name="twitter:description" content="Track your weight loss journey with our free, science-based tracker. Monitor BMI, body fat, health risks, and achieve your goals.">
+    <meta name="twitter:title" content="Free Weight Loss Tracker: Log Weight, BMI and Goals | Weightloss Tracker">
+    <meta name="twitter:description" content="Free online weight loss tracker. Log your weight in kg, lb or stone, see your trend, BMI and a body fat estimate, set a goal and choose email reminders. Sign in with an email code, Google or Microsoft.">
     <meta name="twitter:image" content="https://weightloss-tracker.com/images/og-image.png">
 
     <!-- Additional SEO -->
@@ -62,15 +62,82 @@ $assetVersion = function ($path) { $t = @filemtime(__DIR__ . '/' . $path); retur
     <meta name="apple-mobile-web-app-title" content="Weightloss Tracker">
     <script type="application/ld+json">
     {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "Weightloss Tracker",
-      "url": "https://weightloss-tracker.com/",
-      "description": "Free weight loss tracker: log your weight, see BMI and body fat trends, set goals and get email reminders.",
-      "applicationCategory": "HealthApplication",
-      "operatingSystem": "Any (web browser)",
-      "isAccessibleForFree": true,
-      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "GBP" }
+     "@context": "https://schema.org",
+     "@graph": [
+      {
+       "@type": "WebApplication",
+       "name": "Weightloss Tracker",
+       "url": "https://weightloss-tracker.com/",
+       "description": "Free online weight loss tracker: log your weight, see your trend, BMI and a body fat estimate, set a goal, earn achievements and choose email reminders.",
+       "applicationCategory": "HealthApplication",
+       "operatingSystem": "Any (web browser)",
+       "inLanguage": [
+        "en-GB",
+        "es",
+        "fr",
+        "de"
+       ],
+       "isAccessibleForFree": true,
+       "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "GBP"
+       },
+       "featureList": [
+        "Weight log with history and charts",
+        "BMI and body fat estimate",
+        "Weight goal with progress and streaks",
+        "Body measurements and smart-scale data",
+        "Optional weekly reminder and monthly report emails",
+        "Sign in with an email code, Google or Microsoft"
+       ]
+      },
+      {
+       "@type": "FAQPage",
+       "mainEntity": [
+        {
+         "@type": "Question",
+         "name": "Is Weightloss Tracker free?",
+         "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. There is no paid plan and nothing to install: it runs in your web browser on a phone, tablet or computer."
+         }
+        },
+        {
+         "@type": "Question",
+         "name": "How do I sign in?",
+         "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "There is no password. Enter your email address and we send you a 6-digit code that works for 15 minutes, or continue with your Google or Microsoft account. You stay signed in on that device until you sign out, or until 30 days pass without a visit."
+         }
+        },
+        {
+         "@type": "Question",
+         "name": "Which units can I use?",
+         "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Weight in kilograms, pounds or stone, and height in centimetres, metres or feet and inches. You can change them at any time in Settings."
+         }
+        },
+        {
+         "@type": "Question",
+         "name": "Will you email me?",
+         "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Only to send your sign-in codes, unless you choose more. In Settings you can turn on a weekly reminder to log your weight, on the day and time you pick, and a monthly progress report. Both are off until you turn them on."
+         }
+        },
+        {
+         "@type": "Question",
+         "name": "Is this medical advice?",
+         "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. The app works out figures such as BMI, a body fat estimate and an ideal weight range from the numbers you enter. They are general information only. Talk to a GP or other health professional about your health or before making big changes."
+         }
+        }
+       ]
+      }
+     ]
     }
     </script>
     <!-- jQuery (upgraded for better compatibility) -->
@@ -89,21 +156,22 @@ $assetVersion = function ($path) { $t = @filemtime(__DIR__ . '/' . $path); retur
 
     <main class="container">
         <div class="row justify-content-center align-items-center min-vh-90">
-            <!-- What the app does: shown beside the sign-in card on wide screens, below it on phones -->
-            <section class="col-md-6 col-lg-5 order-2 order-md-1 intro">
-                <h1>Free weight loss tracker</h1>
-                <p>Log your weight in seconds and see your progress: weight trend, BMI, body fat and goal tracking, with reminders by email. Free, no app to install. Sign in with an email code, Google or Microsoft.</p>
-                <h2>What you can track</h2>
-                <ul>
-                    <li>Weight over time, with your trend and progress to goal</li>
-                    <li>BMI and body fat estimates</li>
-                    <li>Goals and achievements</li>
-                    <li>Reminders so you keep logging</li>
+            <!-- What the app does: first on phones, beside the sign-in card on wide screens -->
+            <section class="col-md-6 col-lg-5 intro" aria-labelledby="page-title">
+                <h1 id="page-title">Free weight loss tracker</h1>
+                <p class="lead-text">Log your weight in a few seconds and see how you are doing: your trend over time, BMI, a body fat estimate and progress towards your goal. It is free, works in any web browser and needs no password.</p>
+                <ul class="intro-points">
+                    <li>Weight log with history and charts, from the last week to all time</li>
+                    <li>BMI, a body fat estimate and an ideal weight range, worked out from your entries</li>
+                    <li>A weight goal with progress, streaks and achievements</li>
+                    <li>Optional body measurements and smart-scale readings</li>
+                    <li>Optional weekly reminder and monthly report by email</li>
                 </ul>
+                <a href="#signin" class="btn primary-btn intro-cta">Sign in / Create account</a>
             </section>
-            <div class="col-md-6 order-1 order-md-2">
+            <div class="col-md-6">
                 <!-- Login/Signup Form -->
-                <div class="glass-card">
+                <section class="glass-card" id="signin" aria-labelledby="signin-title">
                     <div class="logo-section">
                         <div class="logo-icon">
                             <svg viewBox="0 0 44 44" class="progress-ring">
@@ -113,6 +181,7 @@ $assetVersion = function ($path) { $t = @filemtime(__DIR__ . '/' . $path); retur
                             </svg>
                         </div>
                         <div class="logo-text" data-eng="Weightloss Tracker" data-spa="Rastreador de Pérdida de Peso" data-fre="Suivi de Perte de Poids" data-ger="Gewichtsverlust-Tracker">Weightloss Tracker</div>
+                        <h2 id="signin-title" class="signin-title">Sign in / Create account</h2>
                     </div>
                     
                     <ul class="nav nav-tabs" id="authTabs" role="tablist">
@@ -198,8 +267,8 @@ $assetVersion = function ($path) { $t = @filemtime(__DIR__ . '/' . $path); retur
                                         <input type="checkbox" class="form-check-input" id="agreeTerms" required>
                                         <label class="form-check-label small" id="agreeTermsLabel" for="agreeTerms">
                                             <span data-eng="I agree to the " data-spa="Acepto los " data-fre="J'accepte les " data-ger="Ich stimme den ">I agree to the </span><a href="#" onclick="openModal('termsModal'); return false;" data-eng="Terms and Conditions" data-spa="Términos y Condiciones" data-fre="Conditions Générales" data-ger="Allgemeinen Geschäftsbedingungen">Terms and Conditions</a><span data-eng=", " data-spa=", " data-fre=", " data-ger=", ">, </span>
-                                            <a href="#" onclick="openModal('privacyModal'); return false;" data-eng="Privacy Policy" data-spa="Política de Privacidad" data-fre="Politique de Confidentialité" data-ger="Datenschutzrichtlinie">Privacy Policy</a><span data-eng=", and " data-spa=", y " data-fre=", et " data-ger=", und ">, and </span>
-                                            <a href="#" onclick="openModal('cookieModal'); return false;" data-eng="Cookie Policy" data-spa="Política de Cookies" data-fre="Politique des Cookies" data-ger="Cookie-Richtlinie">Cookie Policy</a>
+                                            <a href="/privacy" target="_blank" data-eng="Privacy Policy" data-spa="Política de Privacidad" data-fre="Politique de Confidentialité" data-ger="Datenschutzrichtlinie">Privacy Policy</a><span data-eng=", and " data-spa=", y " data-fre=", et " data-ger=", und ">, and </span>
+                                            <a href="/privacy#cookies" target="_blank" data-eng="Cookie Policy" data-spa="Política de Cookies" data-fre="Politique des Cookies" data-ger="Cookie-Richtlinie">Cookie Policy</a>
                                         </label>
                                     </div>
                                     <button type="submit" class="btn primary-btn" data-eng="Create Account →" data-spa="Crear Cuenta →" data-fre="Créer un Compte →" data-ger="Konto erstellen →">Create Account →</button>
@@ -247,7 +316,7 @@ $assetVersion = function ($path) { $t = @filemtime(__DIR__ . '/' . $path); retur
                                 </form>
                             </div>
                         </div>
-                    </div>
+                    </section>
                 </div>
 
                 <div class="mt-4" style="display:none">
@@ -261,7 +330,50 @@ $assetVersion = function ($path) { $t = @filemtime(__DIR__ . '/' . $path); retur
                     </div>
                 </div>
         </div>
+
+        <section class="info-section" aria-labelledby="how-title">
+            <h2 id="how-title">How it works</h2>
+            <ol class="steps">
+                <li><strong>Sign in</strong> with an email code, Google or Microsoft.</li>
+                <li><strong>Add your height, age and a first weight.</strong> The app works out your BMI, a body fat estimate and an ideal weight range.</li>
+                <li><strong>Set a target weight</strong> and log your weight as often as you like. Charts, streaks and achievements show your progress.</li>
+            </ol>
+            <p>You can use it in English, Spanish, French or German, choose from six colour themes, and delete any weight entry from your history.</p>
+        </section>
+
+        <section class="info-section" aria-labelledby="faq-title">
+            <h2 id="faq-title">Questions</h2>
+                <div class="faq-item">
+                    <h3>Is Weightloss Tracker free?</h3>
+                    <p>Yes. There is no paid plan and nothing to install: it runs in your web browser on a phone, tablet or computer.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>How do I sign in?</h3>
+                    <p>There is no password. Enter your email address and we send you a 6-digit code that works for 15 minutes, or continue with your Google or Microsoft account. You stay signed in on that device until you sign out, or until 30 days pass without a visit.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Which units can I use?</h3>
+                    <p>Weight in kilograms, pounds or stone, and height in centimetres, metres or feet and inches. You can change them at any time in Settings.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Will you email me?</h3>
+                    <p>Only to send your sign-in codes, unless you choose more. In Settings you can turn on a weekly reminder to log your weight, on the day and time you pick, and a monthly progress report. Both are off until you turn them on.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Is this medical advice?</h3>
+                    <p>No. The app works out figures such as BMI, a body fat estimate and an ideal weight range from the numbers you enter. They are general information only. Talk to a GP or other health professional about your health or before making big changes.</p>
+                </div>
+        </section>
     </main>
+
+    <footer class="site-footer">
+        <nav aria-label="Footer">
+            <a href="/privacy">Privacy &amp; cookies</a>
+            <button type="button" class="footer-btn" onclick="openModal('termsModal')">Terms</button>
+            <a href="#signin">Sign in</a>
+        </nav>
+        <p>&copy; <?php echo date('Y'); ?> Weightloss Tracker</p>
+    </footer>
 
     <!-- Terms and Conditions Modal -->
     <div class="modal fade" id="termsModal" tabindex="-1" role="dialog" aria-labelledby="termsModalLabel" aria-hidden="true">
@@ -291,86 +403,6 @@ $assetVersion = function ($path) { $t = @filemtime(__DIR__ . '/' . $path); retur
 
                     <h6 data-eng="6. Modifications" data-spa="6. Modificaciones" data-fre="6. Modifications" data-ger="6. Änderungen">6. Modifications</h6>
                     <p data-eng="We reserve the right to modify these terms at any time. Continued use of the service constitutes acceptance of any changes." data-spa="Nos reservamos el derecho de modificar estos términos en cualquier momento. El uso continuado del servicio constituye la aceptación de cualquier cambio." data-fre="Nous nous réservons le droit de modifier ces conditions à tout moment. L'utilisation continue du service constitue l'acceptation de tout changement." data-ger="Wir behalten uns das Recht vor, diese Bedingungen jederzeit zu ändern. Die fortgesetzte Nutzung des Dienstes stellt die Annahme aller Änderungen dar.">We reserve the right to modify these terms at any time. Continued use of the service constitutes acceptance of any changes.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" data-eng="Close" data-spa="Cerrar" data-fre="Fermer" data-ger="Schließen">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Privacy Policy Modal -->
-    <div class="modal fade" id="privacyModal" tabindex="-1" role="dialog" aria-labelledby="privacyModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="privacyModalLabel" data-eng="Privacy Policy" data-spa="Política de Privacidad" data-fre="Politique de Confidentialité" data-ger="Datenschutzrichtlinie">Privacy Policy</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <h6 data-eng="Information We Collect" data-spa="Información que Recolectamos" data-fre="Informations que Nous Collectons" data-ger="Informationen, die wir sammeln">Information We Collect</h6>
-                    <p data-eng="We collect information you provide directly to us, such as when you create an account, update your profile, or use our services." data-spa="Recolectamos información que nos proporcionas directamente, como cuando creas una cuenta, actualizas tu perfil o usas nuestros servicios." data-fre="Nous collectons les informations que vous nous fournissez directement, comme lorsque vous créez un compte, mettez à jour votre profil ou utilisez nos services." data-ger="Wir sammeln Informationen, die Sie uns direkt zur Verfügung stellen, z.B. wenn Sie ein Konto erstellen, Ihr Profil aktualisieren oder unsere Dienste nutzen.">We collect information you provide directly to us, such as when you create an account, update your profile, or use our services.</p>
-
-                    <h6 data-eng="How We Use Your Information" data-spa="Cómo Usamos tu Información" data-fre="Comment Nous Utilisons vos Informations" data-ger="Wie wir Ihre Informationen verwenden">How We Use Your Information</h6>
-                    <p data-eng="We use the information we collect to:" data-spa="Usamos la información que recolectamos para:" data-fre="Nous utilisons les informations que nous collectons pour :" data-ger="Wir verwenden die Informationen, die wir sammeln, um:">We use the information we collect to:</p>
-                    <ul>
-                        <li data-eng="Provide, maintain, and improve our services" data-spa="Proporcionar, mantener y mejorar nuestros servicios" data-fre="Fournir, maintenir et améliorer nos services" data-ger="Unsere Dienste bereitstellen, warten und verbessern">Provide, maintain, and improve our services</li>
-                        <li data-eng="Send you technical notices and support messages" data-spa="Enviarte avisos técnicos y mensajes de soporte" data-fre="Vous envoyer des avis techniques et des messages de support" data-ger="Ihnen technische Hinweise und Support-Nachrichten senden">Send you technical notices and support messages</li>
-                        <li data-eng="Respond to your comments and questions" data-spa="Responder a tus comentarios y preguntas" data-fre="Répondre à vos commentaires et questions" data-ger="Auf Ihre Kommentare und Fragen antworten">Respond to your comments and questions</li>
-                        <li data-eng="Monitor and analyze usage patterns" data-spa="Monitorear y analizar patrones de uso" data-fre="Surveiller et analyser les modèles d'utilisation" data-ger="Nutzungsmuster überwachen und analysieren">Monitor and analyze usage patterns</li>
-                    </ul>
-
-                    <h6 data-eng="Information Sharing" data-spa="Compartir Información" data-fre="Partage d'Informations" data-ger="Informationsweitergabe">Information Sharing</h6>
-                    <p data-eng="We do not sell, trade, or otherwise transfer your personal information to third parties without your consent, except as described in this policy." data-spa="No vendemos, intercambiamos o transferimos de otra manera tu información personal a terceros sin tu consentimiento, excepto como se describe en esta política." data-fre="Nous ne vendons, n'échangeons ou ne transférons pas vos informations personnelles à des tiers sans votre consentement, sauf comme décrit dans cette politique." data-ger="Wir verkaufen, tauschen oder übertragen Ihre persönlichen Informationen nicht an Dritte ohne Ihre Zustimmung, außer wie in dieser Richtlinie beschrieben.">We do not sell, trade, or otherwise transfer your personal information to third parties without your consent, except as described in this policy.</p>
-
-                    <h6 data-eng="Data Security" data-spa="Seguridad de Datos" data-fre="Sécurité des Données" data-ger="Datensicherheit">Data Security</h6>
-                    <p data-eng="We implement appropriate security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction." data-spa="Implementamos medidas de seguridad apropiadas para proteger tu información personal contra acceso no autorizado, alteración, divulgación o destrucción." data-fre="Nous mettons en œuvre des mesures de sécurité appropriées pour protéger vos informations personnelles contre l'accès non autorisé, la modification, la divulgation ou la destruction." data-ger="Wir implementieren angemessene Sicherheitsmaßnahmen, um Ihre persönlichen Informationen vor unbefugtem Zugriff, Änderung, Offenlegung oder Zerstörung zu schützen.">We implement appropriate security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction.</p>
-
-                    <h6 data-eng="Contact Us" data-spa="Contáctanos" data-fre="Contactez-nous" data-ger="Kontaktieren Sie uns">Contact Us</h6>
-                    <p data-eng="If you have any questions about this Privacy Policy, please contact us through our support channels." data-spa="Si tienes alguna pregunta sobre esta Política de Privacidad, por favor contáctanos a través de nuestros canales de soporte." data-fre="Si vous avez des questions sur cette Politique de Confidentialité, veuillez nous contacter par nos canaux de support." data-ger="Wenn Sie Fragen zu dieser Datenschutzrichtlinie haben, kontaktieren Sie uns bitte über unsere Support-Kanäle.">If you have any questions about this Privacy Policy, please contact us through our support channels.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" data-eng="Close" data-spa="Cerrar" data-fre="Fermer" data-ger="Schließen">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Cookie Policy Modal -->
-    <div class="modal fade" id="cookieModal" tabindex="-1" role="dialog" aria-labelledby="cookieModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="cookieModalLabel" data-eng="Cookie Policy" data-spa="Política de Cookies" data-fre="Politique des Cookies" data-ger="Cookie-Richtlinie">Cookie Policy</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <h6 data-eng="What Are Cookies" data-spa="Qué son las Cookies" data-fre="Que sont les Cookies" data-ger="Was sind Cookies">What Are Cookies</h6>
-                    <p data-eng="Cookies are small text files that are stored on your device when you visit our website. They help us provide you with a better experience." data-spa="Las cookies son pequeños archivos de texto que se almacenan en tu dispositivo cuando visitas nuestro sitio web. Nos ayudan a brindarte una mejor experiencia." data-fre="Les cookies sont de petits fichiers texte qui sont stockés sur votre appareil lorsque vous visitez notre site web. Ils nous aident à vous offrir une meilleure expérience." data-ger="Cookies sind kleine Textdateien, die auf Ihrem Gerät gespeichert werden, wenn Sie unsere Website besuchen. Sie helfen uns, Ihnen eine bessere Erfahrung zu bieten.">Cookies are small text files that are stored on your device when you visit our website. They help us provide you with a better experience.</p>
-
-                    <h6 data-eng="How We Use Cookies" data-spa="Cómo Usamos las Cookies" data-fre="Comment Nous Utilisons les Cookies" data-ger="Wie wir Cookies verwenden">How We Use Cookies</h6>
-                    <p data-eng="We use cookies to:" data-spa="Usamos cookies para:" data-fre="Nous utilisons les cookies pour :" data-ger="Wir verwenden Cookies, um:">We use cookies to:</p>
-                    <ul>
-                        <li data-eng="Keep you signed in to your account" data-spa="Mantenerte conectado a tu cuenta" data-fre="Vous maintenir connecté à votre compte" data-ger="Sie bei Ihrem Konto angemeldet zu halten">Keep you signed in to your account</li>
-                        <li data-eng="Remember your preferences and settings" data-spa="Recordar tus preferencias y configuraciones" data-fre="Mémoriser vos préférences et paramètres" data-ger="Ihre Präferenzen und Einstellungen zu merken">Remember your preferences and settings</li>
-                        <li data-eng="Analyze how you use our application" data-spa="Analizar cómo usas nuestra aplicación" data-fre="Analyser comment vous utilisez notre application" data-ger="Zu analysieren, wie Sie unsere Anwendung nutzen">Analyze how you use our application</li>
-                        <li data-eng="Improve our services and user experience" data-spa="Mejorar nuestros servicios y experiencia del usuario" data-fre="Améliorer nos services et l'expérience utilisateur" data-ger="Unsere Dienste und Benutzererfahrung zu verbessern">Improve our services and user experience</li>
-                    </ul>
-
-                    <h6 data-eng="Types of Cookies We Use" data-spa="Tipos de Cookies que Usamos" data-fre="Types de Cookies que Nous Utilisons" data-ger="Arten von Cookies, die wir verwenden">Types of Cookies We Use</h6>
-                    <p><strong data-eng="Essential Cookies:" data-spa="Cookies Esenciales:" data-fre="Cookies Essentiels :" data-ger="Wesentliche Cookies:">Essential Cookies:</strong> <span data-eng="These are necessary for the website to function and cannot be switched off." data-spa="Estas son necesarias para que el sitio web funcione y no se pueden desactivar." data-fre="Ceux-ci sont nécessaires pour que le site web fonctionne et ne peuvent pas être désactivés." data-ger="Diese sind notwendig, damit die Website funktioniert und können nicht ausgeschaltet werden.">These are necessary for the website to function and cannot be switched off.</span></p>
-                    <p><strong data-eng="Analytics Cookies:" data-spa="Cookies de Análisis:" data-fre="Cookies d'Analyse :" data-ger="Analyse-Cookies:">Analytics Cookies:</strong> <span data-eng="These help us understand how visitors interact with our website." data-spa="Estas nos ayudan a entender cómo los visitantes interactúan con nuestro sitio web." data-fre="Ceux-ci nous aident à comprendre comment les visiteurs interagissent avec notre site web." data-ger="Diese helfen uns zu verstehen, wie Besucher mit unserer Website interagieren.">These help us understand how visitors interact with our website.</span></p>
-                    <p><strong data-eng="Preference Cookies:" data-spa="Cookies de Preferencia:" data-fre="Cookies de Préférence :" data-ger="Präferenz-Cookies:">Preference Cookies:</strong> <span data-eng="These allow the website to remember choices you make and provide enhanced features." data-spa="Estas permiten al sitio web recordar las elecciones que haces y proporcionar características mejoradas." data-fre="Ceux-ci permettent au site web de se souvenir des choix que vous faites et de fournir des fonctionnalités améliorées." data-ger="Diese ermöglichen es der Website, sich an Ihre Entscheidungen zu erinnern und erweiterte Funktionen bereitzustellen.">These allow the website to remember choices you make and provide enhanced features.</span></p>
-
-                    <h6 data-eng="Managing Cookies" data-spa="Gestión de Cookies" data-fre="Gestion des Cookies" data-ger="Cookie-Verwaltung">Managing Cookies</h6>
-                    <p data-eng="You can control and/or delete cookies as you wish through your browser settings. However, please note that removing cookies may affect the functionality of our service." data-spa="Puedes controlar y/o eliminar cookies como desees a través de la configuración de tu navegador. Sin embargo, ten en cuenta que eliminar cookies puede afectar la funcionalidad de nuestro servicio." data-fre="Vous pouvez contrôler et/ou supprimer les cookies comme vous le souhaitez par les paramètres de votre navigateur. Cependant, veuillez noter que la suppression des cookies peut affecter la fonctionnalité de notre service." data-ger="Sie können Cookies nach Belieben über Ihre Browser-Einstellungen kontrollieren und/oder löschen. Bitte beachten Sie jedoch, dass das Entfernen von Cookies die Funktionalität unseres Dienstes beeinträchtigen kann.">You can control and/or delete cookies as you wish through your browser settings. However, please note that removing cookies may affect the functionality of our service.</p>
-
-                    <h6 data-eng="Updates to This Policy" data-spa="Actualizaciones a Esta Política" data-fre="Mises à Jour de Cette Politique" data-ger="Aktualisierungen dieser Richtlinie">Updates to This Policy</h6>
-                    <p data-eng="We may update this Cookie Policy from time to time. Any changes will be posted on this page." data-spa="Podemos actualizar esta Política de Cookies de vez en cuando. Cualquier cambio será publicado en esta página." data-fre="Nous pouvons mettre à jour cette Politique des Cookies de temps en temps. Tout changement sera publié sur cette page." data-ger="Wir können diese Cookie-Richtlinie von Zeit zu Zeit aktualisieren. Alle Änderungen werden auf dieser Seite veröffentlicht.">We may update this Cookie Policy from time to time. Any changes will be posted on this page.</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal" data-eng="Close" data-spa="Cerrar" data-fre="Fermer" data-ger="Schließen">Close</button>
