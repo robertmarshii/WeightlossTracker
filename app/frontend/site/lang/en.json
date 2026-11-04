@@ -166,7 +166,7 @@
   "features.signin.h": "Simple, safe sign-in",
   "features.signin.l1": "No password to remember: a 6-digit email code that works for 15 minutes",
   "features.signin.l2": "Or continue with Google or Microsoft",
-  "features.signin.l3": "Stay signed in on your device for 30 days",
+  "features.signin.l3": "Stay signed in on your device for 30 days after your last visit, up to 90 days after you sign in",
   "features.signin.l4": "Repeated wrong codes are blocked to keep your account safe",
   "features.free.h": "Free",
   "features.free.p": "No paid plan, no adverts inside the app and nothing to install.",

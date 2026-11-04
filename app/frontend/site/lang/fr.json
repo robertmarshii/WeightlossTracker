@@ -166,7 +166,7 @@
   "features.signin.h": "Une connexion simple et sûre",
   "features.signin.l1": "Aucun mot de passe à retenir : un code à 6 chiffres par e-mail, valable 15 minutes",
   "features.signin.l2": "Ou continuez avec Google ou Microsoft",
-  "features.signin.l3": "Restez connecté sur votre appareil pendant 30 jours",
+  "features.signin.l3": "Restez connecté sur votre appareil jusqu'à 30 jours après votre dernière visite, et au plus 90 jours après votre connexion",
   "features.signin.l4": "Les tentatives répétées avec un code erroné sont bloquées pour protéger votre compte",
   "features.free.h": "Gratuit",
   "features.free.p": "Pas d'offre payante, pas de publicité dans l'application et rien à installer.",

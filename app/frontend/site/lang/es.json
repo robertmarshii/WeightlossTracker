@@ -166,7 +166,7 @@
   "features.signin.h": "Inicio de sesión sencillo y seguro",
   "features.signin.l1": "Sin contraseñas que recordar: un código de 6 dígitos por correo, válido durante 15 minutos",
   "features.signin.l2": "O continúa con Google o Microsoft",
-  "features.signin.l3": "Mantén la sesión abierta en tu dispositivo durante 30 días",
+  "features.signin.l3": "Mantén la sesión abierta en tu dispositivo hasta 30 días después de tu última visita, con un máximo de 90 días desde que inicias sesión",
   "features.signin.l4": "Los intentos repetidos con códigos incorrectos se bloquean para proteger tu cuenta",
   "features.free.h": "Gratis",
   "features.free.p": "Sin plan de pago, sin anuncios dentro de la app y sin nada que instalar.",

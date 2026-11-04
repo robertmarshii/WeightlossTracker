@@ -166,7 +166,7 @@
   "features.signin.h": "Einfache, sichere Anmeldung",
   "features.signin.l1": "Kein Passwort zum Merken: ein 6-stelliger E-Mail-Code, der 15 Minuten gültig ist",
   "features.signin.l2": "Oder mit Google oder Microsoft fortfahren",
-  "features.signin.l3": "30 Tage lang auf Ihrem Gerät angemeldet bleiben",
+  "features.signin.l3": "Bis zu 30 Tage nach Ihrem letzten Besuch auf Ihrem Gerät angemeldet bleiben, höchstens 90 Tage nach der Anmeldung",
   "features.signin.l4": "Wiederholte Falscheingaben werden gesperrt, um Ihr Konto zu schützen",
   "features.free.h": "Kostenlos",
   "features.free.p": "Kein Bezahl-Abo, keine Werbung in der App und nichts zu installieren.",
