@@ -194,6 +194,7 @@ $(function() {
             if (data.success) {
                 showToast('Weight saved');
                 $('#weightKg').val('');
+                refreshStoneHints();
 
                 // Reload global data first, then refresh all functions
                 reloadGlobalDashboardData(function() {
@@ -236,6 +237,7 @@ $(function() {
     $('#btn-cancel-entry').on('click', function() {
         $('#add-entry-form').removeData('editId editKg editPrefill').slideUp();
         $('#newWeight').val('');
+        refreshStoneHints();
         const todayISO = new Date().toISOString().split('T')[0];
         $('#newDate').val(formatDate(todayISO));
     });
@@ -291,6 +293,7 @@ $(function() {
                 showToast(editId ? t('Weight entry updated') : t('Weight entry saved'));
                 $('#add-entry-form').removeData('editId editKg editPrefill').slideUp();
                 $('#newWeight').val('');
+                refreshStoneHints();
                 const todayISO = new Date().toISOString().split('T')[0];
                 $('#newDate').val(formatDate(todayISO));
 
@@ -2380,7 +2383,21 @@ function updateWeightUnitDisplay() {
             el.setAttribute('step', '0.1');
             el.setAttribute('min', '0');
         }
+        // Under each stone field: how the text will be saved ("= 13 st 7.0 lb" for "13.5"), before Save
+        let hint = document.getElementById(el.id + '-stone-hint');
+        if (stone && !hint) {
+            hint = document.createElement('small');
+            hint.id = el.id + '-stone-hint';
+            hint.className = 'text-muted d-block mt-1 stone-input-hint';
+            hint.setAttribute('aria-live', 'polite');
+            el.insertAdjacentElement('afterend', hint);
+        }
+        if (hint) {
+            hint.hidden = !stone;
+            if (stone) el.setAttribute('aria-describedby', hint.id); else el.removeAttribute('aria-describedby');
+        }
     });
+    refreshStoneHints();
 
     // Update placeholders based on unit
     if (stone) {
@@ -2397,6 +2414,17 @@ function updateWeightUnitDisplay() {
         $('#newWeight').attr('placeholder', 'e.g. 70.5');
     }
 }
+
+// Show how each stone weight field's current text will be read (see stoneInputHint in global.js)
+function refreshStoneHints() {
+    const stone = getWeightUnit() === 'st';
+    ['weightKg', 'goalWeight', 'newWeight'].forEach(id => {
+        const el = document.getElementById(id);
+        const hint = document.getElementById(id + '-stone-hint');
+        if (el && hint) hint.textContent = stone ? stoneInputHint(el.value) : '';
+    });
+}
+$(document).on('input change', '#weightKg, #goalWeight, #newWeight', refreshStoneHints);
 
 function refreshAllWeightDisplays() {
     if (window.coverage) window.coverage.logFunction('refreshAllWeightDisplays', 'dashboard.js');
@@ -4130,6 +4158,7 @@ function getThemeColors() {
 
 // Make functions globally available for settings
 window.updateWeightUnitDisplay = updateWeightUnitDisplay;
+window.refreshStoneHints = refreshStoneHints;
 window.refreshAllWeightDisplays = refreshAllWeightDisplays;
 window.updateHeightUnitDisplay = updateHeightUnitDisplay;
 window.loadQuickLookMetrics = loadQuickLookMetrics;

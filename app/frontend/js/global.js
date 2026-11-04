@@ -219,19 +219,33 @@ function formatStoneValue(stones, fmt = null) {
     return formatWeight(parseFloat(stones) / 0.157473, 'st', fmt);
 }
 
-// Text the user typed for a stone weight, in kg. Accepts "13 st 5.4 lb", "13st 5.4", "13 5.4",
-// "13.4" (decimal stones) and "5.4 lb" (pounds only). Commas work as decimal points. NaN if not understood.
+// Text the user typed for a stone weight, in kg. NaN if not understood. Commas work as decimal points.
+//   "187.4 lb", "187.4 lbs", "187.4 pounds"  pounds only (checked first, so "200 lb" is never read as 20 st 0 lb)
+//   "13 st 5.4 lb", "13st5.4lb", "13 st 5.4", "13 5.4"  whole stones and pounds; "st" or a space must separate
+//                                                       them and the pounds must be under 14
+//   "13 st", "13.5 st", "13.5"  stones; a bare number is decimal stones (13.5 = 13 st 7 lb). The weight fields
+//                               show how the text was read (stoneInputHint) before it is saved.
 function parseStoneInput(text) {
     const s = String(text).trim().toLowerCase().replace(/,/g, '.');
-    let m = s.match(/^(\d+(?:\.\d+)?)\s*(?:st|stone|stones)?\s*(?:(\d+(?:\.\d+)?)\s*(?:lb|lbs|pounds?)?)?$/);
-    if (m) {
-        if (m[2] !== undefined) {
-            return (parseFloat(m[1]) * 14 + parseFloat(m[2])) / 2.20462;
-        }
-        return parseFloat(m[1]) / 0.157473;
-    }
-    m = s.match(/^(\d+(?:\.\d+)?)\s*(?:lb|lbs|pounds?)$/);
-    return m ? parseFloat(m[1]) / 2.20462 : NaN;
+    const NUM = '(\\d+(?:\\.\\d+)?)';
+    const LB = '(?:lb|lbs|pounds?)';
+    const ST = '(?:st|stones?)';
+    let m = s.match(new RegExp('^' + NUM + '\\s*' + LB + '$'));
+    if (m) return parseFloat(m[1]) / 2.20462;
+    m = s.match(new RegExp('^' + NUM + '(?:\\s*' + ST + ')?$'));
+    if (m) return parseFloat(m[1]) / 0.157473;
+    m = s.match(new RegExp('^(\\d+)(?:\\s*' + ST + '\\s*|\\s+)' + NUM + '(?:\\s*' + LB + ')?$'));
+    if (m && parseFloat(m[2]) < 14) return (parseInt(m[1], 10) * 14 + parseFloat(m[2])) / 2.20462;
+    return NaN;
+}
+
+// How a stone weight field's text will be saved, e.g. "= 13 st 7.0 lb" for "13.5". '' when empty, a short
+// "not understood" note when it can't be read.
+function stoneInputHint(text) {
+    if (!String(text).trim()) return '';
+    const kg = parseStoneInput(text);
+    const tr = (x) => (typeof t === 'function' ? t(x) : x);
+    return isNaN(kg) ? tr('Type e.g. 13 st 5 lb') : '= ' + formatWeight(kg, 'st');
 }
 
 // Oldest first by date; entries on the same date by id (the later-saved one counts as the latest, as on the server)

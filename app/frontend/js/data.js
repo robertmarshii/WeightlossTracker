@@ -119,6 +119,7 @@ function editWeight(id, weightKg, date) {
     $('#add-entry-form').data('editId', id).data('editKg', String(weightKg)).data('editPrefill', prefill);
 
     $('#newWeight').val(prefill);
+    if (typeof refreshStoneHints === 'function') refreshStoneHints();
 
     // Format date to user's preferred format before pre-filling
     const formattedDate = formatDateBySettings(date);
