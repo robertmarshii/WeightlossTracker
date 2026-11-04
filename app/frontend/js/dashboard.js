@@ -791,17 +791,19 @@ function refreshWeightProgress() {
 
         const lines = [];
         const unit = getWeightUnitLabel();
-        const displayTotalLost = convertFromKg(data.total_weight_lost_kg);
+        // Numbers written the way the page's language writes them (num() is in health.js)
+        const n = v => (typeof num === 'function' ? num(v) : v);
+        const displayTotalLost = n(convertFromKg(data.total_weight_lost_kg));
         lines.push(`${t('Total Weight Lost:')} <strong>${displayTotalLost} ${unit}</strong>`);
         if (data.estimated_fat_loss_kg) {
-            const fatLoss = convertFromKg(data.estimated_fat_loss_kg);
+            const fatLoss = n(convertFromKg(data.estimated_fat_loss_kg));
             lines.push(`${t('Estimated Fat Loss:')} <strong class="text-success">${fatLoss} ${unit} (${data.fat_loss_percentage}%)</strong>`);
         }
-        const avgWeeklyRate = convertFromKg(data.avg_weekly_rate_kg || data.average_weekly_loss_kg);
-        lines.push(`<small class="text-muted">${t('Over')} ${data.weeks_elapsed || data.weeks_tracked} ${t('weeks')} (${avgWeeklyRate} ${unit}/${t('week average')})</small>`);
+        const avgWeeklyRate = n(convertFromKg(data.avg_weekly_rate_kg || data.average_weekly_loss_kg));
+        lines.push(`<small class="text-muted">${t('Over')} ${n(data.weeks_elapsed || data.weeks_tracked)} ${t('weeks')} (${avgWeeklyRate} ${unit}/${t('week average')})</small>`);
         if (data.research_note) {
             if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
-            lines.push(`<small class="text-muted">${t('Research suggests ~78% of weight loss is fat when combined with exercise')}</small>`);
+            lines.push(`<small class="text-muted">${t('A common rule of thumb is that about three-quarters of weight lost by dieting is fat. It varies a lot between people, and exercise tends to reduce the share of lean tissue lost.')} ${typeof srcRef === 'function' ? srcRef('heym') : ''}</small>`);
         }
 
         el.html(lines.join('<br>')).removeClass('text-muted').removeAttr('data-eng data-spa data-fre data-ger');
@@ -827,13 +829,15 @@ function refreshWeightProgress() {
 
         const lines = [];
         const unit = getWeightUnitLabel();
-        const displayTotalLost = convertFromKg(data.total_weight_lost_kg);
+        // Numbers written the way the page's language writes them (num() is in health.js)
+        const n = v => (typeof num === 'function' ? num(v) : v);
+        const displayTotalLost = n(convertFromKg(data.total_weight_lost_kg));
         lines.push(`${t('Total Weight Lost:')} <strong>${displayTotalLost} ${unit}</strong>`);
-        const fatLoss = convertFromKg(data.estimated_fat_loss_kg);
+        const fatLoss = n(convertFromKg(data.estimated_fat_loss_kg));
         lines.push(`${t('Estimated Fat Loss:')} <strong class="text-success">${fatLoss} ${unit}</strong> (${data.fat_loss_percentage}%)`);
-        const avgWeeklyRate = convertFromKg(data.avg_weekly_rate_kg);
-        lines.push(`<small class="text-muted">${t('Over')} ${data.weeks_elapsed} ${t('weeks')} (${avgWeeklyRate} ${unit}/${t('week average')})</small>`);
-        lines.push(`<small class="text-muted">${t('Research suggests ~78% of weight loss is fat when combined with exercise')}</small>`);
+        const avgWeeklyRate = n(convertFromKg(data.avg_weekly_rate_kg));
+        lines.push(`<small class="text-muted">${t('Over')} ${n(data.weeks_elapsed)} ${t('weeks')} (${avgWeeklyRate} ${unit}/${t('week average')})</small>`);
+        lines.push(`<small class="text-muted">${t('A common rule of thumb is that about three-quarters of weight lost by dieting is fat. It varies a lot between people, and exercise tends to reduce the share of lean tissue lost.')} ${typeof srcRef === 'function' ? srcRef('heym') : ''}</small>`);
 
         el.html(lines.join('<br>')).removeClass('text-muted').removeAttr('data-eng data-spa data-fre data-ger');
     })

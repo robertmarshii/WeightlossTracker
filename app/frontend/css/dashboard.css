@@ -799,7 +799,8 @@ select.form-control.glass-input {
     }
 
     /* Card content should be left-aligned for better readability */
-    .glass-card-small h5.card-title {
+    .glass-card-small h5.card-title,
+    .glass-card-small h2.card-title {
         text-align: left;
     }
 
@@ -1965,4 +1966,32 @@ select.form-control.glass-input {
     text-decoration: underline;
     display: inline-block;
     padding: 0.4rem 0.25rem;
+}
+
+/* Health tab: [n] links to the Sources list, and the list itself */
+.src-ref {
+    color: inherit;
+    text-decoration: underline;
+    white-space: nowrap;
+    font-size: 0.85em;
+}
+.health-fact {
+    line-height: 1.45;
+}
+.health-sources ol {
+    padding-left: 1.4rem;
+    line-height: 1.45;
+}
+.health-sources li {
+    margin-bottom: 0.35rem;
+    overflow-wrap: anywhere;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+.health-sources a {
+    color: inherit;
+    text-decoration: underline;
+}
+.health-sources li.src-highlight {
+    background-color: rgba(255, 255, 255, 0.25);
 }

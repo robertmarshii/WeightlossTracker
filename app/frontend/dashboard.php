@@ -44,7 +44,7 @@ $csrfToken = Security::csrfToken();
     <div class="row justify-content-center align-items-start min-vh-100 py-4">
         <div class="col-lg-10">
             <!-- Header Card -->
-            <div class="glass-card">
+            <header class="glass-card">
                 <!-- First Row: Logo and Welcome Text -->
                 <div class="d-flex align-items-center header-top-row mb-2">
                     <div class="logo-section-compact">
@@ -81,10 +81,10 @@ $csrfToken = Security::csrfToken();
                         <button id="btn-logout" class="btn danger-btn btn-sm" data-eng="↪ Logout" data-spa="↪ Cerrar sesión" data-fre="↪ Déconnexion" data-ger="↪ Abmelden">↪ Logout</button>
                     </div>
                 </div>
-            </div>
+            </header>
             
             <!-- Dashboard Tabs -->
-            <div class="glass-card">
+            <main class="glass-card" id="main">
                 <ul class="nav nav-tabs d-flex justwrap" id="dashboardTabs" role="tablist">
                     <li class="nav-item flex-fill" role="presentation">
                         <a class="nav-link active text-center menu-text" id="data-tab" data-toggle="tab" href="#data" role="tab">
@@ -118,8 +118,8 @@ $csrfToken = Security::csrfToken();
                     <?php include_once 'pages/health.php'; ?>
                     <?php include_once 'pages/body.php'; ?>
                     <?php include_once 'pages/goals.php'; ?>
-                    <?php include_once 'pages/settings.php'; ?>
-            </div>
+                    <?php include_once 'pages/settings.php'; ?><?php /* settings.php also closes the tab-content div */ ?>
+            </main>
         </div>
             <footer class="glass-card dashboard-footer">
                 <nav aria-label="Footer">
