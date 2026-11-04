@@ -251,13 +251,15 @@ function parseStoneInput(text) {
     return NaN;
 }
 
-// How a stone weight field's text will be saved, e.g. "= 13 st 7.0 lb" for "13.5". '' when empty, a short
-// "not understood" note when it can't be read.
+// How a stone weight field's text will be saved, e.g. "= 13 st 7.0 lb" for "13.5" ("= 13 st 7,0 lb" in German,
+// Spanish and French). '' when empty, a short "not understood" note when it can't be read.
 function stoneInputHint(text) {
     if (!String(text).trim()) return '';
     const kg = parseStoneInput(text);
     const tr = (x) => (typeof t === 'function' ? t(x) : x);
-    return isNaN(kg) ? tr('Type e.g. 13 st 5 lb') : '= ' + formatWeight(kg, 'st');
+    if (isNaN(kg)) return tr('Type e.g. 13 st 5 lb');
+    const locale = getLanguageLocale();
+    return '= ' + formatWeight(kg, 'st', x => x.toLocaleString(locale, { minimumFractionDigits: 1, maximumFractionDigits: 1 }));
 }
 
 // Text made safe for HTML element content and quoted attribute values

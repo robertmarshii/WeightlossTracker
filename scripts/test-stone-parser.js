@@ -71,5 +71,25 @@ check('hint "13 5.4"', stoneInputHint('13 5.4'), '= 13 st 5.4 lb');
 check('hint ""', stoneInputHint(''), '');
 check('hint "13 st lb"', stoneInputHint('13 st lb'), 'Type e.g. 13 st 5 lb');
 
+// In other languages (translations from js/translate.js): the locale's decimal separator, and the hint translated
+vm.runInContext(fs.readFileSync(path.join(__dirname, '../app/frontend/js/translate.js'), 'utf8'), ctx);
+const hints = {
+    en: ['= 13 st 7.0 lb', 'Type e.g. 13 st 5 lb'],
+    de: ['= 13 st 7,0 lb', null],
+    es: ['= 13 st 7,0 lb', null],
+    fr: ['= 13 st 7,0 lb', null],
+};
+for (const [lang, [value, help]] of Object.entries(hints)) {
+    store.language = lang;
+    check(`hint "13.5" (${lang})`, stoneInputHint('13.5'), value);
+    const got = stoneInputHint('abc');
+    if (help) {
+        check(`hint "abc" (${lang})`, got, help);
+    } else {
+        check(`hint "abc" (${lang}) is translated`, got !== 'Type e.g. 13 st 5 lb' && got.includes('13 st 5 lb'), true);
+    }
+}
+delete store.language;
+
 console.log(fails ? `\n${fails} FAILED` : '\nAll stone parser tests passed');
 process.exit(fails ? 1 : 0);
