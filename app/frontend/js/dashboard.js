@@ -200,7 +200,7 @@ $(function() {
                     refreshPersonalHealthBenefits();
 
                     // Update the weight chart with current period
-                    const activePeriod = $('.btn-group .active').attr('id')?.replace('chart-', '') || '90days';
+                    const activePeriod = getActiveChartPeriod();
                     updateWeightChart(activePeriod);
                 });
             } else {
@@ -214,12 +214,12 @@ $(function() {
     
     // Weight History Handlers
     $('#btn-add-entry').on('click', function() {
-        $('#add-entry-form').slideDown();
+        $('#add-entry-form').removeData('editId').slideDown();
         $('#newWeight').focus();
     });
     
     $('#btn-cancel-entry').on('click', function() {
-        $('#add-entry-form').slideUp();
+        $('#add-entry-form').removeData('editId').slideUp();
         $('#newWeight').val('');
         const todayISO = new Date().toISOString().split('T')[0];
         $('#newDate').val(formatDate(todayISO));
@@ -249,16 +249,18 @@ $(function() {
             return;
         }
 
-        postRequest('router.php?controller=profile', {
-            action: 'add_weight',
-            weight_kg: weightKg.toFixed(2),
-            entry_date: dateISO
-        })
+        // ✎ on a history row sets editId: update that entry instead of adding a new one
+        const editId = $('#add-entry-form').data('editId');
+        const request = editId
+            ? { action: 'update_weight', id: editId, weight_kg: weightKg.toFixed(2), entry_date: dateISO }
+            : { action: 'add_weight', weight_kg: weightKg.toFixed(2), entry_date: dateISO };
+
+        postRequest('router.php?controller=profile', request)
         .then(resp => {
             const data = parseJson(resp);
             if (data.success) {
-                showToast('Weight entry saved');
-                $('#add-entry-form').slideUp();
+                showToast(editId ? t('Weight entry updated') : 'Weight entry saved');
+                $('#add-entry-form').removeData('editId').slideUp();
                 $('#newWeight').val('');
                 const todayISO = new Date().toISOString().split('T')[0];
                 $('#newDate').val(formatDate(todayISO));
@@ -282,11 +284,11 @@ $(function() {
                     refreshIdealWeight(); // always uses individual API call
 
                     // Update the weight chart with current period
-                    const activePeriod = $('.btn-group .active').attr('id')?.replace('chart-', '') || '90days';
+                    const activePeriod = getActiveChartPeriod();
                     updateWeightChart(activePeriod);
                 });
             } else {
-                showToast('Failed to save weight entry');
+                showToast(editId ? t('Failed to update weight entry') : 'Failed to save weight entry');
             }
         })
         .catch(() => {
@@ -374,7 +376,7 @@ $(function() {
                     refreshPersonalHealthBenefits();
 
                     // Update the weight chart with current period (profile changes might affect BMI data in chart)
-                    const activePeriod = $('.btn-group .active').attr('id')?.replace('chart-', '') || '90days';
+                    const activePeriod = getActiveChartPeriod();
                     updateWeightChart(activePeriod);
                 });
             } else {
@@ -429,14 +431,14 @@ $(function() {
     // Chart navigation handlers
     $('#chart-prev').on('click', function() {
         currentPeriodOffset++;
-        const activePeriod = $('.btn-group .active').attr('id').replace('chart-', '');
+        const activePeriod = getActiveChartPeriod();
         updateWeightChart(activePeriod);
     });
     
     $('#chart-next').on('click', function() {
         if (currentPeriodOffset > 0) {
             currentPeriodOffset--;
-            const activePeriod = $('.btn-group .active').attr('id').replace('chart-', '');
+            const activePeriod = getActiveChartPeriod();
             updateWeightChart(activePeriod);
         }
     });
@@ -1433,12 +1435,20 @@ function initWeightChart() {
         }
     });
     
-    // Load initial data (90 days by default)
-    updateWeightChart('90days');
+    // Load the range whose button is highlighted (All Time by default)
+    updateWeightChart(getActiveChartPeriod());
+}
+
+// The chart range from the highlighted range button; All Time when none is highlighted
+function getActiveChartPeriod() {
+    const active = $('#chart-weekly, #chart-30days, #chart-90days, #chart-monthly, #chart-yearly, #chart-all').filter('.active').first();
+    return active.length ? active.attr('id').replace('chart-', '') : 'all';
 }
 
 function updateWeightChart(period) {
     if (window.coverage) window.coverage.logFunction('updateWeightChart', 'dashboard.js');
+    // Called without a range (e.g. after saving settings): keep the highlighted one
+    period = period || getActiveChartPeriod();
     $('#chart-status').text('Loading chart data...').show();
 
     // Check if we have global data first
@@ -2334,7 +2344,7 @@ function refreshAllWeightDisplays() {
     refreshPersonalHealthBenefits();
 
     // Update chart if visible
-    const activePeriod = $('.btn-group .active').attr('id')?.replace('chart-', '') || '90days';
+    const activePeriod = getActiveChartPeriod();
     if (typeof updateWeightChart === 'function') {
         updateWeightChart(activePeriod);
     }

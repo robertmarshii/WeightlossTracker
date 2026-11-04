@@ -359,11 +359,23 @@ const translations = {
         "fr": "Échec du chargement de l'historique de poids",
         "de": "Fehler beim Laden der Gewichtshistorie"
     },
-    "Edit mode: Modify values and save (creates new entry for now)": {
-        "en": "Edit mode: Modify values and save (creates new entry for now)",
-        "es": "Modo de edición: Modifica los valores y guarda (crea una nueva entrada por ahora)",
-        "fr": "Mode d'édition: Modifiez les valeurs et enregistrez (crée une nouvelle entrée pour l'instant)",
-        "de": "Bearbeitungsmodus: Werte ändern und speichern (erstellt vorerst einen neuen Eintrag)"
+    "Edit mode: change the values and save to update this entry": {
+        "en": "Edit mode: change the values and save to update this entry",
+        "es": "Modo de edición: cambia los valores y guarda para actualizar esta entrada",
+        "fr": "Mode édition : modifiez les valeurs et enregistrez pour mettre à jour cette entrée",
+        "de": "Bearbeitungsmodus: Ändern Sie die Werte und speichern Sie, um diesen Eintrag zu aktualisieren"
+    },
+    "Weight entry updated": {
+        "en": "Weight entry updated",
+        "es": "Entrada de peso actualizada",
+        "fr": "Entrée de poids mise à jour",
+        "de": "Gewichtseintrag aktualisiert"
+    },
+    "Failed to update weight entry": {
+        "en": "Failed to update weight entry",
+        "es": "No se pudo actualizar la entrada de peso",
+        "fr": "Impossible de mettre à jour l'entrée de poids",
+        "de": "Gewichtseintrag konnte nicht aktualisiert werden"
     },
     "Are you sure you want to delete this weight entry?": {
         "en": "Are you sure you want to delete this weight entry?",

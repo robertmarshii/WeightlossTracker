@@ -345,6 +345,27 @@
                 return;
             }
 
+            if ($action === 'update_weight') {
+                // Edit an existing entry in place (the Data tab's ✎ button)
+                $entryId = isset($_POST['id']) ? (int)$_POST['id'] : 0;
+                $w = isset($_POST['weight_kg']) && is_numeric($_POST['weight_kg']) ? (float)$_POST['weight_kg'] : 0.0;
+                $date = isset($_POST['entry_date']) ? (string)$_POST['entry_date'] : '';
+                $d = DateTime::createFromFormat('Y-m-d', $date);
+                if ($entryId <= 0 || $w <= 0 || !$d || $d->format('Y-m-d') !== $date) {
+                    echo json_encode(['success' => false, 'message' => 'Entry ID, weight and date (YYYY-MM-DD) required']);
+                    return;
+                }
+                $stmt = $db->prepare("UPDATE {$schema}.weight_entries SET weight_kg = ?, entry_date = ? WHERE id = ? AND user_id = ?");
+                $stmt->execute([$w, $date, $entryId, $userId]);
+                if ($stmt->rowCount() === 0) {
+                    echo json_encode(['success' => false, 'message' => 'Entry not found or not authorized']);
+                    return;
+                }
+                autoCalculateAndStoreBodyFat($userId, $w, $date, $db, $schema);
+                echo json_encode(['success' => true, 'message' => 'Weight entry updated']);
+                return;
+            }
+
             if ($action === 'get_health_stats') {
                 // Gather inputs
                 $stmt = $db->prepare("SELECT height_cm, body_frame, age, activity_level FROM {$schema}.user_profiles WHERE user_id = ?");

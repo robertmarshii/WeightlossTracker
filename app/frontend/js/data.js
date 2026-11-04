@@ -180,6 +180,9 @@ function formatDate(dateString) {
 function editWeight(id, weight, date) {
     if (window.coverage) window.coverage.logFunction('editWeight', 'data.js');
 
+    // Remember which entry is being edited: Save then updates it instead of adding a new one
+    $('#add-entry-form').data('editId', id);
+
     // Pre-fill weight (already in display units)
     $('#newWeight').val(weight);
 
@@ -191,8 +194,7 @@ function editWeight(id, weight, date) {
     $('#add-entry-form').slideDown();
     $('#newWeight').focus();
 
-    // TODO: Implement proper edit functionality with update instead of add
-    showToast(t('Edit mode: Modify values and save (creates new entry for now)'));
+    showToast(t('Edit mode: change the values and save to update this entry'));
 }
 
 function deleteWeight(id) {
