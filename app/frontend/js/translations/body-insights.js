@@ -464,12 +464,6 @@ window.bodyInsightsTranslations = {
     },
 
     // Caliper insights
-    "5-Site Body Fat Calculation": {
-        "en": "5-Site Body Fat Calculation",
-        "es": "Cálculo de Grasa Corporal de 5 Sitios",
-        "fr": "Calcul de Graisse Corporelle à 5 Sites",
-        "de": "5-Punkte-Körperfettberechnung"
-    },
     "Skinfold Measurements Increasing": {
         "en": "Skinfold Measurements Increasing",
         "es": "Mediciones de Pliegues Cutáneos Aumentando",
@@ -748,24 +742,6 @@ window.bodyInsightsTranslations = {
         "fr": "semaines avec un entraînement régulier.",
         "de": "Wochen mit konsistentem Training dauern."
     },
-    "Total skinfold:": {
-        "en": "Total skinfold:",
-        "es": "Pliegue cutáneo total:",
-        "fr": "Pli cutané total:",
-        "de": "Gesamte Hautfalte:"
-    },
-    "mm → Estimated body fat:": {
-        "en": "mm → Estimated body fat:",
-        "es": "mm → Grasa corporal estimada:",
-        "fr": "mm → Graisse corporelle estimée:",
-        "de": "mm → Geschätztes Körperfett:"
-    },
-    "% using Jackson-Pollock formula. This provides an independent validation of your smart scale readings.": {
-        "en": "% using Jackson-Pollock formula. This provides an independent validation of your smart scale readings.",
-        "es": "% usando la fórmula de Jackson-Pollock. Esto proporciona una validación independiente de las lecturas de tu báscula inteligente.",
-        "fr": "% en utilisant la formule de Jackson-Pollock. Cela fournit une validation indépendante de vos lectures de balance intelligente.",
-        "de": "% unter Verwendung der Jackson-Pollock-Formel. Dies bietet eine unabhängige Validierung Ihrer Smart-Waagen-Messwerte."
-    },
     "Average reduction of": {
         "en": "Average reduction of",
         "es": "Reducción promedio de",
@@ -819,5 +795,29 @@ window.bodyInsightsTranslations = {
         "es": ":1 indica una excelente composición corporal. Continúa con tu programa de entrenamiento.",
         "fr": ":1 indique une excellente composition corporelle. Continuez avec votre programme d'entraînement.",
         "de": ":1 zeigt eine ausgezeichnete Körperzusammensetzung. Fahren Sie mit Ihrem Trainingsprogramm fort."
+    },
+    "Skinfold body fat estimate": {
+        "en": "Skinfold body fat estimate",
+        "es": "Estimación de grasa corporal por pliegues cutáneos",
+        "fr": "Estimation de la masse grasse par plis cutanés",
+        "de": "Körperfett-Schätzung aus Hautfalten"
+    },
+    "Chest + abdomen + thigh skinfolds: {sum} mm.": {
+        "en": "Chest + abdomen + thigh skinfolds: {sum} mm.",
+        "es": "Pliegues de pecho + abdomen + muslo: {sum} mm.",
+        "fr": "Plis cutanés poitrine + abdomen + cuisse : {sum} mm.",
+        "de": "Hautfalten Brust + Bauch + Oberschenkel: {sum} mm."
+    },
+    "If you are a man, the Jackson-Pollock 3-site equation for men gives about {bf}% body fat.": {
+        "en": "If you are a man, the Jackson-Pollock 3-site equation for men gives about {bf}% body fat.",
+        "es": "Si eres hombre, la ecuación de 3 pliegues de Jackson-Pollock para hombres da aproximadamente un {bf} % de grasa corporal.",
+        "fr": "Si vous êtes un homme, l'équation de Jackson-Pollock à 3 plis pour les hommes donne environ {bf} % de masse grasse.",
+        "de": "Wenn Sie ein Mann sind, ergibt die Jackson-Pollock-3-Falten-Formel für Männer etwa {bf} % Körperfett."
+    },
+    "The equation for women needs a triceps skinfold, which this app does not record. This is a general estimate, not a measurement.": {
+        "en": "The equation for women needs a triceps skinfold, which this app does not record. This is a general estimate, not a measurement.",
+        "es": "La ecuación para mujeres necesita el pliegue del tríceps, que esta aplicación no registra. Es una estimación general, no una medición.",
+        "fr": "L'équation pour les femmes nécessite le pli cutané du triceps, que cette application n'enregistre pas. Il s'agit d'une estimation générale, pas d'une mesure.",
+        "de": "Die Formel für Frauen benötigt eine Trizeps-Hautfalte, die diese App nicht erfasst. Dies ist eine allgemeine Schätzung, keine Messung."
     }
 };

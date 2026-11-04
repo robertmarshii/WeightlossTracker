@@ -124,6 +124,10 @@
                 throw new Exception('Database connection failed');
             }
 
+            // Pending one-off data fixes (normally already applied at container start; then just a file check)
+            require_once('/var/app/backend/Migrations.php');
+            Migrations::run($db, $schema);
+
         } catch (Exception $e) {
             error_log("ProfileController ERROR: " . $e->getMessage());
             http_response_code(500);

@@ -899,7 +899,7 @@
                                                         </table>
                                                     </div>
                                                     <div class="text-right">
-                                                        <button class="btn primary-btn btn-sm mt-2 btn-add-historical-entry" data-metric-type="caliper_abdomen" data-unit="mm" data-eng="+ Add Entry" data-spa="+ Agregar Entrada" data-fre="+ Ajouter Entrée" data-ger="+ Eintrag Hinzufügen">+ Add Entry</button>
+                                                        <button class="btn primary-btn btn-sm mt-2 btn-add-historical-entry" data-metric-type="caliper_midaxillary" data-unit="mm" data-eng="+ Add Entry" data-spa="+ Agregar Entrada" data-fre="+ Ajouter Entrée" data-ger="+ Eintrag Hinzufügen">+ Add Entry</button>
                                                     </div>
                                                 </div>
 
@@ -923,7 +923,7 @@
                                                         </table>
                                                     </div>
                                                     <div class="text-right">
-                                                        <button class="btn primary-btn btn-sm mt-2 btn-add-historical-entry" data-metric-type="caliper_thigh" data-unit="mm" data-eng="+ Add Entry" data-spa="+ Agregar Entrada" data-fre="+ Ajouter Entrée" data-ger="+ Eintrag Hinzufügen">+ Add Entry</button>
+                                                        <button class="btn primary-btn btn-sm mt-2 btn-add-historical-entry" data-metric-type="caliper_abdomen" data-unit="mm" data-eng="+ Add Entry" data-spa="+ Agregar Entrada" data-fre="+ Ajouter Entrée" data-ger="+ Eintrag Hinzufügen">+ Add Entry</button>
                                                     </div>
                                                 </div>
 
@@ -971,7 +971,7 @@
                                                         </table>
                                                     </div>
                                                     <div class="text-right">
-                                                        <button class="btn primary-btn btn-sm mt-2 btn-add-historical-entry" data-metric-type="caliper_tricep" data-unit="mm" data-eng="+ Add Entry" data-spa="+ Agregar Entrada" data-fre="+ Ajouter Entrée" data-ger="+ Eintrag Hinzufügen">+ Add Entry</button>
+                                                        <button class="btn primary-btn btn-sm mt-2 btn-add-historical-entry" data-metric-type="caliper_thigh" data-unit="mm" data-eng="+ Add Entry" data-spa="+ Agregar Entrada" data-fre="+ Ajouter Entrée" data-ger="+ Eintrag Hinzufügen">+ Add Entry</button>
                                                     </div>
                                                 </div>
                                             </div>

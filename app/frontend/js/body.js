@@ -26,11 +26,11 @@ window.populateBodyDataCards = function() {
         'measurement_thigh': { valueId: 'thighs-value', changeIconId: 'thighs-change-icon', changeTextId: 'thighs-change-text' },
         'measurement_calf': { valueId: 'calves-value', changeIconId: 'calves-change-icon', changeTextId: 'calves-change-text' },
         'measurement_arm': { valueId: 'arms-value', changeIconId: 'arms-change-icon', changeTextId: 'arms-change-text' },
-        // Calipers (Note: HTML uses armpit, belly, hip instead of abdomen, thigh, suprailiac)
+        // Calipers (HTML names: armpit = midaxillary, belly = abdomen, hip = suprailiac)
         'caliper_chest': { valueId: 'caliper-chest-value', changeIconId: 'caliper-chest-change-icon', changeTextId: 'caliper-chest-change-text' },
-        'caliper_abdomen': { valueId: 'caliper-armpit-value', changeIconId: 'caliper-armpit-change-icon', changeTextId: 'caliper-armpit-change-text' },
-        'caliper_thigh': { valueId: 'caliper-belly-value', changeIconId: 'caliper-belly-change-icon', changeTextId: 'caliper-belly-change-text' },
-        'caliper_tricep': { valueId: 'caliper-thigh-value', changeIconId: 'caliper-thigh-change-icon', changeTextId: 'caliper-thigh-change-text' },
+        'caliper_midaxillary': { valueId: 'caliper-armpit-value', changeIconId: 'caliper-armpit-change-icon', changeTextId: 'caliper-armpit-change-text' },
+        'caliper_abdomen': { valueId: 'caliper-belly-value', changeIconId: 'caliper-belly-change-icon', changeTextId: 'caliper-belly-change-text' },
+        'caliper_thigh': { valueId: 'caliper-thigh-value', changeIconId: 'caliper-thigh-change-icon', changeTextId: 'caliper-thigh-change-text' },
         'caliper_suprailiac': { valueId: 'caliper-hip-value', changeIconId: 'caliper-hip-change-icon', changeTextId: 'caliper-hip-change-text' }
     };
 
@@ -118,11 +118,11 @@ window.populateBodyDataHistoryTables = function() {
         'measurement_thigh': 'thighs-history-body',
         'measurement_calf': 'calves-history-body',
         'measurement_arm': 'arms-history-body',
-        // Calipers (Note: HTML uses armpit, belly, hip, thigh instead of abdomen, thigh, tricep, suprailiac)
+        // Calipers (HTML names: armpit = midaxillary, belly = abdomen, hip = suprailiac)
         'caliper_chest': 'caliper-chest-history-body',
-        'caliper_abdomen': 'caliper-armpit-history-body',
-        'caliper_thigh': 'caliper-belly-history-body',
-        'caliper_tricep': 'caliper-thigh-history-body',
+        'caliper_midaxillary': 'caliper-armpit-history-body',
+        'caliper_abdomen': 'caliper-belly-history-body',
+        'caliper_thigh': 'caliper-thigh-history-body',
         'caliper_suprailiac': 'caliper-hip-history-body'
     };
 
@@ -405,10 +405,10 @@ $(function() {
             'measurement_calf': 'Thickest part',
             'measurement_arm': 'Unflexed midpoint',
             'caliper_chest': 'Diagonal fold armpit-nipple',
-            'caliper_abdomen': 'Vertical fold below armpit',
-            'caliper_thigh': '2cm right of belly button',
+            'caliper_midaxillary': 'Vertical fold below armpit',
+            'caliper_abdomen': '2cm right of belly button',
             'caliper_suprailiac': 'Above hip bone',
-            'caliper_tricep': 'Vertical fold hip-knee'
+            'caliper_thigh': 'Vertical fold hip-knee'
         };
         return instructions[metricType] || '';
     }
@@ -538,11 +538,11 @@ $(function() {
                 unit = 'mm';
             } else if (targetTab === '#caliper-armpit-history') {
                 formNum = 3;
-                metricType = 'caliper_abdomen';
+                metricType = 'caliper_midaxillary';
                 unit = 'mm';
             } else if (targetTab === '#caliper-belly-history') {
                 formNum = 3;
-                metricType = 'caliper_thigh';
+                metricType = 'caliper_abdomen';
                 unit = 'mm';
             } else if (targetTab === '#caliper-hip-history') {
                 formNum = 3;
@@ -550,7 +550,7 @@ $(function() {
                 unit = 'mm';
             } else if (targetTab === '#caliper-thigh-history') {
                 formNum = 3;
-                metricType = 'caliper_tricep';
+                metricType = 'caliper_thigh';
                 unit = 'mm';
             }
 
@@ -661,10 +661,11 @@ $(function() {
 
     // Calipers
     $('#btn-save-caliper-chest').on('click', function() { saveBodyMetric('caliper_chest', '#caliper-chest', 'mm'); });
-    $('#btn-save-caliper-armpit').on('click', function() { saveBodyMetric('caliper_abdomen', '#caliper-armpit', 'mm'); });
-    $('#btn-save-caliper-belly').on('click', function() { saveBodyMetric('caliper_thigh', '#caliper-belly', 'mm'); });
-    $('#btn-save-caliper-thigh').on('click', function() { saveBodyMetric('caliper_tricep', '#caliper-thigh', 'mm'); });
-    $('#btn-save-caliper-hip').on('click', function() { saveBodyMetric('caliper_suprailiac', '#caliper-hip', 'mm'); });
+    // Input ids in body.php: armpit card = #caliper-axilla, belly card = #caliper-abdomen, hip card = #caliper-suprailiac
+    $('#btn-save-caliper-armpit').on('click', function() { saveBodyMetric('caliper_midaxillary', '#caliper-axilla', 'mm'); });
+    $('#btn-save-caliper-belly').on('click', function() { saveBodyMetric('caliper_abdomen', '#caliper-abdomen', 'mm'); });
+    $('#btn-save-caliper-thigh').on('click', function() { saveBodyMetric('caliper_thigh', '#caliper-thigh', 'mm'); });
+    $('#btn-save-caliper-hip').on('click', function() { saveBodyMetric('caliper_suprailiac', '#caliper-suprailiac', 'mm'); });
 
     // Collapsible card toggle for insights
     $(document).on('click', '.card-header-collapsible', function() {
@@ -1434,6 +1435,16 @@ function renderMeasurementInsights(insights) {
     debugLog('📏 Measurement Insights: Rendered successfully');
 }
 
+/**
+ * Jackson & Pollock (1978) generalized 3-site equation for men (sum of chest, abdomen and thigh skinfolds in mm),
+ * body density converted to % fat with the Siri (1961) equation.
+ */
+function jacksonPollock3SiteMenBodyFat(sumMm, age) {
+    const density = 1.10938 - 0.0008267 * sumMm + 0.0000016 * sumMm * sumMm - 0.0002574 * age;
+    return 495 / density - 450;
+}
+window.jacksonPollock3SiteMenBodyFat = jacksonPollock3SiteMenBodyFat;
+
 // Function to generate insights from caliper measurements
 window.generateCaliperInsights = function() {
     debugLog('📐 Caliper Insights: Function called');
@@ -1460,26 +1471,26 @@ window.generateCaliperInsights = function() {
     const chest = history.caliper_chest || [];
     const abdomen = history.caliper_abdomen || [];
     const thigh = history.caliper_thigh || [];
-    const tricep = history.caliper_tricep || [];
+    const midaxillary = history.caliper_midaxillary || [];
     const suprailiac = history.caliper_suprailiac || [];
 
     // Check for trends (need at least 2 data points)
     const hasChestTrend = chest.length >= 2;
     const hasAbdomenTrend = abdomen.length >= 2;
     const hasThighTrend = thigh.length >= 2;
-    const hasTricepTrend = tricep.length >= 2;
+    const hasMidaxillaryTrend = midaxillary.length >= 2;
     const hasSuprailiacTrend = suprailiac.length >= 2;
 
     debugLog('📐 Caliper Insights: Trend checks', {
         hasChestTrend,
         hasAbdomenTrend,
         hasThighTrend,
-        hasTricepTrend,
+        hasMidaxillaryTrend,
         hasSuprailiacTrend
     });
 
     // Calculate trends (comparing current to worst/highest ever recorded)
-    let chestChange = null, abdomenChange = null, thighChange = null, tricepChange = null, suprailiacChange = null;
+    let chestChange = null, abdomenChange = null, thighChange = null, midaxillaryChange = null, suprailiacChange = null;
 
     if (hasChestTrend) {
         const current = parseFloat(chest[0].value);
@@ -1502,11 +1513,11 @@ window.generateCaliperInsights = function() {
         debugLog('📐 Caliper Insights: Thigh change', { current, worst, thighChange });
     }
 
-    if (hasTricepTrend) {
-        const current = parseFloat(tricep[0].value);
-        const worst = Math.max(...tricep.map(t => parseFloat(t.value)));
-        tricepChange = current - worst;
-        debugLog('📐 Caliper Insights: Tricep change', { current, worst, tricepChange });
+    if (hasMidaxillaryTrend) {
+        const current = parseFloat(midaxillary[0].value);
+        const worst = Math.max(...midaxillary.map(t => parseFloat(t.value)));
+        midaxillaryChange = current - worst;
+        debugLog('📐 Caliper Insights: Midaxillary change', { current, worst, midaxillaryChange });
     }
 
     if (hasSuprailiacTrend) {
@@ -1516,26 +1527,26 @@ window.generateCaliperInsights = function() {
         debugLog('📐 Caliper Insights: Suprailiac change', { current, worst, suprailiacChange });
     }
 
-    // Calculate total 5-site sum if we have all measurements
-    if (chest.length > 0 && abdomen.length > 0 && thigh.length > 0 && tricep.length > 0 && suprailiac.length > 0) {
-        const currentSum = parseFloat(chest[0].value) + parseFloat(abdomen[0].value) + parseFloat(thigh[0].value) + parseFloat(tricep[0].value) + parseFloat(suprailiac[0].value);
-
-        // Calculate body density and fat % using Jackson-Pollock 5-site formula
+    // Skinfold body fat estimate. The app records chest, armpit (midaxillary), belly (abdomen), hip (suprailiac)
+    // and thigh. Published equation used: Jackson & Pollock (1978) 3-site equation for MEN (chest + abdomen + thigh),
+    // converted to % fat with Siri (1961). The women's 3-site equation (Jackson, Pollock & Ward 1980) needs a triceps
+    // skinfold, which the app does not record, so women get the skinfold sum only.
+    if (chest.length > 0 && abdomen.length > 0 && thigh.length > 0) {
+        const sum3 = parseFloat(chest[0].value) + parseFloat(abdomen[0].value) + parseFloat(thigh[0].value);
+        let description = t("Chest + abdomen + thigh skinfolds: {sum} mm.").replace('{sum}', sum3.toFixed(1));
         if (profile && profile.age) {
-            const age = parseFloat(profile.age);
-            const sumSquared = currentSum * currentSum;
-            const density = 1.0982 - (0.000815 * currentSum) + (0.00000084 * sumSquared) - (0.0000320 * age);
-            const bodyFatPercent = (495 / density) - 450;
-
-            insights.push({
-                title: t("5-Site Body Fat Calculation"),
-                description: t("Total skinfold:") + ` ${currentSum.toFixed(1)}` + t("mm → Estimated body fat:") + ` ${bodyFatPercent.toFixed(1)}` + t("% using Jackson-Pollock formula. This provides an independent validation of your smart scale readings.")
-            });
+            const bodyFatPercent = jacksonPollock3SiteMenBodyFat(sum3, parseFloat(profile.age));
+            description += ' ' + t("If you are a man, the Jackson-Pollock 3-site equation for men gives about {bf}% body fat.").replace('{bf}', bodyFatPercent.toFixed(1));
         }
+        description += ' ' + t("The equation for women needs a triceps skinfold, which this app does not record. This is a general estimate, not a measurement.");
+        insights.push({
+            title: t("Skinfold body fat estimate"),
+            description: description
+        });
     }
 
     // Insight 1: Overall skinfold changes (both gain and loss)
-    const allChanges = [chestChange, abdomenChange, thighChange, tricepChange, suprailiacChange].filter(c => c !== null);
+    const allChanges = [chestChange, abdomenChange, thighChange, midaxillaryChange, suprailiacChange].filter(c => c !== null);
     if (allChanges.length >= 3) {
         const avgChange = allChanges.reduce((sum, change) => sum + change, 0) / allChanges.length;
         const avgAbsChange = allChanges.reduce((sum, change) => sum + Math.abs(change), 0) / allChanges.length;
