@@ -6,6 +6,14 @@ DROP SCHEMA IF EXISTS wt_test CASCADE;
 CREATE SCHEMA wt_test;
 
 -- Create users table for wt_test
+-- One-off data fixes already reflected in this seed (see app/backend/Migrations.php)
+CREATE TABLE wt_test.app_migrations (
+    name VARCHAR(100) PRIMARY KEY,
+    applied_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    details TEXT
+);
+INSERT INTO wt_test.app_migrations (name, details) VALUES ('2026-11-04-caliper-metric-names', 'seeded with the right caliper names');
+
 CREATE TABLE wt_test.users (
     id SERIAL PRIMARY KEY,
     email VARCHAR(100) UNIQUE NOT NULL,
@@ -284,9 +292,9 @@ INSERT INTO wt_test.body_data_entries (user_id, metric_type, value, unit, entry_
     (1, 'measurement_calf', 42.0, 'cm', '2024-01-01'),
     (1, 'measurement_arm', 34.0, 'cm', '2024-01-01'),
     (1, 'caliper_chest', 22.0, 'mm', '2024-01-01'),
-    (1, 'caliper_abdomen', 28.0, 'mm', '2024-01-01'),
-    (1, 'caliper_thigh', 24.0, 'mm', '2024-01-01'),
-    (1, 'caliper_tricep', 18.0, 'mm', '2024-01-01'),
+    (1, 'caliper_midaxillary', 28.0, 'mm', '2024-01-01'),
+    (1, 'caliper_abdomen', 24.0, 'mm', '2024-01-01'),
+    (1, 'caliper_thigh', 18.0, 'mm', '2024-01-01'),
     (1, 'caliper_suprailiac', 25.0, 'mm', '2024-01-01'),
 
     -- Week 2 - Early progress
@@ -302,9 +310,9 @@ INSERT INTO wt_test.body_data_entries (user_id, metric_type, value, unit, entry_
     (1, 'measurement_calf', 41.5, 'cm', '2024-01-08'),
     (1, 'measurement_arm', 33.5, 'cm', '2024-01-08'),
     (1, 'caliper_chest', 21.5, 'mm', '2024-01-08'),
-    (1, 'caliper_abdomen', 27.0, 'mm', '2024-01-08'),
-    (1, 'caliper_thigh', 23.5, 'mm', '2024-01-08'),
-    (1, 'caliper_tricep', 17.5, 'mm', '2024-01-08'),
+    (1, 'caliper_midaxillary', 27.0, 'mm', '2024-01-08'),
+    (1, 'caliper_abdomen', 23.5, 'mm', '2024-01-08'),
+    (1, 'caliper_thigh', 17.5, 'mm', '2024-01-08'),
     (1, 'caliper_suprailiac', 24.5, 'mm', '2024-01-08'),
 
     -- Week 3
@@ -320,9 +328,9 @@ INSERT INTO wt_test.body_data_entries (user_id, metric_type, value, unit, entry_
     (1, 'measurement_calf', 41.0, 'cm', '2024-01-15'),
     (1, 'measurement_arm', 33.2, 'cm', '2024-01-15'),
     (1, 'caliper_chest', 21.0, 'mm', '2024-01-15'),
-    (1, 'caliper_abdomen', 26.5, 'mm', '2024-01-15'),
-    (1, 'caliper_thigh', 23.0, 'mm', '2024-01-15'),
-    (1, 'caliper_tricep', 17.0, 'mm', '2024-01-15'),
+    (1, 'caliper_midaxillary', 26.5, 'mm', '2024-01-15'),
+    (1, 'caliper_abdomen', 23.0, 'mm', '2024-01-15'),
+    (1, 'caliper_thigh', 17.0, 'mm', '2024-01-15'),
     (1, 'caliper_suprailiac', 24.0, 'mm', '2024-01-15'),
 
     -- Month 2 - February
@@ -338,9 +346,9 @@ INSERT INTO wt_test.body_data_entries (user_id, metric_type, value, unit, entry_
     (1, 'measurement_calf', 40.5, 'cm', '2024-02-15'),
     (1, 'measurement_arm', 33.0, 'cm', '2024-02-15'),
     (1, 'caliper_chest', 20.5, 'mm', '2024-02-15'),
-    (1, 'caliper_abdomen', 25.5, 'mm', '2024-02-15'),
-    (1, 'caliper_thigh', 22.5, 'mm', '2024-02-15'),
-    (1, 'caliper_tricep', 16.5, 'mm', '2024-02-15'),
+    (1, 'caliper_midaxillary', 25.5, 'mm', '2024-02-15'),
+    (1, 'caliper_abdomen', 22.5, 'mm', '2024-02-15'),
+    (1, 'caliper_thigh', 16.5, 'mm', '2024-02-15'),
     (1, 'caliper_suprailiac', 23.5, 'mm', '2024-02-15'),
 
     -- Month 3 - March (current/best scores)
@@ -356,9 +364,9 @@ INSERT INTO wt_test.body_data_entries (user_id, metric_type, value, unit, entry_
     (1, 'measurement_calf', 40.0, 'cm', '2024-03-15'),
     (1, 'measurement_arm', 32.8, 'cm', '2024-03-15'),
     (1, 'caliper_chest', 20.0, 'mm', '2024-03-15'),
-    (1, 'caliper_abdomen', 25.0, 'mm', '2024-03-15'),
-    (1, 'caliper_thigh', 22.0, 'mm', '2024-03-15'),
-    (1, 'caliper_tricep', 16.0, 'mm', '2024-03-15'),
+    (1, 'caliper_midaxillary', 25.0, 'mm', '2024-03-15'),
+    (1, 'caliper_abdomen', 22.0, 'mm', '2024-03-15'),
+    (1, 'caliper_thigh', 16.0, 'mm', '2024-03-15'),
     (1, 'caliper_suprailiac', 23.0, 'mm', '2024-03-15'),
 
     -- User 2 (Robert Marsh) - Recent data
@@ -382,8 +390,8 @@ INSERT INTO wt_test.body_data_entries (user_id, metric_type, value, unit, entry_
     (3, 'fat_percent', 33.5, '%', '2024-01-15'),
     (3, 'water_percent', 50.0, '%', '2024-01-01'),
     (3, 'water_percent', 51.0, '%', '2024-01-15'),
-    (3, 'caliper_abdomen', 30.0, 'mm', '2024-01-01'),
-    (3, 'caliper_abdomen', 27.5, 'mm', '2024-01-15'),
+    (3, 'caliper_midaxillary', 30.0, 'mm', '2024-01-01'),
+    (3, 'caliper_midaxillary', 27.5, 'mm', '2024-01-15'),
 
     -- User 4 (David) - Bulk phase showing muscle gain
     (4, 'muscle_mass', 48.0, '%', '2024-01-01'),

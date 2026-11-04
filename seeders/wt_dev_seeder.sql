@@ -6,6 +6,14 @@ DROP SCHEMA IF EXISTS wt_dev CASCADE;
 CREATE SCHEMA wt_dev;
 
 -- Create users table for wt_dev
+-- One-off data fixes already reflected in this seed (see app/backend/Migrations.php)
+CREATE TABLE wt_dev.app_migrations (
+    name VARCHAR(100) PRIMARY KEY,
+    applied_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    details TEXT
+);
+INSERT INTO wt_dev.app_migrations (name, details) VALUES ('2026-11-04-caliper-metric-names', 'seeded with the right caliper names');
+
 CREATE TABLE wt_dev.users (
     id SERIAL PRIMARY KEY,
     email VARCHAR(100) UNIQUE NOT NULL,
@@ -64,7 +72,7 @@ CREATE INDEX idx_body_fat_user_date ON wt_dev.body_fat_entries(user_id, entry_da
 CREATE TABLE wt_dev.body_data_entries (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES wt_dev.users(id) ON DELETE CASCADE,
-    metric_type VARCHAR(50) NOT NULL, -- muscle_mass, fat_percent, water_percent, bone_mass, measurement_neck, measurement_chest, measurement_waist, measurement_hips, measurement_thigh, measurement_calf, measurement_arm, caliper_chest, caliper_abdomen, caliper_thigh, caliper_tricep, caliper_suprailiac
+    metric_type VARCHAR(50) NOT NULL, -- muscle_mass, fat_percent, water_percent, bone_mass, measurement_neck, measurement_chest, measurement_waist, measurement_hips, measurement_thigh, measurement_calf, measurement_arm, caliper_chest, caliper_midaxillary (armpit), caliper_abdomen (belly), caliper_suprailiac (hip), caliper_thigh
     value DECIMAL(6,2) NOT NULL CHECK (value >= 0),
     unit VARCHAR(10) NOT NULL, -- %, cm, kg, mm, etc.
     entry_date DATE NOT NULL DEFAULT CURRENT_DATE,
@@ -175,9 +183,9 @@ INSERT INTO wt_dev.body_data_entries (user_id, metric_type, value, unit, entry_d
     (1, 'measurement_calf', 41.5, 'cm', '2025-06-15'),
     (1, 'measurement_arm', 37.0, 'cm', '2025-06-15'),
     (1, 'caliper_chest', 21.0, 'mm', '2025-06-15'),
-    (1, 'caliper_abdomen', 25.5, 'mm', '2025-06-15'),
-    (1, 'caliper_thigh', 23.5, 'mm', '2025-06-15'),
-    (1, 'caliper_tricep', 17.5, 'mm', '2025-06-15'),
+    (1, 'caliper_midaxillary', 25.5, 'mm', '2025-06-15'),
+    (1, 'caliper_abdomen', 23.5, 'mm', '2025-06-15'),
+    (1, 'caliper_thigh', 17.5, 'mm', '2025-06-15'),
     (1, 'caliper_suprailiac', 22.0, 'mm', '2025-06-15'),
 
     -- July 2025 - Early progress
@@ -193,9 +201,9 @@ INSERT INTO wt_dev.body_data_entries (user_id, metric_type, value, unit, entry_d
     (1, 'measurement_calf', 41.0, 'cm', '2025-07-15'),
     (1, 'measurement_arm', 36.5, 'cm', '2025-07-15'),
     (1, 'caliper_chest', 20.2, 'mm', '2025-07-15'),
-    (1, 'caliper_abdomen', 24.5, 'mm', '2025-07-15'),
-    (1, 'caliper_thigh', 22.8, 'mm', '2025-07-15'),
-    (1, 'caliper_tricep', 16.8, 'mm', '2025-07-15'),
+    (1, 'caliper_midaxillary', 24.5, 'mm', '2025-07-15'),
+    (1, 'caliper_abdomen', 22.8, 'mm', '2025-07-15'),
+    (1, 'caliper_thigh', 16.8, 'mm', '2025-07-15'),
     (1, 'caliper_suprailiac', 21.2, 'mm', '2025-07-15'),
 
     -- August 2025 - Continued improvement
@@ -211,9 +219,9 @@ INSERT INTO wt_dev.body_data_entries (user_id, metric_type, value, unit, entry_d
     (1, 'measurement_calf', 40.5, 'cm', '2025-08-15'),
     (1, 'measurement_arm', 36.0, 'cm', '2025-08-15'),
     (1, 'caliper_chest', 19.5, 'mm', '2025-08-15'),
-    (1, 'caliper_abdomen', 23.5, 'mm', '2025-08-15'),
-    (1, 'caliper_thigh', 22.0, 'mm', '2025-08-15'),
-    (1, 'caliper_tricep', 16.2, 'mm', '2025-08-15'),
+    (1, 'caliper_midaxillary', 23.5, 'mm', '2025-08-15'),
+    (1, 'caliper_abdomen', 22.0, 'mm', '2025-08-15'),
+    (1, 'caliper_thigh', 16.2, 'mm', '2025-08-15'),
     (1, 'caliper_suprailiac', 20.5, 'mm', '2025-08-15'),
 
     -- September 2025 - More progress
@@ -229,9 +237,9 @@ INSERT INTO wt_dev.body_data_entries (user_id, metric_type, value, unit, entry_d
     (1, 'measurement_calf', 40.2, 'cm', '2025-09-15'),
     (1, 'measurement_arm', 35.8, 'cm', '2025-09-15'),
     (1, 'caliper_chest', 19.0, 'mm', '2025-09-15'),
-    (1, 'caliper_abdomen', 22.8, 'mm', '2025-09-15'),
-    (1, 'caliper_thigh', 21.2, 'mm', '2025-09-15'),
-    (1, 'caliper_tricep', 15.5, 'mm', '2025-09-15'),
+    (1, 'caliper_midaxillary', 22.8, 'mm', '2025-09-15'),
+    (1, 'caliper_abdomen', 21.2, 'mm', '2025-09-15'),
+    (1, 'caliper_thigh', 15.5, 'mm', '2025-09-15'),
     (1, 'caliper_suprailiac', 20.0, 'mm', '2025-09-15'),
 
     -- Week 1 October
@@ -247,9 +255,9 @@ INSERT INTO wt_dev.body_data_entries (user_id, metric_type, value, unit, entry_d
     (1, 'measurement_calf', 40.0, 'cm', '2025-10-01'),
     (1, 'measurement_arm', 35.5, 'cm', '2025-10-01'),
     (1, 'caliper_chest', 18.5, 'mm', '2025-10-01'),
-    (1, 'caliper_abdomen', 22.0, 'mm', '2025-10-01'),
-    (1, 'caliper_thigh', 20.5, 'mm', '2025-10-01'),
-    (1, 'caliper_tricep', 15.0, 'mm', '2025-10-01'),
+    (1, 'caliper_midaxillary', 22.0, 'mm', '2025-10-01'),
+    (1, 'caliper_abdomen', 20.5, 'mm', '2025-10-01'),
+    (1, 'caliper_thigh', 15.0, 'mm', '2025-10-01'),
     (1, 'caliper_suprailiac', 19.5, 'mm', '2025-10-01'),
 
     -- Week 2 October (current/best scores)
@@ -265,9 +273,9 @@ INSERT INTO wt_dev.body_data_entries (user_id, metric_type, value, unit, entry_d
     (1, 'measurement_calf', 39.8, 'cm', '2025-10-05'),
     (1, 'measurement_arm', 35.3, 'cm', '2025-10-05'),
     (1, 'caliper_chest', 18.0, 'mm', '2025-10-05'),
-    (1, 'caliper_abdomen', 21.5, 'mm', '2025-10-05'),
-    (1, 'caliper_thigh', 20.0, 'mm', '2025-10-05'),
-    (1, 'caliper_tricep', 14.5, 'mm', '2025-10-05'),
+    (1, 'caliper_midaxillary', 21.5, 'mm', '2025-10-05'),
+    (1, 'caliper_abdomen', 20.0, 'mm', '2025-10-05'),
+    (1, 'caliper_thigh', 14.5, 'mm', '2025-10-05'),
     (1, 'caliper_suprailiac', 19.0, 'mm', '2025-10-05');
 
 -- Grant permissions (adjust as needed for your setup)

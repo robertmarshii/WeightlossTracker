@@ -222,15 +222,17 @@ describe('Body Insights - Comprehensive Tests', () => {
             cy.get('#caliper-insights-content').should('be.visible');
         });
 
-        it('should calculate 5-site body fat percentage with Jackson-Pollock formula', () => {
+        it('should estimate body fat from chest, belly and thigh with the Jackson-Pollock 3-site equation', () => {
+            // Metric names as saved since Nov 2026: caliper_midaxillary = armpit card, caliper_abdomen = belly,
+            // caliper_suprailiac = hip, caliper_thigh = thigh. There is no triceps site.
             cy.window().then((win) => {
                 win.globalDashboardData = {
                     body_data_history: {
                         caliper_chest: [{ value: '18.0', entry_date: '2024-03-15' }],
+                        caliper_midaxillary: [{ value: '15.0', entry_date: '2024-03-15' }],
                         caliper_abdomen: [{ value: '22.0', entry_date: '2024-03-15' }],
-                        caliper_thigh: [{ value: '20.0', entry_date: '2024-03-15' }],
-                        caliper_tricep: [{ value: '15.0', entry_date: '2024-03-15' }],
-                        caliper_suprailiac: [{ value: '19.0', entry_date: '2024-03-15' }]
+                        caliper_suprailiac: [{ value: '19.0', entry_date: '2024-03-15' }],
+                        caliper_thigh: [{ value: '20.0', entry_date: '2024-03-15' }]
                     },
                     profile: { age: 40 }
                 };
@@ -241,9 +243,11 @@ describe('Body Insights - Comprehensive Tests', () => {
             cy.wait(500);
             cy.get('#caliper-insights-card .card-header-collapsible').click();
 
-            // Should show 5-site calculation
-            cy.get('#caliper-insights-content').should('contain', '5-Site Body Fat');
-            cy.get('#caliper-insights-content').should('contain', '94.0mm'); // 18+22+20+15+19
+            // 3-site sum (chest + abdomen + thigh) and the men's equation; armpit and hip are not in it
+            cy.get('#caliper-insights-content').should('contain', 'Skinfold body fat estimate');
+            cy.get('#caliper-insights-content').should('contain', '60.0 mm'); // 18 + 22 + 20
+            cy.get('#caliper-insights-content').should('contain', 'Jackson-Pollock 3-site equation for men');
+            cy.get('#caliper-insights-content').should('not.contain', '5-Site');
         });
 
         it('should handle significant fat loss across all sites', () => {
@@ -272,7 +276,7 @@ describe('Body Insights - Comprehensive Tests', () => {
             cy.get('#caliper-insights-content').should('contain', 'Fat Loss');
         });
 
-        it('should detect excellent visceral fat reduction (abdomen)', () => {
+        it('should detect excellent visceral fat reduction (belly site, caliper_abdomen)', () => {
             cy.window().then((win) => {
                 win.globalDashboardData = {
                     body_data_history: {

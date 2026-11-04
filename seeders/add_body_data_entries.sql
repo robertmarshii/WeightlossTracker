@@ -5,7 +5,7 @@
 CREATE TABLE IF NOT EXISTS wt_dev.body_data_entries (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES wt_dev.users(id) ON DELETE CASCADE,
-    metric_type VARCHAR(50) NOT NULL, -- muscle_mass, fat_percent, water_percent, bone_mass, measurement_neck, measurement_chest, measurement_waist, measurement_hips, measurement_thigh, measurement_calf, measurement_arm, caliper_chest, caliper_abdomen, caliper_thigh, caliper_tricep, caliper_suprailiac
+    metric_type VARCHAR(50) NOT NULL, -- muscle_mass, fat_percent, water_percent, bone_mass, measurement_neck, measurement_chest, measurement_waist, measurement_hips, measurement_thigh, measurement_calf, measurement_arm, caliper_chest, caliper_midaxillary (armpit), caliper_abdomen (belly), caliper_suprailiac (hip), caliper_thigh
     value DECIMAL(6,2) NOT NULL CHECK (value >= 0), -- The actual measurement value
     unit VARCHAR(10) NOT NULL, -- %, cm, kg, mm, etc.
     entry_date DATE NOT NULL DEFAULT CURRENT_DATE,
