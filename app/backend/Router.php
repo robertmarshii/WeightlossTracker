@@ -6,6 +6,8 @@
     // Plausible weights for an adult, in kg (js/dashboard.js checks the same limits)
     const WEIGHT_MIN_KG = 20;
     const WEIGHT_MAX_KG = 500;
+    // A goal's target date may be up to this many years ahead (js/dashboard.js checks the same)
+    const GOAL_DATE_MAX_YEARS = 10;
 
     if(isset($_GET["controller"])) {
         $controller = htmlspecialchars($_GET["controller"]);
@@ -201,21 +203,35 @@
             }
 
             if ($action === 'save_goal') {
-                if (!isset($_POST['target_weight_kg'])) { echo json_encode(['success'=>false,'message'=>'target_weight_kg required']); return; }
-                $tw = (float)$_POST['target_weight_kg'];
+                // Target weight: a number within the same 20-500 kg limits as a weight entry
+                $rawTw = $_POST['target_weight_kg'] ?? null;
+                $tw = (is_string($rawTw) && is_numeric(trim($rawTw))) ? (float)trim($rawTw) : null;
+                if ($tw === null || !is_finite($tw) || $tw < WEIGHT_MIN_KG || $tw > WEIGHT_MAX_KG) {
+                    echo json_encode(['success' => false, 'code' => 'weight_out_of_range', 'message' => 'Weight must be between ' . WEIGHT_MIN_KG . ' and ' . WEIGHT_MAX_KG . ' kg']);
+                    return;
+                }
                 // No date: the dashboard sends "null" (or nothing, or ""); any other value must be a real date
+                // from today up to GOAL_DATE_MAX_YEARS ahead (see goalDateError)
                 $td = isset($_POST['target_date']) && is_string($_POST['target_date']) ? trim($_POST['target_date']) : '';
                 if ($td === '' || $td === 'null') {
                     $td = null;
-                } elseif (!isValidEntryDate($td)) {
-                    echo json_encode(['success' => false, 'code' => 'invalid_date', 'message' => 'Invalid date']);
+                } elseif ($err = goalDateError($td)) {
+                    echo json_encode(['success' => false] + $err);
                     return;
                 }
-                // Deactivate existing active goals
-                $db->prepare("UPDATE {$schema}.goals SET is_active = false WHERE user_id = ? AND is_active = true")->execute([$userId]);
-                // Insert new active goal
-                $stmt = $db->prepare("INSERT INTO {$schema}.goals (user_id, target_weight_kg, target_date, is_active, created_at) VALUES (?, ?, ?, true, NOW())");
-                $stmt->execute([$userId, $tw, $td]);
+                // Replace the active goal in one transaction: if the insert fails, the current goal stays active
+                $db->beginTransaction();
+                try {
+                    $db->prepare("UPDATE {$schema}.goals SET is_active = false WHERE user_id = ? AND is_active = true")->execute([$userId]);
+                    $stmt = $db->prepare("INSERT INTO {$schema}.goals (user_id, target_weight_kg, target_date, is_active, created_at) VALUES (?, ?, ?, true, NOW())");
+                    $stmt->execute([$userId, $tw, $td]);
+                    $db->commit();
+                } catch (Throwable $e) {
+                    if ($db->inTransaction()) {
+                        $db->rollBack();
+                    }
+                    throw $e;
+                }
                 echo json_encode(['success' => true, 'message' => 'Goal saved']);
                 return;
             }
@@ -1149,6 +1165,27 @@
         if (!is_string($date) || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
             return false;
         }
+    /**
+     * Why a goal's target date cannot be saved, or null if it can: a real date in YYYY-MM-DD form, no earlier
+     * than today anywhere on Earth (today in UTC-12, the zone furthest behind, so a user's own "today" is always
+     * allowed) and no later than GOAL_DATE_MAX_YEARS from today in UTC+14.
+     */
+    function goalDateError($date) {
+        if (!is_string($date) || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
+            return ['code' => 'invalid_date', 'message' => 'Invalid date'];
+        }
+        $d = DateTime::createFromFormat('!Y-m-d', $date);
+        if (!$d || $d->format('Y-m-d') !== $date) {
+            return ['code' => 'invalid_date', 'message' => 'Invalid date'];
+        }
+        $earliest = (new DateTime('now', new DateTimeZone('-12:00')))->format('Y-m-d');
+        $latest = (new DateTime('now', new DateTimeZone('+14:00')))->modify('+' . GOAL_DATE_MAX_YEARS . ' years')->format('Y-m-d');
+        if ($date < $earliest || $date > $latest) {
+            return ['code' => 'goal_date_out_of_range', 'message' => 'The goal date must be between today and ' . GOAL_DATE_MAX_YEARS . ' years from now'];
+        }
+        return null;
+    }
+
         $d = DateTime::createFromFormat('!Y-m-d', $date);
         if (!$d || $d->format('Y-m-d') !== $date) {
             return false;

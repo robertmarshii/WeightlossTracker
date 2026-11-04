@@ -30,6 +30,34 @@ function weightSaveError(data) {
     return '';
 }
 
+// A goal's target date may be up to this many years ahead (the server checks the same: Router.php goalDateError)
+const GOAL_DATE_MAX_YEARS = 10;
+
+function goalDateInvalidMessage() {
+    return tf('Please enter a valid date in the format {format}.', { format: getDatePlaceholder() });
+}
+
+function goalDateOutOfRangeMessage() {
+    return tf('The goal date must be between today and {years} years from now.', { years: GOAL_DATE_MAX_YEARS });
+}
+
+// A message if a goal date (YYYY-MM-DD) is before the user's today or more than GOAL_DATE_MAX_YEARS ahead, else ''
+function goalDateRangeError(dateISO) {
+    const today = new Date();
+    const latest = new Date(today.getFullYear() + GOAL_DATE_MAX_YEARS, today.getMonth(), today.getDate());
+    if (dateISO < localISODate(today) || dateISO > localISODate(latest)) return goalDateOutOfRangeMessage();
+    return '';
+}
+
+// The server's reason for refusing a goal, in the user's language and unit ('' if none given)
+function goalSaveError(data) {
+    if (!data) return '';
+    if (data.code === 'weight_out_of_range') return weightOutOfRangeMessage();
+    if (data.code === 'invalid_date') return goalDateInvalidMessage();
+    if (data.code === 'goal_date_out_of_range') return goalDateOutOfRangeMessage();
+    return '';
+}
+
 // Helper function for standardized fetch requests
 function postRequest(url, data) {
     const params = new URLSearchParams();
@@ -334,19 +362,25 @@ $(function() {
         if (!goalInput) { return; }
             if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
 
-        // Convert user input to kg for storage
+        // Convert user input to kg for storage; the same 20-500 kg limits as the server
         const weightKg = convertToKg(goalInput);
-        if (isNaN(weightKg) || weightKg <= 0) {
-            showAlert('Please enter a valid goal weight', 'warning');
+        const weightErr = weightRangeError(weightKg);
+        if (weightErr) {
+            showAlert(weightErr, 'warning');
             return;
         }
 
-        // Parse goal date if provided
+        // Parse goal date if provided: a real date from today up to GOAL_DATE_MAX_YEARS ahead
         let dateISO = null;
         if (dateStr) {
             dateISO = parseUserDate(dateStr);
             if (!dateISO) {
-                showAlert('Please enter a valid date in format: ' + getDatePlaceholder(), 'warning');
+                showAlert(goalDateInvalidMessage(), 'warning');
+                return;
+            }
+            const goalDateErr = goalDateRangeError(dateISO);
+            if (goalDateErr) {
+                showAlert(goalDateErr, 'warning');
                 return;
             }
         }
@@ -356,14 +390,14 @@ $(function() {
             const data = parseJson(resp);
             if (data.success) {
                 if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
-                showToast('Goal saved');
+                showToast(t('Goal saved'));
                 // The goal card reads the cached dashboard data: reload it so the new goal shows
                 reloadGlobalDashboardData(function() {
                     refreshGoal();
                     refreshPersonalHealthBenefits();
                 });
             } else {
-                showAlert('Failed to save goal', 'warning');
+                showAlert(goalSaveError(data) || t('Failed to save goal'), 'warning');
             }
         })
         .catch(() => {

@@ -932,6 +932,48 @@ const translations = {
         "es": "p. ej., {example}",
         "fr": "ex. : {example}",
         "de": "z. B. {example}"
+    },
+    "Type e.g. 13 st 5 lb": {
+        "en": "Type e.g. 13 st 5 lb",
+        "es": "Escribe, p. ej., 13 st 5 lb",
+        "fr": "Saisissez par exemple 13 st 5 lb",
+        "de": "Geben Sie z. B. 13 st 5 lb ein"
+    },
+    "Please enter a valid date in the format {format}.": {
+        "en": "Please enter a valid date in the format {format}.",
+        "es": "Introduce una fecha válida con el formato {format}.",
+        "fr": "Saisissez une date valide au format {format}.",
+        "de": "Bitte geben Sie ein gültiges Datum im Format {format} ein."
+    },
+    "The goal date must be between today and {years} years from now.": {
+        "en": "The goal date must be between today and {years} years from now.",
+        "es": "La fecha objetivo debe ser como muy pronto hoy y como muy tarde dentro de {years} años.",
+        "fr": "La date cible doit être au plus tôt aujourd'hui et au plus tard dans {years} ans.",
+        "de": "Das Zieldatum darf frühestens heute und spätestens in {years} Jahren liegen."
+    },
+    "Goal saved": {
+        "en": "Goal saved",
+        "es": "Meta guardada",
+        "fr": "Objectif enregistré",
+        "de": "Ziel gespeichert"
+    },
+    "Failed to save goal": {
+        "en": "Failed to save goal",
+        "es": "No se pudo guardar la meta",
+        "fr": "Impossible d'enregistrer l'objectif",
+        "de": "Ziel konnte nicht gespeichert werden"
+    },
+    "Source {n}": {
+        "en": "Source {n}",
+        "es": "Fuente {n}",
+        "fr": "Source {n}",
+        "de": "Quelle {n}"
+    },
+    "Source {n}, opens the Health tab": {
+        "en": "Source {n}, opens the Health tab",
+        "es": "Fuente {n}; abre la pestaña Salud",
+        "fr": "Source {n}, ouvre l'onglet Santé",
+        "de": "Quelle {n}, öffnet den Tab „Gesundheit“"
     }
 };
 
