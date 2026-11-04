@@ -1161,18 +1161,23 @@ window.generateBodyInsights = function() {
             }
             const avgFatChange = fatChanges.reduce((a, b) => a + b, 0) / fatChanges.length;
 
-            // Arithmetic only, worded as an "if". The only target is a reference value shown above (the top of the
-            // men's range for the user's age), not a goal; the app does not know the user's sex.
+            // Arithmetic only, worded as an "if". The only targets are the reference values shown above. The app
+            // does not know the user's sex, so it names the top of both the women's and the men's range (the
+            // men's is lower), never just one of them.
             if (avgFatChange < 0 && fatBand && currentFat > fatBand.men[1]) {
-                const targetFat = fatBand.men[1];
-                const entriesToTarget = Math.ceil((currentFat - targetFat) / Math.abs(avgFatChange));
-                if (entriesToTarget > 0 && entriesToTarget < 52) {
-                    insights.push({
-                        title: t("Body Fat Trend"),
-                        description: bt("If your body fat reading kept falling by {r} percentage points per entry, it would reach {target}% in about {n} more entries. {target}% is the top of the men's reference range above. This is simple arithmetic, not a prediction.", {
-                            r: bnum(Math.abs(avgFatChange)), target: targetFat, n: entriesToTarget
-                        })
-                    });
+                const rate = Math.abs(avgFatChange);
+                const entriesTo = top => Math.ceil((currentFat - top) / rate);
+                const nMen = entriesTo(fatBand.men[1]);
+                if (nMen > 0 && nMen < 52) {
+                    const values = { r: bnum(rate), w2: fatBand.women[1], m2: fatBand.men[1], nm: nMen };
+                    let text;
+                    if (currentFat > fatBand.women[1]) {
+                        values.nw = entriesTo(fatBand.women[1]);
+                        text = bt("If your body fat reading kept falling by {r} percentage points per entry, it would reach {w2}%, the top of the women's reference range above, in about {nw} more entries, and {m2}%, the top of the men's range, in about {nm}. This is simple arithmetic, not a prediction.", values);
+                    } else {
+                        text = bt("If your body fat reading kept falling by {r} percentage points per entry, it would reach {m2}%, the top of the men's reference range above, in about {nm} more entries. It is already at or below {w2}%, the top of the women's range. This is simple arithmetic, not a prediction.", values);
+                    }
+                    insights.push({ title: t("Body Fat Trend"), description: text });
                 }
             }
         }
