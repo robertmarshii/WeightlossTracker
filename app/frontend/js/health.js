@@ -70,14 +70,27 @@ function bmiCategoryLabel(bmi) {
 }
 
 // The [n] links scroll to the source without touching the #page=... hash the dashboard uses for navigation
+// A link from another tab (e.g. the skinfold estimate on Body) opens the Health tab first.
 $(document).on('click', '.src-ref', function (e) {
     e.preventDefault();
     const target = document.getElementById(($(this).attr('href') || '').slice(1));
-    if (target) {
+    if (!target) return;
+    const show = () => {
         target.scrollIntoView({ behavior: 'smooth', block: 'center' });
         target.classList.add('src-highlight');
         setTimeout(() => target.classList.remove('src-highlight'), 2000);
+    };
+    if (!target.closest('.tab-pane.active')) {
+        const pane = target.closest('.tab-pane');
+        const link = pane && $(`.nav-tabs .nav-link[href="#${pane.id}"]`);
+        if (link && link.length) {
+            window.location.hash = 'page=' + pane.id;
+            link.tab('show');
+            setTimeout(show, 350);
+            return;
+        }
     }
+    show();
 });
 
 // ---------- Your Progress (top card) ----------
