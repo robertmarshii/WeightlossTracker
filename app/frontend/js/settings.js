@@ -204,7 +204,7 @@ function updateDateExample() {
             example = today.toLocaleDateString('en-US');
             break;
         case 'iso':
-            example = today.toISOString().split('T')[0];
+            example = localISODate(today);
             break;
         case 'euro':
             example = today.toLocaleDateString('de-DE');

@@ -2,7 +2,7 @@
 // Global variable to store consolidated dashboard data
 window.globalDashboardData = null;
 
-// Plausibility limits, the same as the server's (Router.php: 20-500 kg, no later than tomorrow)
+// Plausibility limits, the same as the server's (Router.php: 20-500 kg, no later than the user's tomorrow)
 const WEIGHT_MIN_KG = 20;
 const WEIGHT_MAX_KG = 500;
 
@@ -16,7 +16,7 @@ function weightRangeError(weightKg, dateISO) {
     if (dateISO) {
         const d = new Date();
         d.setDate(d.getDate() + 1);
-        const tomorrow = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        const tomorrow = localISODate(d);
         if (dateISO > tomorrow) return t('The date cannot be later than tomorrow.');
     }
     return '';
@@ -156,7 +156,7 @@ $(function() {
             formatAllTimestamps();
 
             // STEP 5: Set today's date as default for new entries (formatted with user's date format)
-            const todayISO = new Date().toISOString().split('T')[0];
+            const todayISO = localISODate();
             $('#newDate').val(formatDate(todayISO));
 
             // Update date input placeholders
@@ -188,7 +188,7 @@ $(function() {
             return;
         }
 
-        postRequest('router.php?controller=profile', { action: 'add_weight', weight_kg: weightKg.toFixed(2) })
+        postRequest('router.php?controller=profile', { action: 'add_weight', weight_kg: weightKg.toFixed(2), entry_date: localISODate() })
         .then(resp => {
             const data = parseJson(resp);
             if (data.success) {
@@ -238,7 +238,7 @@ $(function() {
         $('#add-entry-form').removeData('editId editKg editPrefill').slideUp();
         $('#newWeight').val('');
         refreshStoneHints();
-        const todayISO = new Date().toISOString().split('T')[0];
+        const todayISO = localISODate();
         $('#newDate').val(formatDate(todayISO));
     });
 
@@ -294,7 +294,7 @@ $(function() {
                 $('#add-entry-form').removeData('editId editKg editPrefill').slideUp();
                 $('#newWeight').val('');
                 refreshStoneHints();
-                const todayISO = new Date().toISOString().split('T')[0];
+                const todayISO = localISODate();
                 $('#newDate').val(formatDate(todayISO));
 
                 // Reload global data first, then refresh all functions
@@ -3192,7 +3192,7 @@ function displayIdealWeightETA(currentWeight, idealTargetWeight, weeklyLossRate)
     const etaDate = new Date();
     etaDate.setDate(etaDate.getDate() + (weeksToGoal * 7));
 
-    const formattedDate = formatDate(etaDate.toISOString().split('T')[0]);
+    const formattedDate = formatDate(localISODate(etaDate));
     const html = `<span data-eng="On track to reach BMI by ${formattedDate}" data-spa="En camino de alcanzar IMC para ${formattedDate}" data-fre="En bonne voie pour atteindre l'IMC d'ici ${formattedDate}" data-ger="Auf dem Weg, den BMI bis ${formattedDate} zu erreichen">On track to reach BMI by ${formattedDate}</span>`;
 
     container.empty().html(html).removeAttr('data-eng data-spa data-fre data-ger');

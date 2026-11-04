@@ -1086,7 +1086,9 @@
 
     /**
      * Why a weight entry cannot be saved, or null if it can: weight 20-500 kg and a real date that is
-     * no later than tomorrow (allows for time zones ahead of the server's).
+     * no later than tomorrow anywhere on Earth: tomorrow in UTC+14 (Kiribati), the zone furthest ahead, so a
+     * user's own "tomorrow" is always allowed wherever they are. (user_settings.timezone defaults to
+     * Europe/London for everyone, so it can't be relied on to be where the user is.)
      */
     function weightEntryError($weightKg, $date) {
         if ($weightKg === null || !is_finite((float)$weightKg) || $weightKg < WEIGHT_MIN_KG || $weightKg > WEIGHT_MAX_KG) {
@@ -1095,7 +1097,8 @@
         if (!isValidEntryDate($date)) {
             return ['code' => 'invalid_date', 'message' => 'Invalid date'];
         }
-        if ($date > date('Y-m-d', strtotime('+1 day'))) {
+        $latest = (new DateTime('now', new DateTimeZone('+14:00')))->modify('+1 day')->format('Y-m-d');
+        if ($date > $latest) {
             return ['code' => 'date_out_of_range', 'message' => 'Date cannot be later than tomorrow'];
         }
         return null;
