@@ -128,6 +128,24 @@ class Migrations
         return $out;
     }
 
+    /** Names of fixes not applied yet (read-only, for /status). Null if the database can't be read. */
+    public static function pending($db, string $schema): ?array
+    {
+        if (!$db instanceof PDO || !preg_match('/^[a-z_][a-z0-9_]*$/', $schema)) {
+            return null;
+        }
+        try {
+            $exists = $db->prepare("SELECT to_regclass(?) IS NOT NULL");
+            $exists->execute(["{$schema}.app_migrations"]);
+            $applied = $exists->fetchColumn()
+                ? $db->query("SELECT name FROM {$schema}.app_migrations")->fetchAll(PDO::FETCH_COLUMN)
+                : [];
+        } catch (Throwable $e) {
+            return null;
+        }
+        return array_values(array_diff(array_keys(self::all()), $applied));
+    }
+
     /**
      * Caliper readings were saved under the wrong metric names (since the Body page was added, Oct 2025):
      *   armpit card -> caliper_abdomen, belly card -> caliper_thigh, thigh card -> caliper_tricep.

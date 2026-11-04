@@ -2,10 +2,9 @@
 // Password-protected status page: /status. HTTP Basic auth, any username.
 // The password's bcrypt hash comes from the STATUS_PASSWORD_HASH environment variable (the hash itself,
 // or the hash base64-encoded so it has no "$" characters). Prints no environment, config or secrets.
+// Fails closed: if the variable is missing or not a bcrypt hash, every request gets 401.
 declare(strict_types=1);
 
-// TODO: remove this fallback once STATUS_PASSWORD_HASH is set in Easypanel (it is used only while the variable is missing).
-const STATUS_PASSWORD_HASH_FALLBACK = '$2y$12$jvH7lq./cZN8/MOQkDHG7Ocv6ap/iIpvEHB5EGDgqvDGUk0AX1hoq';
 const STATUS_APP_NAME = 'WeightlossTracker';
 const STATUS_VERSION_FILE = '/srv/git-sha';
 
@@ -44,20 +43,16 @@ function status_env_password_hash(): ?string
     if ($isBcrypt($decoded)) {
         return trim((string) $decoded);
     }
-    if ($v !== '') {
-        error_log('status.php: STATUS_PASSWORD_HASH is set but is not a bcrypt hash; using the built-in fallback');
-    }
+    error_log($v === ''
+        ? 'status.php: STATUS_PASSWORD_HASH is not set; /status refuses every request'
+        : 'status.php: STATUS_PASSWORD_HASH is not a bcrypt hash; /status refuses every request');
     return null;
 }
 
-function status_password_hash(): string
-{
-    return status_env_password_hash() ?? STATUS_PASSWORD_HASH_FALLBACK;
-}
-
 $given = status_given_password();
-// password_verify compares in constant time.
-if ($given === null || !password_verify($given, status_password_hash())) {
+$hash = status_env_password_hash();
+// password_verify compares in constant time. No usable hash configured: nobody gets in.
+if ($given === null || $hash === null || !password_verify($given, $hash)) {
     http_response_code(401);
     header('WWW-Authenticate: Basic realm="status", charset="UTF-8"');
     echo "Unauthorized\n";
@@ -75,9 +70,8 @@ $add = function (string $check, bool $ok, string $why = '') use (&$lines, &$allO
 
 $add('App: ' . STATUS_APP_NAME, true);
 
-// The built-in fallback hash is in the public repository, so the password must come from the environment
-$add('Status password from environment', status_env_password_hash() !== null,
-    'STATUS_PASSWORD_HASH is missing or not a bcrypt hash, so the built-in fallback is in use');
+// There is no built-in password: reaching this line means STATUS_PASSWORD_HASH is set and matched
+$add('Status password from environment', $hash !== null, 'STATUS_PASSWORD_HASH is missing or not a bcrypt hash');
 
 $sha = is_readable(STATUS_VERSION_FILE) ? trim((string) file_get_contents(STATUS_VERSION_FILE)) : '';
 $shaOk = (bool) preg_match('/^[0-9a-f]{7,40}$/i', $sha);
@@ -120,6 +114,19 @@ if ($dbOk) {
     }
     ob_end_clean();
     $add('Sign-in tables up to date', $authOk, 'upgrade could not run, sign-in is in the older mode (see the server log)');
+}
+
+// One-off data fixes (app/backend/Migrations.php) applied. Read-only; names only, no details.
+if ($dbOk) {
+    ob_start();
+    try {
+        require_once '/var/app/backend/Migrations.php';
+        $pending = Migrations::pending($pdo, Database::getSchema());
+    } catch (Throwable $e) {
+        $pending = null;
+    }
+    ob_end_clean();
+    $add('Data fixes applied', $pending === [], $pending === null ? 'could not read app_migrations' : 'pending: ' . implode(', ', $pending));
 }
 
 // Email settings: present, and the Scaleway key is accepted (a read-only call; no email is sent, no value is shown).
