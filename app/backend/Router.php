@@ -1,25 +1,25 @@
 <?php
-   $router_start = microtime(true);
    session_start();
    require_once '/var/app/backend/CoverageLogger.php';
-
-   error_log("DEBUG: Router.php called - " . $_SERVER['REQUEST_METHOD'] . " " . $_SERVER['REQUEST_URI']);
-   error_log("DEBUG: Controller parameter: " . ($_GET["controller"] ?? 'not set'));
-   error_log("DEBUG: Session ID: " . session_id());
-   error_log("DEBUG: Session user_id: " . (isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 'not set'));
+   require_once '/var/app/backend/Security.php';
 
     if(isset($_GET["controller"])) {
         $controller = htmlspecialchars($_GET["controller"]);
-        error_log("DEBUG: Routing to controller: {$controller}");
-        if($controller === "get1") { Get1(); }
-        if($controller === "schema") { SchemaController(); }
-        if($controller === "seeder") { SeederController(); }
-        if($controller === "profile") { ProfileController(); }
-        if($controller === "email") { EmailController(); }
-        if($controller === "coverage") { CoverageController(); }
-        if($controller === "seeder_tester") { SeederTesterController(); }
-    } else {
-        error_log("DEBUG: No controller specified in request");
+        if($controller === "profile") {
+            ProfileController();
+        } elseif (Security::isTestEnv()) {
+            // Test/dev-only controllers: never routed unless the server runs with APP_ENV=test
+            if($controller === "get1") { Get1(); }
+            if($controller === "schema") { SchemaController(); }
+            if($controller === "seeder") { SeederController(); }
+            if($controller === "email") { EmailController(); }
+            if($controller === "coverage") { CoverageController(); }
+            if($controller === "seeder_tester") { SeederTesterController(); }
+        } else {
+            http_response_code(404);
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Not found']);
+        }
     }
 
     function Get1() {
@@ -96,19 +96,25 @@
             require_once ('/var/app/backend/Config.php');
             require_once ('/var/app/backend/AuthManager.php');
 
-            $auth_start = microtime(true);
-            error_log("DEBUG: ProfileController - Starting authentication check");
-
             if (!AuthManager::isLoggedIn()) {
-                $auth_elapsed = (microtime(true) - $auth_start) * 1000;
-                error_log("DEBUG: ProfileController - Authentication failed after {$auth_elapsed}ms");
                 http_response_code(403);
                 echo json_encode(['success' => false, 'message' => 'Not authenticated']);
                 return;
             }
 
-            $auth_elapsed = (microtime(true) - $auth_start) * 1000;
-            error_log("DEBUG: ProfileController - Authentication successful after {$auth_elapsed}ms");
+            // Give the page a fresh token (e.g. after the session was restored from the remember-me cookie).
+            // Safe without a token: other sites cannot read the response.
+            if (($_POST['action'] ?? '') === 'csrf_token') {
+                echo json_encode(['success' => true, 'csrf_token' => Security::csrfToken()]);
+                return;
+            }
+
+            // CSRF: every request must carry this session's token (sent by js/global.js as X-CSRF-Token)
+            if (!Security::csrfValid()) {
+                http_response_code(403);
+                echo json_encode(['success' => false, 'message' => 'Your session has expired. Please reload the page.', 'csrf' => false]);
+                return;
+            }
 
             $userId = (int)$_SESSION['user_id'];
             $db = Database::getInstance()->getdbConnection();
@@ -2013,60 +2019,30 @@
             }
             
             if ($action === 'clear_rate_limits') {
-                // For testing purposes - clear rate limits for specific email or all
+                // Test only (APP_ENV=test): clear throttle state for one email or everything
                 $email = $request['email'] ?? null;
-                $rateLimitFile = '/var/app/backend/rate_limits.json';
-                
                 if ($email) {
-                    // Clear limits for specific email
-                    $rateLimits = [];
-                    if (file_exists($rateLimitFile)) {
-                        $data = json_decode(file_get_contents($rateLimitFile), true);
-                        if (is_array($data)) {
-                            $rateLimits = $data;
-                        }
+                    $email = strtolower(trim($email));
+                    foreach (['send:login_code', 'send:signup_code', 'send_block:login_code', 'send_block:signup_code', 'verify_lock'] as $kind) {
+                        Security::throttleClear($kind, $email);
                     }
-                    
-                    // Remove entries for this email
-                    foreach (array_keys($rateLimits) as $key) {
-                        if (strpos($key, $email . ':') === 0) {
-                            unset($rateLimits[$key]);
-                        }
-                    }
-                    
-                    file_put_contents($rateLimitFile, json_encode($rateLimits, JSON_PRETTY_PRINT));
-                    
-                    echo json_encode([
-                        'success' => true,
-                        'message' => "Rate limits cleared for $email"
-                    ]);
+                    echo json_encode(['success' => true, 'message' => 'Rate limits cleared for email']);
                 } else {
-                    // Clear all rate limits
-                    if (file_exists($rateLimitFile)) {
-                        unlink($rateLimitFile);
-                    }
-                    echo json_encode([
-                        'success' => true,
-                        'message' => 'All rate limits cleared'
-                    ]);
+                    Security::throttleClearAll();
+                    echo json_encode(['success' => true, 'message' => 'All rate limits cleared']);
                 }
                 return;
             }
-            
+
             if ($action === 'get_rate_limits') {
-                $rateLimitFile = '/var/app/backend/rate_limits.json';
-                $rateLimits = [];
-                
-                if (file_exists($rateLimitFile)) {
-                    $data = json_decode(file_get_contents($rateLimitFile), true);
-                    if (is_array($data)) {
-                        $rateLimits = $data;
-                    }
-                }
-                
+                // Test only (APP_ENV=test): send counts for one email in the last minute
+                $email = strtolower(trim($request['email'] ?? ''));
                 echo json_encode([
                     'success' => true,
-                    'rate_limits' => $rateLimits
+                    'rate_limits' => $email === '' ? [] : [
+                        'login_code_last_minute' => Security::throttleCount('send:login_code', $email, 60),
+                        'signup_code_last_minute' => Security::throttleCount('send:signup_code', $email, 60),
+                    ]
                 ]);
                 return;
             }
@@ -2104,7 +2080,7 @@
         header('Content-Type: application/json');
         
         // Only allow in development environment
-        if (($_SERVER['HTTP_HOST'] ?? '') !== '127.0.0.1:8111') {
+        if (!Security::isTestEnv()) {
             echo json_encode(['success' => false, 'message' => 'Coverage API not available']);
             return;
         }

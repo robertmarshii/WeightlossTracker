@@ -12,10 +12,12 @@ $email = htmlspecialchars($_SESSION['email'] ?? '');
 $firstName = htmlspecialchars($_SESSION['first_name'] ?? '');
 $lastName = htmlspecialchars($_SESSION['last_name'] ?? '');
 $loginTimeTimestamp = $_SESSION['login_time'] ?? null;
+$csrfToken = Security::csrfToken();
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta name="csrf-token" content="<?php echo htmlspecialchars($csrfToken); ?>">
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17636245354"></script>
     <script>

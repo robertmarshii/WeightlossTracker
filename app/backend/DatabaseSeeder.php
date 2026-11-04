@@ -212,8 +212,9 @@ class DatabaseSeeder
     private static function isLocalhost()
     {
         COVERAGE_LOG('isLocalhost', __CLASS__, __FILE__, __LINE__);
-        $httpHost = $_SERVER['HTTP_HOST'] ?? '';
-        return $httpHost === '127.0.0.1:8111';
+        // Test/dev only: decided by the server's APP_ENV, never by the Host header
+        require_once('/var/app/backend/Security.php');
+        return Security::isTestEnv();
     }
 }
 ?>

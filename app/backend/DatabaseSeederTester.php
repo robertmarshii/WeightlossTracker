@@ -6,8 +6,8 @@ require_once('/var/app/backend/CoverageLogger.php');
 class DatabaseSeederTester {
     public static function handleRequest() {
         // Only allow localhost access
-        $httpHost = $_SERVER['HTTP_HOST'] ?? '';
-        if ($httpHost !== '127.0.0.1:8111') {
+        require_once('/var/app/backend/Security.php');
+        if (!Security::isTestEnv()) {
             http_response_code(403);
             echo json_encode(['error' => 'Access denied. This endpoint is only accessible from localhost.']);
             exit;

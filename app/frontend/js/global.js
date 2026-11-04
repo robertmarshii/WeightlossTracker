@@ -1,5 +1,56 @@
 /* Global JavaScript - Shared across all pages */
 
+// CSRF protection: add this session's token (from <meta name="csrf-token">) to every same-origin
+// fetch/jQuery request. If the server says the token is stale (e.g. the session was restored from
+// the remember-me cookie), get a fresh token once and retry the request.
+(function () {
+    function csrfMeta() { return document.querySelector('meta[name="csrf-token"]'); }
+    function csrfToken() { const m = csrfMeta(); return m ? m.getAttribute('content') : ''; }
+    function setCsrfToken(t) { const m = csrfMeta(); if (m) m.setAttribute('content', t); }
+    function sameOrigin(url) {
+        try { return new URL(url, window.location.href).origin === window.location.origin; } catch (e) { return false; }
+    }
+    function withToken(init) {
+        const opts = Object.assign({}, init || {});
+        const headers = new Headers(opts.headers || {});
+        headers.set('X-CSRF-Token', csrfToken());
+        opts.headers = headers;
+        return opts;
+    }
+    window.getCsrfToken = csrfToken;
+
+    if (window.fetch) {
+        const originalFetch = window.fetch.bind(window);
+        window.fetch = function (input, init) {
+            const url = typeof input === 'string' ? input : (input && input.url) || '';
+            if (!sameOrigin(url) || !csrfToken()) return originalFetch(input, init);
+            return originalFetch(input, withToken(init)).then(function (resp) {
+                if (resp.status !== 403 || url.indexOf('controller=profile') === -1) return resp;
+                return resp.clone().json().then(function (data) {
+                    if (!data || data.csrf !== false) return resp;
+                    const body = new URLSearchParams();
+                    body.append('action', 'csrf_token');
+                    return originalFetch('router.php?controller=profile', {
+                        method: 'POST', body: body, credentials: 'same-origin'
+                    }).then(function (r) { return r.json(); }).then(function (t) {
+                        if (!t || !t.csrf_token) return resp;
+                        setCsrfToken(t.csrf_token);
+                        return originalFetch(input, withToken(init));
+                    });
+                }).catch(function () { return resp; });
+            });
+        };
+    }
+
+    if (window.jQuery) {
+        window.jQuery.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                if (sameOrigin(settings.url) && csrfToken()) xhr.setRequestHeader('X-CSRF-Token', csrfToken());
+            }
+        });
+    }
+})();
+
 // Debug logging system - collects logs and outputs at end
 // Only enabled in development (not on production domain)
 window.debugLogs = [];
@@ -179,17 +230,14 @@ function showAlert(message, type, duration = null) {
         currentAlertTimeout = null;
     }
     
-    const alertClass = `alert-${type}`;
-    const alertHtml = `
-        <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
-            ${message}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    `;
-    
-    $('#alert-container').html(alertHtml);
+    // Build the alert with the message as plain text (never HTML), so text from the URL or the
+    // server can never run as script.
+    const safeType = ['success', 'info', 'warning', 'danger', 'primary', 'secondary', 'light', 'dark'].indexOf(type) !== -1 ? type : 'info';
+    const $alert = $('<div class="alert alert-dismissible fade show" role="alert"></div>').addClass('alert-' + safeType);
+    $alert.append(document.createTextNode(String(message)));
+    $alert.append('<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
+
+    $('#alert-container').empty().append($alert);
     
     // Set different durations for different message types
     let autoDismissTime = duration;

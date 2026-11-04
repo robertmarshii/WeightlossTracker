@@ -1,4 +1,5 @@
 <?php
+require_once('/var/app/backend/Security.php');
 /**
  * Simple PHP Code Coverage Logger
  * Tracks function/method calls to identify untested code paths
@@ -20,7 +21,7 @@ class CoverageLogger {
         $isCoverageMode = (isset($_GET['coverage']) && $_GET['coverage'] === '1') ||
                          (isset($_POST['coverage']) && $_POST['coverage'] === '1') ||
                          (isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], 'Cypress') !== false);
-        $isTestEnvironment = ($_SERVER['HTTP_HOST'] ?? '') === '127.0.0.1:8111';
+        $isTestEnvironment = Security::isTestEnv();
         $this->enabled = $isCoverageMode && $isTestEnvironment;
         $this->sessionId = time() . '_' . uniqid();
         $this->logFile = '/var/app/backend/coverage.log';
@@ -67,7 +68,7 @@ class CoverageLogger {
             }
 
             // Only log debug messages in test environment when enabled
-            $isTestEnvironment = ($_SERVER['HTTP_HOST'] ?? '') === '127.0.0.1:8111';
+            $isTestEnvironment = Security::isTestEnv();
             if ($isTestEnvironment && $this->enabled) {
                 error_log("logFunction called: {$className}::{$functionName}. Enabled: true");
             }

@@ -61,7 +61,8 @@ class Database
         }
         catch(PDOException $e)
         { // catch any failure to connect to the database
-            echo $e->getMessage();
+            // Log only - never show database error details to visitors
+            error_log('Database connection failed: ' . $e->getMessage());
         }
     }
 

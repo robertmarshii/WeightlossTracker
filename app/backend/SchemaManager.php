@@ -44,7 +44,11 @@ class SchemaManager
     {
         COVERAGE_LOG('getCurrentSchema', __CLASS__, __FILE__, __LINE__);
         // Check session first (user's choice), then fallback to env, then default
-        return $_SESSION['selected_schema'] ?? getenv('PG_SCHEMA') ?: 'wt_dev';
+        // A per-session schema choice only counts on test servers (APP_ENV=test)
+        if (self::isLocalhost() && !empty($_SESSION['selected_schema'])) {
+            return $_SESSION['selected_schema'];
+        }
+        return getenv('PG_SCHEMA') ?: 'wt_dev';
     }
     
     private static function validateSchemaSwitch($schema)
@@ -104,8 +108,8 @@ class SchemaManager
     private static function isLocalhost()
     {
         COVERAGE_LOG('isLocalhost', __CLASS__, __FILE__, __LINE__);
-        $httpHost = $_SERVER['HTTP_HOST'] ?? '';
-        
-        return $httpHost === '127.0.0.1:8111';
+        // Test/dev only: decided by the server's APP_ENV, never by the Host header
+        require_once('/var/app/backend/Security.php');
+        return Security::isTestEnv();
     }
 }

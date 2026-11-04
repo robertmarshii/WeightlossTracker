@@ -4,8 +4,9 @@
  * Receives JavaScript coverage data in batches to reduce server load
  */
 
-// Only allow in development
-if (($_SERVER['HTTP_HOST'] ?? '') !== '127.0.0.1:8111') {
+// Only allow on test servers (APP_ENV=test)
+require_once('/var/app/backend/Security.php');
+if (!Security::isTestEnv()) {
     http_response_code(404);
     exit;
 }
