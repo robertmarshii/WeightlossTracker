@@ -1594,7 +1594,7 @@ function updateWeightChart(period) {
         const unit = getWeightUnitLabel();
         const reversedData = filteredData.reverse();
         const labels = reversedData.map(entry => formatDate(entry.entry_date));
-        const dataPoints = reversedData.map(entry => convertFromKg(parseFloat(entry.weight_kg)));
+        const dataPoints = reversedData.map(entry => kgToUnitValue(entry.weight_kg));
 
         weightChart.data.labels = labels;
         weightChart.data.datasets[0].data = dataPoints;
@@ -1717,7 +1717,7 @@ function updateWeightChart(period) {
             });
         });
         
-        const weights = filteredData.map(entry => parseFloat(convertFromKg(entry.weight_kg)));
+        const weights = filteredData.map(entry => kgToUnitValue(entry.weight_kg));
         
         // Reset to single-line chart configuration
         resetToLineChart();
@@ -1797,7 +1797,7 @@ function updateMonthlyChart(sortedData) {
                 if (window.coverage) window.coverage.logFunction('if', 'dashboard.js');
                 month.data.push({
                     date: entryDate,
-                    weight: parseFloat(convertFromKg(entry.weight_kg)),
+                    weight: kgToUnitValue(entry.weight_kg),
                     dayOfMonth: entryDate.getDate()
                 });
             }

@@ -156,6 +156,18 @@ function convertFromKg(weightKg, targetUnit = null) {
     }
 }
 
+// A weight in kg as a plain, unrounded number in the user's unit (decimal stones for stone). For charts: the
+// tooltip and axis format it, so it must not be pre-rounded (0.1 st is 1.4 lb, which made tooltips disagree
+// with the table).
+function kgToUnitValue(weightKg, targetUnit = null) {
+    const unit = targetUnit || getWeightUnit();
+    const kg = parseFloat(weightKg);
+    if (isNaN(kg)) return NaN;
+    if (unit === 'lbs') return kg * 2.20462;
+    if (unit === 'st') return kg * 0.157473;
+    return kg;
+}
+
 // Convert user's input to kg for storage
 function convertToKg(weightInput, sourceUnit = null) {
     if (window.coverage) window.coverage.logFunction('convertToKg', 'global.js');
