@@ -204,6 +204,7 @@ figcaption { font-size: 0.88rem; color: var(--muted); margin-top: 0.5rem; }
     .feature-row.flip > figure { order: 0; }
     .grid-3, .steps { grid-template-columns: 1fr; }
     .steps-long > li > div { padding-top: 2.4rem; }
+    .steps-long > li > .shots, .steps-long > li > figure, .steps-long > li > .card { padding-top: 0; }
 }
 @media (min-width: 600px) and (max-width: 900px) {
     .grid-3 { grid-template-columns: repeat(2, 1fr); }
