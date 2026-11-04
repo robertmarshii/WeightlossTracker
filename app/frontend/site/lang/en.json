@@ -84,7 +84,7 @@
   "faq.signin.q": "How do I sign in?",
   "faq.signin.a": "There is no password. Enter your email address and we send you a 6-digit code that works for 15 minutes, or continue with your Google or Microsoft account. You stay signed in on that device until you sign out, for up to 30 days between visits and at most 90 days in total.",
   "faq.units.q": "Which units can I use?",
-  "faq.units.a": "Weight in kilograms, pounds or stone (shown as decimal stone, for example 12.5 st), and height in centimetres, metres or feet and inches. Body measurements are in centimetres. You can change units at any time in Settings.",
+  "faq.units.a": "Weight in kilograms, pounds or stone (shown as stone and pounds, for example 12 st 7.0 lb), and height in centimetres, metres or feet and inches. Body measurements are in centimetres. You can change units at any time in Settings.",
   "faq.lang.q": "Which languages does it support?",
   "faq.lang.a": "The app and this website are in English, German, Spanish and French. You choose the app's language in Settings. Reminder and report emails are currently sent in English.",
   "faq.email.q": "Will you email me?",

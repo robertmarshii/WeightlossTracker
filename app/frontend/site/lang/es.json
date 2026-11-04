@@ -84,7 +84,7 @@
   "faq.signin.q": "¿Cómo inicio sesión?",
   "faq.signin.a": "No hay contraseña. Escribe tu correo electrónico y te enviamos un código de 6 dígitos válido durante 15 minutos, o continúa con tu cuenta de Google o Microsoft. Tu sesión sigue abierta en ese dispositivo hasta que la cierres, siempre que no pasen más de 30 días entre una visita y otra, y como máximo 90 días en total.",
   "faq.units.q": "¿Qué unidades puedo usar?",
-  "faq.units.a": "El peso en kilogramos, libras o piedras (stone, mostradas en decimales, por ejemplo 12,5 st) y la altura en centímetros, metros o pies y pulgadas. Las medidas corporales van en centímetros. Puedes cambiar las unidades cuando quieras en Configuración.",
+  "faq.units.a": "El peso en kilogramos, libras o stone (mostrado en stone y libras, por ejemplo 12 st 7,0 lb) y la altura en centímetros, metros o pies y pulgadas. Las medidas corporales van en centímetros. Puedes cambiar las unidades cuando quieras en Configuración.",
   "faq.lang.q": "¿En qué idiomas está?",
   "faq.lang.a": "La app y este sitio web están en inglés, alemán, español y francés. El idioma de la app se elige en Configuración. Por ahora, los correos de recordatorio y de informe se envían en inglés.",
   "faq.email.q": "¿Recibiré correos?",

@@ -84,7 +84,7 @@
   "faq.signin.q": "Comment me connecter ?",
   "faq.signin.a": "Il n'y a pas de mot de passe. Saisissez votre adresse e-mail et nous vous envoyons un code à 6 chiffres valable 15 minutes, ou continuez avec votre compte Google ou Microsoft. Vous restez connecté sur cet appareil jusqu'à ce que vous vous déconnectiez, à condition de ne pas laisser passer plus de 30 jours entre deux visites, et pendant 90 jours au maximum.",
   "faq.units.q": "Quelles unités puis-je utiliser ?",
-  "faq.units.a": "Le poids en kilogrammes, en livres ou en stone (affiché en stone décimal, par exemple 12,5 st), et la taille en centimètres, en mètres ou en pieds et pouces. Les mesures corporelles sont en centimètres. Vous pouvez changer d'unités à tout moment dans les Paramètres.",
+  "faq.units.a": "Le poids en kilogrammes, en livres ou en stone (affiché en stone et livres, par exemple 12 st 7,0 lb), et la taille en centimètres, en mètres ou en pieds et pouces. Les mesures corporelles sont en centimètres. Vous pouvez changer d'unités à tout moment dans les Paramètres.",
   "faq.lang.q": "Quelles langues sont disponibles ?",
   "faq.lang.a": "L'application et ce site existent en anglais, allemand, espagnol et français. Vous choisissez la langue de l'application dans les Paramètres. Les e-mails de rappel et de rapport sont pour l'instant envoyés en anglais.",
   "faq.email.q": "Allez-vous m'envoyer des e-mails ?",
