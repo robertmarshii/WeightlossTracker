@@ -8,11 +8,13 @@
  *   - a marker file says everything is applied -> nothing else happens;
  *   - after a failure it waits RETRY_AFTER_SECONDS before trying again, so a broken fix is tried (and
  *     logged) at most once every few minutes instead of on every request;
- *   - it waits at most REQUEST_LOCK_WAIT for another process that is applying a fix, then gives up quietly.
+ *   - it never waits for another process that is applying a fix (pg_try_advisory_xact_lock): it gives up
+ *     at once and skips the check for BUSY_RETRY_SECONDS (a short back-off, the busy file).
  *
  * Concurrency: every fix runs inside a transaction holding a per-schema advisory lock
- * (pg_advisory_xact_lock), so two processes never apply fixes at the same time; the second one sees the
- * first one's app_migrations row once it gets the lock and does nothing.
+ * (pg_advisory_xact_lock at startup, pg_try_advisory_xact_lock in requests), so two processes never apply
+ * fixes at the same time; the second one sees the first one's app_migrations row once it gets the lock and
+ * does nothing.
  */
 class Migrations
 {
@@ -23,7 +25,8 @@ class Migrations
     const MODE_STARTUP = 'startup';
     const MODE_REQUEST = 'request';
     const RETRY_AFTER_SECONDS = 300;
-    const REQUEST_LOCK_WAIT = '2s';
+    const BUSY_RETRY_SECONDS = 30;
+    const REQUEST_LOCK_WAIT = '2s';   // other locks a fix may need (rows, tables); the fix lock itself is never waited for
     const STARTUP_LOCK_WAIT = '60s';
 
     /** name => function (PDO $db, string $schema): string (details, kept in app_migrations) */
@@ -48,6 +51,11 @@ class Migrations
     public static function backoffFile(string $schema): string
     {
         return self::stateDir() . '/migrations-' . $schema . '.failed';
+    }
+
+    public static function busyFile(string $schema): string
+    {
+        return self::stateDir() . '/migrations-' . $schema . '.busy';
     }
 
     /** Same number for the same schema in every process (fits PostgreSQL's bigint advisory lock key). */
@@ -78,6 +86,10 @@ class Migrations
         if ($mode === self::MODE_REQUEST && is_file($backoff) && time() - (int)@filemtime($backoff) < self::RETRY_AFTER_SECONDS) {
             return ['waiting before trying again (last attempt failed)'];
         }
+        $busy = self::busyFile($schema);
+        if ($mode === self::MODE_REQUEST && is_file($busy) && time() - (int)@filemtime($busy) < self::BUSY_RETRY_SECONDS) {
+            return ['waiting before trying again (another process was applying fixes)'];
+        }
 
         $prevErrMode = $db->getAttribute(PDO::ATTR_ERRMODE);
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -89,7 +101,16 @@ class Migrations
             try {
                 $db->beginTransaction();
                 $db->exec("SET LOCAL lock_timeout = '{$wait}'");
-                $db->query('SELECT pg_advisory_xact_lock(' . self::lockKey($schema) . ')');
+                if ($mode === self::MODE_STARTUP) {
+                    $db->query('SELECT pg_advisory_xact_lock(' . self::lockKey($schema) . ')');
+                } elseif (!$db->query('SELECT pg_try_advisory_xact_lock(' . self::lockKey($schema) . ')')->fetchColumn()) {
+                    // Another process holds the lock: don't wait for it in a user's request
+                    $db->rollBack();
+                    $allDone = false;
+                    $out[] = "{$name}: busy (another process is applying fixes)";
+                    @touch($busy);
+                    break;
+                }
                 $db->exec("CREATE TABLE IF NOT EXISTS {$schema}.app_migrations (
                     name VARCHAR(100) PRIMARY KEY,
                     applied_at TIMESTAMP NOT NULL DEFAULT NOW(),
@@ -115,6 +136,9 @@ class Migrations
                 // 55P03 = lock_not_available: another process is applying fixes right now. Not a failure.
                 if ($e instanceof PDOException && ($e->getCode() === '55P03' || strpos($e->getMessage(), '55P03') !== false)) {
                     $out[] = "{$name}: busy (another process is applying fixes)";
+                    if ($mode === self::MODE_REQUEST) {
+                        @touch($busy);
+                    }
                     break;
                 }
                 $failed = "{$name}: " . $e->getMessage();
@@ -139,6 +163,7 @@ class Migrations
         if ($allDone) {
             @file_put_contents($marker, date('c') . "\n");
             @unlink($backoff);
+            @unlink($busy);
         }
         return $out;
     }

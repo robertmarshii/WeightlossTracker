@@ -96,9 +96,10 @@ touch(Migrations::backoffFile($s), time() - Migrations::RETRY_AFTER_SECONDS - 1)
 $later = Migrations::run($db, $s, Migrations::MODE_REQUEST);
 check('request call after back-off tries again', (bool)preg_match('/not applied: ALERT/', $later[0] ?? ''), true);
 
-// ---- Request-time call waits only briefly while another process holds the migration lock
+// ---- Request-time call does not wait while another process holds the migration lock, then backs off briefly
 $db->exec("DELETE FROM {$s}.body_data_entries WHERE metric_type = 'caliper_midaxillary'");
 @unlink(Migrations::backoffFile($s));
+@unlink(Migrations::busyFile($s));
 $other = new PDO('pgsql:host=' . $_ENV['PG_HOST'] . ';dbname=' . $_ENV['PG_DATABASE'] . ';port=' . $_ENV['PG_PORT'], $_ENV['PG_USER'], $_ENV['PG_PASSWORD']);
 $other->beginTransaction();
 $other->query('SELECT pg_advisory_xact_lock(' . crc32('weightloss-tracker-migrations:' . $s) . ')');
@@ -106,15 +107,21 @@ $t = microtime(true);
 $busy = Migrations::run($db, $s, Migrations::MODE_REQUEST);
 $waited = microtime(true) - $t;
 check('request call gives up while locked', $busy, ['2026-11-04-caliper-metric-names: busy (another process is applying fixes)']);
-check('request call waited about 2 s (1.5-4 s)', $waited > 1.5 && $waited < 4, true);
+check('request call did not wait (under 0.5 s)', $waited < 0.5, true);
 check('busy is not a failure (no back-off file)', is_file(Migrations::backoffFile($s)), false);
+check('busy back-off file written', is_file(Migrations::busyFile($s)), true);
 $other->rollBack();
+$skip = Migrations::run($db, $s, Migrations::MODE_REQUEST);
+check('request call within the busy back-off skips the check', $skip, ['waiting before trying again (another process was applying fixes)']);
+touch(Migrations::busyFile($s), time() - Migrations::BUSY_RETRY_SECONDS - 1);
 $ok = Migrations::run($db, $s, Migrations::MODE_REQUEST);
 check('applies once the lock is free', $ok, ['2026-11-04-caliper-metric-names: applied (renamed 1 armpit, 1 belly, 0 thigh rows)']);
 check('marker written after success', is_file(Migrations::markerFile($s)), true);
+check('busy file removed after success', is_file(Migrations::busyFile($s)), false);
 
 $db->exec("DROP SCHEMA {$s} CASCADE");
 @unlink(Migrations::markerFile($s));
 @unlink(Migrations::backoffFile($s));
+@unlink(Migrations::busyFile($s));
 echo $fails ? "\n{$fails} check(s) failed\n" : "\nAll checks passed\n";
 exit($fails ? 1 : 0);
