@@ -64,7 +64,7 @@ echo "Sandbox mode: DISABLED (real email will be sent)\n\n";
 
 try {
     // Note: sendEmail only sends plain text, so we'll send the HTML content as text
-    // SparkPost will render it properly
+    // The email service renders it properly
     $result = AuthManager::sendEmail($email, $subject, $plainContent);
 
     if ($result) {
@@ -72,7 +72,7 @@ try {
         echo "Check robertmarshgb@gmail.com inbox.\n";
     } else {
         echo "❌ Failed to send email.\n";
-        echo "Check SparkPost API key and configuration in .env file.\n";
+        echo "Check SCW_SECRET_KEY, SCW_PROJECT_ID and MAIL_FROM_EMAIL in the environment.\n";
     }
 } catch (Exception $e) {
     echo "❌ Error: " . $e->getMessage() . "\n";

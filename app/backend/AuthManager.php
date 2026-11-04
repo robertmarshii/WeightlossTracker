@@ -5,9 +5,6 @@ require_once '/var/app/backend/CoverageLogger.php';
 require_once '/var/app/backend/Config.php';
 require_once '/var/app/backend/Security.php';
 
-use SparkPost\SparkPost;
-use GuzzleHttp\Client;
-use Http\Adapter\Guzzle7\Client as GuzzleAdapter;
 
 class AuthManager {
     // Login/sign-up code limits
@@ -38,53 +35,41 @@ class AuthManager {
             return true;
         }
 
+        // Sent through Scaleway Transactional Email (fr-par). Settings come from the server environment:
+        // SCW_SECRET_KEY, SCW_PROJECT_ID, MAIL_FROM_EMAIL (e.g. noreply@mail.weightloss-tracker.com), MAIL_FROM_NAME.
         try {
-            // Prepare email data
-            $fromEmail = $_ENV['SPARKPOST_FROM_EMAIL'] ?? 'noreply@weightlosstracker.com';
-            $fromName = $_ENV['SPARKPOST_FROM_NAME'] ?? 'Weightloss Tracker';
-            $apiKey = $_ENV['SPARKPOST_API_KEY'] ?? '';
-            $host = $_ENV['SPARKPOST_HOST'] ?? 'api.sparkpost.com';
-
-            // Use cURL directly to avoid SDK compatibility issues
-            $url = "https://" . $host . "/api/v1/transmissions";
-
-            // Build content - if HTML is provided, use both HTML and text, otherwise just text
-            $content = [
-                'from' => [
-                    'email' => $fromEmail,
-                    'name' => $fromName
-                ],
-                'subject' => $subject,
-                'text' => $message
-            ];
-
-            // Add HTML content if provided
-            if ($htmlContent !== null) {
-                $content['html'] = $htmlContent;
+            $env = function ($name, $default = '') {
+                $v = $_ENV[$name] ?? getenv($name);
+                return ($v === false || $v === null || $v === '') ? $default : $v;
+            };
+            $apiKey = $env('SCW_SECRET_KEY');
+            $projectId = $env('SCW_PROJECT_ID');
+            $fromEmail = $env('MAIL_FROM_EMAIL', 'noreply@mail.weightloss-tracker.com');
+            $fromName = $env('MAIL_FROM_NAME', 'Weightloss Tracker');
+            $region = $env('SCW_REGION', 'fr-par');
+            if ($apiKey === '' || $projectId === '') {
+                throw new Exception("SCW_SECRET_KEY or SCW_PROJECT_ID is not set");
             }
 
             $payload = [
-                'recipients' => [
-                    ['address' => ['email' => $to]]
-                ],
-                'content' => $content,
-                'options' => [
-                    'click_tracking' => false,  // Disable link tracking/wrapping
-                    'open_tracking' => false    // Disable open tracking
-                ]
+                'from' => ['email' => $fromEmail, 'name' => $fromName],
+                'to' => [['email' => $to]],
+                'subject' => $subject,
+                'text' => $message,
+                'project_id' => $projectId,
             ];
+            if ($htmlContent !== null) {
+                $payload['html'] = $htmlContent;
+            }
 
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
-            curl_setopt($ch, CURLOPT_HTTPHEADER, [
-                'Authorization: ' . $apiKey,
-                'Content-Type: application/json'
+            $ch = curl_init("https://api.scaleway.com/transactional-email/v1alpha1/regions/" . rawurlencode($region) . "/emails");
+            curl_setopt_array($ch, [
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_POST => true,
+                CURLOPT_POSTFIELDS => json_encode($payload),
+                CURLOPT_HTTPHEADER => ['X-Auth-Token: ' . $apiKey, 'Content-Type: application/json'],
+                CURLOPT_TIMEOUT => 30,
             ]);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-
             $response = curl_exec($ch);
             $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             $curlError = curl_error($ch);
@@ -93,15 +78,14 @@ class AuthManager {
             if ($curlError) {
                 throw new Exception("cURL error: " . $curlError);
             }
-
-            if ($httpCode !== 200) {
-                throw new Exception("HTTP $httpCode");
+            if ($httpCode < 200 || $httpCode >= 300) {
+                // The body holds Scaleway's error message, never the key.
+                throw new Exception("HTTP $httpCode " . substr((string)$response, 0, 300));
             }
-
             return true;
 
         } catch (Exception $e) {
-            error_log("Failed to send email via SparkPost to " . self::maskEmail($to) . ": " . $e->getMessage());
+            error_log("Failed to send email via Scaleway to " . self::maskEmail($to) . ": " . $e->getMessage());
             return false;
         }
     }
