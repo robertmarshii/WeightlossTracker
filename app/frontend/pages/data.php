@@ -7,6 +7,7 @@
                         <h5 class="card-title" data-eng="📊 Log Current Weight" data-spa="📊 Registrar Peso Actual" data-fre="📊 Enregistrer le Poids Actuel" data-ger="📊 Aktuelles Gewicht Erfassen">📊 Log Current Weight</h5>
                         <div class="row">
                             <div class="col-8">
+                                <label for="weightKg" class="sr-only" data-eng="Weight" data-spa="Peso" data-fre="Poids" data-ger="Gewicht">Weight</label>
                                 <input type="number" step="0.1" min="0" id="weightKg" class="form-control glass-input" placeholder="Weight" data-eng="Weight" data-spa="Peso" data-fre="Poids" data-ger="Gewicht">
                             </div>
                             <div class="col-4">
@@ -23,11 +24,13 @@
                         <h5 class="card-title" data-eng="🎯 Set Weight Goal" data-spa="🎯 Establecer Meta de Peso" data-fre="🎯 Définir l'Objectif de Poids" data-ger="🎯 Gewichtsziel Festlegen">🎯 Set Weight Goal</h5>
                         <div class="row mb-2">
                             <div class="col-12">
+                                <label for="goalWeight" class="sr-only" data-eng="Target weight" data-spa="Peso objetivo" data-fre="Poids cible" data-ger="Zielgewicht">Target weight</label>
                                 <input type="number" step="0.1" min="0" id="goalWeight" class="form-control glass-input mb-2" placeholder="Target weight" data-eng="Target weight" data-spa="Peso objetivo" data-fre="Poids cible" data-ger="Zielgewicht">
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-8">
+                                <label for="goalDate" class="sr-only" data-eng="Target date" data-spa="Fecha objetivo" data-fre="Date cible" data-ger="Zieldatum">Target date</label>
                                 <input type="text" id="goalDate" class="form-control glass-input" placeholder="dd/mm/yyyy">
                             </div>
                             <div class="col-4">

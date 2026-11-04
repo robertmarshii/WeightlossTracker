@@ -2458,10 +2458,24 @@ function refreshStoneHints() {
     ['weightKg', 'goalWeight', 'newWeight'].forEach(id => {
         const el = document.getElementById(id);
         const hint = document.getElementById(id + '-stone-hint');
-        if (el && hint) hint.textContent = stone ? stoneInputHint(el.value) : '';
+        if (!el || !hint) return;
+        const text = stone ? stoneInputHint(el.value) : '';
+        // Only touch the text when it changes, so the polite live region doesn't repeat itself
+        if (hint.textContent !== text) hint.textContent = text;
     });
 }
-$(document).on('input change', '#weightKg, #goalWeight, #newWeight', refreshStoneHints);
+// The hints are a polite live region: update them once typing pauses (not on every key, which would make a
+// screen reader read out each half-typed value), and at once when the field is left
+const STONE_HINT_PAUSE_MS = 700;
+let stoneHintTimer = null;
+$(document).on('input', '#weightKg, #goalWeight, #newWeight', function () {
+    clearTimeout(stoneHintTimer);
+    stoneHintTimer = setTimeout(refreshStoneHints, STONE_HINT_PAUSE_MS);
+});
+$(document).on('change', '#weightKg, #goalWeight, #newWeight', function () {
+    clearTimeout(stoneHintTimer);
+    refreshStoneHints();
+});
 
 function refreshAllWeightDisplays() {
     if (window.coverage) window.coverage.logFunction('refreshAllWeightDisplays', 'dashboard.js');
