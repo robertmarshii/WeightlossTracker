@@ -350,6 +350,7 @@ function switchLanguage(languageCode, skipReload = false) {
 
     // Apply translations
     applyCurrentLanguageTranslations();
+    if (typeof window.labelSrcRefs === 'function') window.labelSrcRefs();
 
     debugLog('Language switched to:', languageCode);
 

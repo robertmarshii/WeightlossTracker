@@ -1567,7 +1567,7 @@ window.generateCaliperInsights = function() {
             const bodyFatPercent = jacksonPollock3SiteMenBodyFat(sum3, parseFloat(profile.age));
             description += ' ' + t("If you are a man, the Jackson-Pollock 3-site equation for men gives about {bf}% body fat.").replace('{bf}', bodyFatPercent.toFixed(1));
             // Sources [24] Jackson & Pollock 1978 and [25] Siri 1961 (density to % fat), listed on the Health tab
-            if (typeof srcRef === 'function') description += ' ' + srcRef('jackson') + ' ' + srcRef('siri');
+            if (typeof srcRef === 'function') description += ' ' + srcRef('jackson', true) + ' ' + srcRef('siri', true);
         }
         description += ' ' + t("The equation for women needs a triceps skinfold, which this app does not record. This is a general estimate, not a measurement.");
         insights.push({

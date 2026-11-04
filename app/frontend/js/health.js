@@ -55,11 +55,27 @@ function healthWeightRange(minKg, maxKg) {
     return `${num(convertFromKg(minKg))}–${num(convertFromKg(maxKg))} ${getWeightUnitLabel()}`;
 }
 
-// "[n]" link to an entry of the Sources list on this page
-function srcRef(key) {
+// "[n]" link to an entry of the Sources list on the Health tab. From another tab (otherTab: true, e.g. Body) the
+// link's name says that it opens the Health tab.
+function srcRef(key, otherTab = false) {
     const n = $('#src-' + key).attr('data-n');
-    return n ? `<a href="#src-${key}" class="src-ref" aria-label="Source ${n}">[${n}]</a>` : '';
+    return n ? `<a href="#src-${key}" class="src-ref" aria-label="${escapeHtml(srcRefLabel(n, otherTab))}">[${n}]</a>` : '';
 }
+
+function srcRefLabel(n, otherTab) {
+    return otherTab ? tf('Source {n}, opens the Health tab', { n }) : tf('Source {n}', { n });
+}
+
+// The [n] links written in pages/health.php: their names in the page's language
+function labelSrcRefs() {
+    $('#health .src-ref').each(function () {
+        const target = document.getElementById(($(this).attr('href') || '').slice(1));
+        const n = target && target.getAttribute('data-n');
+        if (n) this.setAttribute('aria-label', srcRefLabel(n, false));
+    });
+}
+window.labelSrcRefs = labelSrcRefs;
+$(labelSrcRefs);
 
 // WHO adult BMI categories (WHO fact sheet: 25 or more overweight, 30 or more obesity)
 function bmiCategoryLabel(bmi) {
@@ -77,6 +93,9 @@ $(document).on('click', '.src-ref', function (e) {
     if (!target) return;
     const show = () => {
         target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // Move keyboard focus to the source too (else it stays on the link, which may be on a hidden tab)
+        if (!target.hasAttribute('tabindex')) target.tabIndex = -1;
+        target.focus({ preventScroll: true });
         target.classList.add('src-highlight');
         setTimeout(() => target.classList.remove('src-highlight'), 2000);
     };
