@@ -20,6 +20,9 @@
         }
     },
     "config": {
-        "optimize-autoloader": true
+        "optimize-autoloader": true,
+        "platform": {
+            "php": "8.4.27"
+        }
     }
 }
