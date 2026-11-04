@@ -1,5 +1,5 @@
 # Start from an official PHP image with FPM (Alpine)
-FROM php:8.2-fpm-alpine
+FROM php:8.4.27-fpm-alpine
 
 # Install nginx + supervisord + PostgreSQL runtime libs + curl for composer + dcron
 RUN set -eux; \
