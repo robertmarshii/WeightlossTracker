@@ -98,7 +98,7 @@ $assetVersion = function ($path) { $t = @filemtime(__DIR__ . '/' . $path); retur
             <h2 id="services">Who we share data with</h2>
             <p>We use these companies to run the service. Some are outside the UK.</p>
             <ul>
-                <li><strong>SparkPost</strong> sends our emails (sign-in codes, and the weekly reminder and monthly report if you turn them on). It receives your email address and the email content. Open and click tracking are switched off.</li>
+                <li><strong>Scaleway</strong> (Transactional Email, Paris region) sends our emails: sign-in codes, and the weekly reminder and monthly report if you turn them on. It receives your email address and the email content.</li>
                 <li><strong>Google and Microsoft</strong>, only if you choose &ldquo;Continue with Google&rdquo; or &ldquo;Continue with Microsoft&rdquo;. We ask for your basic profile only (Google: openid, email and profile; Microsoft: User.Read) and receive your email address and name.</li>
                 <li><strong>Google Ads</strong>: the advertising tag described above.</li>
                 <li><strong>Code and style libraries</strong>: pages load jQuery from cdnjs (Cloudflare), Bootstrap from StackPath&rsquo;s BootstrapCDN and, on the dashboard, Chart.js from jsDelivr. These services receive your IP address and browser details when the files load.</li>
